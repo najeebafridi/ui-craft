@@ -1,0 +1,9 @@
+{
+  "name": "ui-craft",
+  "version": "1.0.0",
+  "description": "UI/UX design rules for AI coding agents: professional, modern, easy-to-use screens for web apps, dashboards, desktop, mobile and marketing sites, plus fast clickable HTML mockups for client approval.",
+  "author": { "name": "najeebafridi" },
+  "license": "MIT",
+  "repository": "https://github.com/YOUR-NAME/ui-craft",
+  "keywords": ["design", "ui", "ux", "accessibility", "dashboard", "mockup", "frontend"]
+}
