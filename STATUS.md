@@ -10,8 +10,8 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - [x] 0. Set up git, STATUS, LICENSE
 - [x] 1. Research -> research/sources.md, research/conflicts.md
 - [x] 2. Licence sort -> CREDITS.md
-- [ ] 3. Write skill -> skills/ui-craft/SKILL.md + references/
-- [ ] 4. Fast mockups guide -> references/mockups.md + template
+- [x] 3. Write skill -> skills/ui-craft/SKILL.md + references/
+- [x] 4. Fast mockups guide -> references/mockups.md + template
 - [ ] 5. Evals with and without skill -> evals/
 - [ ] 6. Package: plugin, AGENTS.md, README.md
 
@@ -22,4 +22,4 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - Write nothing outside this folder.
 
 ## Next action
-Step 3: write skills/ui-craft/SKILL.md and references/. Use research/conflicts.md for decisions.
+Step 5: evals. Build 4 screens with and without the skill (skill-creator eval process), compare, fix skill. Work folder: evals/
