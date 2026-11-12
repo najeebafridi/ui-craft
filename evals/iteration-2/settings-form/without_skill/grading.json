@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+      "passed": true,
+      "evidence": "index.html: desktop: 2 fails [3.24, 3.24]; phone: 2 fails [3.24, 3.24]"
+    },
+    {
+      "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+      "passed": true,
+      "evidence": "index.html: hasFocusStyle=True"
+    },
+    {
+      "text": "Smallest visible text is at least 12px",
+      "passed": true,
+      "evidence": "index.html: min=12px"
+    },
+    {
+      "text": "No sideways scrolling at 390px phone width",
+      "passed": true,
+      "evidence": "index.html: overflow=False"
+    },
+    {
+      "text": "Uses at most 7 distinct font sizes on the desktop screen",
+      "passed": true,
+      "evidence": "index.html: sizes=[12, 13, 14, 16, 18, 22]"
+    },
+    {
+      "text": "Every form control has an accessible label",
+      "passed": true,
+      "evidence": "index.html: unlabelled=[]"
+    },
+    {
+      "text": "At least 80% of spacing values sit on the 4px grid",
+      "passed": false,
+      "evidence": "index.html: on-grid=0.575"
+    },
+    {
+      "text": "Respects prefers-reduced-motion (or has no motion at all)",
+      "passed": false,
+      "evidence": "index.html: reducedMotion=False motion=True"
+    },
+    {
+      "text": "No emoji icons, lorem ipsum or placeholder-image services",
+      "passed": true,
+      "evidence": "index.html: emoji=0 lorem=False placeholderImgs=0"
+    },
+    {
+      "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+      "passed": false,
+      "evidence": "index.html: 23 small: ['Profile', 'Password', 'Notifications', 'Upload photo', 'INPUT', 'INPUT']"
+    },
+    {
+      "text": "Email field uses type=email and password fields use current-password/new-password autocomplete",
+      "passed": true,
+      "evidence": "email=True current=True new=True"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 3,
+    "total": 11,
+    "pass_rate": 0.727
+  }
+}

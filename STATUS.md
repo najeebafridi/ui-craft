@@ -10,16 +10,20 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - [x] 0. Set up git, STATUS, LICENSE
 - [x] 1. Research -> research/sources.md, research/conflicts.md
 - [x] 2. Licence sort -> CREDITS.md
-- [x] 3. Write skill -> skills/ui-craft/SKILL.md + references/
-- [x] 4. Fast mockups guide -> references/mockups.md + template
-- [ ] 5. Evals with and without skill -> evals/
-- [ ] 6. Package: plugin, AGENTS.md, README.md
+- [x] 3. Write skill -> skills/ui-craft/SKILL.md + 12 references + assets/tokens.css
+- [x] 4. Fast mockups -> references/mockups.md, assets/mockup-template.html, assets/options-board.html
+- [x] 5. Evals: 2 rounds. Round 2: 97% vs 57% checks passed; blind judge preferred skill on 5/5. See evals/RESULTS.md
+- [x] 6. Package: .claude-plugin/ (plugin + marketplace), AGENTS.md (generated), README.md
+
+## Not done yet / next ideas
+- Push to GitHub (user will do it later), then replace `YOUR-NAME` in README.md and .claude-plugin/plugin.json.
+- Run `claude plugin validate .` once the `claude` CLI is on PATH (it was not available here; JSON checked by hand).
+- Description-trigger optimisation (skill-creator run_loop) needs the `claude` CLI; not run.
+- Optional: a round 3 with a different model (e.g. a smaller one) to check the skill helps there too.
 
 ## Rules for whoever continues
 - Read public pages only. No logins, sign-ups or forms. Download or run nothing from sources.
 - Copy word for word only from MIT / Apache / CC-BY sources, and credit them in CREDITS.md.
+- Edit skills/ui-craft/SKILL.md, then run `python tools/build-agents-md.py` to regenerate AGENTS.md.
 - Commit after every working step. Update this file each time.
 - Write nothing outside this folder.
-
-## Next action
-Step 5: evals. Iteration 1 done (88% vs 56% pass; blind judge: skill won 3 of 5). Skill fixed (touch sizes, overflow, audit script). Next: iteration-2 = rerun with_skill only, reuse baseline from iteration-1, re-judge blind.

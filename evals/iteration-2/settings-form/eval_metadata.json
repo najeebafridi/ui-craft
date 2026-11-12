@@ -1,0 +1,5 @@
+{
+  "eval_name": "settings-form",
+  "prompt": "Build the account settings page for our project management web app (think Linear/Asana style). Sections: profile (name, email, avatar, timezone), change password, and email notification preferences. Single HTML file, plain HTML/CSS/JS, no frameworks.",
+  "assertions": []
+}

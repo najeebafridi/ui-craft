@@ -153,7 +153,7 @@ Details: `references/motion.md`.
   }
   ```
   Icon buttons and small links get a 44×44px hit area with padding, even if the icon stays 20px.
-- Tables on phones become stacked cards or a list with the 2–3 key fields; keep the full table on desktop. Long lists (over ~200 rows) get pagination or virtual scrolling.
+- Tables on phones become stacked cards or a list with the 2–3 key fields; keep the full table on desktop. A table that scrolls sideways on a phone looks broken and hides columns: use it only as a last resort. Long lists (over ~200 rows) get pagination or virtual scrolling.
 - **Nothing may be wider than the screen.** Rows of chips, dates or tabs scroll inside their own box (`overflow-x: auto`), flex and grid children get `min-width: 0`, long words wrap or truncate, and wide tables sit in a scroll container or turn into cards. Sideways page scroll at 390px is a bug.
 - A pinned bottom bar (sticky action bar, tab bar) must never hide content: give the scrolling content `padding-bottom` equal to the bar's height plus the safe area.
 - Respect safe areas (`env(safe-area-inset-*)`), notches and home indicators.

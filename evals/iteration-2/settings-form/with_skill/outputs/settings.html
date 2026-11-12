@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account settings · Tasklane</title>
+<!--
+Design brief
+Product: Tasklane, project management web app used daily by teams (Linear/Asana style)
+Tone: calm, precise, quiet            Density: compact on desktop (14px body, controls 36px), 44px on touch
+Accent: blue #2563EB (tokens)         Neutrals: cool grey
+Font: system/Inter stack              Radius: 6px
+Primary task on this screen: update your profile and save it (explicit Save); notifications auto-save.
+Sample data is fictional.
+-->
+<style>
+:root {
+  color-scheme: light dark;
+  --bg:#F8FAFC; --surface:#FFFFFF; --surface-2:#F1F5F9; --surface-3:#E2E8F0;
+  --border:#E2E8F0; --border-strong:#8B95A5;
+  --text:#0F172A; --text-muted:#475569; --text-subtle:#64748B;
+  --accent:#2563EB; --accent-hover:#1D4ED8; --accent-fg:#FFFFFF; --accent-soft:#EFF6FF; --accent-text:#1D4ED8;
+  --success:#15803D; --success-soft:#F0FDF4; --success-text:#166534;
+  --danger:#DC2626; --danger-soft:#FEF2F2; --danger-text:#B91C1C;
+  --font-sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --radius:6px;
+  --shadow-overlay:0 4px 6px rgb(15 23 42/.05),0 12px 32px rgb(15 23 42/.14);
+  --ease-out:cubic-bezier(.2,0,0,1);
+  --control-h:36px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0B0F14; --surface:#12171E; --surface-2:#1A2029; --surface-3:#242B36;
+    --border:#262E3A; --border-strong:#5E6A7C;
+    --text:#E6E9EE; --text-muted:#A3ADBC; --text-subtle:#8792A2;
+    --accent-soft:#172554; --accent-text:#93C5FD;
+    --success:#22C55E; --success-soft:#052E16; --success-text:#86EFAC;
+    --danger:#EF4444; --danger-soft:#2A0E0E; --danger-text:#FCA5A5;
+    --shadow-overlay:0 8px 32px rgb(0 0 0/.5);
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{overflow-x:clip;scroll-padding-top:80px;scroll-padding-bottom:96px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 14px/20px var(--font-sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;line-height:1.25;font-weight:600;text-wrap:balance}
+p{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sr-only{position:absolute;left:0;top:0;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* App shell */
+.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:16px 12px;display:flex;flex-direction:column;gap:24px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:8px;padding:0 8px;font-weight:600;font-size:16px}
+.brand-mark{width:24px;height:24px;border-radius:6px;background:var(--accent);display:grid;place-items:center}
+.nav{display:grid;gap:4px}
+.nav a{display:flex;align-items:center;gap:8px;min-height:36px;padding:0 8px;border-radius:var(--radius);color:var(--text-muted);text-decoration:none;font-weight:500}
+.nav a:hover{background:var(--surface-2);color:var(--text)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent-text)}
+.nav-label{font-size:12px;color:var(--text-subtle);padding:0 8px;margin-bottom:4px}
+.icon{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.sidebar-foot{margin-top:auto;display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--radius)}
+
+.main{padding:32px 32px 96px;min-width:0}
+.page{max-width:880px;margin:0 auto}
+.crumbs{font-size:12px;color:var(--text-subtle);margin-bottom:8px}
+.crumbs a{color:inherit}
+h1{font-size:24px;letter-spacing:-.01em}
+.lede{color:var(--text-muted);margin-top:4px}
+
+/* Settings tabs (anchors) */
+.subnav{display:flex;gap:4px;margin:24px 0 0;border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:0;background:var(--bg);z-index:5}
+.subnav a{display:inline-flex;align-items:center;min-height:40px;padding:0 12px;color:var(--text-muted);text-decoration:none;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.subnav a:hover{color:var(--text)}
+.subnav a[aria-current="true"]{color:var(--text);border-bottom-color:var(--accent)}
+
+/* Sections: flat, no cards. Label left, form right on wide screens */
+.section{display:grid;grid-template-columns:240px minmax(0,1fr);gap:32px;padding:32px 0;border-bottom:1px solid var(--border)}
+.section:last-of-type{border-bottom:0}
+.section h2{font-size:16px}
+.section .desc{color:var(--text-muted);margin-top:4px}
+.form{display:grid;gap:24px;max-width:480px;min-width:0}
+.field{display:grid;gap:4px}
+label,.label{font-weight:500}
+.opt{font-weight:400;color:var(--text-subtle)}
+.hint,.error{font-size:12px;line-height:16px}
+.hint{color:var(--text-muted)}
+.error{color:var(--danger-text);display:flex;gap:4px;align-items:flex-start}
+.error[hidden]{display:none}
+input[type=text],input[type=email],input[type=password],select{
+  width:100%;height:var(--control-h);padding:0 12px;font:inherit;color:var(--text);
+  background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);
+  transition:border-color 120ms var(--ease-out)}
+select{appearance:none;padding-right:32px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238B95A5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+input:hover,select:hover{border-color:var(--text-subtle)}
+input[aria-invalid="true"]{border-color:var(--danger)}
+input::placeholder{color:var(--text-subtle)}
+.input-wrap{position:relative}
+.input-wrap input{padding-right:64px}
+.input-wrap .toggle-vis{position:absolute;right:4px;top:50%;transform:translateY(-50%)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 12px;border-radius:var(--radius);font:inherit;font-weight:500;cursor:pointer;border:1px solid transparent;background:none;color:var(--text);text-decoration:none;transition:background-color 120ms var(--ease-out),border-color 120ms var(--ease-out)}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary:active{filter:brightness(.92)}
+.btn-secondary{border-color:var(--border-strong);background:var(--surface)}
+.btn-secondary:hover{background:var(--surface-2)}
+.btn-secondary:active{background:var(--surface-3)}
+.btn-text{color:var(--text-muted)}
+.btn-text:hover{background:var(--surface-2);color:var(--text)}
+.btn-text:active{background:var(--surface-3)}
+.btn-link{height:28px;padding:0 8px;color:var(--accent-text)}
+.btn-link:hover{background:var(--accent-soft)}
+.btn-danger-text{color:var(--danger-text)}
+.btn-danger-text:hover{background:var(--danger-soft)}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+.spinner{width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Avatar */
+.avatar-row{display:flex;align-items:center;gap:16px}
+.avatar{width:64px;height:64px;border-radius:50%;background:#1D4ED8;color:#fff;display:grid;place-items:center;font-size:20px;font-weight:600;overflow:hidden;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-actions{display:flex;gap:8px;flex-wrap:wrap}
+.mini-avatar{width:28px;height:28px;font-size:12px}
+
+/* Password rules */
+.rules{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px;font-size:12px;line-height:16px;color:var(--text-muted)}
+.rules li{display:flex;gap:8px;align-items:center}
+.rules .icon{width:14px;height:14px;color:var(--text-subtle)}
+.rules li.ok{color:var(--success-text)}
+.rules li.ok .icon{color:var(--success)}
+.form-actions{display:flex;gap:8px;align-items:center}
+
+/* Notifications: instant toggles */
+.status{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--success-text);min-height:16px;opacity:0;transition:opacity 200ms var(--ease-out)}
+.status.show{opacity:1}
+.notif{display:grid;gap:0;max-width:560px;min-width:0}
+.notif-group{padding:0;margin:0;border:0;min-width:0}
+.notif-group+.notif-group{margin-top:24px}
+.notif-group legend{padding:0 0 8px;font-weight:600;font-size:14px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--border)}
+.row:last-child{border-bottom:1px solid var(--border)}
+.row-text{min-width:0}
+.row-text .t{font-weight:500}
+.row-text .d{color:var(--text-muted);font-size:12px;line-height:16px;margin-top:2px}
+.switch{position:relative;flex:none;display:inline-flex;align-items:center;width:44px;height:44px;margin:-8px 0}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+.switch .track{width:36px;height:20px;border-radius:10px;background:var(--border-strong);margin:0 4px;position:relative;transition:background-color 120ms var(--ease-out)}
+.switch .track::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 120ms var(--ease-out)}
+.switch input:checked+.track{background:var(--accent)}
+.switch input:checked+.track::after{transform:translateX(16px)}
+.switch input:focus-visible+.track{outline:2px solid var(--accent);outline-offset:2px}
+.switch input:active+.track::after{width:18px}
+.switch input:disabled{cursor:not-allowed}
+.switch input:disabled+.track{opacity:.5}
+.freq{display:grid;gap:4px;max-width:280px;margin-bottom:24px}
+.notif-head{display:flex;justify-content:space-between;align-items:center;max-width:560px;margin-bottom:16px}
+
+/* Sticky save bar */
+.savebar{position:fixed;left:240px;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 32px;padding-bottom:calc(12px + env(safe-area-inset-bottom));z-index:10;transform:translateY(110%);transition:transform 200ms var(--ease-out);visibility:hidden}
+.savebar.show{transform:none;visibility:visible}
+.savebar-in{max-width:880px;margin:0 auto;display:flex;align-items:center;gap:16px;justify-content:space-between}
+.savebar p{color:var(--text-muted)}
+.savebar .btns{display:flex;gap:8px}
+
+/* Toast */
+.toast{position:fixed;right:24px;bottom:24px;background:var(--text);color:var(--bg);padding:12px 16px;border-radius:var(--radius);box-shadow:var(--shadow-overlay);display:flex;gap:8px;align-items:center;z-index:20;transform:translateY(16px);opacity:0;pointer-events:none;transition:transform 200ms var(--ease-out),opacity 200ms var(--ease-out);max-width:calc(100vw - 32px)}
+.toast.show{transform:none;opacity:1}
+.toast .icon{color:#4ADE80}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .toast .icon{color:#15803D}}
+
+/* Error summary */
+.summary{border:1px solid var(--danger);background:var(--danger-soft);color:var(--danger-text);border-radius:var(--radius);padding:12px;max-width:480px}
+.summary[hidden]{display:none}
+.summary h3{font-size:14px;margin-bottom:4px}
+.summary ul{margin:0;padding-left:16px}
+.summary a{color:inherit}
+
+.mobile-top{display:none}
+
+@media (max-width:1024px){
+  .section{grid-template-columns:1fr;gap:16px}
+}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .mobile-top{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--surface);border-bottom:1px solid var(--border);min-height:56px}
+  .mobile-top a{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:var(--text-muted);text-decoration:none;font-weight:500}
+  .main{padding:24px 16px 96px}
+  .savebar{left:0;padding:12px 16px}
+  .savebar-in{flex-direction:column;align-items:stretch;gap:8px}
+  .savebar .btns{flex-direction:column-reverse}
+  .toast{left:16px;right:16px;bottom:16px}
+  .subnav{margin-left:-16px;margin-right:-16px;padding:0 16px}
+}
+@media (max-width:640px),(pointer:coarse){
+  :root{--control-h:44px}
+  .btn,.subnav a,.nav a{min-height:44px}
+  input,select{font-size:16px}
+  .btn-link{height:44px}
+  .avatar-actions .btn{min-height:44px}
+  .form-actions{flex-direction:column-reverse;align-items:stretch}
+  .input-wrap .toggle-vis{height:36px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<!-- Icon sprite: one set, 24 grid, 1.75 stroke -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h8" stroke="#fff" fill="none" stroke-width="2.25" stroke-linecap="round"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-check-sq" viewBox="0 0 24 24"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="sidebar" aria-label="Workspace">
+    <div class="brand"><span class="brand-mark"><svg class="icon" style="stroke:none;width:16px;height:16px"><use href="#i-logo"/></svg></span>Tasklane</div>
+    <nav class="nav" aria-label="Main">
+      <a href="#"><svg class="icon" aria-hidden="true"><use href="#i-inbox"/></svg>Inbox</a>
+      <a href="#"><svg class="icon" aria-hidden="true"><use href="#i-check-sq"/></svg>My tasks</a>
+      <a href="#"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg>Projects</a>
+      <a href="#" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg>Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <span class="avatar mini-avatar" data-avatar-mini aria-hidden="true">MO</span>
+      <div style="min-width:0"><div style="font-weight:500" data-name-mini>Maya Okafor</div><div class="hint" style="color:var(--text-subtle)">Northwind team</div></div>
+    </div>
+  </aside>
+
+  <div style="min-width:0">
+    <div class="mobile-top"><a href="#"><svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>Back to Tasklane</a></div>
+    <main class="main" id="main">
+      <div class="page">
+        <div class="crumbs">Northwind / Settings</div>
+        <h1>Account settings</h1>
+        <p class="lede">Manage how you appear to your team and how Tasklane contacts you.</p>
+
+        <nav class="subnav" aria-label="Settings sections">
+          <a href="#profile" aria-current="true">Profile</a>
+          <a href="#password">Password</a>
+          <a href="#notifications">Notifications</a>
+        </nav>
+
+        <!-- PROFILE -->
+        <section class="section" id="profile" aria-labelledby="h-profile">
+          <div>
+            <h2 id="h-profile">Profile</h2>
+            <p class="desc">Your name and photo are shown on tasks, comments and mentions.</p>
+          </div>
+          <form class="form" id="profile-form" novalidate>
+            <div id="profile-summary" class="summary" role="alert" tabindex="-1" hidden>
+              <h3>Fix 2 things to save your profile</h3>
+              <ul></ul>
+            </div>
+
+            <div class="field">
+              <span class="label" id="avatar-label">Profile photo</span>
+              <div class="avatar-row" role="group" aria-labelledby="avatar-label">
+                <div class="avatar" id="avatar" aria-hidden="true">MO</div>
+                <div>
+                  <div class="avatar-actions">
+                    <button type="button" class="btn btn-secondary" id="avatar-upload">Upload photo</button>
+                    <button type="button" class="btn btn-text" id="avatar-remove" hidden>Remove</button>
+                  </div>
+                  <p class="hint" id="avatar-hint" style="margin-top:8px">JPG or PNG, up to 2 MB</p>
+                  <p class="error" id="avatar-error" hidden><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+                </div>
+                <input type="file" id="avatar-file" accept="image/png,image/jpeg" class="sr-only" tabindex="-1" aria-labelledby="avatar-label">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" autocomplete="name" value="Maya Okafor" required aria-describedby="name-hint name-error">
+              <p class="hint" id="name-hint">Shown to teammates across Tasklane</p>
+              <p class="error" id="name-error" hidden><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" value="maya.okafor@northwind.co" required aria-describedby="email-hint email-error">
+              <p class="hint" id="email-hint">We'll email a confirmation link if you change this</p>
+              <p class="error" id="email-error" hidden><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+            </div>
+
+            <div class="field">
+              <label for="tz">Timezone</label>
+              <select id="tz" name="tz" aria-describedby="tz-hint">
+                <option value="America/Los_Angeles">(UTC-08:00) Pacific Time – Los Angeles</option>
+                <option value="America/Denver">(UTC-07:00) Mountain Time – Denver</option>
+                <option value="America/Chicago">(UTC-06:00) Central Time – Chicago</option>
+                <option value="America/New_York">(UTC-05:00) Eastern Time – New York</option>
+                <option value="America/Sao_Paulo">(UTC-03:00) Brasília – São Paulo</option>
+                <option value="UTC">(UTC+00:00) UTC</option>
+                <option value="Europe/London" selected>(UTC+00:00) London</option>
+                <option value="Europe/Berlin">(UTC+01:00) Central European – Berlin</option>
+                <option value="Africa/Lagos">(UTC+01:00) West Africa – Lagos</option>
+                <option value="Europe/Athens">(UTC+02:00) Eastern European – Athens</option>
+                <option value="Asia/Dubai">(UTC+04:00) Gulf – Dubai</option>
+                <option value="Asia/Kolkata">(UTC+05:30) India – Kolkata</option>
+                <option value="Asia/Singapore">(UTC+08:00) Singapore</option>
+                <option value="Asia/Tokyo">(UTC+09:00) Japan – Tokyo</option>
+                <option value="Australia/Sydney">(UTC+10:00) Sydney</option>
+                <option value="Pacific/Auckland">(UTC+12:00) Auckland</option>
+              </select>
+              <p class="hint" id="tz-hint">Used for due dates, reminders and digest times. Current time: <span id="tz-now" class="num"></span></p>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="profile-save">Save profile</button>
+              <button type="button" class="btn btn-text" id="profile-cancel">Cancel</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- PASSWORD -->
+        <section class="section" id="password" aria-labelledby="h-password">
+          <div>
+            <h2 id="h-password">Change password</h2>
+            <p class="desc">You'll stay signed in on this device. Other devices will be signed out.</p>
+          </div>
+          <form class="form" id="password-form" novalidate>
+            <input type="email" name="username" value="maya.okafor@northwind.co" autocomplete="username" aria-label="Account email" hidden>
+
+            <div class="field">
+              <label for="pw-current">Current password</label>
+              <div class="input-wrap">
+                <input id="pw-current" type="password" autocomplete="current-password" aria-describedby="pw-current-error">
+                <button type="button" class="btn btn-link toggle-vis" data-toggle="pw-current" aria-pressed="false" aria-label="Show current password">Show</button>
+              </div>
+              <p class="error" id="pw-current-error" hidden><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+            </div>
+
+            <div class="field">
+              <label for="pw-new">New password</label>
+              <div class="input-wrap">
+                <input id="pw-new" type="password" autocomplete="new-password" aria-describedby="pw-rules pw-new-error">
+                <button type="button" class="btn btn-link toggle-vis" data-toggle="pw-new" aria-pressed="false" aria-label="Show new password">Show</button>
+              </div>
+              <ul class="rules" id="pw-rules" aria-label="Password requirements">
+                <li data-rule="len"><svg class="icon" aria-hidden="true"><use href="#i-circle"/></svg><span>At least 12 characters</span></li>
+                <li data-rule="mix"><svg class="icon" aria-hidden="true"><use href="#i-circle"/></svg><span>A letter and a number</span></li>
+                <li data-rule="diff"><svg class="icon" aria-hidden="true"><use href="#i-circle"/></svg><span>Different from your current password</span></li>
+              </ul>
+              <p class="error" id="pw-new-error" hidden><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+            </div>
+
+            <div class="field">
+              <label for="pw-confirm">Confirm new password</label>
+              <div class="input-wrap">
+                <input id="pw-confirm" type="password" autocomplete="new-password" aria-describedby="pw-confirm-error">
+                <button type="button" class="btn btn-link toggle-vis" data-toggle="pw-confirm" aria-pressed="false" aria-label="Show confirmation password">Show</button>
+              </div>
+              <p class="error" id="pw-confirm-error" hidden><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-secondary" id="pw-save">Update password</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- NOTIFICATIONS -->
+        <section class="section" id="notifications" aria-labelledby="h-notif">
+          <div>
+            <h2 id="h-notif">Email notifications</h2>
+            <p class="desc">Changes here apply immediately. There is nothing to save.</p>
+          </div>
+          <div class="notif">
+            <div class="notif-head">
+              <label class="row-text t" style="font-weight:500" for="digest">Email digest</label>
+              <span class="status" id="notif-status" role="status" aria-live="polite"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span>Saved</span></span>
+            </div>
+            <div class="freq" style="margin-top:-12px">
+              <select id="digest" data-autosave aria-describedby="digest-hint">
+                <option value="off">Never</option>
+                <option value="daily" selected>Daily, at 9:00</option>
+                <option value="weekly">Weekly, Monday at 9:00</option>
+              </select>
+              <p class="hint" id="digest-hint">A summary of what changed across your projects</p>
+            </div>
+
+            <fieldset class="notif-group">
+              <legend>Tasks</legend>
+              <div class="row">
+                <div class="row-text"><div class="t" id="n1">Assigned to me</div><div class="d" id="n1d">When someone assigns a task to you</div></div>
+                <label class="switch"><input type="checkbox" role="switch" data-autosave checked aria-labelledby="n1" aria-describedby="n1d"><span class="track"></span></label>
+              </div>
+              <div class="row">
+                <div class="row-text"><div class="t" id="n2">Mentions and replies</div><div class="d" id="n2d">When you are @mentioned or someone replies to your comment</div></div>
+                <label class="switch"><input type="checkbox" role="switch" data-autosave checked aria-labelledby="n2" aria-describedby="n2d"><span class="track"></span></label>
+              </div>
+              <div class="row">
+                <div class="row-text"><div class="t" id="n3">Due date reminders</div><div class="d" id="n3d">The morning before a task you own is due</div></div>
+                <label class="switch"><input type="checkbox" role="switch" data-autosave checked aria-labelledby="n3" aria-describedby="n3d"><span class="track"></span></label>
+              </div>
+              <div class="row">
+                <div class="row-text"><div class="t" id="n4">Status changes on tasks I follow</div><div class="d" id="n4d">Can be busy on large projects</div></div>
+                <label class="switch"><input type="checkbox" role="switch" data-autosave aria-labelledby="n4" aria-describedby="n4d"><span class="track"></span></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="notif-group">
+              <legend>Projects and workspace</legend>
+              <div class="row">
+                <div class="row-text"><div class="t" id="n5">Added to a project</div><div class="d" id="n5d">When you are invited to or added to a project</div></div>
+                <label class="switch"><input type="checkbox" role="switch" data-autosave checked aria-labelledby="n5" aria-describedby="n5d"><span class="track"></span></label>
+              </div>
+              <div class="row">
+                <div class="row-text"><div class="t" id="n6">Weekly project summary</div><div class="d" id="n6d">Progress and upcoming deadlines for projects you belong to</div></div>
+                <label class="switch"><input type="checkbox" role="switch" data-autosave aria-labelledby="n6" aria-describedby="n6d"><span class="track"></span></label>
+              </div>
+              <div class="row">
+                <div class="row-text"><div class="t" id="n7">Product updates</div><div class="d" id="n7d">New features and tips, about once a month</div></div>
+                <label class="switch"><input type="checkbox" role="switch" data-autosave aria-labelledby="n7" aria-describedby="n7d"><span class="track"></span></label>
+              </div>
+            </fieldset>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span id="toast-msg"></span></div>
+
+<script>
+(function () {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const ICON_ERR = '';
+
+  /* ---------- Toast ---------- */
+  let toastTimer;
+  function toast(msg) {
+    $('#toast-msg').textContent = msg;
+    $('#toast').classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => $('#toast').classList.remove('show'), 5000);
+  }
+
+  /* ---------- Field error helpers ---------- */
+  function setError(input, msg) {
+    const err = $('#' + input.id + '-error') || input.closest('.field').querySelector('.error');
+    if (!err) return;
+    if (msg) {
+      err.querySelector('span').textContent = msg;
+      err.hidden = false;
+      input.setAttribute('aria-invalid', 'true');
+    } else {
+      err.hidden = true;
+      input.removeAttribute('aria-invalid');
+    }
+  }
+
+  /* ---------- Profile ---------- */
+  const pf = $('#profile-form');
+  const name = $('#name'), email = $('#email'), tz = $('#tz');
+  const saved = { name: name.value, email: email.value, tz: tz.value, avatar: null };
+  let avatarUrl = null;
+
+  const initials = n => n.trim().split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?';
+
+  function renderAvatar() {
+    for (const el of [$('#avatar'), $('[data-avatar-mini]')]) {
+      el.textContent = '';
+      if (avatarUrl) {
+        const img = document.createElement('img');
+        img.src = avatarUrl; img.alt = '';
+        el.appendChild(img);
+      } else el.textContent = initials(name.value);
+    }
+    $('#avatar-remove').hidden = !avatarUrl;
+    $('#avatar-upload').textContent = avatarUrl ? 'Change photo' : 'Upload photo';
+  }
+
+  const validators = {
+    name: v => v.trim() ? '' : 'Enter your full name so teammates recognise you',
+    email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Enter an email like name@company.com'
+  };
+
+  function validateField(input) {
+    const msg = validators[input.id](input.value);
+    setError(input, msg);
+    return msg;
+  }
+
+  function isDirty() {
+    return name.value !== saved.name || email.value !== saved.email || tz.value !== saved.tz || avatarUrl !== saved.avatar;
+  }
+
+  /* Sticky bar appears once something changes */
+  const bar = document.createElement('div');
+  bar.className = 'savebar';
+  bar.setAttribute('role', 'region');
+  bar.setAttribute('aria-label', 'Unsaved changes');
+  bar.innerHTML = '<div class="savebar-in"><p>You have unsaved profile changes</p><div class="btns"><button type="button" class="btn btn-text" id="bar-discard">Discard</button><button type="button" class="btn btn-primary" id="bar-save">Save profile</button></div></div>';
+  document.body.appendChild(bar);
+
+  function refresh() {
+    bar.classList.toggle('show', isDirty());
+    if (!isDirty()) bar.querySelectorAll('button').forEach(b => b.blur && 0);
+    $('#name-hint'); renderAvatar();
+    $('#tz-now').textContent = nowIn(tz.value);
+  }
+
+  function nowIn(zone) {
+    try { return new Intl.DateTimeFormat('en-GB', { timeZone: zone, hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()); }
+    catch (e) { return ''; }
+  }
+
+  [name, email].forEach(inp => {
+    inp.addEventListener('input', () => { if (inp.hasAttribute('aria-invalid')) validateField(inp); refresh(); });
+    inp.addEventListener('blur', () => validateField(inp));
+  });
+  tz.addEventListener('change', refresh);
+
+  /* Avatar upload */
+  const MAX = 2 * 1024 * 1024;
+  $('#avatar-upload').addEventListener('click', () => $('#avatar-file').click());
+  $('#avatar-file').addEventListener('change', e => {
+    const f = e.target.files[0];
+    const err = $('#avatar-error');
+    err.hidden = true;
+    if (!f) return;
+    if (!/^image\/(png|jpeg)$/.test(f.type)) { err.querySelector('span').textContent = 'That file is not a JPG or PNG. Choose a different image.'; err.hidden = false; e.target.value = ''; return; }
+    if (f.size > MAX) { err.querySelector('span').textContent = 'That image is over 2 MB. Choose a smaller one.'; err.hidden = false; e.target.value = ''; return; }
+    if (avatarUrl && avatarUrl !== saved.avatar) URL.revokeObjectURL(avatarUrl);
+    avatarUrl = URL.createObjectURL(f);
+    refresh();
+  });
+  $('#avatar-remove').addEventListener('click', () => { avatarUrl = null; $('#avatar-file').value = ''; $('#avatar-error').hidden = true; refresh(); $('#avatar-upload').focus(); });
+  name.addEventListener('input', () => { if (!avatarUrl) renderAvatar(); });
+
+  /* Submit */
+  const summary = $('#profile-summary');
+  function showSummary(items) {
+    const ul = $('ul', summary);
+    ul.innerHTML = '';
+    summary.querySelector('h3').textContent = items.length === 1 ? 'Fix 1 thing to save your profile' : `Fix ${items.length} things to save your profile`;
+    items.forEach(({ input, msg }) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + input.id; a.textContent = msg;
+      a.addEventListener('click', ev => { ev.preventDefault(); input.focus(); });
+      li.appendChild(a); ul.appendChild(li);
+    });
+    summary.hidden = items.length === 0;
+    if (items.length) summary.focus();
+  }
+
+  let saving = false;
+  function saveProfile() {
+    if (saving) return;
+    const problems = [name, email].map(i => ({ input: i, msg: validateField(i) })).filter(p => p.msg);
+    if (problems.length) {
+      if (problems.length > 1) showSummary(problems); else { summary.hidden = true; problems[0].input.focus(); }
+      return;
+    }
+    summary.hidden = true;
+    saving = true;
+    const btns = [$('#profile-save'), $('#bar-save')];
+    btns.forEach(b => { b.disabled = true; b.dataset.l = b.textContent; b.innerHTML = '<span class="spinner" aria-hidden="true"></span>Saving…'; });
+    setTimeout(() => {
+      const emailChanged = email.value.trim() !== saved.email;
+      saved.name = name.value.trim(); name.value = saved.name;
+      saved.email = email.value.trim(); email.value = saved.email;
+      saved.tz = tz.value; saved.avatar = avatarUrl;
+      $('[data-name-mini]').textContent = saved.name;
+      btns.forEach(b => { b.disabled = false; b.textContent = b.dataset.l; });
+      saving = false;
+      refresh();
+      toast(emailChanged ? `Profile saved. Confirm your new email from the link we sent to ${saved.email}.` : 'Profile saved');
+    }, 700);
+  }
+  pf.addEventListener('submit', e => { e.preventDefault(); saveProfile(); });
+  bar.querySelector('#bar-save').addEventListener('click', saveProfile);
+  function discard() {
+    name.value = saved.name; email.value = saved.email; tz.value = saved.tz;
+    avatarUrl = saved.avatar; $('#avatar-file').value = '';
+    [name, email].forEach(i => setError(i, ''));
+    summary.hidden = true; $('#avatar-error').hidden = true;
+    refresh();
+  }
+  $('#profile-cancel').addEventListener('click', discard);
+  bar.querySelector('#bar-discard').addEventListener('click', discard);
+
+  window.addEventListener('beforeunload', e => { if (isDirty()) { e.preventDefault(); e.returnValue = ''; } });
+
+  /* ---------- Password ---------- */
+  const cur = $('#pw-current'), nw = $('#pw-new'), cf = $('#pw-confirm');
+  $$('.toggle-vis').forEach(btn => btn.addEventListener('click', () => {
+    const input = document.getElementById(btn.dataset.toggle);
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.textContent = show ? 'Hide' : 'Show';
+    btn.setAttribute('aria-pressed', String(show));
+    btn.setAttribute('aria-label', (show ? 'Hide ' : 'Show ') + btn.getAttribute('aria-label').replace(/^(Show|Hide) /, ''));
+  }));
+
+  function ruleState() {
+    const v = nw.value;
+    return {
+      len: v.length >= 12,
+      mix: /[A-Za-z]/.test(v) && /\d/.test(v),
+      diff: v.length > 0 && v !== cur.value
+    };
+  }
+  function renderRules() {
+    const s = ruleState();
+    $$('#pw-rules li').forEach(li => {
+      const ok = s[li.dataset.rule];
+      li.classList.toggle('ok', ok);
+      li.querySelector('use').setAttribute('href', ok ? '#i-check' : '#i-circle');
+      li.querySelector('span').setAttribute('aria-label', '');
+      li.querySelector('span').removeAttribute('aria-label');
+    });
+  }
+  [nw, cur].forEach(i => i.addEventListener('input', () => { renderRules(); if (nw.hasAttribute('aria-invalid')) checkNew(); if (cf.hasAttribute('aria-invalid')) checkConfirm(); }));
+  cf.addEventListener('input', () => { if (cf.hasAttribute('aria-invalid')) checkConfirm(); });
+
+  function checkCur() { const m = cur.value ? '' : 'Enter your current password to confirm it\'s you'; setError(cur, m); return m; }
+  function checkNew() {
+    const s = ruleState();
+    const m = !nw.value ? 'Enter a new password' : !s.len ? 'Use at least 12 characters' : !s.mix ? 'Add at least one letter and one number' : !s.diff ? 'Choose a password different from your current one' : '';
+    setError(nw, m); return m;
+  }
+  function checkConfirm() { const m = cf.value !== nw.value || !cf.value ? 'Passwords don\'t match. Retype the new password' : ''; setError(cf, m); return m; }
+  cur.addEventListener('blur', () => { if (cur.value || cur.hasAttribute('aria-invalid')) checkCur(); });
+  nw.addEventListener('blur', () => { if (nw.value) checkNew(); });
+  cf.addEventListener('blur', () => { if (cf.value) checkConfirm(); });
+
+  let pwSaving = false;
+  $('#password-form').addEventListener('submit', e => {
+    e.preventDefault();
+    if (pwSaving) return;
+    const errs = [[cur, checkCur()], [nw, checkNew()], [cf, checkConfirm()]].filter(x => x[1]);
+    if (errs.length) { errs[0][0].focus(); return; }
+    pwSaving = true;
+    const b = $('#pw-save'); b.disabled = true; b.innerHTML = '<span class="spinner" aria-hidden="true"></span>Updating…';
+    setTimeout(() => {
+      /* Demo: the "server" rejects one known wrong password to show the server-error path */
+      if (cur.value === 'wrong-password') {
+        setError(cur, 'Current password is incorrect. Check it and try again');
+        cur.focus();
+      } else {
+        cur.value = nw.value = cf.value = '';
+        [cur, nw, cf].forEach(i => setError(i, ''));
+        renderRules();
+        toast('Password updated. Other devices have been signed out.');
+      }
+      b.disabled = false; b.textContent = 'Update password'; pwSaving = false;
+    }, 700);
+  });
+
+  /* ---------- Notifications: auto-save ---------- */
+  let statusTimer;
+  $$('[data-autosave]').forEach(c => c.addEventListener('change', () => {
+    const s = $('#notif-status');
+    s.classList.add('show');
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(() => s.classList.remove('show'), 2500);
+  }));
+
+  /* ---------- Section nav highlight ---------- */
+  const links = $$('.subnav a');
+  const secs = links.map(a => document.querySelector(a.getAttribute('href')));
+  function spy() {
+    let idx = 0;
+    secs.forEach((s, i) => { if (s.getBoundingClientRect().top < window.innerHeight * 0.4) idx = i; });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) idx = secs.length - 1;
+    links.forEach((a, i) => a.setAttribute('aria-current', String(i === idx)));
+  }
+  window.addEventListener('scroll', spy, { passive: true });
+
+  refresh(); spy();
+  setInterval(() => { $('#tz-now').textContent = nowIn(tz.value); }, 30000);
+})();
+</script>
+</body>
+</html>

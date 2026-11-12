@@ -11,9 +11,10 @@ The goal: the client approves the look in a day, not a month. Mockups are throwa
 3. **Same tokens in every file.** Copy the `:root` block unchanged into every screen so they match. If you change a colour, change it in all files.
 4. **Real content.** Real-sounding names, numbers, dates and text from the client's world. Never lorem ipsum. Clients cannot judge a layout full of fake Latin.
 5. **Clickable where it matters.** Link screens with plain `<a href="02-list.html">`. Make the main path work: list → detail → edit → back. Other links can be `href="#"`.
-6. **Show states, cheaply.** Add `?state=empty` / `?state=error` support, or make separate files (`02-list-empty.html`). Clients forget empty and error states unless they see them.
-7. **Responsive is required.** Clients open links on their phone. Check at 390px and 1440px.
-8. **Mark it as a mockup.** Put "Mockup v1" in the `<title>`. Sample data looks real, so say it is sample data if it could be mistaken for live numbers.
+6. **Show the main interaction in use.** If the screen is about choosing (a time slot, a plan, a filter), show it with a realistic choice already made, so the client sees the result, not only the empty start.
+7. **Show states, cheaply.** Add `?state=empty` / `?state=error` support, or make separate files (`02-list-empty.html`). Clients forget empty and error states unless they see them.
+8. **Responsive is required.** Clients open links on their phone. Check at 390px and 1440px.
+9. **Mark it as a mockup.** Put "Mockup v1" in the `<title>`. Sample data looks real, so say it is sample data if it could be mistaken for live numbers.
 
 ## File layout
 

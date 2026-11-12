@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minutely — Meeting notes and action items, written for you</title>
+<meta name="description" content="Minutely joins your client calls and writes the notes, decisions and action items for you. Built for small marketing agencies. Start a free 14-day trial.">
+<style>
+:root{
+  --bg:#fbf8f3; --surface:#ffffff; --ink:#1a1a2e; --muted:#5d5d73; --line:#e8e2d6;
+  --brand:#4f3df5; --brand-dark:#3a2bd1; --accent:#ff7a59; --soft:#eeebff; --ok:#1f9d6b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
+h1{font-size:clamp(2.3rem,5.5vw,3.8rem);font-weight:800}
+h2{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:800}
+h3{font-size:1.1rem;font-weight:700}
+.btn{display:inline-block;background:var(--brand);color:#fff;padding:14px 26px;border-radius:10px;font-weight:700;text-decoration:none;border:0;font-size:1rem;cursor:pointer;transition:background .15s,transform .15s}
+.btn:hover{background:var(--brand-dark);transform:translateY(-1px)}
+.btn:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.ghost:hover{background:var(--surface)}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.logo{font-weight:800;font-size:1.35rem;text-decoration:none;display:flex;align-items:center;gap:8px}
+.logo i{width:26px;height:26px;border-radius:50%;background:var(--brand);display:inline-block;position:relative}
+.logo i::after{content:"";position:absolute;left:12px;top:5px;width:2px;height:9px;background:#fff;border-radius:2px;box-shadow:4px 6px 0 -0px #fff}
+nav .links{display:flex;gap:28px;align-items:center;font-size:.95rem}
+nav .links a{text-decoration:none;color:var(--muted)}
+nav .links a.btn{color:#fff;padding:9px 18px}
+.hero{padding:56px 0 72px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.eyebrow{display:inline-block;background:var(--soft);color:var(--brand);font-weight:700;font-size:.82rem;padding:5px 12px;border-radius:99px;margin-bottom:20px}
+.hero p.lead{font-size:1.2rem;color:var(--muted);margin:22px 0 30px;max-width:30em}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.fine{font-size:.88rem;color:var(--muted);margin-top:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px -24px rgba(40,30,120,.3)}
+.demo{padding:22px}
+.demo .top{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
+.demo .top b{color:var(--ink)}
+.demo .tag{background:#e6f6ef;color:var(--ok);font-weight:700;padding:2px 10px;border-radius:99px;font-size:.75rem}
+.demo h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
+.demo ul{list-style:none;font-size:.93rem}
+.demo li{padding:7px 0;display:flex;gap:10px;align-items:flex-start}
+.demo li .box{flex:none;width:18px;height:18px;border:2px solid var(--brand);border-radius:5px;margin-top:3px}
+.demo li .who{margin-left:auto;flex:none;font-size:.75rem;background:var(--soft);color:var(--brand);padding:1px 9px;border-radius:99px;font-weight:700}
+.proof{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:26px 0;background:var(--surface)}
+.proof .wrap{display:flex;justify-content:space-around;gap:20px;flex-wrap:wrap;text-align:center}
+.proof strong{display:block;font-size:1.9rem;font-weight:800;color:var(--brand)}
+.proof span{font-size:.9rem;color:var(--muted)}
+section{padding:84px 0}
+.head{text-align:center;max-width:640px;margin:0 auto 48px}
+.head p{color:var(--muted);margin-top:14px;font-size:1.08rem}
+.pain{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pain .card{padding:26px;box-shadow:none}
+.pain .card p{color:var(--muted);margin-top:8px;font-size:.96rem}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;counter-reset:s}
+.step{counter-increment:s}
+.step::before{content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--brand);color:#fff;font-weight:800;margin-bottom:14px}
+.step p{color:var(--muted);margin-top:6px}
+.alt{background:var(--ink);color:#fff}
+.alt .head p{color:#b9b9d0}
+.feats{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.feat{background:#25253f;border-radius:14px;padding:26px}
+.feat p{color:#b9b9d0;margin-top:8px;font-size:.96rem}
+.feat .ic{font-size:1.5rem;margin-bottom:8px;display:block}
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.quote{padding:26px}
+.quote p{font-size:1rem}
+.quote footer{margin-top:16px;font-size:.88rem;color:var(--muted)}
+.quote footer b{color:var(--ink);display:block}
+.pricing{max-width:480px;margin:0 auto;padding:36px;text-align:center;border:2px solid var(--brand)}
+.price{font-size:3.2rem;font-weight:800;margin:10px 0 0}
+.price small{font-size:1rem;font-weight:500;color:var(--muted)}
+.pricing ul{list-style:none;text-align:left;margin:24px 0;display:grid;gap:10px}
+.pricing li::before{content:"\2713";color:var(--ok);font-weight:800;margin-right:10px}
+.pricing .btn{width:100%}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:12px}
+summary{font-weight:700;cursor:pointer}
+details p{color:var(--muted);margin-top:10px}
+.faq{max-width:740px;margin:0 auto}
+.final{text-align:center;background:var(--brand);color:#fff;border-radius:24px;padding:64px 24px}
+.final p{opacity:.9;margin:14px 0 28px;font-size:1.1rem}
+.final .btn{background:#fff;color:var(--brand)}
+.final .btn:hover{background:var(--soft)}
+form.trial{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+form.trial input{padding:14px 16px;border-radius:10px;border:0;font-size:1rem;min-width:260px}
+footer.site{padding:40px 0;color:var(--muted);font-size:.88rem;text-align:center}
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;padding-top:24px}
+  .pain,.steps,.quotes,.feats{grid-template-columns:1fr}
+  nav .links a:not(.btn){display:none}
+  section{padding:60px 0}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <nav aria-label="Main">
+    <a class="logo" href="#"><i aria-hidden="true"></i>Minutely</a>
+    <div class="links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn" href="#trial">Start free trial</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+<div class="wrap hero">
+  <div>
+    <span class="eyebrow">Built for small marketing agencies</span>
+    <h1>Stop writing up client calls. Start getting paid for the work.</h1>
+    <p class="lead">Minutely sits in on your meetings and sends you clean notes, decisions and assigned action items before you have closed the laptop.</p>
+    <div class="cta">
+      <a class="btn" href="#trial">Start your free 14-day trial</a>
+      <a class="btn ghost" href="#how">See how it works</a>
+    </div>
+    <p class="fine">No credit card. Works with Zoom, Google Meet and Teams. Set up in 2 minutes.</p>
+  </div>
+
+  <div class="card demo" role="img" aria-label="Example Minutely meeting summary with decisions and action items">
+    <div class="top"><span><b>Q4 campaign kickoff</b> &middot; Brightside Coffee</span><span class="tag">Notes ready</span></div>
+    <h4>Summary</h4>
+    <p style="font-size:.93rem">Client approved the holiday concept. Budget stays at $18k; launch moves up to Nov 20.</p>
+    <h4>Decisions</h4>
+    <ul>
+      <li>Go with the "Warm Up" creative direction</li>
+      <li>Paid social first, email second</li>
+    </ul>
+    <h4>Action items</h4>
+    <ul>
+      <li><span class="box"></span>Send revised timeline to client<span class="who">Priya &middot; Fri</span></li>
+      <li><span class="box"></span>Draft 3 ad variants<span class="who">Marcus &middot; Mon</span></li>
+      <li><span class="box"></span>Share brand assets folder<span class="who">Client &middot; Wed</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="proof">
+  <div class="wrap">
+    <div><strong>6 hrs</strong><span>saved per person, per week*</span></div>
+    <div><strong>0</strong><span>"what did we agree?" emails</span></div>
+    <div><strong>2 min</strong><span>average time to notes after a call</span></div>
+    <div><strong>40+</strong><span>languages understood</span></div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <h2>Agency meetings are where things get lost</h2>
+      <p>Ten clients, five calls a day, and nobody remembers who promised what.</p>
+    </div>
+    <div class="pain">
+      <div class="card"><h3>Notes eat your afternoon</h3><p>Your best people spend hours turning call recordings into recaps instead of doing client work.</p></div>
+      <div class="card"><h3>Action items slip</h3><p>A task said out loud on a call but never written down is a missed deadline waiting to happen.</p></div>
+      <div class="card"><h3>Scope creep hides in memory</h3><p>Without a clear record, "I thought you said" turns into unpaid revisions.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how" style="background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="head"><h2>Three steps. Zero typing.</h2></div>
+    <div class="steps">
+      <div class="step"><h3>Connect your calendar</h3><p>Minutely joins your scheduled calls automatically, or you can invite it to any meeting with one click.</p></div>
+      <div class="step"><h3>Have your meeting</h3><p>Talk to your client like normal. Minutely listens, tracks who said what and spots commitments.</p></div>
+      <div class="step"><h3>Get notes and tasks</h3><p>A summary, decisions and owner-assigned action items land in your inbox and your project tool.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="alt">
+  <div class="wrap">
+    <div class="head"><h2>Everything an agency needs from a meeting</h2><p>Not another generic transcription tool. Minutely understands how agency work runs.</p></div>
+    <div class="feats">
+      <div class="feat"><span class="ic" aria-hidden="true">&#9998;</span><h3>Client-ready recaps</h3><p>Send a polished summary to the client in one click, under your agency's name.</p></div>
+      <div class="feat"><span class="ic" aria-hidden="true">&#10003;</span><h3>Action items with owners and dates</h3><p>Every commitment is captured, assigned and given a due date from the conversation.</p></div>
+      <div class="feat"><span class="ic" aria-hidden="true">&#8644;</span><h3>Sync to your tools</h3><p>Push tasks to Asana, ClickUp, Trello, Notion or Slack automatically.</p></div>
+      <div class="feat"><span class="ic" aria-hidden="true">&#128269;</span><h3>Searchable by client</h3><p>Find what Brightside decided in March in seconds, not scrolling through old emails.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head"><h2>Agency owners get their time back</h2></div>
+    <div class="quotes">
+      <div class="card quote"><p>"We used to lose Monday mornings to recaps. Now the notes are in my inbox before the client has even hung up."</p><footer><b>Dana R.</b>Founder, 6-person brand studio</footer></div>
+      <div class="card quote"><p>"The action items alone paid for it. Nothing slips and nobody asks what we agreed on."</p><footer><b>Tomas L.</b>Owner, performance marketing shop</footer></div>
+      <div class="card quote"><p>"Clients love getting a tidy recap the same day. It makes a small team look very organized."</p><footer><b>Aisha K.</b>Managing partner, content agency</footer></div>
+    </div>
+    <p class="fine" style="text-align:center;margin-top:18px">*Sample testimonials and figures shown for illustration; replace with real customer data before launch.</p>
+  </div>
+</section>
+
+<section id="pricing" style="background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="head"><h2>Simple pricing for small teams</h2><p>One plan. Everyone on your team included.</p></div>
+    <div class="card pricing">
+      <h3>Agency plan</h3>
+      <div class="price">$49<small> / month, up to 10 people</small></div>
+      <ul>
+        <li>Unlimited meetings and recordings</li>
+        <li>Notes, decisions and action items</li>
+        <li>Client-ready recaps</li>
+        <li>Asana, ClickUp, Trello, Notion, Slack</li>
+        <li>Cancel anytime</li>
+      </ul>
+      <a class="btn" href="#trial">Start free for 14 days</a>
+      <p class="fine">No credit card required.</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap faq">
+    <div class="head"><h2>Questions agency owners ask</h2></div>
+    <details><summary>Will my clients know a bot is in the meeting?</summary><p>Minutely shows as a named participant and can post a short notice in the chat. You control this in settings.</p></details>
+    <details><summary>How accurate are the notes?</summary><p>Every action item links back to the exact moment in the call, so you can verify anything in a click and edit before sending.</p></details>
+    <details><summary>Is our client data secure?</summary><p>Recordings and notes are encrypted, never used to train models, and you can delete any meeting at any time.</p></details>
+    <details><summary>What happens after the trial?</summary><p>Nothing unless you choose to continue. We do not ask for a card to start, so there is nothing to cancel.</p></details>
+  </div>
+</section>
+
+<section id="trial" style="padding-top:0">
+  <div class="wrap">
+    <div class="final">
+      <h2>Your next client call can write its own notes</h2>
+      <p>Try Minutely free for 14 days. Set up in two minutes, no card needed.</p>
+      <form class="trial" onsubmit="event.preventDefault();this.querySelector('button').textContent='Check your inbox!';">
+        <label for="email" style="position:absolute;left:-9999px">Work email</label>
+        <input id="email" type="email" required placeholder="you@youragency.com" autocomplete="email">
+        <button class="btn" type="submit">Start free trial</button>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site wrap">&copy; 2026 Minutely. Made for agencies that would rather be making things.</footer>
+</body>
+</html>

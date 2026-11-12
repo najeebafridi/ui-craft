@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minutely: meeting notes and action items for marketing agencies</title>
+<meta name="description" content="Minutely writes your client meeting notes and action items, so your team stops typing recaps and starts doing the work. Start a free trial.">
+<!--
+Design brief
+Product: AI meeting notes + action items for small marketing agencies (owners of 5-25 person shops)
+Tone: calm, practical, a little warm      Density: spacious marketing (16-18px body)
+Accent: deep teal #0F766E                 Neutrals: warm stone
+Font: Georgia-family serif for headings + system sans for text (no downloads)   Radius: 8px
+Primary task: agency owner starts a free trial (one solid button, repeated hero + end)
+-->
+<style>
+:root {
+  color-scheme: light;
+  --bg: #FAFAF7;
+  --surface: #FFFFFF;
+  --surface-2: #F2F1EC;
+  --border: #E4E2DA;
+  --border-strong: #8A8678;
+  --text: #1C1B17;
+  --text-muted: #55524A;
+  --text-subtle: #6B675D;
+  --accent: #0F766E;
+  --accent-hover: #115E59;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #E6F4F1;
+  --accent-text: #0F5F58;
+  --warning-soft: #FEF3C7;
+  --warning-text: #92400E;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-raised: 0 1px 2px rgb(28 27 23 / 0.06), 0 1px 3px rgb(28 27 23 / 0.10);
+  --shadow-overlay: 0 4px 6px rgb(28 27 23 / 0.05), 0 16px 40px rgb(28 27 23 / 0.12);
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 1rem/1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { margin: 0; font-family: var(--font-serif); font-weight: 600; text-wrap: balance; color: var(--text); }
+h1 { font-size: clamp(2.25rem, 1.4rem + 3.6vw, 3.75rem); line-height: 1.08; letter-spacing: -0.025em; }
+h2 { font-size: clamp(1.875rem, 1.4rem + 1.8vw, 2.25rem); line-height: 1.15; letter-spacing: -0.02em; }
+h3 { font-size: 1.25rem; line-height: 1.3; letter-spacing: -0.01em; }
+p { margin: 0; text-wrap: pretty; }
+a { color: var(--accent-text); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
+@media (min-width: 640px) { .wrap { padding-inline: 24px; } }
+@media (min-width: 1024px) { .wrap { padding-inline: 32px; } }
+
+.skip { position: absolute; left: 16px; top: -64px; background: var(--text); color: #fff; padding: 8px 16px; border-radius: var(--radius); z-index: 500; }
+.skip:focus { top: 8px; min-height: 44px; display: inline-flex; align-items: center; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 24px; border-radius: var(--radius);
+  font: 500 1rem/1 var(--font-sans); text-decoration: none; cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 120ms var(--ease-out), border-color 120ms var(--ease-out), transform 120ms var(--ease-out);
+}
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+.btn-secondary:hover { background: var(--surface-2); }
+.btn-sm { min-height: 40px; padding: 0 16px; font-size: 0.875rem; }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: .6; cursor: not-allowed; }
+
+/* Header */
+header.site { position: sticky; top: 0; z-index: 100; background: rgb(250 250 247 / 0.96); border-bottom: 1px solid var(--border); }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 64px; }
+.logo { display: inline-flex; align-items: center; gap: 8px; font: 600 1.25rem/1 var(--font-serif); color: var(--text); text-decoration: none; letter-spacing: -0.01em; min-height: 44px; }
+.logo svg { width: 24px; height: 24px; }
+.nav-links { display: none; gap: 32px; list-style: none; margin: 0; padding: 0; }
+.nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; display: inline-flex; min-height: 44px; align-items: center; }
+.nav-links a:hover { color: var(--text); }
+.nav-cta { display: flex; align-items: center; gap: 16px; }
+.nav-cta .signin { display: none; font-size: 0.875rem; font-weight: 500; color: var(--text-muted); text-decoration: none; min-height: 44px; align-items: center; }
+@media (min-width: 1024px) { .nav-links { display: flex; } .nav-cta .signin { display: inline-flex; } }
+
+section { padding-block: 64px; }
+@media (min-width: 1024px) { section { padding-block: 96px; } }
+
+/* Hero */
+.hero { padding-block: 48px 64px; }
+@media (min-width: 1024px) { .hero { padding-block: 80px 96px; } }
+.hero-grid { display: grid; gap: 48px; align-items: center; }
+@media (min-width: 1024px) { .hero-grid { grid-template-columns: 5fr 6fr; gap: 64px; } }
+.hero-copy { display: grid; gap: 24px; justify-items: start; }
+.lead { font-size: 1.125rem; line-height: 1.6; color: var(--text-muted); max-width: 52ch; }
+@media (min-width: 640px) { .lead { font-size: 1.25rem; line-height: 1.5; } }
+
+.signup { display: grid; gap: 12px; width: 100%; max-width: 480px; }
+.signup .row { display: grid; gap: 12px; }
+@media (min-width: 640px) { .signup .row { grid-template-columns: 1fr auto; } }
+.field-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.input {
+  min-height: 48px; padding: 0 16px; width: 100%; min-width: 0;
+  font: 400 1rem/1.5 var(--font-sans); color: var(--text);
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius);
+}
+.input::placeholder { color: var(--text-subtle); }
+.input:hover { border-color: var(--text-muted); }
+.input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
+.input[aria-invalid="true"] { border-color: #B91C1C; }
+.err { display: none; align-items: center; gap: 8px; color: #B91C1C; font-size: 0.875rem; }
+.err svg { width: 16px; height: 16px; flex: none; }
+.err.show { display: flex; }
+.success { display: none; align-items: flex-start; gap: 12px; padding: 16px; border-radius: var(--radius); background: var(--accent-soft); color: var(--accent-text); font-weight: 500; }
+.success.show { display: flex; }
+.success svg { width: 20px; height: 20px; flex: none; margin-top: 2px; }
+.assure { display: flex; flex-wrap: wrap; gap: 8px 16px; list-style: none; margin: 0; padding: 0; font-size: 0.875rem; color: var(--text-muted); }
+.assure li { display: inline-flex; align-items: center; gap: 8px; }
+.assure svg { width: 16px; height: 16px; color: var(--accent); flex: none; }
+
+/* Product mock */
+.mock-wrap { position: relative; min-width: 0; }
+.mock { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-overlay); overflow: hidden; }
+.mock-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface-2); font-size: 0.875rem; }
+.mock-bar strong { font-weight: 600; }
+.mock-bar span { color: var(--text-muted); }
+.mock-body { padding: 24px; display: grid; gap: 24px; }
+.mock .mh { margin: 0 0 8px; font: 600 0.75rem/1.2 var(--font-sans); color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; }
+.mock p { font-size: 0.875rem; line-height: 1.6; color: var(--text); }
+.mock-title { font: 600 1.125rem/1.3 var(--font-serif); margin-bottom: 4px; }
+.mock-meta { font-size: 0.875rem; color: var(--text-muted); }
+.tasks { list-style: none; margin: 0; padding: 0; display: grid; }
+.tasks li { display: grid; grid-template-columns: 20px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--border); font-size: 0.875rem; align-items: start; }
+.tasks li:first-child { border-top: 0; padding-top: 0; }
+.box { width: 20px; height: 20px; border: 1.5px solid var(--border-strong); border-radius: 4px; margin-top: 0; }
+.task-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; color: var(--text-muted); font-size: 0.75rem; }
+.chip { display: inline-flex; align-items: center; padding: 0 8px; min-height: 20px; border-radius: 4px; background: var(--accent-soft); color: var(--accent-text); font-weight: 500; }
+.chip.due { background: var(--warning-soft); color: var(--warning-text); }
+.sample-note { margin-top: 12px; font-size: 0.75rem; color: var(--text-subtle); }
+
+/* Section heads */
+.section-head { display: grid; gap: 16px; max-width: 680px; margin-bottom: 48px; }
+.section-head p { font-size: 1.125rem; color: var(--text-muted); line-height: 1.6; }
+
+/* Problem band */
+.band { background: var(--surface-2); }
+.problem { display: grid; gap: 32px; }
+@media (min-width: 1024px) { .problem { grid-template-columns: 5fr 6fr; gap: 64px; align-items: start; } }
+.pain { display: grid; gap: 24px; }
+.pain p { font-size: 1.125rem; line-height: 1.6; color: var(--text-muted); max-width: 60ch; }
+.pain p strong { color: var(--text); font-weight: 600; }
+
+/* How it works */
+.steps { display: grid; gap: 32px; list-style: none; margin: 0; padding: 0; counter-reset: step; }
+@media (min-width: 1024px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 48px; } }
+.steps li { display: grid; gap: 12px; align-content: start; border-top: 2px solid var(--text); padding-top: 16px; counter-increment: step; }
+.steps li::before { content: "0" counter(step); font: 600 0.875rem/1 var(--font-sans); color: var(--accent-text); font-variant-numeric: tabular-nums; }
+.steps p { color: var(--text-muted); max-width: 40ch; }
+
+/* Features: alternating rows */
+.feature { display: grid; gap: 32px; align-items: center; }
+.feature + .feature { margin-top: 64px; }
+@media (min-width: 1024px) {
+  .feature { grid-template-columns: 1fr 1fr; gap: 64px; }
+  .feature + .feature { margin-top: 96px; }
+  .feature.flip .feature-copy { order: 2; }
+}
+.feature-copy { display: grid; gap: 16px; justify-items: start; }
+.feature-copy p { color: var(--text-muted); font-size: 1.125rem; line-height: 1.6; max-width: 52ch; }
+.ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ticks li { display: grid; grid-template-columns: 20px 1fr; gap: 12px; color: var(--text); }
+.ticks svg { width: 20px; height: 20px; color: var(--accent); margin-top: 2px; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-raised); display: grid; gap: 16px; min-width: 0; }
+.panel .label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; }
+.email { display: grid; gap: 12px; font-size: 0.875rem; line-height: 1.6; }
+.email .hdr { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+.email .hdr b { color: var(--text); font-weight: 600; }
+.email ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.mapping { display: grid; gap: 0; font-size: 0.875rem; }
+.mapping .r { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px 0; border-top: 1px solid var(--border); align-items: center; }
+.mapping .r:first-child { border-top: 0; }
+.mapping .r span:last-child { color: var(--text-muted); text-align: right; }
+
+/* FAQ */
+.faq-grid { display: grid; gap: 32px; }
+@media (min-width: 1024px) { .faq-grid { grid-template-columns: 4fr 7fr; gap: 64px; } }
+.faq { display: grid; }
+.faq details { border-top: 1px solid var(--border); }
+.faq details:last-child { border-bottom: 1px solid var(--border); }
+.faq summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; padding: 12px 0; cursor: pointer; font-weight: 600; font-size: 1.125rem; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: ""; width: 12px; height: 12px; flex: none; border-right: 2px solid var(--text-muted); border-bottom: 2px solid var(--text-muted); transform: rotate(45deg); transition: transform 200ms var(--ease-out); margin-right: 4px; }
+.faq details[open] summary::after { transform: rotate(-135deg); }
+.faq summary:hover { color: var(--accent-text); }
+.faq .answer { padding: 0 32px 24px 0; color: var(--text-muted); max-width: 62ch; line-height: 1.6; }
+
+/* Final CTA */
+.cta { background: #123B37; color: #fff; }
+.cta h2 { color: #fff; }
+.cta-grid { display: grid; gap: 32px; }
+@media (min-width: 1024px) { .cta-grid { grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; } }
+.cta p.sub { color: #C9E3DF; font-size: 1.125rem; line-height: 1.6; max-width: 48ch; }
+.cta .btn-primary { background: #fff; color: #0B4A44; }
+.cta .btn-primary:hover { background: #E6F4F1; }
+.cta .input { border-color: #fff; }
+.cta .assure { color: #C9E3DF; }
+.cta .assure svg { color: #7DD3C8; }
+.cta .err { color: #FECACA; }
+.cta .success { background: #0F4A44; color: #fff; }
+.cta :focus-visible { outline-color: #fff; }
+.cta .cta-copy { display: grid; gap: 16px; }
+
+footer { padding-block: 48px; border-top: 1px solid var(--border); font-size: 0.875rem; color: var(--text-muted); }
+.foot { display: flex; flex-wrap: wrap; gap: 24px 32px; justify-content: space-between; align-items: center; }
+.foot ul { display: flex; flex-wrap: wrap; gap: 0 24px; list-style: none; margin: 0; padding: 0; }
+.foot a { color: var(--text-muted); display: inline-flex; min-height: 44px; min-width: 44px; align-items: center; }
+
+/* Signature motion: hero action items check off once */
+@keyframes tick { from { background: var(--surface); } to { background: var(--accent); border-color: var(--accent); } }
+@keyframes tickmark { from { opacity: 0; } to { opacity: 1; } }
+.tasks .box { position: relative; }
+.tasks .box::after { content: ""; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); opacity: 0; }
+.tasks li.done .box { background: var(--accent); border-color: var(--accent); }
+.tasks li.done .box::after { opacity: 1; }
+.tasks .box { transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out); }
+.tasks .box::after { transition: opacity 200ms var(--ease-out); }
+
+@media (max-width: 640px), (pointer: coarse) {
+  .btn, .input { min-height: 48px; }
+  .input { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 6v5M10 13.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+</svg>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="Minutely home">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="6" fill="#0F766E"/><path d="M7 16V8l5 5 5-5v8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Minutely
+    </a>
+    <nav aria-label="Main">
+      <ul class="nav-links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <div class="nav-cta">
+      <a class="signin" href="#">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="#trial">Start free trial</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1>Your client call ends. The notes are already written.</h1>
+        <p class="lead">Minutely listens to your meetings, then writes the recap and pulls out every action item with an owner and a due date. Your team stops typing notes and starts on the work.</p>
+        <form class="signup" id="trial" novalidate data-signup>
+          <div class="row">
+            <div>
+              <label class="field-label" for="email-1">Work email</label>
+              <input class="input" id="email-1" type="email" name="email" placeholder="you@youragency.com" autocomplete="email" required aria-describedby="err-1">
+            </div>
+            <button class="btn btn-primary" type="submit">Start free trial</button>
+          </div>
+          <p class="err" id="err-1" role="alert"><svg aria-hidden="true"><use href="#i-alert"/></svg><span>Enter a work email like you@youragency.com so we can set up your trial.</span></p>
+          <p class="success" role="status"><svg aria-hidden="true"><use href="#i-check"/></svg><span>You are on the list. Check your inbox for a link to start your trial.</span></p>
+          <ul class="assure">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Free trial</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>No credit card to start</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Works with Zoom, Meet and Teams</li>
+          </ul>
+        </form>
+      </div>
+
+      <div class="mock-wrap">
+        <div class="mock" role="img" aria-label="Sample Minutely output: a meeting summary, three decisions, and four action items with owners and due dates">
+          <div class="mock-bar"><strong>Meeting notes</strong><span class="num">Written in under a minute</span></div>
+          <div class="mock-body">
+            <div>
+              <p class="mock-title">Harbor Coffee: Q1 launch campaign kickoff</p>
+              <p class="mock-meta num">12 Nov 2026 &middot; 32 min &middot; 4 attendees</p>
+            </div>
+            <div>
+              <div class="mh">Summary</div>
+              <p>Harbor Coffee wants the spring blend launch live by 3 March. The client prefers short video over static ads and will approve creative in one round, by 20 Feb.</p>
+            </div>
+            <div>
+              <div class="mh">Action items</div>
+              <ul class="tasks" id="demo-tasks">
+                <li><span class="box"></span><div>Send revised media plan to Dana at Harbor<div class="task-meta"><span class="chip">Priya</span><span class="chip due num">Fri 14 Nov</span></div></div></li>
+                <li><span class="box"></span><div>Draft three 15-second video concepts<div class="task-meta"><span class="chip">Marcus</span><span class="chip due num">Wed 19 Nov</span></div></div></li>
+                <li><span class="box"></span><div>Confirm influencer budget with finance<div class="task-meta"><span class="chip">Sam</span><span class="chip due num">Mon 17 Nov</span></div></div></li>
+                <li><span class="box"></span><div>Book creative review call for 20 Feb<div class="task-meta"><span class="chip">Priya</span><span class="chip due num">Tue 18 Nov</span></div></div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <p class="sample-note">Sample output with made-up client and team names.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="band" aria-labelledby="problem-h">
+    <div class="wrap problem">
+      <h2 id="problem-h">Every client call creates an hour of admin nobody bills for.</h2>
+      <div class="pain">
+        <p>Someone has to write the recap, chase the decisions, and remember who promised what. In a small agency, that someone is usually you or your best account manager.</p>
+        <p>When it slips, the client notices. <strong>A missed follow-up looks like a missed deadline</strong>, and the thread of who said what lives only in one person's head.</p>
+        <p>Minutely takes that job off your team's plate and keeps a clean, searchable record of every client conversation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="how-h">Three steps, and the second one is nothing.</h2>
+        <p>There is no template to fill in and no habit to build. Connect your calendar once and Minutely does the rest.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <h3>Connect your calendar</h3>
+          <p>Minutely joins your Zoom, Google Meet and Teams calls on its own. Pick which meetings it should skip, such as one-to-ones.</p>
+        </li>
+        <li>
+          <h3>Have your meeting</h3>
+          <p>Talk the way you always do. Nobody needs to take notes, and nobody needs to remember to press record.</p>
+        </li>
+        <li>
+          <h3>Review and send</h3>
+          <p>A summary, the decisions and the action items land in your inbox. Edit anything, then share it with the client in one click.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="band" id="features" aria-labelledby="feat-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="feat-h">Built around how agencies actually work.</h2>
+        <p>Generic note takers write for any meeting. Minutely is tuned for client calls, briefs, reviews and the follow-ups that come after.</p>
+      </div>
+
+      <div class="feature">
+        <div class="feature-copy">
+          <h3>Action items with an owner and a date</h3>
+          <p>Minutely listens for commitments, not just topics. Each task is assigned to the person who said they would do it, with the due date they agreed to.</p>
+          <ul class="ticks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Tasks stay unassigned if the owner was unclear, so nothing is guessed</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Send tasks to your project tool or copy them out as a list</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <span class="label">Needs your eye</span>
+          <div class="mapping" role="list">
+            <div class="r" role="listitem"><span>Share brand guidelines with the client</span><span>Owner unclear</span></div>
+            <div class="r" role="listitem"><span>Update the content calendar for March</span><span class="num">Marcus &middot; Thu 20 Nov</span></div>
+            <div class="r" role="listitem"><span>Send invoice for November retainer</span><span class="num">Sam &middot; Mon 17 Nov</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature flip">
+        <div class="feature-copy">
+          <h3>A client-ready recap in one click</h3>
+          <p>Skip rewriting your notes into an email. Minutely drafts a short follow-up in your tone that clients can read in 30 seconds: what was decided, what happens next, and who does it.</p>
+          <ul class="ticks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Internal chatter stays out of the version you share</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You approve every recap before it leaves</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <span class="label">Draft follow-up</span>
+          <div class="email">
+            <div class="hdr"><span>To: <b>Dana Whitfield</b></span><span>Subject: <b>Recap and next steps from today</b></span></div>
+            <p>Hi Dana, thanks for the time today. Here is where we landed:</p>
+            <ul>
+              <li>Spring blend launch goes live on 3 March.</li>
+              <li>We will lead with short video; three concepts to you by 19 Nov.</li>
+              <li>One round of creative feedback, due 20 Feb.</li>
+            </ul>
+            <p>Shout if I missed anything.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-copy">
+          <h3>Every client conversation, searchable</h3>
+          <p>Ask "what did we agree on the budget?" and get the answer with the call it came from. New starters can catch up on an account without booking time with you.</p>
+          <ul class="ticks">
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>One folder per client, created automatically</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>You choose who on your team can see which client</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <span class="label">Ask your meetings</span>
+          <div class="email">
+            <p><b>What did Harbor Coffee say about video length?</b></p>
+            <p>They want 15-second cuts for social, with one 30-second version for pre-roll. Raised by Dana on the 12 Nov kickoff call.</p>
+            <p style="color:var(--text-subtle);font-size:0.75rem">Source: Harbor Coffee kickoff, 12 Nov 2026</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" aria-labelledby="faq-h">
+    <div class="wrap faq-grid">
+      <div class="section-head" style="margin-bottom:0">
+        <h2 id="faq-h">Questions owners ask before they start.</h2>
+        <p>Something missing? Ask us at <a href="mailto:hello@minutely.example">hello@minutely.example</a>.</p>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Do my clients need to know it is there?</summary>
+          <p class="answer">Minutely shows as a named participant in the call, and you can add a line to your invite. Most agencies tell clients up front that notes are taken automatically. Check the recording rules where you and your clients are based.</p>
+        </details>
+        <details>
+          <summary>How accurate are the notes?</summary>
+          <p class="answer">Good enough to send after a quick read, not good enough to send blind. That is why every recap and task list goes to you for review first, and why unclear owners are flagged instead of guessed.</p>
+        </details>
+        <details>
+          <summary>What happens to our meeting data?</summary>
+          <p class="answer">Your recordings and notes belong to you. You can delete any meeting at any time, and you can choose to keep audio or transcripts only for a set period.</p>
+        </details>
+        <details>
+          <summary>Which tools does it work with?</summary>
+          <p class="answer">Zoom, Google Meet and Microsoft Teams, plus Google and Outlook calendars. Tasks can be copied out as a list or sent to your project tool.</p>
+        </details>
+        <details>
+          <summary>What does the free trial include?</summary>
+          <p class="answer">Everything. You can try it on real client meetings with your whole team, and you do not need a credit card to begin.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="cta" aria-labelledby="cta-h">
+    <div class="wrap cta-grid">
+      <div class="cta-copy">
+        <h2 id="cta-h">Run your next client call without a notepad.</h2>
+        <p class="sub">Start a free trial and let Minutely write up your next meeting. If the notes are not better than what you write by hand, you have lost nothing.</p>
+      </div>
+      <form class="signup" novalidate data-signup>
+        <div class="row">
+          <div>
+            <label class="field-label" for="email-2">Work email</label>
+            <input class="input" id="email-2" type="email" name="email" placeholder="you@youragency.com" autocomplete="email" required aria-describedby="err-2">
+          </div>
+          <button class="btn btn-primary" type="submit">Start free trial</button>
+        </div>
+        <p class="err" id="err-2" role="alert"><svg aria-hidden="true"><use href="#i-alert"/></svg><span>Enter a work email like you@youragency.com so we can set up your trial.</span></p>
+        <p class="success" role="status"><svg aria-hidden="true"><use href="#i-check"/></svg><span>You are on the list. Check your inbox for a link to start your trial.</span></p>
+        <ul class="assure">
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>No credit card to start</li>
+          <li><svg aria-hidden="true"><use href="#i-check"/></svg>Set up in minutes</li>
+        </ul>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>&copy; 2026 Minutely</span>
+    <ul>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="mailto:hello@minutely.example">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  document.querySelectorAll('[data-signup]').forEach(function (form) {
+    var input = form.querySelector('input'), err = form.querySelector('.err'),
+        ok = form.querySelector('.success'), btn = form.querySelector('button');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!re.test(input.value.trim())) {
+        err.classList.add('show'); input.setAttribute('aria-invalid', 'true'); input.focus(); return;
+      }
+      err.classList.remove('show'); input.removeAttribute('aria-invalid');
+      /* Demo only: wire this to your sign-up endpoint. */
+      btn.disabled = true; btn.textContent = 'Sending...';
+      setTimeout(function () {
+        form.querySelector('.row').style.display = 'none';
+        ok.classList.add('show');
+      }, 400);
+    });
+    input.addEventListener('input', function () {
+      err.classList.remove('show'); input.removeAttribute('aria-invalid');
+    });
+  });
+
+  /* One signature motion: hero action items tick off once, then stay. */
+  var items = document.querySelectorAll('#demo-tasks li');
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    items.forEach(function (li, i) { setTimeout(function () { li.classList.add('done'); }, 900 + i * 450); });
+  }
+})();
+</script>
+</body>
+</html>

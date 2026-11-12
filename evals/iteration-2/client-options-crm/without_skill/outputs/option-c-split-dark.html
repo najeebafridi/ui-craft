@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Option C - Split View Dark</title>
+<style>
+:root{--bg:#0e1116;--panel:#161b22;--panel2:#1c232c;--ink:#e6edf3;--mute:#8b98a7;--line:#262e38;--brand:#3ddc97}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:16px;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+.top b{color:var(--brand)}.top input{flex:1;max-width:420px;background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:8px 12px;border-radius:8px;font:inherit}
+.top button{margin-left:auto;background:var(--brand);color:#06281a;border:0;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer}
+.wrap{flex:1;display:grid;grid-template-columns:340px 1fr;min-height:0}
+.list{border-right:1px solid var(--line);overflow:auto;background:var(--panel)}
+.filters{display:flex;gap:6px;padding:12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.f{padding:4px 10px;border-radius:6px;background:var(--panel2);color:var(--mute);font-size:12px}.f.on{background:var(--brand);color:#06281a;font-weight:700}
+.item{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+.item.sel{background:var(--panel2);box-shadow:inset 3px 0 var(--brand)}
+.av{width:38px;height:38px;border-radius:10px;background:#24303d;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--brand);flex-shrink:0}
+.item small{color:var(--mute);display:block}.item .t{margin-left:auto;color:var(--mute);font-size:12px}
+.detail{padding:32px;overflow:auto}
+.dh{display:flex;gap:18px;align-items:center;margin-bottom:24px}
+.dh .av{width:68px;height:68px;font-size:22px;border-radius:18px}
+.dh h1{margin:0;font-size:26px}.dh p{margin:2px 0 0;color:var(--mute)}
+.acts{display:flex;gap:8px;margin-left:auto}.acts span{border:1px solid var(--line);padding:7px 12px;border-radius:8px;background:var(--panel)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.box h4{margin:0 0 10px;color:var(--mute);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.box div{padding:5px 0}.box span{color:var(--mute)}
+.tl div{border-left:2px solid var(--line);padding:0 0 12px 14px;margin-left:4px;position:relative}
+.tl div:before{content:"";position:absolute;left:-6px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--brand)}
+@media(max-width:760px){.wrap{grid-template-columns:1fr}.detail{display:none}}
+</style></head><body>
+<div class="top"><b>Harbor &amp; Key</b><input placeholder="Search contacts (Ctrl+K)"><button>+ New</button></div>
+<div class="wrap">
+<div class="list"><div class="filters"><span class="f on">All 248</span><span class="f">Buyers</span><span class="f">Sellers</span><span class="f">Renters</span><span class="f">Hot</span></div>
+<div class="item sel"><div class="av">SM</div><div>Sarah Mitchell<small>Buyer - 3BR, $650k</small></div><span class="t">Today</span></div>
+<div class="item"><div class="av">DO</div><div>David Okafor<small>Seller - 14 Elm St</small></div><span class="t">1d</span></div>
+<div class="item"><div class="av">LC</div><div>Lena Cho<small>Renter - 2BR downtown</small></div><span class="t">2d</span></div>
+<div class="item"><div class="av">MB</div><div>Marcus Bell<small>Investor - Multi-family</small></div><span class="t">4d</span></div>
+<div class="item"><div class="av">EV</div><div>Elena Vasquez<small>Buyer - Condo, $420k</small></div><span class="t">1w</span></div>
+<div class="item"><div class="av">RP</div><div>Robert Pham<small>Seller - 88 Cedar Ave</small></div><span class="t">1w</span></div>
+</div>
+<div class="detail">
+<div class="dh"><div class="av">SM</div><div><h1>Sarah Mitchell</h1><p>Buyer - assigned to Tom R. - Hot lead</p></div><div class="acts"><span>Call</span><span>Email</span><span>Edit</span></div></div>
+<div class="cols">
+<div class="box"><h4>Contact</h4><div><span>Phone</span> (555) 201-4432</div><div><span>Email</span> sarah.m@mail.com</div><div><span>Source</span> Website enquiry</div></div>
+<div class="box"><h4>Search criteria</h4><div><span>Type</span> House, 3BR+</div><div><span>Budget</span> up to $650k</div><div><span>Area</span> Northside, Lakeview</div></div>
+<div class="box tl"><h4>Activity</h4><div>Viewing booked: 22 Oak Rd, Sat 10:00</div><div>Emailed 3 new listings</div><div>Phone call, 12 min</div></div>
+</div></div></div></body></html>

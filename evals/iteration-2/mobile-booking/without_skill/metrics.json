@@ -1,0 +1,82 @@
+{
+  "index.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 23,
+      "contrastFails": 1,
+      "contrastFailSamples": [
+        {
+          "text": "Pick one service.",
+          "ratio": 4.38,
+          "size": 14
+        }
+      ],
+      "fontSizes": [
+        13,
+        14,
+        16,
+        17,
+        18,
+        22
+      ],
+      "minFontSize": 13,
+      "hasFocusStyle": true,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": false,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [],
+      "interactiveCount": 6,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.429,
+      "gradientElements": 1,
+      "gradientText": false,
+      "emojiCount": 5,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 9
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 23,
+      "contrastFails": 1,
+      "contrastFailSamples": [
+        {
+          "text": "Pick one service.",
+          "ratio": 4.38,
+          "size": 14
+        }
+      ],
+      "fontSizes": [
+        13,
+        14,
+        16,
+        17,
+        18,
+        22
+      ],
+      "minFontSize": 13,
+      "hasFocusStyle": true,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": false,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [],
+      "interactiveCount": 6,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.429,
+      "gradientElements": 1,
+      "gradientText": false,
+      "emojiCount": 5,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 9
+    }
+  }
+}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account settings</title>
+<style>
+:root{
+  --bg:#f7f8fa;--surface:#fff;--border:#e4e7ec;--text:#1a1d23;--muted:#667085;
+  --accent:#5b5bd6;--accent-hover:#4a4ac2;--danger:#d92d20;--success:#067647;
+  --ring:rgba(91,91,214,.25);--radius:8px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0f1115;--surface:#171a21;--border:#2a2f3a;--text:#edeff3;--muted:#98a2b3;
+  --accent:#8183f4;--accent-hover:#9a9cf8;--danger:#f97066;--success:#47cd89;--ring:rgba(129,131,244,.3)}
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.layout{display:flex;max-width:960px;margin:0 auto;padding:40px 24px;gap:48px}
+nav{width:180px;flex-shrink:0;position:sticky;top:40px;align-self:flex-start}
+nav h1{font-size:18px;margin:0 0 16px}
+nav a{display:block;padding:7px 10px;border-radius:6px;color:var(--muted);text-decoration:none;margin-bottom:2px}
+nav a:hover{background:var(--border);color:var(--text)}
+nav a.active{background:var(--border);color:var(--text);font-weight:500}
+main{flex:1;min-width:0}
+section{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:24px;scroll-margin-top:24px}
+.head{padding:20px 24px 0}
+.head h2{margin:0;font-size:16px}
+.head p{margin:4px 0 0;color:var(--muted)}
+form{padding:20px 24px 0}
+.field{margin-bottom:18px}
+label,.lbl{display:block;font-weight:500;margin-bottom:6px}
+input[type=text],input[type=email],input[type=password],select{
+  width:100%;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius);
+  background:var(--surface);color:var(--text);font:inherit}
+input:focus,select:focus,button:focus-visible,.switch input:focus-visible+span{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+input[aria-invalid=true]{border-color:var(--danger)}
+.hint{color:var(--muted);font-size:12.5px;margin-top:4px}
+.err{color:var(--danger);font-size:12.5px;margin-top:4px;min-height:0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.avatar-row{display:flex;align-items:center;gap:16px}
+.avatar{width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:22px;font-weight:600;overflow:hidden;flex-shrink:0}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.btn{height:36px;padding:0 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-weight:500;cursor:pointer}
+.btn:hover{background:var(--bg)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-hover)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.link{border:none;background:none;color:var(--danger);padding:0 8px}
+.foot{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:14px 24px;border-top:1px solid var(--border);margin:4px -24px 0}
+.status{margin-right:auto;font-size:13px;color:var(--success)}
+.meter{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;transition:width .2s,background .2s}
+.pw{position:relative}
+.pw button{position:absolute;right:4px;top:4px;height:30px;border:none;background:none;color:var(--muted);cursor:pointer;font:inherit;font-size:12.5px;padding:0 8px;border-radius:6px}
+.pw input{padding-right:60px}
+.pref{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)}
+.pref:last-of-type{border-bottom:none}
+.pref b{font-weight:500;display:block}
+.pref span.d{color:var(--muted);font-size:13px}
+.switch{position:relative;width:38px;height:22px;flex-shrink:0}
+.switch input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.switch span{position:absolute;inset:0;background:var(--border);border-radius:11px;transition:.15s;pointer-events:none}
+.switch span::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.switch input:checked+span{background:var(--accent)}
+.switch input:checked+span::after{transform:translateX(16px)}
+.group-title{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:8px 0 0;font-weight:600}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:8px;opacity:0;transition:.2s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:720px){
+  .layout{flex-direction:column;gap:16px;padding:20px 16px}
+  nav{position:static;width:auto;display:flex;gap:4px;overflow-x:auto}
+  nav h1{display:none}
+  nav a{white-space:nowrap;margin:0}
+  .row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav aria-label="Settings sections">
+    <h1>Settings</h1>
+    <a href="#profile" class="active">Profile</a>
+    <a href="#password">Password</a>
+    <a href="#notifications">Notifications</a>
+  </nav>
+  <main>
+    <section id="profile">
+      <div class="head"><h2>Profile</h2><p>How you appear to teammates across projects.</p></div>
+      <form id="profileForm" novalidate>
+        <div class="field">
+          <span class="lbl">Avatar</span>
+          <div class="avatar-row">
+            <div class="avatar" id="avatar" aria-hidden="true">AM</div>
+            <div>
+              <input type="file" id="avatarFile" accept="image/png,image/jpeg,image/webp" hidden>
+              <button type="button" class="btn" id="avatarBtn">Upload photo</button>
+              <button type="button" class="btn link" id="avatarRemove" hidden>Remove</button>
+              <div class="hint">PNG, JPG or WebP, up to 2 MB.</div>
+              <div class="err" id="avatarErr" role="alert"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="name">Full name</label>
+            <input type="text" id="name" value="Alex Morgan" autocomplete="name" required>
+            <div class="err" id="nameErr"></div></div>
+          <div class="field"><label for="email">Email</label>
+            <input type="email" id="email" value="alex@acme.io" autocomplete="email" required>
+            <div class="err" id="emailErr"></div></div>
+        </div>
+        <div class="field"><label for="tz">Timezone</label>
+          <select id="tz"></select>
+          <div class="hint" id="tzNow"></div></div>
+        <div class="foot">
+          <span class="status" id="profileStatus" role="status"></span>
+          <button type="button" class="btn" id="profileReset">Cancel</button>
+          <button type="submit" class="btn primary" id="profileSave" disabled>Save changes</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="password">
+      <div class="head"><h2>Change password</h2><p>Use at least 10 characters. You'll stay signed in on this device.</p></div>
+      <form id="pwForm" novalidate>
+        <div class="field"><label for="cur">Current password</label>
+          <div class="pw"><input type="password" id="cur" autocomplete="current-password"><button type="button" data-toggle="cur">Show</button></div>
+          <div class="err" id="curErr"></div></div>
+        <div class="field"><label for="new">New password</label>
+          <div class="pw"><input type="password" id="new" autocomplete="new-password"><button type="button" data-toggle="new">Show</button></div>
+          <div class="meter"><i id="meter"></i></div>
+          <div class="hint" id="strength">Mix letters, numbers and symbols.</div>
+          <div class="err" id="newErr"></div></div>
+        <div class="field"><label for="conf">Confirm new password</label>
+          <div class="pw"><input type="password" id="conf" autocomplete="new-password"><button type="button" data-toggle="conf">Show</button></div>
+          <div class="err" id="confErr"></div></div>
+        <div class="foot">
+          <span class="status" id="pwStatus" role="status"></span>
+          <button type="submit" class="btn primary">Update password</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="notifications">
+      <div class="head"><h2>Email notifications</h2><p>Choose what lands in your inbox. Changes save automatically.</p></div>
+      <form style="padding-bottom:12px" onsubmit="return false">
+        <p class="group-title">Activity</p>
+        <div class="pref"><div><b>Assigned to me</b><span class="d">When someone assigns you a task or issue.</span></div><label class="switch"><input type="checkbox" data-k="assigned" checked aria-label="Assigned to me"><span></span></label></div>
+        <div class="pref"><div><b>Mentions</b><span class="d">When you're @mentioned in a comment or description.</span></div><label class="switch"><input type="checkbox" data-k="mentions" checked aria-label="Mentions"><span></span></label></div>
+        <div class="pref"><div><b>Comments on my tasks</b><span class="d">New replies on tasks you created or follow.</span></div><label class="switch"><input type="checkbox" data-k="comments" aria-label="Comments on my tasks"><span></span></label></div>
+        <div class="pref"><div><b>Status changes</b><span class="d">When a task you follow moves to a new status.</span></div><label class="switch"><input type="checkbox" data-k="status" aria-label="Status changes"><span></span></label></div>
+        <p class="group-title">Summaries</p>
+        <div class="pref"><div><b>Due date reminders</b><span class="d">A reminder the day before a task is due.</span></div><label class="switch"><input type="checkbox" data-k="due" checked aria-label="Due date reminders"><span></span></label></div>
+        <div class="pref"><div><b>Weekly digest</b><span class="d">Monday summary of your projects' progress.</span></div><label class="switch"><input type="checkbox" data-k="digest" checked aria-label="Weekly digest"><span></span></label></div>
+        <div class="pref"><div><b>Product updates</b><span class="d">Occasional news about new features.</span></div><label class="switch"><input type="checkbox" data-k="product" aria-label="Product updates"><span></span></label></div>
+      </form>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const toast = msg => { const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'),2400); };
+const initials = n => n.trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase() || '?';
+
+/* Profile */
+let zones = [];
+try { zones = Intl.supportedValuesOf('timeZone'); } catch(e) {}
+if(!zones.length) zones = ['UTC','America/New_York','America/Chicago','America/Denver','America/Los_Angeles','Europe/London','Europe/Berlin','Asia/Kolkata','Asia/Tokyo','Australia/Sydney'];
+const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+if(!zones.includes(detected)) zones.unshift(detected);
+$('tz').innerHTML = zones.map(z=>`<option value="${z}">${z.replace(/_/g,' ')}</option>`).join('');
+$('tz').value = detected;
+
+let saved = {name:$('name').value, email:$('email').value, tz:$('tz').value, avatar:null};
+let avatar = null;
+
+function tzNow(){
+  try{ $('tzNow').textContent = 'Current time there: ' + new Date().toLocaleTimeString([], {timeZone:$('tz').value, hour:'numeric', minute:'2-digit'}); }catch(e){}
+}
+function renderAvatar(){
+  const a=$('avatar');
+  if(avatar){ a.innerHTML=''; const i=new Image(); i.src=avatar; i.alt=''; a.appendChild(i); }
+  else a.textContent = initials($('name').value);
+  $('avatarRemove').hidden = !avatar;
+}
+function dirty(){
+  const d = $('name').value!==saved.name || $('email').value!==saved.email || $('tz').value!==saved.tz || avatar!==saved.avatar;
+  $('profileSave').disabled = !d; $('profileStatus').textContent='';
+}
+function setErr(input, errEl, msg){ $(errEl).textContent=msg; input.setAttribute('aria-invalid', !!msg); if(msg) input.setAttribute('aria-describedby',errEl); }
+
+['name','email','tz'].forEach(id=>$(id).addEventListener('input',()=>{ if(id==='name') renderAvatar(); if(id==='tz') tzNow(); dirty(); }));
+$('avatarBtn').onclick = ()=>$('avatarFile').click();
+$('avatarRemove').onclick = ()=>{ avatar=null; $('avatarFile').value=''; renderAvatar(); dirty(); };
+$('avatarFile').onchange = e=>{
+  const f=e.target.files[0]; $('avatarErr').textContent=''; if(!f) return;
+  if(!/^image\/(png|jpeg|webp)$/.test(f.type)){ $('avatarErr').textContent='Please choose a PNG, JPG or WebP image.'; return; }
+  if(f.size>2*1024*1024){ $('avatarErr').textContent='Image must be under 2 MB.'; return; }
+  const r=new FileReader(); r.onload=()=>{ avatar=r.result; renderAvatar(); dirty(); }; r.readAsDataURL(f);
+};
+$('profileReset').onclick = ()=>{
+  $('name').value=saved.name; $('email').value=saved.email; $('tz').value=saved.tz; avatar=saved.avatar;
+  setErr($('name'),'nameErr',''); setErr($('email'),'emailErr',''); renderAvatar(); tzNow(); dirty();
+};
+$('profileForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const n=$('name').value.trim(), m=$('email').value.trim();
+  const nOk = n.length>0, mOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m);
+  setErr($('name'),'nameErr', nOk?'':'Enter your name.');
+  setErr($('email'),'emailErr', mOk?'':'Enter a valid email address.');
+  if(!nOk||!mOk){ (nOk?$('email'):$('name')).focus(); return; }
+  const b=$('profileSave'); b.disabled=true; b.textContent='Saving…';
+  setTimeout(()=>{ // simulated request
+    saved={name:n,email:m,tz:$('tz').value,avatar}; b.textContent='Save changes';
+    $('profileStatus').textContent='Saved'; b.disabled=true; toast('Profile updated');
+  },600);
+});
+renderAvatar(); tzNow(); setInterval(tzNow,30000);
+
+/* Password */
+document.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>{
+  const i=$(b.dataset.toggle), show=i.type==='password'; i.type=show?'text':'password'; b.textContent=show?'Hide':'Show';
+});
+function score(p){
+  let s=0; if(p.length>=10)s++; if(p.length>=14)s++; if(/[a-z]/.test(p)&&/[A-Z]/.test(p))s++; if(/\d/.test(p))s++; if(/[^A-Za-z0-9]/.test(p))s++;
+  return Math.min(s,4);
+}
+$('new').addEventListener('input',()=>{
+  const p=$('new').value, s=p?Math.max(1,score(p)):0;
+  const labels=['Mix letters, numbers and symbols.','Weak','Fair','Good','Strong'];
+  const cols=['transparent','#d92d20','#f79009','#99c24d','#12b76a'];
+  $('meter').style.width=(s*25)+'%'; $('meter').style.background=cols[s]; $('strength').textContent=labels[s];
+});
+$('pwForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const c=$('cur').value, n=$('new').value, f=$('conf').value;
+  const errs={cur:c?'':'Enter your current password.',
+    new:n.length<10?'Use at least 10 characters.':(n===c?'New password must differ from the current one.':''),
+    conf:f===n?'':'Passwords do not match.'};
+  if(!f&&!errs.conf.length) errs.conf='';
+  setErr($('cur'),'curErr',errs.cur); setErr($('new'),'newErr',errs.new); setErr($('conf'),'confErr',errs.conf);
+  const first=['cur','new','conf'].find(k=>errs[k]); if(first){ $(first).focus(); return; }
+  $('pwForm').reset(); $('new').dispatchEvent(new Event('input'));
+  document.querySelectorAll('[data-toggle]').forEach(b=>{$(b.dataset.toggle).type='password';b.textContent='Show'});
+  $('pwStatus').textContent='Password updated'; toast('Password updated');
+  setTimeout(()=>$('pwStatus').textContent='',4000);
+});
+
+/* Notifications: autosave */
+const KEY='notif-prefs';
+let prefs={}; try{ prefs=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){}
+document.querySelectorAll('[data-k]').forEach(c=>{
+  if(c.dataset.k in prefs) c.checked=prefs[c.dataset.k];
+  c.onchange=()=>{ prefs[c.dataset.k]=c.checked; try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch(e){} toast('Preference saved'); };
+});
+
+/* Nav highlight */
+const links=[...document.querySelectorAll('nav a')];
+const io=new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting) links.forEach(l=>l.classList.toggle('active',l.hash==='#'+en.target.id)); }),{rootMargin:'-30% 0px -60% 0px'});
+document.querySelectorAll('section').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

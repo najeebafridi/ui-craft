@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Book a visit - Mockup v1</title>
+<!--
+Design brief
+Product: booking screen in a barbershop chain's mobile app, used one-handed, often in a hurry
+Tone: confident, warm, no fuss          Density: touch (16px body, 44px+ targets)
+Accent: deep copper #9A4A0E             Neutrals: warm stone
+Font: system stack (SF / Roboto)        Radius: 8px controls, 12px groups
+Primary task: pick service, barber and time, then confirm
+Sample data: shops, barbers, prices and slots are made up.
+-->
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #FAF8F5;
+  --surface: #FFFFFF;
+  --surface-2: #F3EFEA;
+  --surface-3: #E7E1DA;
+  --border: #E7E1DA;
+  --border-strong: #8C857D;
+  --text: #1C1917;
+  --text-muted: #57534E;
+  --text-subtle: #6B645E;
+  --accent: #9A4A0E;
+  --accent-hover: #833F0B;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #FBF0E4;
+  --accent-text: #8A3F08;
+  --success: #15803D; --success-soft: #F0FDF4; --success-text: #166534;
+  --danger-text: #B91C1C;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px; --space-7: 48px;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius: 8px; --radius-lg: 12px;
+  --shadow-overlay: 0 4px 6px rgb(28 25 23 / .05), 0 12px 32px rgb(28 25 23 / .14);
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --bar-h: 112px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12100E; --surface: #1B1815; --surface-2: #25211D; --surface-3: #322D28;
+    --border: #2E2924; --border-strong: #6F675E;
+    --text: #EDE9E4; --text-muted: #B3ABA2; --text-subtle: #978F86;
+    --accent: #B45309; --accent-hover: #C2610F; --accent-fg: #FFFFFF;
+    --accent-soft: #2E1C0E; --accent-text: #F4B26B;
+    --success-soft: #052E16; --success-text: #86EFAC; --danger-text: #FCA5A5;
+    --shadow-overlay: 0 8px 32px rgb(0 0 0 / .5);
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 72px; scroll-padding-bottom: calc(var(--bar-h) + 16px); }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 16px/24px var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3, p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+button { touch-action: manipulation; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+svg { flex: none; }
+
+.app { max-width: 480px; margin: 0 auto; min-height: 100dvh; background: var(--bg); position: relative; }
+
+/* Top bar */
+.topbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: calc(var(--space-2) + env(safe-area-inset-top)) var(--space-4) var(--space-2) var(--space-2);
+  background: var(--bg); border-bottom: 1px solid var(--border);
+}
+.icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: none; border-radius: var(--radius); }
+.icon-btn:hover { background: var(--surface-2); }
+.icon-btn:active { background: var(--surface-3); }
+.topbar h1 { font-size: 18px; line-height: 24px; font-weight: 600; }
+.topbar .shop { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+
+main { padding: var(--space-5) var(--space-4) calc(var(--bar-h) + var(--space-5)); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.section-head h2 { font-size: 18px; line-height: 24px; font-weight: 600; display: flex; align-items: center; gap: var(--space-2); }
+.step {
+  width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 12px; line-height: 16px; font-weight: 600;
+  background: var(--surface-3); color: var(--text);
+}
+.section.done .step { background: var(--accent); color: var(--accent-fg); }
+.section-head .meta { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+
+/* Option cards (radio) */
+.options { display: grid; gap: var(--space-2); }
+.opt { position: relative; display: block; }
+.opt input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.opt .card {
+  display: flex; align-items: center; gap: var(--space-3);
+  min-height: 64px; padding: var(--space-3) var(--space-4);
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-lg);
+  transition: background-color 120ms var(--ease-out), border-color 120ms var(--ease-out);
+}
+.opt:hover .card { background: var(--surface-2); }
+.opt:active .card { background: var(--surface-3); }
+.opt:has(input:focus-visible) .card { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opt:has(input:checked) .card { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.card .grow { flex: 1; min-width: 0; }
+.card .title { font-weight: 600; }
+.card .sub { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.card .price { font-weight: 600; }
+.tick {
+  width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border-strong);
+  display: grid; place-items: center; color: transparent; flex: none;
+}
+.opt:has(input:checked) .tick { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+
+/* Barbers */
+.barbers { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+.barbers .card { flex-direction: column; align-items: flex-start; gap: var(--space-2); min-height: 120px; padding: var(--space-3) var(--space-4); }
+.barbers .top { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.avatar {
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--surface-3); color: var(--text); font-weight: 600; font-size: 16px;
+}
+.avatar.any { background: var(--surface-2); color: var(--text-muted); }
+.opt:has(input:checked) .avatar { background: var(--accent); color: var(--accent-fg); }
+.barbers .sub { display: block; }
+
+/* Day strip */
+.days { display: flex; gap: var(--space-2); overflow-x: auto; margin: 0 calc(var(--space-4) * -1); padding: 2px var(--space-4) var(--space-2); scroll-snap-type: x proximity; scroll-padding-left: var(--space-4); scrollbar-width: none; }
+.days::-webkit-scrollbar { display: none; }
+.day { position: relative; flex: none; scroll-snap-align: start; }
+.day input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.day .chip {
+  width: 56px; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  border: 1px solid var(--border-strong); border-radius: var(--radius-lg); background: var(--surface);
+  transition: background-color 120ms var(--ease-out);
+}
+.day .dow { font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.day .dnum { font-size: 20px; line-height: 28px; font-weight: 600; }
+.day:hover .chip { background: var(--surface-2); }
+.day:has(input:focus-visible) .chip { outline: 2px solid var(--accent); outline-offset: 2px; }
+.day:has(input:checked) .chip { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.day:has(input:checked) .dow { color: var(--accent-fg); }
+.day.closed .dnum { color: var(--text-subtle); font-weight: 400; }
+
+/* Slots */
+.slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); margin-top: var(--space-3); }
+.slot { position: relative; }
+.slot input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.slot .chip {
+  min-height: 48px; display: grid; place-items: center; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--border-strong); font-weight: 500;
+  transition: background-color 120ms var(--ease-out);
+}
+.slot:hover .chip { background: var(--surface-2); }
+.slot:active .chip { background: var(--surface-3); }
+.slot:has(input:focus-visible) .chip { outline: 2px solid var(--accent); outline-offset: 2px; }
+.slot:has(input:checked) .chip { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.slot:has(input:disabled) .chip { background: transparent; border-color: var(--border); color: var(--text-subtle); text-decoration: line-through; }
+.slot:has(input:disabled) input { cursor: not-allowed; }
+.legend { font-size: 14px; line-height: 20px; color: var(--text-muted); margin-top: var(--space-3); }
+
+.skel { height: 48px; border-radius: var(--radius); background: linear-gradient(90deg, var(--surface-2), var(--surface-3), var(--surface-2)); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+.empty { margin-top: var(--space-3); padding: var(--space-5) var(--space-4); border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); display: grid; gap: var(--space-3); justify-items: start; }
+.empty p { color: var(--text-muted); }
+.empty strong { color: var(--text); display: block; }
+
+/* Buttons */
+.btn {
+  min-height: 52px; padding: 0 var(--space-5); border-radius: var(--radius); border: 1px solid transparent;
+  font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  transition: background-color 120ms var(--ease-out);
+}
+.btn.primary { background: var(--accent); color: var(--accent-fg); width: 100%; }
+.btn.primary:hover { background: var(--accent-hover); }
+.btn.primary:active { filter: brightness(.92); }
+.btn.primary[aria-disabled="true"] { background: var(--surface-3); color: var(--text-muted); }
+.btn.primary[aria-busy="true"] { pointer-events: none; }
+.btn.secondary { background: transparent; border-color: var(--border-strong); color: var(--text); min-height: 48px; }
+.btn.secondary:hover { background: var(--surface-2); }
+.btn.text { background: none; color: var(--accent-text); min-height: 44px; padding: 0 var(--space-2); }
+.btn.text:hover { background: var(--surface-2); }
+.spinner { width: 20px; height: 20px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Action bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+  max-width: 480px; margin: 0 auto;
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+  background: var(--surface); border-top: 1px solid var(--border);
+  display: grid; gap: var(--space-3);
+}
+.summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); min-height: 40px; }
+.summary .what { min-width: 0; font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.summary .what b { display: block; color: var(--text); font-weight: 600; font-size: 16px; line-height: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.summary .total { font-size: 20px; line-height: 28px; font-weight: 600; }
+
+/* Confirmation */
+.done { padding: var(--space-7) var(--space-4) var(--space-6); display: grid; gap: var(--space-5); }
+.done[hidden], main[hidden], .bar[hidden] { display: none; }
+.badge { width: 64px; height: 64px; border-radius: 50%; background: var(--success-soft); color: var(--success-text); display: grid; place-items: center; border: 1px solid var(--success); }
+.done h2 { font-size: 24px; line-height: 32px; font-weight: 600; }
+.done .lead { color: var(--text-muted); margin-top: var(--space-2); }
+.receipt { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-2) var(--space-4); margin: 0; }
+.receipt div { display: flex; justify-content: space-between; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--border); }
+.receipt div:last-child { border-bottom: 0; }
+.receipt dt { color: var(--text-muted); }
+.receipt dd { margin: 0; font-weight: 600; text-align: right; }
+.done .actions { display: grid; gap: var(--space-2); }
+.note { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+
+.toast {
+  position: fixed; left: var(--space-4); right: var(--space-4); bottom: calc(var(--bar-h) + var(--space-3)); max-width: 448px; margin: 0 auto; z-index: 8;
+  background: var(--text); color: var(--bg); padding: var(--space-3) var(--space-4); border-radius: var(--radius); box-shadow: var(--shadow-overlay);
+  font-size: 14px; line-height: 20px; opacity: 0; transform: translateY(8px); pointer-events: none;
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+.toast.show { opacity: 1; transform: none; }
+
+@media (min-width: 641px) { body { background: var(--surface-2); } .app { box-shadow: 0 0 0 1px var(--border); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <button class="icon-btn" type="button" aria-label="Back" id="back">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div>
+      <h1>Book a visit</h1>
+      <p class="shop">Northside shop, 214 Mercer St</p>
+    </div>
+  </header>
+
+  <main id="flow">
+    <section class="section" id="sec-service" aria-labelledby="h-service">
+      <div class="section-head"><h2 id="h-service"><span class="step" aria-hidden="true">1</span>Choose a service</h2></div>
+      <div class="options" id="services" role="radiogroup" aria-labelledby="h-service"></div>
+    </section>
+
+    <section class="section" id="sec-barber" aria-labelledby="h-barber">
+      <div class="section-head"><h2 id="h-barber"><span class="step" aria-hidden="true">2</span>Choose a barber</h2></div>
+      <div class="barbers" id="barbers" role="radiogroup" aria-labelledby="h-barber"></div>
+    </section>
+
+    <section class="section" id="sec-time" aria-labelledby="h-time">
+      <div class="section-head"><h2 id="h-time"><span class="step" aria-hidden="true">3</span>Pick a time</h2><span class="meta" id="month">November 2026</span></div>
+      <div class="days" id="days" role="radiogroup" aria-label="Day"></div>
+      <div id="slot-area" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <section class="done" id="done" hidden aria-labelledby="done-h" tabindex="-1">
+    <div class="badge"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div>
+    <div>
+      <h2 id="done-h">You're booked</h2>
+      <p class="lead" id="done-lead"></p>
+    </div>
+    <dl class="receipt" id="receipt"></dl>
+    <p class="note">Pay at the shop. Free cancellation until 2 hours before your slot. We'll send a reminder the evening before.</p>
+    <div class="actions">
+      <button class="btn secondary" type="button" id="cal">Add to calendar</button>
+      <button class="btn text" type="button" id="again">Book another visit</button>
+    </div>
+  </section>
+
+  <div class="bar" id="bar">
+    <div class="summary" aria-live="polite">
+      <div class="what"><b id="sum-title">Nothing selected yet</b><span id="sum-sub">Start with a service</span></div>
+      <div class="total num" id="sum-total"></div>
+    </div>
+    <button class="btn primary" type="button" id="confirm" aria-disabled="true">Confirm booking</button>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+</div>
+
+<script>
+const SERVICES = [
+  { id: "cut",   name: "Classic haircut",     mins: 30, price: 32 },
+  { id: "fade",  name: "Skin fade and style", mins: 45, price: 40 },
+  { id: "beard", name: "Beard trim and line-up", mins: 20, price: 22 },
+  { id: "combo", name: "Haircut and beard",   mins: 60, price: 52 },
+  { id: "shave", name: "Hot towel shave",     mins: 30, price: 35 },
+];
+const BARBERS = [
+  { id: "any",   name: "No preference", sub: "First available", initials: "?" },
+  { id: "marcus", name: "Marcus Bell",   sub: "Fades, 9 yrs",    initials: "MB" },
+  { id: "dani",  name: "Dani Okafor",   sub: "Beards, shaves",  initials: "DO" },
+  { id: "luis",  name: "Luis Herrera",  sub: "Classic cuts",    initials: "LH" },
+  { id: "priya", name: "Priya Nair",    sub: "Kids and long hair", initials: "PN" },
+];
+const TIMES = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"];
+const TODAY = new Date(2026, 10, 13, 11, 10); // sample "now": Fri 13 Nov 2026, 11:10
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const LONGDOW = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+const state = { service: null, barber: null, day: 0, time: null };
+const $ = (id) => document.getElementById(id);
+const money = (n) => "$" + n;
+const dayDate = (i) => { const d = new Date(TODAY); d.setDate(d.getDate() + i); return d; };
+const isClosed = (d) => d.getDay() === 0;
+const fmt12 = (t) => { const [h, m] = t.split(":").map(Number); return `${((h + 11) % 12) + 1}:${String(m).padStart(2,"0")} ${h < 12 ? "am" : "pm"}`; };
+function hash(s) { let h = 7; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; }
+function isTaken(barberId, i, t) {
+  const d = dayDate(i);
+  if (i === 0) { const [h, m] = t.split(":").map(Number); if (h * 60 + m <= TODAY.getHours() * 60 + TODAY.getMinutes() + 30) return true; }
+  const who = barberId === "any" ? "any" : barberId;
+  const r = hash(who + d.getDate() + t) % 100;
+  return barberId === "any" ? r < 12 : r < 38;
+}
+
+function tick() { return '<span class="tick" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>'; }
+
+function renderServices() {
+  $("services").innerHTML = SERVICES.map(s => `
+    <label class="opt"><input type="radio" name="service" value="${s.id}">
+      <span class="card">
+        ${tick()}
+        <span class="grow"><span class="title">${s.name}</span><span class="sub num" style="display:block">${s.mins} min</span></span>
+        <span class="price num">${money(s.price)}</span>
+      </span></label>`).join("");
+}
+function renderBarbers() {
+  $("barbers").innerHTML = BARBERS.map(b => `
+    <label class="opt"><input type="radio" name="barber" value="${b.id}">
+      <span class="card">
+        <span class="top"><span class="avatar ${b.id === "any" ? "any" : ""}" aria-hidden="true">${b.initials}</span>${tick()}</span>
+        <span class="grow"><span class="title">${b.name}</span><span class="sub">${b.sub}</span></span>
+      </span></label>`).join("");
+}
+function renderDays() {
+  let h = "";
+  for (let i = 0; i < 10; i++) {
+    const d = dayDate(i), closed = isClosed(d);
+    h += `<label class="day ${closed ? "closed" : ""}"><input type="radio" name="day" value="${i}" ${i === state.day ? "checked" : ""} aria-label="${LONGDOW[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}${closed ? ", closed" : ""}">
+      <span class="chip"><span class="dow">${i === 0 ? "Today" : DOW[d.getDay()]}</span><span class="dnum num">${d.getDate()}</span></span></label>`;
+  }
+  $("days").innerHTML = h;
+}
+
+let slotTimer;
+function renderSlots() {
+  const area = $("slot-area");
+  clearTimeout(slotTimer);
+  const d = dayDate(state.day);
+  $("month").textContent = `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  if (!state.barber) {
+    area.innerHTML = `<div class="empty"><p><strong>Choose a barber first</strong>Times depend on who's cutting. Pick one above, or "No preference" to see every opening.</p></div>`;
+    return;
+  }
+  if (isClosed(d)) {
+    area.innerHTML = `<div class="empty"><p><strong>We're closed on Sundays</strong>Pick another day to see open times.</p><button class="btn secondary" type="button" data-next>See Monday ${dayDate(state.day + 1).getDate()}</button></div>`;
+    return;
+  }
+  area.innerHTML = `<div class="slots" aria-hidden="true">${'<div class="skel"></div>'.repeat(9)}</div><p class="sr-only">Loading times</p>`;
+  slotTimer = setTimeout(() => {
+    const free = TIMES.filter(t => !isTaken(state.barber, state.day, t));
+    if (!free.length) {
+      area.innerHTML = `<div class="empty"><p><strong>Fully booked</strong>No openings with this barber on this day. Try another day or choose "No preference".</p></div>`;
+      return;
+    }
+    const grid = TIMES.map(t => {
+      const taken = isTaken(state.barber, state.day, t);
+      return `<label class="slot"><input type="radio" name="time" value="${t}" ${taken ? "disabled" : ""} ${state.time === t ? "checked" : ""} aria-label="${fmt12(t)}${taken ? ", unavailable" : ""}"><span class="chip num">${fmt12(t)}</span></label>`;
+    }).join("");
+    area.innerHTML = `<div class="slots" role="radiogroup" aria-label="Time">${grid}</div><p class="legend">${free.length} openings. Struck-through times are taken.</p>`;
+  }, 450);
+}
+
+function missing() {
+  if (!state.service) return "sec-service";
+  if (!state.barber) return "sec-barber";
+  if (!state.time) return "sec-time";
+  return null;
+}
+function update() {
+  const s = SERVICES.find(x => x.id === state.service), b = BARBERS.find(x => x.id === state.barber);
+  const d = dayDate(state.day);
+  $("sec-service").classList.toggle("done", !!s);
+  $("sec-barber").classList.toggle("done", !!b);
+  $("sec-time").classList.toggle("done", !!state.time);
+  const when = state.time ? `${state.day === 0 ? "Today" : DOW[d.getDay()] + " " + d.getDate() + " " + MONTHS[d.getMonth()].slice(0,3)}, ${fmt12(state.time)}` : null;
+  const parts = [s && s.name, b && b.name, when].filter(Boolean);
+  $("sum-title").textContent = parts.length ? parts.join(" · ") : "Nothing selected yet";
+  const next = !s ? "Start with a service" : !b ? "Next: choose a barber" : !state.time ? "Next: pick a time" : `${s.mins} min · pay at the shop`;
+  $("sum-sub").textContent = next;
+  $("sum-total").textContent = s ? money(s.price) : "";
+  $("confirm").setAttribute("aria-disabled", missing() ? "true" : "false");
+}
+
+document.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.name === "service") { state.service = t.value; }
+  if (t.name === "barber") { state.barber = t.value; state.time = null; renderSlots(); }
+  if (t.name === "day") { state.day = +t.value; state.time = null; renderSlots(); }
+  if (t.name === "time") { state.time = t.value; }
+  update();
+  if (t.name === "service" && !state.barber) $("sec-barber").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+});
+document.addEventListener("click", (e) => {
+  if (e.target.closest("[data-next]")) { const r = document.querySelector('input[name="day"][value="' + (state.day + 1) + '"]'); r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); r.focus(); }
+});
+
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 4000); }
+
+$("confirm").addEventListener("click", () => {
+  const m = missing();
+  if (m) {
+    const msg = { "sec-service": "Choose a service to continue.", "sec-barber": "Choose a barber to continue.", "sec-time": "Pick a time to continue." }[m];
+    document.getElementById(m).scrollIntoView({ behavior: "smooth", block: "start" });
+    toast(msg);
+    return;
+  }
+  const btn = $("confirm");
+  btn.setAttribute("aria-busy", "true");
+  btn.innerHTML = '<span class="spinner" aria-hidden="true"></span>Booking...';
+  setTimeout(() => {
+    const s = SERVICES.find(x => x.id === state.service), b = BARBERS.find(x => x.id === state.barber), d = dayDate(state.day);
+    const who = b.id === "any" ? "the first available barber" : b.name;
+    $("done-lead").textContent = `See you ${state.day === 0 ? "today" : "on " + LONGDOW[d.getDay()]} at ${fmt12(state.time)}. Your barber is ${who}.`;
+    $("receipt").innerHTML = [
+      ["Service", s.name], ["Barber", b.id === "any" ? "Assigned on arrival" : b.name],
+      ["When", `${LONGDOW[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}, ${fmt12(state.time)}`],
+      ["Where", "Northside, 214 Mercer St"], ["Duration", s.mins + " min"], ["Total", money(s.price)],
+    ].map(([k, v]) => `<div><dt>${k}</dt><dd class="num">${v}</dd></div>`).join("");
+    $("flow").hidden = true; $("bar").hidden = true; $("done").hidden = false;
+    window.scrollTo(0, 0); $("done").focus();
+    btn.removeAttribute("aria-busy"); btn.textContent = "Confirm booking";
+  }, 900);
+});
+$("again").addEventListener("click", () => {
+  Object.assign(state, { service: null, barber: null, day: 0, time: null });
+  document.querySelectorAll("input[type=radio]").forEach(i => i.checked = false);
+  renderDays(); renderSlots(); update();
+  $("done").hidden = true; $("flow").hidden = false; $("bar").hidden = false; window.scrollTo(0, 0);
+});
+$("cal").addEventListener("click", () => toast("Added to your calendar (sample)."));
+$("back").addEventListener("click", () => toast("Back to shop list (not wired in this mockup)."));
+
+renderServices(); renderBarbers(); renderDays(); renderSlots(); update();
+</script>
+</body>
+</html>

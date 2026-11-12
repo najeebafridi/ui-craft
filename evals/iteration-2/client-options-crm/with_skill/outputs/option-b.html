@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B · Warm and spacious · Contacts · Mockup v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 14px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,p{margin:0}
+.num{font-variant-numeric:tabular-nums}.muted{color:var(--text-muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:var(--radius-sm);border:1px solid transparent;font:500 14px var(--font);cursor:pointer;text-decoration:none}.btn-primary{background:var(--accent);color:var(--accent-fg)}.btn-secondary{background:var(--surface);color:var(--text);border-color:var(--border-strong)}
+:root{--bg:#FAF6EF;--surface:#FFFFFF;--surface-2:#F4EEE3;--border:#E7DFD0;--border-strong:#8A7F6C;--text:#2A241C;--text-muted:#5E5546;--text-subtle:#6E6453;--accent:#B4432A;--accent-hover:#963421;--accent-fg:#FFF;--accent-soft:#FBE9E3;--accent-text:#963421;--radius:14px;--radius-sm:10px;--shadow-overlay:0 12px 32px rgb(42 36 28/.16);--font:"Inter",ui-sans-serif,system-ui,sans-serif;--display:"Fraunces",Georgia,serif}
+body{font-size:16px;line-height:1.5}
+.top{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+.top-in{max-width:1120px;margin:0 auto;padding:0 32px;display:flex;align-items:center;gap:32px;height:64px}
+.brand{font:600 22px var(--display);color:var(--accent-text)}
+.top nav{display:flex;gap:4px;flex:1}
+.top nav a{padding:8px 16px;border-radius:var(--radius-sm);text-decoration:none;color:var(--text-muted);font-weight:500}
+.top nav a:hover{background:var(--surface-2)}.top nav a[aria-current=page]{background:var(--accent-soft);color:var(--accent-text)}
+.me{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--surface-2);font-weight:600}
+main{max-width:1120px;margin:0 auto;padding:48px 32px 64px}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+h1{font:500 48px/1.1 var(--display);letter-spacing:-.01em}
+.sub{color:var(--text-muted);margin-top:8px}
+.bar{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.tabs{display:flex;gap:4px;overflow-x:auto;max-width:100%}
+.tabs a{padding:10px 16px;border-radius:999px;text-decoration:none;color:var(--text-muted);font-weight:500;white-space:nowrap}
+.tabs a[aria-current=true]{background:var(--text);color:#fff}
+.tabs a:hover:not([aria-current]){background:var(--surface-2)}
+.tabs span{margin-left:4px}
+.search{position:relative;flex:0 1 300px;min-width:220px}.search input{width:100%;height:44px;padding:0 16px 0 44px;border:1px solid var(--border-strong);border-radius:999px;background:var(--surface);font:16px var(--font);color:var(--text)}.search svg{position:absolute;left:14px;top:12px;width:20px;height:20px;color:var(--text-muted)}
+.btn{height:44px;padding:0 20px;border-radius:999px;font-size:16px}
+.list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);list-style:none;margin:0;padding:8px}
+.row{display:grid;grid-template-columns:48px minmax(0,2fr) 160px 140px 120px 44px;gap:16px;align-items:center;padding:12px 16px;border-radius:var(--radius-sm)}
+.row+.row{border-top:1px solid var(--border);border-radius:0}
+.row:hover{background:var(--surface-2)}
+.av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:16px;background:var(--accent-soft);color:var(--accent-text)}
+.row:nth-child(3n+2) .av{background:#E3EEE8;color:#1F5A3E}.row:nth-child(3n) .av{background:#E6E8F3;color:#3A4380}
+.who a{font-weight:600;color:var(--text);text-decoration:none;font-size:16px;display:inline-block;padding:4px 0}.who a:hover{text-decoration:underline}
+.who p{color:var(--text-muted);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;padding:4px 12px;border-radius:999px;justify-self:start}
+.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.s-new{background:#E7ECF7;color:#2F3C7E}.s-view{background:#FBE9E3;color:#963421}.s-offer{background:#E1F1E7;color:#1B5E3A}.s-due{background:#FCEFD0;color:#7A4B07}.s-listed{background:#EEE8DC;color:#4A4234}
+.meta{font-size:14px;color:var(--text-muted)}.meta b{display:block;color:var(--text);font-weight:500}
+.call{width:44px;height:44px;border-radius:50%;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer}.call:hover{background:var(--accent);color:#fff;border-color:var(--accent)}.call svg{width:20px;height:20px}
+.more-link{display:block;text-align:center;padding:16px}
+@media (max-width:1024px){.row{grid-template-columns:48px minmax(0,1fr) 140px 44px}.row .agent,.row .last{display:none}}
+@media (max-width:640px){
+ .top-in{padding:0 16px;gap:16px}.top nav a:not([aria-current]){display:none}.me{margin-left:auto}
+ main{padding:24px 16px 48px}h1{font-size:36px}.top nav a,.who a{min-height:44px;display:inline-flex;align-items:center;padding-block:0}.top nav a{padding:0 16px}.who a{display:flex}
+ .row{grid-template-columns:48px minmax(0,1fr) 44px;padding:12px 8px}.row .badge{grid-column:2;grid-row:2}.row .who{grid-column:2}.row .call{grid-row:1/3;grid-column:3}.row .av{grid-row:1/3}
+ .search{flex-basis:100%}.bar .btn{width:100%}
+ #mk-bar{bottom:16px}
+}
+</style></head><body>
+<header class="top"><div class="top-in"><span class="brand">Harbourview</span>
+<nav aria-label="Main"><a href="#">Dashboard</a><a href="#" aria-current="page">Contacts</a><a href="#">Properties</a><a href="#">Deals</a><a href="#">Calendar</a></nav><span class="me" role="img" aria-label="Signed in as Sarah Chen">SC</span></div></header>
+<main>
+<div class="page-head"><div><h1>Your contacts</h1><p class="sub">248 people. Six are waiting to hear from you this week.</p></div><a class="btn btn-primary" href="#">Add contact</a></div>
+<div class="bar"><div class="tabs" aria-label="Contact type"><a href="#" aria-current="true">All<span>248</span></a><a href="#">Buyers<span>112</span></a><a href="#">Sellers<span>57</span></a><a href="#">Landlords<span>31</span></a><a href="#">Tenants<span>48</span></a></div>
+<div class="search" role="search"><label class="sr" for="q">Search contacts</label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg><input id="q" placeholder="Search contacts"></div></div>
+<ul class="list" aria-label="Contacts, most recently contacted first">
+<li class="row"><div class="av" aria-hidden="true">PR</div><div class="who"><a href="#">Priya Raman</a><p>Buyer · 3-bed house, $620k to $680k, Westfield</p></div><span class="badge s-view">Viewing booked</span><div class="meta agent"><b>Tom Ellis</b>Agent</div><div class="meta last"><b class="num">12 Nov 2026</b>Last contact</div><button class="call" aria-label="Call Priya Raman"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button></li>
+<li class="row"><div class="av" aria-hidden="true">ME</div><div class="who"><a href="#">Marcus and Elena Doyle</a><p>Seller · 14 Alder Street, listed at $845,000</p></div><span class="badge s-listed">Active</span><div class="meta agent"><b>Sarah Chen</b>Agent</div><div class="meta last"><b class="num">11 Nov 2026</b>Last contact</div><button class="call" aria-label="Call Marcus and Elena Doyle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button></li>
+<li class="row"><div class="av" aria-hidden="true">HW</div><div class="who"><a href="#">Hannah Whitfield</a><p>Buyer · 2-bed condo, offer of $410,000 sent</p></div><span class="badge s-offer">Offer made</span><div class="meta agent"><b>Tom Ellis</b>Agent</div><div class="meta last"><b class="num">10 Nov 2026</b>Last contact</div><button class="call" aria-label="Call Hannah Whitfield"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button></li>
+<li class="row"><div class="av" aria-hidden="true">KM</div><div class="who"><a href="#">Kwame Mensah</a><p>Landlord · 2 rental properties, Eastgate</p></div><span class="badge s-listed">Active</span><div class="meta agent"><b>Dana Ortiz</b>Agent</div><div class="meta last"><b class="num">9 Nov 2026</b>Last contact</div><button class="call" aria-label="Call Kwame Mensah"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button></li>
+<li class="row"><div class="av" aria-hidden="true">LF</div><div class="who"><a href="#">Lucia Fernandes</a><p>Tenant · 1-bed apartment, move in by 1 Dec</p></div><span class="badge s-due">Follow-up due</span><div class="meta agent"><b>Dana Ortiz</b>Agent</div><div class="meta last"><b class="num">3 Nov 2026</b>Last contact</div><button class="call" aria-label="Call Lucia Fernandes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button></li>
+<li class="row"><div class="av" aria-hidden="true">OB</div><div class="who"><a href="#">Oliver Banks</a><p>Buyer · First-time buyer, budget not yet set</p></div><span class="badge s-new">New lead</span><div class="meta agent"><b>Sarah Chen</b>Agent</div><div class="meta last"><b class="num">Today</b>Last contact</div><button class="call" aria-label="Call Oliver Banks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button></li>
+<li class="row"><div class="av" aria-hidden="true">IS</div><div class="who"><a href="#">Ingrid Solberg</a><p>Seller · Valuation for 7 Quay Road</p></div><span class="badge s-view">Viewing booked</span><div class="meta agent"><b>Tom Ellis</b>Agent</div><div class="meta last"><b class="num">6 Nov 2026</b>Last contact</div><button class="call" aria-label="Call Ingrid Solberg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button></li>
+<li class="row"><div class="av" aria-hidden="true">RP</div><div class="who"><a href="#">Raj Patel</a><p>Investor · Looking for 3 to 5 unit buildings</p></div><span class="badge s-due">Follow-up due</span><div class="meta agent"><b>Sarah Chen</b>Agent</div><div class="meta last"><b class="num">28 Oct 2026</b>Last contact</div><button class="call" aria-label="Call Raj Patel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></button></li>
+</ul><a class="more-link" href="#">Show 20 more contacts</a>
+</main>
+<p class="sr">Sample data for design review only.</p>
+<!-- ===== Mockup toolbar: theme toggle + client feedback pins. Delete this block for real code. ===== -->
+<style>
+#mk-bar{position:fixed;right:16px;bottom:16px;z-index:1000;display:flex;gap:8px;font:500 14px var(--font);opacity:.85}
+#mk-bar:hover,#mk-bar:focus-within{opacity:1}
+#mk-tools:not([hidden]){display:flex;gap:8px}
+#mk-bar button{height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);box-shadow:var(--shadow-overlay);cursor:pointer;font:inherit}
+#mk-bar button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+body.mk-commenting, body.mk-commenting *{cursor:crosshair!important}
+.mk-pin{position:absolute;z-index:999;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#E11D48;color:#fff;font:600 12px/24px var(--font);text-align:center;box-shadow:0 0 0 2px #fff,var(--shadow-overlay);cursor:pointer}
+#mk-panel{position:fixed;right:16px;bottom:64px;z-index:1000;width:min(360px,calc(100vw - 32px));max-height:60vh;overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-overlay);padding:16px;font:14px/1.5 var(--font)}
+#mk-panel h3{margin:0 0 8px;font-size:15px}
+#mk-panel ol{padding-left:20px;margin:8px 0}
+#mk-panel li{margin-bottom:6px}
+#mk-panel small{color:var(--text-subtle)}
+@media (max-width:640px),(pointer:coarse){#mk-bar{bottom:76px} #mk-bar button{height:44px}}
+</style>
+<div id="mk-bar">
+  <span id="mk-tools" hidden>
+    <button type="button" id="mk-comment" aria-pressed="false">Add comment</button>
+  </span>
+  <button type="button" id="mk-list" aria-expanded="false">Feedback (<span id="mk-count">0</span>)</button>
+</div>
+<div id="mk-panel" hidden></div>
+<script>
+(() => {
+  const KEY = "mk-feedback:" + location.pathname;
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+  const save = (n) => { try { localStorage.setItem(KEY, JSON.stringify(n)); } catch {} };
+  let notes = load(), commenting = false;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+  $("mk-comment").onclick = (e) => {
+    commenting = !commenting;
+    document.body.classList.toggle("mk-commenting", commenting);
+    e.currentTarget.setAttribute("aria-pressed", commenting);
+    e.currentTarget.textContent = commenting ? "Click the screen…" : "Add comment";
+  };
+  document.addEventListener("click", (e) => {
+    if (!commenting || e.target.closest("#mk-bar,#mk-panel,.mk-pin")) return;
+    e.preventDefault(); e.stopPropagation();
+    const near = (e.target.closest("button,a,h1,h2,h3,th,td,label,input,p,li") || e.target).textContent.trim().replace(/\s+/g," ").slice(0,40);
+    const text = prompt("Your comment" + (near ? ` (near "${near}")` : "") + ":");
+    $("mk-comment").click();
+    if (!text) return;
+    notes.push({ x: e.pageX / document.documentElement.scrollWidth, y: e.pageY, near, text, at: new Date().toISOString() });
+    save(notes); render();
+  }, true);
+  $("mk-list").onclick = (e) => { const open = $("mk-panel").hidden; $("mk-panel").hidden = !open; $("mk-tools").hidden = !open; e.currentTarget.setAttribute("aria-expanded", open); render(); };
+
+  function asText() {
+    return `Feedback on "${document.title}"\n` + notes.map((n, i) => `${i + 1}. ${n.text}${n.near ? `  [near "${n.near}"]` : ""}`).join("\n");
+  }
+  function render() {
+    document.querySelectorAll(".mk-pin").forEach(p => p.remove());
+    notes.forEach((n, i) => {
+      const p = document.createElement("button");
+      p.className = "mk-pin"; p.textContent = i + 1; p.title = n.text;
+      p.style.left = (n.x * 100) + "%"; p.style.top = n.y + "px";
+      p.onclick = () => { $("mk-panel").hidden = false; render(); };
+      document.body.appendChild(p);
+    });
+    $("mk-count").textContent = notes.length;
+    const panel = $("mk-panel");
+    if (panel.hidden) return;
+    panel.innerHTML = `<h3>Feedback on this screen</h3>` +
+      (notes.length ? `<ol>${notes.map((n, i) => `<li>${esc(n.text)} ${n.near ? `<small>near “${esc(n.near)}”</small>` : ""} <button type="button" data-del="${i}" aria-label="Delete comment ${i + 1}">×</button></li>`).join("")}</ol>`
+                    : `<p><small>No comments yet. Click “Add comment”, then click anywhere on the screen.</small></p>`) +
+      `<div style="display:flex;gap:8px;margin-top:8px"><button type="button" id="mk-copy" class="btn btn-primary">Copy all</button><button type="button" id="mk-dl" class="btn btn-secondary">Download .txt</button></div>`;
+    panel.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { notes.splice(+b.dataset.del, 1); save(notes); render(); });
+    $("mk-copy").onclick = async () => { try { await navigator.clipboard.writeText(asText()); $("mk-copy").textContent = "Copied"; } catch { prompt("Copy this:", asText()); } };
+    $("mk-dl").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([asText()], { type: "text/plain" })); a.download = "feedback-" + (location.pathname.split("/").pop() || "screen").replace(/\.html?$/, "") + ".txt"; a.click(); };
+  }
+  render();
+})();
+</script>
+</body></html>

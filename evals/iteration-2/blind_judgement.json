@@ -1,0 +1,37 @@
+{
+  "ecommerce-dashboard": {
+    "X": {"professional": 9, "hierarchy": 9, "polish": 8, "phone": 8, "approve": 9},
+    "Y": {"professional": 7, "hierarchy": 7, "polish": 5, "phone": 4, "approve": 6},
+    "winner": "X",
+    "reason": "X leads with an insight headline ('Revenue is up 21% on the previous 30 days') and a clear dashed previous-period comparison line, KPI deltas in green, and a Running low table with Reorder now / Running low status chips plus a single orange Reorder stock CTA that maps directly to the brief. On the phone it reflows into a clean stack with a bottom tab bar and a readable chart. Y's donut with the centre label 'Total 4 lines' says nothing, its phone line chart is a tiny strip with illegible axis labels, and the phone tables collide ('ORDERCUSTOMER' run together, '11 left' wrapping under the bar).",
+    "winner_weaknesses": ["Dark palette with many small low-contrast grey captions ($28.00 each, axis labels) is dense and tiring, and the sidebar is absent on phone with only 4 of 5 nav items in the tab bar", "Desktop is information-heavy with six cards competing; the lower Running low and Recent orders tables are cramped with tight row text and tiny status chips"]
+  },
+  "settings-form": {
+    "X": {"professional": 9, "hierarchy": 9, "polish": 8, "phone": 8, "approve": 9},
+    "Y": {"professional": 7, "hierarchy": 7, "polish": 6, "phone": 7, "approve": 6},
+    "winner": "X",
+    "reason": "X uses a proper settings pattern: page title with breadcrumb, Profile/Password/Notifications tabs, a left description column per section and fields aligned in a right column, plus a live password-requirements checklist and grouped notification toggles (Tasks vs Projects and workspace) with helper text. Y has no page-level heading, highlights 'Password' in the left nav while the Profile card is first, and shows a muddy greyed 'Save changes' button; the password strength bar is an empty grey line.",
+    "winner_weaknesses": ["Desktop content is a narrow column with large empty gutters and the description column leaves wide dead space, with the notification toggles sitting far right from their labels", "Phone version stacks Cancel above a full-width Save and the Email digest select is not full width, a small inconsistency among otherwise full-width fields"]
+  },
+  "mobile-booking": {
+    "X": {"professional": 6, "hierarchy": 7, "polish": 5, "phone": 6, "approve": 5},
+    "Y": {"professional": 7, "hierarchy": 8, "polish": 7, "phone": 8, "approve": 7},
+    "winner": "Y",
+    "reason": "Y covers the whole brief on one screen (numbered service, barber grid with initials avatars, date strip, time area) and keeps a sticky summary with a Confirm booking button, so the flow is clear and complete; the orange selected-date chip is a clean accent. X shows only step 1 of the flow, uses cartoonish emoji icons (scissors, barber pole, face) that read as cheap, and the first progress segment is a tall solid block next to thin grey bars, which looks like a rendering bug.",
+    "winner_weaknesses": ["Very long single-page scroll with a generic dark theme and no barbershop personality, imagery or barber photos (just initials)", "Date strip is cropped on the right and the time-slot area shows only a dashed empty state, so the key slot picker is not demonstrated; the disabled Confirm button is low-contrast grey"]
+  },
+  "saas-landing-page": {
+    "X": {"professional": 6, "hierarchy": 7, "polish": 4, "phone": 3, "approve": 4},
+    "Y": {"professional": 9, "hierarchy": 9, "polish": 9, "phone": 9, "approve": 9},
+    "winner": "Y",
+    "reason": "Y puts an email field plus a teal 'Start free trial' button directly in the hero with 'Free trial / No credit card' ticks, which serves the sign-up goal, and the serif headline 'Your client call ends. The notes are already written.' with a realistic notes card (checked action items, owner and date chips, 'Sample output' caption) feels credible and distinct. X's phone hero has no side padding at all: headline, body copy and both buttons are flush against the screen edge while the card below is inset, which looks broken.",
+    "winner_weaknesses": ["Hero card and sections are text-heavy with little visual proof (no logos, testimonials or product screenshots) in the visible area", "Hero CTA relies on a form field for sign-up on phone with small grey check-line copy beneath, and the nav drops 'Sign in' and links on mobile, leaving a very plain header"]
+  },
+  "client-options-crm": {
+    "X": {"professional": 6, "hierarchy": 6, "polish": 5, "phone": 4, "approve": 5},
+    "Y": {"professional": 8, "hierarchy": 8, "polish": 7, "phone": 7, "approve": 8},
+    "winner": "Y",
+    "reason": "Y's three directions are clearly distinct and more realistic: a dense admin table with checkboxes, status chips, sortable Last contact and Import CSV; a warm editorial list with coloured status pills, counts on filter tabs (Buyers 112) and a call button per row; and a dark master-detail with a green 'Next step' callout and activity log. X's table option is generic and its phone view is broken (sidebar eats the width, columns clipped, filters stacked awkwardly), and the dark option only shows a list on phone.",
+    "winner_weaknesses": ["Option 1 phone still clips the table, with Last contact cut off at the right edge and a floating Feedback button overlapping the Next button", "Directions share the same data but option 2 truncates the interest line on phone ('3-bed house, $620k...') and the dark option's filter chips are cut off ('Follow-up due - 6' overlaps Buyers)"]
+  }
+}

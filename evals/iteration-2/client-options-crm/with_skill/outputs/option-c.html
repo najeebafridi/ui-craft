@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C · Dark and focused · Contacts · Mockup v1</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 14px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,p{margin:0}
+.num{font-variant-numeric:tabular-nums}.muted{color:var(--text-muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:var(--radius-sm);border:1px solid transparent;font:500 14px var(--font);cursor:pointer;text-decoration:none}.btn-primary{background:var(--accent);color:var(--accent-fg)}.btn-secondary{background:var(--surface);color:var(--text);border-color:var(--border-strong)}
+:root{--bg:#0D1117;--surface:#151B23;--surface-2:#1C242E;--border:#2A3441;--border-strong:#6B7A8F;--text:#E8ECF1;--text-muted:#A5B0BF;--text-subtle:#8C98A8;--accent:#3DD6A0;--accent-hover:#6BE3BA;--accent-fg:#06281E;--accent-soft:#12372D;--accent-text:#6BE3BA;--radius:8px;--radius-sm:6px;--shadow-overlay:0 8px 32px rgb(0 0 0/.5);--font:"Inter",ui-sans-serif,system-ui,sans-serif}
+body{height:100vh;overflow:hidden}
+.app{display:grid;grid-template-columns:56px 400px 1fr;height:100vh}
+.rail{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0}
+.rail .logo{width:32px;height:32px;border-radius:8px;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-weight:700;margin-bottom:12px}
+.rail a{width:40px;height:40px;display:grid;place-items:center;border-radius:var(--radius-sm);color:var(--text-muted)}.rail a:hover{background:var(--surface-2);color:var(--text)}.rail a[aria-current=page]{background:var(--accent-soft);color:var(--accent-text)}.rail svg{width:20px;height:20px}
+.pane{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--border)}
+.pane-head{padding:16px;border-bottom:1px solid var(--border)}
+.pane-head .t{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+h1{font-size:18px;font-weight:600}
+.field{width:100%;height:36px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font:14px var(--font);padding:0 10px 0 34px}
+.sw{position:relative}.sw svg{position:absolute;left:10px;top:9px;width:18px;height:18px;color:var(--text-muted)}
+.filters{display:flex;gap:8px;margin-top:12px;overflow-x:auto}
+.filters button{min-height:28px;min-width:44px;padding:0 12px;border-radius:999px;border:1px solid var(--border-strong);background:transparent;color:var(--text-muted);font:500 12px var(--font);cursor:pointer;white-space:nowrap}
+.filters button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent-text);border-color:var(--accent)}
+.items{overflow-y:auto;flex:1}
+.item{all:unset;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;width:100%;padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;color:var(--text);font:14px/1.5 var(--font)}
+.item:hover{background:var(--surface-2)}.item[aria-current=true]{background:var(--surface-2);box-shadow:inset 3px 0 var(--accent)}
+.item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.item .n{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item .d{color:var(--text-muted);font-size:12px;text-align:right}
+.item .i{color:var(--text-muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.s-new{color:#93B4FF}.s-view{color:#6BE3BA}.s-offer{color:#7DE08A}.s-due{color:#FFC857}.s-listed{color:#B8C2D0}
+.detail{overflow-y:auto;padding:32px 40px;min-width:0}
+.dh{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.dh h2{font-size:30px;line-height:1.2;font-weight:600}.dh p{color:var(--text-muted);margin-top:4px}
+.stage{display:inline-flex;align-items:center;font-weight:500;margin-top:12px}
+.btn-secondary{background:transparent}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;margin:32px 0;padding:24px 0;border-block:1px solid var(--border)}
+.grid dt{color:var(--text-muted);font-size:12px}.grid dd{margin:4px 0 0;font-size:16px;font-weight:500}
+.next{background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--radius);padding:16px;margin-bottom:32px}
+.next b{display:block;margin-bottom:4px}
+h3{font-size:16px;font-weight:600;margin:0 0 12px}
+.tl{list-style:none;margin:0;padding:0}.tl li{display:grid;grid-template-columns:96px 1fr;gap:16px;padding:8px 0}.tl time{color:var(--text-muted);font-size:12px;padding-top:2px}
+@media (max-width:1024px){.app{grid-template-columns:56px 1fr}.detail{display:none}.pane{border-right:0}}
+@media (max-width:640px){
+ body{overflow:auto;height:auto}.app{grid-template-columns:minmax(0,1fr);height:auto}
+ .rail{position:fixed;bottom:0;left:0;right:0;flex-direction:row;justify-content:space-around;padding:6px;border-right:0;border-top:1px solid var(--border);z-index:10;height:60px}.rail .logo{display:none}.rail a{width:48px;height:48px}
+ .pane{padding-bottom:72px}.item{min-height:64px;padding:12px 16px}.field,.filters button{min-height:44px;font-size:16px}.filters button{font-size:14px}
+ #mk-bar{bottom:76px}#mk-bar button{height:44px}
+}
+@media (pointer:coarse){.btn{min-height:44px}}
+</style></head><body>
+<div class="app">
+<nav class="rail" aria-label="Main"><span class="logo" aria-hidden="true">H</span><a href="#" aria-label="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg></a><a href="#" aria-current="page" aria-label="Contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 11a3 3 0 100-6M22 21c0-3-2-5-5-5"/></svg></a><a href="#" aria-label="Properties"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 21V5l8-3v19M12 9l8 3v9M2 21h20"/></svg></a><a href="#" aria-label="Deals"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7h18v13H3zM8 7V4h8v3"/></svg></a><a href="#" aria-label="Calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></a></nav>
+<section class="pane" aria-label="Contacts list"><div class="pane-head"><div class="t"><h1>Contacts <span class="muted num" style="font-weight:400">248</span></h1><a class="btn btn-primary" href="#">Add contact</a></div>
+<div class="sw" role="search"><label class="sr" for="q">Search contacts</label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg><input id="q" class="field" placeholder="Search contacts"></div>
+<div class="filters"><button aria-pressed="true">All</button><button aria-pressed="false">Follow-up due · 6</button><button aria-pressed="false">Buyers</button><button aria-pressed="false">Sellers</button><button aria-pressed="false">Mine</button></div></div>
+<div class="items" id="items"><button class="item" data-i="0" aria-current="true"><span class="n">Priya Raman</span><span class="d num">12 Nov</span><span class="i"><span class="dot s-view" style="background:currentColor"></span>Viewing booked · Buyer</span><span class="d">Tom</span></button><button class="item" data-i="1" aria-current="false"><span class="n">Marcus and Elena Doyle</span><span class="d num">11 Nov</span><span class="i"><span class="dot s-listed" style="background:currentColor"></span>Active · Seller</span><span class="d">Sarah</span></button><button class="item" data-i="2" aria-current="false"><span class="n">Hannah Whitfield</span><span class="d num">10 Nov</span><span class="i"><span class="dot s-offer" style="background:currentColor"></span>Offer made · Buyer</span><span class="d">Tom</span></button><button class="item" data-i="3" aria-current="false"><span class="n">Kwame Mensah</span><span class="d num">9 Nov</span><span class="i"><span class="dot s-listed" style="background:currentColor"></span>Active · Landlord</span><span class="d">Dana</span></button><button class="item" data-i="4" aria-current="false"><span class="n">Lucia Fernandes</span><span class="d num">3 Nov</span><span class="i"><span class="dot s-due" style="background:currentColor"></span>Follow-up due · Tenant</span><span class="d">Dana</span></button><button class="item" data-i="5" aria-current="false"><span class="n">Oliver Banks</span><span class="d num">Today</span><span class="i"><span class="dot s-new" style="background:currentColor"></span>New lead · Buyer</span><span class="d">Sarah</span></button><button class="item" data-i="6" aria-current="false"><span class="n">Ingrid Solberg</span><span class="d num">6 Nov</span><span class="i"><span class="dot s-view" style="background:currentColor"></span>Viewing booked · Seller</span><span class="d">Tom</span></button><button class="item" data-i="7" aria-current="false"><span class="n">Raj Patel</span><span class="d num">28 Oct</span><span class="i"><span class="dot s-due" style="background:currentColor"></span>Follow-up due · Investor</span><span class="d">Sarah</span></button></div></section>
+<section class="detail" id="detail" aria-live="polite" aria-label="Contact details"><div class="dh"><div><h2>Priya Raman</h2><p>Buyer · 3-bed house, $620k to $680k, Westfield</p><span class="stage s-view"><span class="dot" style="background:currentColor"></span>Viewing booked</span></div><div style="display:flex;gap:8px"><a class="btn btn-secondary" href="#">Email</a><a class="btn btn-primary" href="#">Call Priya</a></div></div>
+<dl class="grid"><div><dt>Phone</dt><dd class="num">+1 (555) 014-2271</dd></div><div><dt>Email</dt><dd>priya.raman@example.com</dd></div><div><dt>Agent</dt><dd>Tom Ellis</dd></div><div><dt>Last contact</dt><dd>12 Nov 2026</dd></div></dl>
+<div class="next"><b>Next step</b>Send three new listings matching the brief and confirm the Saturday viewing time.</div>
+<h3>Recent activity</h3><ul class="tl"><li><time>12 Nov 2026</time><span>Call, 12 minutes. Discussed budget and neighbourhoods.</span></li><li><time>7 Nov 2026</time><span>Email sent: listing shortlist (4 properties).</span></li><li><time>2 Nov 2026</time><span>Enquiry received through the website.</span></li></ul></section>
+</div>
+<script>
+const C=[["Priya Raman","Buyer","3-bed house, $620k to $680k, Westfield","view","Tom Ellis","12 Nov 2026","+1 (555) 014-2271","priya.raman@example.com"],["Marcus and Elena Doyle","Seller","14 Alder Street, listed at $845,000","listed","Sarah Chen","11 Nov 2026","+1 (555) 019-8830","doyle.family@example.com"],["Hannah Whitfield","Buyer","2-bed condo, offer of $410,000 sent","offer","Tom Ellis","10 Nov 2026","+1 (555) 010-5546","h.whitfield@example.com"],["Kwame Mensah","Landlord","2 rental properties, Eastgate","listed","Dana Ortiz","9 Nov 2026","+1 (555) 017-3092","kwame.mensah@example.com"],["Lucia Fernandes","Tenant","1-bed apartment, move in by 1 Dec","due","Dana Ortiz","3 Nov 2026","+1 (555) 012-6618","lucia.f@example.com"],["Oliver Banks","Buyer","First-time buyer, budget not yet set","new","Sarah Chen","Today","+1 (555) 013-7704","oliver.banks@example.com"],["Ingrid Solberg","Seller","Valuation for 7 Quay Road","view","Tom Ellis","6 Nov 2026","+1 (555) 018-4423","ingrid.solberg@example.com"],["Raj Patel","Investor","Looking for 3 to 5 unit buildings","due","Sarah Chen","28 Oct 2026","+1 (555) 011-9087","raj.patel@example.com"]],ST={"new":"New lead","view":"Viewing booked","offer":"Offer made","due":"Follow-up due","listed":"Active"};
+const detail=(c)=>`<div class="dh"><div><h2>${c[0]}</h2><p>${c[1]} · ${c[2]}</p><span class="stage s-${c[3]}"><span class="dot" style="background:currentColor"></span>${ST[c[3]]}</span></div><div style="display:flex;gap:8px"><a class="btn btn-secondary" href="#">Email</a><a class="btn btn-primary" href="#">Call ${c[0].split(' ')[0]}</a></div></div>
+<dl class="grid"><div><dt>Phone</dt><dd class="num">${c[6]}</dd></div><div><dt>Email</dt><dd>${c[7]}</dd></div><div><dt>Agent</dt><dd>${c[4]}</dd></div><div><dt>Last contact</dt><dd>${c[5]}</dd></div></dl>
+<div class="next"><b>Next step</b>Send three new listings matching the brief and confirm the Saturday viewing time.</div>
+<h3>Recent activity</h3><ul class="tl"><li><time>${c[5]}</time><span>Call, 12 minutes. Discussed budget and neighbourhoods.</span></li><li><time>7 Nov 2026</time><span>Email sent: listing shortlist (4 properties).</span></li><li><time>2 Nov 2026</time><span>Enquiry received through the website.</span></li></ul>`;
+document.getElementById('items').addEventListener('click',e=>{const b=e.target.closest('.item');if(!b)return;document.querySelectorAll('.item').forEach(x=>x.setAttribute('aria-current',x===b));document.getElementById('detail').innerHTML=detail(C[+b.dataset.i]);});
+</script>
+<p class="sr">Sample data for design review only.</p>
+<!-- ===== Mockup toolbar: theme toggle + client feedback pins. Delete this block for real code. ===== -->
+<style>
+#mk-bar{position:fixed;right:16px;bottom:16px;z-index:1000;display:flex;gap:8px;font:500 14px var(--font);opacity:.85}
+#mk-bar:hover,#mk-bar:focus-within{opacity:1}
+#mk-tools:not([hidden]){display:flex;gap:8px}
+#mk-bar button{height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);box-shadow:var(--shadow-overlay);cursor:pointer;font:inherit}
+#mk-bar button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+body.mk-commenting, body.mk-commenting *{cursor:crosshair!important}
+.mk-pin{position:absolute;z-index:999;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#E11D48;color:#fff;font:600 12px/24px var(--font);text-align:center;box-shadow:0 0 0 2px #fff,var(--shadow-overlay);cursor:pointer}
+#mk-panel{position:fixed;right:16px;bottom:64px;z-index:1000;width:min(360px,calc(100vw - 32px));max-height:60vh;overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-overlay);padding:16px;font:14px/1.5 var(--font)}
+#mk-panel h3{margin:0 0 8px;font-size:15px}
+#mk-panel ol{padding-left:20px;margin:8px 0}
+#mk-panel li{margin-bottom:6px}
+#mk-panel small{color:var(--text-subtle)}
+@media (max-width:640px),(pointer:coarse){#mk-bar{bottom:76px} #mk-bar button{height:44px}}
+</style>
+<div id="mk-bar">
+  <span id="mk-tools" hidden>
+    <button type="button" id="mk-comment" aria-pressed="false">Add comment</button>
+  </span>
+  <button type="button" id="mk-list" aria-expanded="false">Feedback (<span id="mk-count">0</span>)</button>
+</div>
+<div id="mk-panel" hidden></div>
+<script>
+(() => {
+  const KEY = "mk-feedback:" + location.pathname;
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+  const save = (n) => { try { localStorage.setItem(KEY, JSON.stringify(n)); } catch {} };
+  let notes = load(), commenting = false;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+  $("mk-comment").onclick = (e) => {
+    commenting = !commenting;
+    document.body.classList.toggle("mk-commenting", commenting);
+    e.currentTarget.setAttribute("aria-pressed", commenting);
+    e.currentTarget.textContent = commenting ? "Click the screen…" : "Add comment";
+  };
+  document.addEventListener("click", (e) => {
+    if (!commenting || e.target.closest("#mk-bar,#mk-panel,.mk-pin")) return;
+    e.preventDefault(); e.stopPropagation();
+    const near = (e.target.closest("button,a,h1,h2,h3,th,td,label,input,p,li") || e.target).textContent.trim().replace(/\s+/g," ").slice(0,40);
+    const text = prompt("Your comment" + (near ? ` (near "${near}")` : "") + ":");
+    $("mk-comment").click();
+    if (!text) return;
+    notes.push({ x: e.pageX / document.documentElement.scrollWidth, y: e.pageY, near, text, at: new Date().toISOString() });
+    save(notes); render();
+  }, true);
+  $("mk-list").onclick = (e) => { const open = $("mk-panel").hidden; $("mk-panel").hidden = !open; $("mk-tools").hidden = !open; e.currentTarget.setAttribute("aria-expanded", open); render(); };
+
+  function asText() {
+    return `Feedback on "${document.title}"\n` + notes.map((n, i) => `${i + 1}. ${n.text}${n.near ? `  [near "${n.near}"]` : ""}`).join("\n");
+  }
+  function render() {
+    document.querySelectorAll(".mk-pin").forEach(p => p.remove());
+    notes.forEach((n, i) => {
+      const p = document.createElement("button");
+      p.className = "mk-pin"; p.textContent = i + 1; p.title = n.text;
+      p.style.left = (n.x * 100) + "%"; p.style.top = n.y + "px";
+      p.onclick = () => { $("mk-panel").hidden = false; render(); };
+      document.body.appendChild(p);
+    });
+    $("mk-count").textContent = notes.length;
+    const panel = $("mk-panel");
+    if (panel.hidden) return;
+    panel.innerHTML = `<h3>Feedback on this screen</h3>` +
+      (notes.length ? `<ol>${notes.map((n, i) => `<li>${esc(n.text)} ${n.near ? `<small>near “${esc(n.near)}”</small>` : ""} <button type="button" data-del="${i}" aria-label="Delete comment ${i + 1}">×</button></li>`).join("")}</ol>`
+                    : `<p><small>No comments yet. Click “Add comment”, then click anywhere on the screen.</small></p>`) +
+      `<div style="display:flex;gap:8px;margin-top:8px"><button type="button" id="mk-copy" class="btn btn-primary">Copy all</button><button type="button" id="mk-dl" class="btn btn-secondary">Download .txt</button></div>`;
+    panel.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { notes.splice(+b.dataset.del, 1); save(notes); render(); });
+    $("mk-copy").onclick = async () => { try { await navigator.clipboard.writeText(asText()); $("mk-copy").textContent = "Copied"; } catch { prompt("Copy this:", asText()); } };
+    $("mk-dl").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([asText()], { type: "text/plain" })); a.download = "feedback-" + (location.pathname.split("/").pop() || "screen").replace(/\.html?$/, "") + ".txt"; a.click(); };
+  }
+  render();
+})();
+</script>
+</body></html>
