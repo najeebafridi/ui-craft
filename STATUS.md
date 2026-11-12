@@ -8,7 +8,7 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 
 ## Steps
 - [x] 0. Set up git, STATUS, LICENSE
-- [ ] 1. Research -> research/sources.md, research/conflicts.md
+- [x] 1. Research -> research/sources.md, research/conflicts.md
 - [ ] 2. Licence sort -> CREDITS.md
 - [ ] 3. Write skill -> skills/ui-craft/SKILL.md + references/
 - [ ] 4. Fast mockups guide -> references/mockups.md + template
@@ -22,4 +22,4 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - Write nothing outside this folder.
 
 ## Next action
-Step 1: research.
+Step 2: licence sort -> CREDITS.md.
