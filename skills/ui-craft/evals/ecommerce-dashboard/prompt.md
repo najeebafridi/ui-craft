@@ -1,0 +1,8 @@
+---
+tags: [skill-creator]
+max_turns: 30
+timeout_seconds: 900
+allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, Bash]
+---
+
+I run a small online store selling handmade candles (~300 orders a month). Build me a dashboard screen as a single HTML file I can open in the browser: sales, orders, best-selling products, and stock that's running low. Make it look professional.

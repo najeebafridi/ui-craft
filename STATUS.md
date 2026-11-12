@@ -22,4 +22,4 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - Write nothing outside this folder.
 
 ## Next action
-Step 5: evals. Build 4 screens with and without the skill (skill-creator eval process), compare, fix skill. Work folder: evals/
+Step 5: evals. Iteration 1 done (88% vs 56% pass; blind judge: skill won 3 of 5). Skill fixed (touch sizes, overflow, audit script). Next: iteration-2 = rerun with_skill only, reuse baseline from iteration-1, re-judge blind.

@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+      "passed": true,
+      "evidence": "dashboard.html: desktop: 0 fails []; phone: 0 fails []"
+    },
+    {
+      "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+      "passed": true,
+      "evidence": "dashboard.html: hasFocusStyle=True"
+    },
+    {
+      "text": "Smallest visible text is at least 12px",
+      "passed": true,
+      "evidence": "dashboard.html: min=12px"
+    },
+    {
+      "text": "No sideways scrolling at 390px phone width",
+      "passed": true,
+      "evidence": "dashboard.html: overflow=False"
+    },
+    {
+      "text": "Uses at most 7 distinct font sizes on the desktop screen",
+      "passed": true,
+      "evidence": "dashboard.html: sizes=[12, 13, 14, 16, 20, 30]"
+    },
+    {
+      "text": "Every form control has an accessible label",
+      "passed": true,
+      "evidence": "dashboard.html: unlabelled=[]"
+    },
+    {
+      "text": "At least 80% of spacing values sit on the 4px grid",
+      "passed": true,
+      "evidence": "dashboard.html: on-grid=0.962"
+    },
+    {
+      "text": "Respects prefers-reduced-motion (or has no motion at all)",
+      "passed": true,
+      "evidence": "dashboard.html: reducedMotion=True motion=True"
+    },
+    {
+      "text": "No emoji icons, lorem ipsum or placeholder-image services",
+      "passed": true,
+      "evidence": "dashboard.html: emoji=0 lorem=False placeholderImgs=0"
+    },
+    {
+      "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+      "passed": false,
+      "evidence": "dashboard.html: 8 small: ['Overview', 'Orders', 'Products & stock', 'Customers', 'Settings', 'Review']"
+    },
+    {
+      "text": "KPI figures are given context (vs previous period or a target)",
+      "passed": true,
+      "evidence": "regex on text"
+    }
+  ],
+  "summary": {
+    "passed": 10,
+    "failed": 1,
+    "total": 11,
+    "pass_rate": 0.909
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "index.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 43,
+      "contrastFails": 2,
+      "contrastFailSamples": [
+        {
+          "text": "AM",
+          "ratio": 3.24,
+          "size": 22
+        },
+        {
+          "text": "Update password",
+          "ratio": 3.24,
+          "size": 14
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        16,
+        18,
+        22
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL"
+      ],
+      "targetsUnder44": [
+        "Profile",
+        "Password",
+        "Notifications",
+        "Upload photo",
+        "INPUT",
+        "INPUT",
+        "Africa/AbidjanAfrica/AccraAfri",
+        "Cancel",
+        "Save changes",
+        "INPUT",
+        "Show",
+        "INPUT",
+        "Show",
+        "INPUT",
+        "Show",
+        "Update password",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL"
+      ],
+      "interactiveCount": 23,
+      "unlabelledControls": [
+        "avatarFile"
+      ],
+      "spacingOn4pxGrid": 0.575,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 21
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 42,
+      "contrastFails": 2,
+      "contrastFailSamples": [
+        {
+          "text": "AM",
+          "ratio": 3.24,
+          "size": 22
+        },
+        {
+          "text": "Update password",
+          "ratio": 3.24,
+          "size": 14
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        16,
+        22
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL"
+      ],
+      "targetsUnder44": [
+        "Profile",
+        "Password",
+        "Notifications",
+        "Upload photo",
+        "INPUT",
+        "INPUT",
+        "Africa/AbidjanAfrica/AccraAfri",
+        "Cancel",
+        "Save changes",
+        "INPUT",
+        "Show",
+        "INPUT",
+        "Show",
+        "INPUT",
+        "Show",
+        "Update password",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL",
+        "LABEL"
+      ],
+      "interactiveCount": 23,
+      "unlabelledControls": [
+        "avatarFile"
+      ],
+      "spacingOn4pxGrid": 0.59,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 21
+    }
+  }
+}

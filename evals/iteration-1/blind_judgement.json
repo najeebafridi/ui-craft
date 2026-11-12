@@ -1,0 +1,37 @@
+{
+"ecommerce-dashboard": {
+"X": {"professional":7,"hierarchy":7,"polish":6,"phone":5,"approve":6},
+"Y": {"professional":8,"hierarchy":8,"polish":8,"phone":7,"approve":8},
+"winner":"Y",
+"reason":"Y leads with an insight headline ('Sales are up 19%...'), a 4th KPI that surfaces low stock with a Review link, and a low-stock table with days-left, reorder points and Reorder buttons, which is actionable. X's phone version is visibly broken: the Recent orders columns collide ('ORDERCUSTOMER'), and 'left' wraps under the stock numbers, and its donut says 'Total 4 lines', which is filler.",
+"winner_weaknesses":["Dark theme with a tall empty gap under Best sellers, and a sidebar that stops at about 900px on desktop","On the phone, the low-stock rows have a large Reorder button per item, which makes the list long, and the top nav is cramped and cut off"]
+},
+"settings-form": {
+"X": {"professional":6,"hierarchy":6,"polish":7,"phone":7,"approve":6},
+"Y": {"professional":7,"hierarchy":8,"polish":5,"phone":5,"approve":6},
+"winner":"X",
+"reason":"X renders cleanly with no overlapping elements: three consistent cards with matching section footers and a tidy toggle list, and its phone version is clean with tabs on top. Y has the better structure (app shell, two-column label/field layout, password rules, tab underline), but a sticky 'unsaved changes' bar overlaps the password rules on desktop and the Save/Cancel buttons on the phone, which a client would see as a bug.",
+"winner_weaknesses":["Generic and spare: no app shell or branding, and the left nav is just text links floating on a black page","Disabled Save changes button is low contrast, and the strength bar with no label is unclear; the phone tabs do not mark which section you are on while scrolling"]
+},
+"mobile-booking": {
+"X": {"professional":4,"hierarchy":5,"polish":3,"phone":2,"approve":3},
+"Y": {"professional":7,"hierarchy":8,"polish":7,"phone":7,"approve":7},
+"winner":"Y",
+"reason":"Y is a clear stepped flow with a 4-segment progress bar, a single question ('What are you in for?'), roomy service cards with price and duration, and a pinned Continue button, which is easy to use on a phone. X's phone shot is broken: the cards are clipped at the right edge, and the 'Nothing selected yet / Review booking' bar overlaps the date picker.",
+"winner_weaknesses":["Emoji icons (scissors, star, razor) look cheap and are inconsistent, and the first progress segment is a thick block unlike the thin others","The Continue button is disabled grey with weak contrast, and the screen has no barber or time slot visible, so it only shows step 1"]
+},
+"saas-landing-page": {
+"X": {"professional":7,"hierarchy":7,"polish":7,"phone":6,"approve":6},
+"Y": {"professional":9,"hierarchy":9,"polish":9,"phone":8,"approve":9},
+"winner":"Y",
+"reason":"Y has an editorial condensed-serif headline, a real conversion path (inline work email field with 'Start free trial' and a 'Free for 14 days' note), and a realistic notes card with dated action items and owners. X relies on a heavy tight-set headline, a generic stats strip ('6 hrs', '0', '40+') and three equal boxes, and its phone shows the hero text running to the screen edge with no side padding, plus a button stack that looks unfinished.",
+"winner_weaknesses":["The condensed serif headline is tightly set and is slightly hard to read at some sizes, and the left-aligned hero leaves empty space","No social proof, logos or pricing is visible in the first screens, so trust is mostly on the sample card"]
+},
+"client-options-crm": {
+"X": {"professional":7,"hierarchy":7,"polish":5,"phone":5,"approve":6},
+"Y": {"professional":6,"hierarchy":5,"polish":4,"phone":3,"approve":4},
+"winner":"X",
+"reason":"X's three directions are rich and realistic: a dense table with stage pills and an active filter chip, a card grid with a follow-up alert banner and call/email buttons, and a dark master-detail with a next-step banner and activity timeline. They are distinct and speak to real-estate workflows. Y's options are sparse (6 rows, no stage or next action), and its phone layouts are broken: option 1 crams the table beside the full sidebar, so columns are cut off.",
+"winner_weaknesses":["Option 1 table overflows at both widths: the primary action button and Next follow-up column are cut off, and the phone shows only name and type","A floating 'All options / Add comment / Feedback' pill bar overlaps content in all three options and on the phone, and the dark option 3 is plain on the empty right side"]
+}
+}

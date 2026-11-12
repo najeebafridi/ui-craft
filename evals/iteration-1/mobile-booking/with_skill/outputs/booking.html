@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Book a visit - Mockup v1</title>
+<!--
+Design brief
+Product: mobile app for a barbershop chain; customers book in under a minute
+Tone: confident, warm, no-fuss        Density: touch (16px body, 44px+ targets)
+Accent: deep green #1B4D3E            Neutrals: warm grey (stone)
+Font: system stack                    Radius: 12px cards, 8px chips (soft-ish)
+Primary task: pick a service, a barber and a time, then confirm
+Sample data: names, prices and availability are made up.
+-->
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #F7F5F2;  --surface: #FFFFFF;  --surface-2: #F0EDE8;  --surface-3: #E4E0D9;
+  --border: #E4E0D9;  --border-strong: #8A8378;
+  --text: #1C1917;  --text-muted: #57534E;  --text-subtle: #6B655D;
+  --accent: #1B4D3E;  --accent-hover: #153D31;  --accent-fg: #FFFFFF;
+  --accent-soft: #E8F1ED;  --accent-text: #1B4D3E;
+  --danger-text: #B91C1C;  --danger-soft: #FEF2F2;
+  --success: #15803D;
+  --overlay: rgb(28 25 23 / .5);
+  --shadow-raised: 0 1px 2px rgb(28 25 23 / .06), 0 1px 3px rgb(28 25 23 / .10);
+  --shadow-overlay: 0 -8px 32px rgb(28 25 23 / .18);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius-sm: 8px; --radius: 12px; --radius-full: 9999px;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F0E0D;  --surface: #1A1816;  --surface-2: #24211E;  --surface-3: #2F2B27;
+    --border: #2F2B27;  --border-strong: #7A736A;
+    --text: #EDEAE5;  --text-muted: #B3ADA3;  --text-subtle: #978F84;
+    --accent: #2F7A62;  --accent-hover: #38906F;  --accent-fg: #FFFFFF;
+    --accent-soft: #14281F;  --accent-text: #8FD1B6;
+    --danger-text: #FCA5A5;  --danger-soft: #2A0E0E;
+    --success: #4ADE80;
+    --overlay: rgb(0 0 0 / .6);
+    --shadow-raised: 0 1px 2px rgb(0 0 0 / .4);
+    --shadow-overlay: 0 -8px 32px rgb(0 0 0 / .5);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 72px; scroll-padding-bottom: 160px; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 16px/1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3, p { margin: 0; }
+button, input { font: inherit; color: inherit; }
+button { touch-action: manipulation; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+svg { flex: none; }
+
+.app { max-width: 480px; margin: 0 auto; min-height: 100dvh; background: var(--bg); position: relative; }
+
+/* Top bar */
+.topbar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: 8px;
+  padding: calc(8px + env(safe-area-inset-top)) 16px 8px 8px;
+  background: var(--bg); border-bottom: 1px solid var(--border);
+}
+.icon-btn { width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; border-radius: var(--radius-full); }
+.icon-btn:active { background: var(--surface-3); }
+.topbar h1 { font-size: 20px; line-height: 1.25; font-weight: 600; }
+.topbar p { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+
+main { padding: 24px 16px calc(176px + env(safe-area-inset-bottom)); display: grid; gap: 32px; }
+
+/* Section heading */
+.sec-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.step {
+  width: 28px; height: 28px; border-radius: var(--radius-full);
+  display: grid; place-items: center; font-size: 14px; font-weight: 600;
+  background: var(--surface-3); color: var(--text-muted);
+}
+.sec.done .step { background: var(--accent); color: var(--accent-fg); }
+.sec-head h2 { font-size: 18px; line-height: 1.3; font-weight: 600; }
+.sec-hint { font-size: 14px; line-height: 20px; color: var(--danger-text); margin: -4px 0 12px 40px; display: none; }
+.sec.missing .sec-hint { display: flex; gap: 6px; align-items: center; }
+
+.list { display: grid; gap: 8px; }
+
+/* Option rows (radio cards) */
+.opt { position: relative; display: block; }
+.opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.opt-body {
+  display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 16px;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius);
+  transition: background-color 120ms var(--ease-out), border-color 120ms var(--ease-out);
+}
+.opt input:active + .opt-body { background: var(--surface-2); }
+.opt input:checked + .opt-body { border-color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent-text); background: var(--accent-soft); }
+.opt input:focus-visible + .opt-body { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+.opt-main { flex: 1; min-width: 0; }
+.opt-title { font-weight: 600; line-height: 24px; }
+.opt-meta { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.opt-side { text-align: right; font-weight: 600; }
+.opt-side small { display: block; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--text-muted); }
+.check { width: 24px; height: 24px; border-radius: var(--radius-full); border: 2px solid var(--border-strong); display: grid; place-items: center; color: transparent; }
+.opt input:checked + .opt-body .check { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+
+.avatar {
+  width: 44px; height: 44px; border-radius: var(--radius-full); flex: none;
+  display: grid; place-items: center; font-weight: 600; font-size: 16px;
+  background: var(--surface-3); color: var(--text);
+}
+.opt input:checked + .opt-body .avatar { background: var(--accent); color: var(--accent-fg); }
+.rating { display: inline-flex; align-items: center; gap: 4px; }
+.rating svg { color: #B45309; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .rating svg { color: #FCD34D; } }
+
+/* Date strip */
+.dates { display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 4px 16px; scroll-snap-type: x proximity; scrollbar-width: none; }
+.dates::-webkit-scrollbar { display: none; }
+.date { flex: none; width: 56px; scroll-snap-align: start; }
+.date .opt-body { flex-direction: column; gap: 0; min-height: 72px; padding: 8px 0; justify-content: center; border-radius: var(--radius); }
+.date .dow { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.date .dom { font-size: 20px; line-height: 28px; font-weight: 600; }
+.date input:checked + .opt-body .dow { color: var(--accent-text); }
+.date input:disabled { cursor: not-allowed; }
+.date input:disabled + .opt-body { background: var(--surface-2); border-color: var(--border); opacity: .7; }
+.date input:disabled + .opt-body .dom { text-decoration: line-through; color: var(--text-subtle); }
+
+/* Time slots */
+.slots-label { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--text-muted); margin: 16px 0 8px; }
+.slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.slot {
+  min-height: 48px; border-radius: var(--radius-sm); background: var(--surface);
+  border: 1px solid var(--border-strong); font-weight: 500;
+  transition: background-color 120ms var(--ease-out), border-color 120ms var(--ease-out);
+}
+.slot:active:not(:disabled) { background: var(--surface-2); }
+.slot[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.slot:disabled { cursor: not-allowed; background: var(--surface-2); border-color: var(--border); color: var(--text-subtle); text-decoration: line-through; }
+.legend { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--text-muted); }
+
+.empty { padding: 16px; border: 1px dashed var(--border-strong); border-radius: var(--radius); }
+.empty strong { display: block; margin-bottom: 4px; }
+.empty p { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.link-btn { background: none; border: 0; padding: 0; min-height: 44px; color: var(--accent-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Bottom action bar */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+  max-width: 480px; margin: 0 auto;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: var(--surface); border-top: 1px solid var(--border);
+}
+.summary { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; align-items: baseline; }
+.summary-text { min-width: 0; font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.summary-text b { display: block; color: var(--text); font-weight: 600; font-size: 16px; line-height: 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.summary-price { text-align: right; font-weight: 600; font-size: 20px; line-height: 24px; white-space: nowrap; }
+.summary-price small { display: block; font-size: 14px; line-height: 20px; font-weight: 400; color: var(--text-muted); }
+
+.btn {
+  width: 100%; min-height: 52px; border-radius: var(--radius); border: 1px solid transparent;
+  font-weight: 600; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background-color 120ms var(--ease-out), transform 120ms var(--ease-out);
+}
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:active { transform: scale(.985); }
+.btn-primary[aria-busy="true"] { pointer-events: none; opacity: .85; }
+.btn-secondary { background: var(--surface); border-color: var(--border-strong); color: var(--text); }
+.btn-secondary:active { background: var(--surface-2); }
+.btn-text { background: none; color: var(--text-muted); min-height: 48px; }
+.spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Sheet */
+.scrim { position: fixed; inset: 0; z-index: 10; background: var(--overlay); opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease-out); }
+.scrim.open { opacity: 1; pointer-events: auto; }
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 11; max-width: 480px; margin: 0 auto;
+  max-height: 90dvh; overflow-y: auto;
+  background: var(--surface); border-radius: 16px 16px 0 0; box-shadow: var(--shadow-overlay);
+  padding: 8px 16px calc(16px + env(safe-area-inset-bottom));
+  transform: translateY(100%); visibility: hidden;
+  transition: transform 250ms var(--ease-out), visibility 0s 250ms;
+}
+.sheet.open { transform: none; visibility: visible; transition: transform 250ms var(--ease-out), visibility 0s; }
+.handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border-strong); margin: 0 auto 8px; }
+.sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sheet-head h2 { font-size: 20px; line-height: 1.25; font-weight: 600; padding-left: 4px; }
+.review { margin: 0 0 16px; padding: 0; }
+.review div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 4px; border-bottom: 1px solid var(--border); }
+.review dt { color: var(--text-muted); }
+.review dd { margin: 0; font-weight: 500; text-align: right; }
+.review .total dd { font-weight: 600; }
+.note { font-size: 14px; line-height: 20px; color: var(--text-muted); margin-bottom: 16px; padding: 0 4px; }
+
+/* Success */
+.done-screen {
+  position: fixed; inset: 0; z-index: 20; background: var(--bg); overflow-y: auto;
+  padding: calc(48px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+  display: none;
+}
+.done-screen.open { display: block; }
+.done-inner { max-width: 480px; margin: 0 auto; min-height: calc(100dvh - 64px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); display: flex; flex-direction: column; }
+.done-badge { width: 56px; height: 56px; border-radius: var(--radius-full); background: var(--accent); color: var(--accent-fg); display: grid; place-items: center; margin-bottom: 24px; }
+.done-inner h1 { font-size: 30px; line-height: 1.2; font-weight: 600; margin-bottom: 8px; }
+.done-inner > p { color: var(--text-muted); margin-bottom: 24px; }
+.ticket { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 16px; margin-bottom: 16px; }
+.ticket .review { margin: 0; }
+.ticket .review div:last-child { border-bottom: 0; }
+.done-actions { margin-top: auto; padding-top: 24px; display: grid; gap: 8px; }
+
+.toast { position: fixed; left: 16px; right: 16px; bottom: calc(24px + env(safe-area-inset-bottom)); z-index: 30; max-width: 448px; margin: 0 auto; background: var(--text); color: var(--bg); padding: 12px 16px; border-radius: var(--radius); font-size: 14px; line-height: 20px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="topbar">
+    <button class="icon-btn" type="button" aria-label="Back">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div>
+      <h1>Book a visit</h1>
+      <p>Soho &middot; 14 Greek Street</p>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="sec" id="sec-service" aria-labelledby="h-service">
+      <div class="sec-head"><span class="step" aria-hidden="true">1</span><h2 id="h-service">Choose a service</h2></div>
+      <p class="sec-hint" role="alert">Pick a service to continue</p>
+      <div class="list" id="services" role="radiogroup" aria-labelledby="h-service"></div>
+    </section>
+
+    <section class="sec" id="sec-barber" aria-labelledby="h-barber">
+      <div class="sec-head"><span class="step" aria-hidden="true">2</span><h2 id="h-barber">Choose a barber</h2></div>
+      <p class="sec-hint" role="alert">Pick a barber, or Any barber for the earliest time</p>
+      <div class="list" id="barbers" role="radiogroup" aria-labelledby="h-barber"></div>
+    </section>
+
+    <section class="sec" id="sec-time" aria-labelledby="h-time">
+      <div class="sec-head"><span class="step" aria-hidden="true">3</span><h2 id="h-time">Pick a time</h2></div>
+      <p class="sec-hint" role="alert">Pick a day and a time to continue</p>
+      <div class="dates" id="dates" role="radiogroup" aria-label="Day"></div>
+      <div id="slots-wrap" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <div class="bar">
+    <div class="summary" aria-live="polite">
+      <div class="summary-text"><b id="sum-title">Nothing selected yet</b><span id="sum-sub">Start with a service</span></div>
+      <div class="summary-price num" id="sum-price" hidden></div>
+    </div>
+    <button class="btn btn-primary" id="review-btn" type="button">Review booking</button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" aria-hidden="true">
+  <div class="handle" aria-hidden="true"></div>
+  <div class="sheet-head">
+    <h2 id="sheet-title">Confirm your booking</h2>
+    <button class="icon-btn" type="button" id="sheet-close" aria-label="Close">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <dl class="review num" id="review"></dl>
+  <p class="note">Pay in the shop after your cut. Free cancellation up to 2 hours before.</p>
+  <button class="btn btn-primary" id="confirm-btn" type="button">Confirm booking</button>
+</div>
+
+<div class="done-screen" id="done" role="region" aria-labelledby="done-title" aria-hidden="true">
+  <div class="done-inner">
+    <div class="done-badge" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h1 id="done-title" tabindex="-1">You're booked</h1>
+    <p id="done-lead"></p>
+    <div class="ticket"><dl class="review num" id="done-review"></dl></div>
+    <p class="note" style="padding:0">We'll send a reminder 2 hours before. Running late? Call the shop on 020 7946 0153.</p>
+    <div class="done-actions">
+      <button class="btn btn-secondary" id="cal-btn" type="button">Add to calendar</button>
+      <button class="btn btn-text" id="again-btn" type="button">Book another visit</button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var SERVICES = [
+    { id: 'cut',   name: 'Haircut',            desc: 'Cut, wash and style',            min: 30, price: 28 },
+    { id: 'fade',  name: 'Skin fade',          desc: 'Precision fade with finish',      min: 45, price: 34 },
+    { id: 'beard', name: 'Beard trim',         desc: 'Shape, line-up and hot towel',    min: 20, price: 18 },
+    { id: 'combo', name: 'Cut and beard',      desc: 'Our most booked combination',     min: 60, price: 44 },
+    { id: 'shave', name: 'Hot towel shave',    desc: 'Straight razor, the classic way', min: 30, price: 30 }
+  ];
+  var BARBERS = [
+    { id: 'any',    name: 'Any barber',      spec: 'First available, earliest time', rating: null },
+    { id: 'marcus', name: 'Marcus Reid',     spec: 'Fades and tapers',               rating: '4.9' },
+    { id: 'dmitri', name: 'Dmitri Volkov',   spec: 'Classic cuts and shaves',        rating: '4.8' },
+    { id: 'aisha',  name: 'Aisha Bello',     spec: 'Beards and textured hair',       rating: '4.9' }
+  ];
+  var TIMES = [];
+  for (var h = 9; h < 19; h++) { TIMES.push([h, 0]); TIMES.push([h, 30]); }
+  var GROUPS = [['Morning', 9, 12], ['Afternoon', 12, 17], ['Evening', 17, 19]];
+  var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var MONTH = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var LONGDOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  var state = { service: null, barber: null, date: null, time: null };
+  var $ = function (id) { return document.getElementById(id); };
+  var icons = {
+    check: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    star: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.2 6.8.8-5 4.7 1.3 6.7L12 17.5l-6 3.4 1.3-6.7-5-4.7 6.8-.8z"/></svg>',
+    alert: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5M12 16v.5"/></svg>'
+  };
+
+  /* Dates: next 8 days, Sundays closed */
+  var now = new Date();
+  var DATES = [];
+  for (var i = 0; i < 8; i++) {
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+    DATES.push(d);
+  }
+  function key(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function isClosed(d) { return d.getDay() === 0; }
+
+  /* Deterministic fake availability */
+  function hash(s) { var x = 7; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) % 9973; return x; }
+  function barberFree(b, d, t) {
+    if (isClosed(d)) return false;
+    if (b === 'aisha' && d.getDay() === 2) return false; /* day off */
+    var tt = t[0] * 60 + t[1];
+    if (d.getFullYear() === now.getFullYear() && key(d) === key(now) && tt <= now.getHours() * 60 + now.getMinutes() + 30) return false;
+    return hash(b + key(d) + tt) % 100 > 38;
+  }
+  function slotFree(d, t) {
+    var b = state.barber;
+    if (!b) return false;
+    if (b === 'any') return ['marcus','dmitri','aisha'].some(function (x) { return barberFree(x, d, t); });
+    return barberFree(b, d, t);
+  }
+  function fmt(t) { return String(t[0]).padStart(2, '0') + ':' + String(t[1]).padStart(2, '0'); }
+  function dayFree(d) { return TIMES.some(function (t) { return slotFree(d, t); }); }
+  function money(n) { return '£' + n; }
+  function find(arr, id) { return arr.filter(function (x) { return x.id === id; })[0]; }
+  function longDate(d) { return LONGDOW[d.getDay()] + ' ' + d.getDate() + ' ' + MONTH[d.getMonth()]; }
+
+  /* Render options */
+  function opt(group, id, checked, inner, extraClass, disabled) {
+    return '<label class="opt ' + (extraClass || '') + '"><input type="radio" name="' + group + '" value="' + id + '"' +
+      (checked ? ' checked' : '') + (disabled ? ' disabled' : '') + '>' + inner + '</label>';
+  }
+  function renderServices() {
+    $('services').innerHTML = SERVICES.map(function (s) {
+      return opt('service', s.id, state.service === s.id,
+        '<span class="opt-body"><span class="opt-main"><span class="opt-title">' + s.name + '</span><span class="opt-meta" style="display:block">' + s.desc + '</span></span>' +
+        '<span class="opt-side num">' + money(s.price) + '<small>' + s.min + ' min</small></span></span>');
+    }).join('');
+  }
+  function renderBarbers() {
+    $('barbers').innerHTML = BARBERS.map(function (b) {
+      var ini = b.id === 'any' ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-3.5 3-5.5 6.5-5.5s6 2 6.5 5.5"/><path d="M17 5.5a3.5 3.5 0 010 6.5M19.5 20c-.2-2-1-3.5-2.4-4.5"/></svg>' : b.name.split(' ').map(function (w) { return w[0]; }).join('');
+      var meta = b.spec + (b.rating ? '' : '');
+      return opt('barber', b.id, state.barber === b.id,
+        '<span class="opt-body"><span class="avatar" aria-hidden="true">' + ini + '</span><span class="opt-main"><span class="opt-title">' + b.name + '</span><span class="opt-meta" style="display:block">' + meta + '</span></span>' +
+        (b.rating ? '<span class="rating num">' + icons.star + '<span>' + b.rating + '</span></span>' : '') + '</span>');
+    }).join('');
+  }
+  function renderDates() {
+    $('dates').innerHTML = DATES.map(function (d) {
+      var closed = isClosed(d);
+      var off = closed || (state.barber && !dayFree(d));
+      var label = (key(d) === key(now) ? 'Today' : DOW[d.getDay()]);
+      return opt('date', key(d), state.date === key(d),
+        '<span class="opt-body" aria-label="' + longDate(d) + (off ? ', unavailable' : '') + '"><span class="dow">' + (label === 'Today' ? 'Today' : label) + '</span><span class="dom num">' + d.getDate() + '</span></span>',
+        'date', off);
+    }).join('');
+  }
+  function renderSlots() {
+    var wrap = $('slots-wrap');
+    var d = DATES.filter(function (x) { return key(x) === state.date; })[0];
+    if (!state.barber) {
+      wrap.innerHTML = '<div class="empty"><strong>Times show once you pick a barber</strong><p>Availability depends on who is cutting.</p></div>';
+      return;
+    }
+    if (!d) { wrap.innerHTML = '<div class="empty"><strong>Pick a day first</strong><p>Free times will appear here.</p></div>'; return; }
+    if (!dayFree(d)) {
+      var who = state.barber === 'any' ? 'We are' : find(BARBERS, state.barber).name.split(' ')[0] + ' is';
+      wrap.innerHTML = '<div class="empty"><strong>Fully booked on ' + longDate(d) + '</strong><p>' + who + ' not available this day. Try another day' +
+        (state.barber !== 'any' ? ' or <button type="button" class="link-btn" id="any-link">switch to any barber</button>' : '') + '.</p></div>';
+      return;
+    }
+    var html = '';
+    GROUPS.forEach(function (g) {
+      var ts = TIMES.filter(function (t) { return t[0] >= g[1] && t[0] < g[2]; });
+      html += '<h3 class="slots-label">' + g[0] + '</h3><div class="slots">' + ts.map(function (t) {
+        var free = slotFree(d, t);
+        var sel = state.time === fmt(t);
+        return '<button type="button" class="slot num" data-time="' + fmt(t) + '" aria-pressed="' + sel + '"' + (free ? '' : ' disabled aria-label="' + fmt(t) + ', booked"') + '>' + fmt(t) + '</button>';
+      }).join('') + '</div>';
+    });
+    html += '<p class="legend">Crossed-out times are already booked.</p>';
+    wrap.innerHTML = html;
+  }
+
+  function render() { renderServices(); renderBarbers(); renderDates(); renderSlots(); updateBar(); }
+
+  /* Summary bar */
+  function updateBar() {
+    var s = state.service && find(SERVICES, state.service);
+    var b = state.barber && find(BARBERS, state.barber);
+    var d = state.date && DATES.filter(function (x) { return key(x) === state.date; })[0];
+    var parts = [];
+    if (s) parts.push(s.name);
+    if (b) parts.push(b.id === 'any' ? 'Any barber' : b.name.split(' ')[0]);
+    var title = parts.length ? parts.join(' with ').replace(' with Any barber', ', any barber') : 'Nothing selected yet';
+    var sub;
+    if (d && state.time) sub = DOW[d.getDay()] + ' ' + d.getDate() + ' ' + MONTH[d.getMonth()] + ' at ' + state.time;
+    else if (!s) sub = 'Start with a service';
+    else if (!b) sub = 'Next, choose a barber';
+    else sub = 'Next, pick a time';
+    $('sum-title').textContent = title;
+    $('sum-sub').textContent = sub;
+    var p = $('sum-price');
+    if (s) { p.hidden = false; p.innerHTML = money(s.price) + '<small>' + s.min + ' min</small>'; } else p.hidden = true;
+    document.querySelectorAll('.sec').forEach(function (el) { el.classList.remove('missing'); });
+    $('sec-service').classList.toggle('done', !!s);
+    $('sec-barber').classList.toggle('done', !!b);
+    $('sec-time').classList.toggle('done', !!(d && state.time));
+  }
+
+  /* Events */
+  function pickDefaultDate() {
+    if (state.date) return;
+    var first = DATES.filter(function (d) { return dayFree(d); })[0];
+    if (first) state.date = key(first);
+  }
+  document.addEventListener('change', function (e) {
+    var t = e.target; if (t.type !== 'radio') return;
+    if (t.name === 'service') state.service = t.value;
+    if (t.name === 'barber') {
+      state.barber = t.value;
+      state.time = null;
+      var cur = DATES.filter(function (d) { return key(d) === state.date; })[0];
+      if (!cur || !dayFree(cur)) state.date = null;
+      pickDefaultDate();
+    }
+    if (t.name === 'date') { state.date = t.value; state.time = null; }
+    render();
+    if (t.name === 'barber') { var f = document.querySelector('input[name="barber"]:checked'); if (f) f.focus({ preventScroll: true }); }
+  });
+  document.addEventListener('click', function (e) {
+    var slot = e.target.closest && e.target.closest('.slot');
+    if (slot && !slot.disabled) { state.time = slot.dataset.time; renderSlots(); updateBar(); var again = document.querySelector('.slot[data-time="' + state.time + '"]'); if (again) again.focus({ preventScroll: true }); }
+    if (e.target.id === 'any-link') { state.barber = 'any'; state.time = null; render(); }
+  });
+
+  /* Review sheet */
+  var lastFocus = null;
+  function rows(map) {
+    return map.map(function (r) { return '<div' + (r[2] ? ' class="total"' : '') + '><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>'; }).join('');
+  }
+  function bookingRows() {
+    var s = find(SERVICES, state.service), b = find(BARBERS, state.barber);
+    var d = DATES.filter(function (x) { return key(x) === state.date; })[0];
+    return rows([
+      ['Service', s.name + ' (' + s.min + ' min)'],
+      ['Barber', b.id === 'any' ? 'First available' : b.name],
+      ['When', longDate(d) + ', ' + state.time],
+      ['Where', 'Soho, 14 Greek Street'],
+      ['Total, pay in shop', money(s.price), true]
+    ]);
+  }
+  function openSheet() {
+    var missing = null;
+    if (!state.service) missing = 'sec-service'; else if (!state.barber) missing = 'sec-barber'; else if (!state.date || !state.time) missing = 'sec-time';
+    if (missing) {
+      var el = $(missing);
+      el.classList.add('missing');
+      var hint = el.querySelector('.sec-hint');
+      hint.innerHTML = icons.alert + '<span>' + hint.textContent + '</span>';
+      el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      return;
+    }
+    lastFocus = document.activeElement;
+    $('review').innerHTML = bookingRows();
+    $('sheet').classList.add('open'); $('scrim').classList.add('open');
+    $('sheet').setAttribute('aria-hidden', 'false');
+    $('app').setAttribute('inert', '');
+    $('sheet-close').focus();
+  }
+  function closeSheet() {
+    $('sheet').classList.remove('open'); $('scrim').classList.remove('open');
+    $('sheet').setAttribute('aria-hidden', 'true');
+    $('app').removeAttribute('inert');
+    if (lastFocus) lastFocus.focus();
+  }
+  $('review-btn').addEventListener('click', openSheet);
+  $('sheet-close').addEventListener('click', closeSheet);
+  $('scrim').addEventListener('click', closeSheet);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && $('sheet').classList.contains('open')) closeSheet();
+    if (e.key === 'Tab' && $('sheet').classList.contains('open')) {
+      var f = $('sheet').querySelectorAll('button:not([disabled])');
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  /* Confirm */
+  $('confirm-btn').addEventListener('click', function () {
+    var btn = $('confirm-btn');
+    btn.setAttribute('aria-busy', 'true');
+    btn.innerHTML = '<span class="spinner" aria-hidden="true"></span>Confirming…';
+    setTimeout(function () {
+      btn.removeAttribute('aria-busy'); btn.textContent = 'Confirm booking';
+      closeSheet();
+      var b = find(BARBERS, state.barber);
+      var d = DATES.filter(function (x) { return key(x) === state.date; })[0];
+      $('done-lead').textContent = 'See you ' + (key(d) === key(now) ? 'today' : LONGDOW[d.getDay()]) + ' at ' + state.time + '.';
+      $('done-review').innerHTML = bookingRows();
+      $('done').classList.add('open'); $('done').setAttribute('aria-hidden', 'false');
+      $('app').setAttribute('inert', '');
+      $('done-title').focus();
+    }, 900);
+  });
+
+  /* Calendar file */
+  $('cal-btn').addEventListener('click', function () {
+    var s = find(SERVICES, state.service);
+    var d = DATES.filter(function (x) { return key(x) === state.date; })[0];
+    var hm = state.time.split(':');
+    var st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), +hm[0], +hm[1]);
+    var en = new Date(st.getTime() + s.min * 60000);
+    var f = function (x) { return x.getFullYear() + String(x.getMonth() + 1).padStart(2, '0') + String(x.getDate()).padStart(2, '0') + 'T' + String(x.getHours()).padStart(2, '0') + String(x.getMinutes()).padStart(2, '0') + '00'; };
+    var ics = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT','DTSTART:' + f(st),'DTEND:' + f(en),'SUMMARY:' + s.name + ' - Soho barbershop','LOCATION:14 Greek Street','END:VEVENT','END:VCALENDAR'].join('\r\n');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+    a.download = 'haircut-booking.ics';
+    document.body.appendChild(a); a.click(); a.remove();
+    toast('Calendar event saved');
+  });
+  $('again-btn').addEventListener('click', function () {
+    state = { service: null, barber: null, date: null, time: null };
+    $('done').classList.remove('open'); $('done').setAttribute('aria-hidden', 'true');
+    $('app').removeAttribute('inert');
+    render(); window.scrollTo(0, 0);
+  });
+
+  function toast(msg) {
+    var el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
+    $('toasts').appendChild(el); setTimeout(function () { el.remove(); }, 4000);
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

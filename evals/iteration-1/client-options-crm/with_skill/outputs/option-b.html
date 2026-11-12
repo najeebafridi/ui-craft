@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts, Option B (Warm and visual) - Mockup v1</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:wght@600&display=swap");
+
+:root{
+  --bg:#FAF6F0;--surface:#FFFFFF;--surface-2:#F3EDE3;--border:#E7DFD2;--border-strong:#8A7F6D;
+  --text:#1F2A24;--text-muted:#566057;
+  --accent:#1F5C47;--accent-hover:#174636;--accent-fg:#FFF;--accent-soft:#E3EFE8;--accent-text:#1F5C47;
+  --warn-text:#9A3412;--warn-soft:#FDEBDD;--late-text:#9F1239;--late-soft:#FCE7EC;--ok-text:#1F5C47;
+  --radius:14px;--font:"DM Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--display:"Fraunces",Georgia,"Times New Roman",serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/24px var(--font)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+header.top{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+.top-in{max-width:1200px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;gap:32px}
+.logo{font:600 22px var(--display);color:var(--accent);text-decoration:none}
+.top nav{display:flex;gap:4px;flex:1}
+.top nav a{padding:8px 12px;border-radius:10px;text-decoration:none;color:var(--text-muted);font-weight:500;font-size:15px}
+.top nav a:hover{background:var(--surface-2);color:var(--text)}
+.top nav a[aria-current="page"]{color:var(--accent-text);background:var(--accent-soft)}
+.me{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:600}
+main{max-width:1200px;margin:0 auto;padding:48px 32px 96px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+h1{font:600 36px/44px var(--display);margin:0;letter-spacing:-.01em}
+.sub{margin:8px 0 0;color:var(--text-muted)}
+.btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:12px;border:1px solid transparent;font:500 16px var(--font);cursor:pointer;text-decoration:none}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}.btn-primary:hover{background:var(--accent-hover)}
+.controls{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:24px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.tab{height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:500 15px var(--font);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.tab .n{color:var(--text-muted);font-weight:400}
+.tab[aria-pressed="true"]{background:var(--text);border-color:var(--text);color:#fff}.tab[aria-pressed="true"] .n{color:#D5DAD6}
+.search{position:relative;width:280px;max-width:100%}
+.search svg{position:absolute;left:14px;top:12px;color:var(--text-muted)}
+.search input{width:100%;height:40px;padding:0 14px 0 40px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);font:15px var(--font);color:var(--text)}
+.today{background:var(--warn-soft);border-radius:var(--radius);padding:16px 20px;margin-bottom:32px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.today strong{color:var(--warn-text);font-weight:600}
+.today p{margin:0;flex:1;min-width:240px}
+.today a{color:var(--warn-text);font-weight:600}
+.grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:8px}
+.card:hover{border-color:var(--border-strong)}
+.card .top{display:flex;gap:16px;align-items:center;margin-bottom:8px}
+.av{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font:600 16px var(--display);color:var(--text)}
+h3{margin:0;font-size:18px;line-height:24px;font-weight:600}
+h3 a{text-decoration:none}h3 a:hover{color:var(--accent-text);text-decoration:underline}
+.meta{margin:2px 0 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tag{font-size:13px;color:var(--text-muted)}
+.st{font-size:13px;font-weight:500;padding:0 8px;border-radius:6px;background:var(--surface-2);color:var(--text)}
+.s-hot{background:var(--warn-soft);color:var(--warn-text)}.s-won{background:var(--accent-soft);color:var(--ok-text)}.s-new{background:#E4ECFA;color:#1E3A8A}
+.s-cold{color:var(--text-muted)}
+.intr{margin:0;font-weight:500}
+.bud{margin:0;color:var(--text-muted)}
+.fu{margin:8px 0 0;display:flex;gap:8px;align-items:center;font-size:14px;color:var(--text-muted)}
+.f-today{color:var(--warn-text);font-weight:500}.f-late{color:var(--late-text);font-weight:500}
+.foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.last{font-size:13px;color:var(--text-muted)}
+.acts{display:flex;gap:8px}
+.ib{width:44px;height:44px;border-radius:12px;border:1px solid var(--border-strong);display:grid;place-items:center;color:var(--text);text-decoration:none;background:var(--surface)}
+.ib:hover{background:var(--accent-soft);color:var(--accent-text)}
+.more{display:flex;justify-content:center;margin-top:32px;gap:16px;align-items:center;color:var(--text-muted);flex-wrap:wrap}
+.btn-secondary{background:var(--surface);color:var(--text);border-color:var(--border-strong)}
+.note{margin:32px 0 0;color:var(--text-muted);font-size:13px;text-align:center}
+@media (max-width:760px){.top nav{display:none}.top-in{padding:0 16px;justify-content:space-between}main{padding:24px 16px 96px}h1{font-size:30px;line-height:36px}.search{width:100%}}
+
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in"><a class="logo" href="#">Keystone</a>
+<nav aria-label="Main"><a href="#">Home</a><a href="#" aria-current="page">Contacts</a><a href="#">Listings</a><a href="#">Deals</a><a href="#">Calendar</a></nav><span class="me" aria-label="Signed in as Sara Lindqvist">SL</span></div></header>
+<main>
+  <div class="head"><div><h1>Your contacts</h1><p class="sub">248 people across buying, selling and renting.</p></div><a class="btn btn-primary" href="#"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add contact</a></div>
+  <div class="today" role="status"><p><strong>5 people need a follow-up today.</strong> Two are overdue, including Linda Chu (quiet for 6 weeks).</p><a href="#">Show only these</a></div>
+  <div class="controls">
+    <div class="tabs" role="group" aria-label="Filter by type"><button class="tab" type="button" aria-pressed="true">All <span class="n">248</span></button><button class="tab" type="button" aria-pressed="false">Buyers <span class="n">96</span></button><button class="tab" type="button" aria-pressed="false">Sellers <span class="n">58</span></button><button class="tab" type="button" aria-pressed="false">Landlords &amp; tenants <span class="n">71</span></button><button class="tab" type="button" aria-pressed="false">Investors <span class="n">23</span></button></div>
+    <div class="search"><span aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span><input type="search" aria-label="Search contacts" placeholder="Search by name or place"></div>
+  </div>
+  <ul class="grid" aria-label="Contacts"><li class="card"><div class="top"><span class="av" style="background:#F3D9C8">PR</span><div><h3><a href="#">Priya Raman</a></h3><p class="meta"><span class="tag">Buyer</span> <span class="st s-active">Viewing booked</span></p></div></div>
+<p class="intr">3-bed house, Eastfield</p><p class="bud num">$780-850k</p><p class="fu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Next: Tomorrow, 10:00</span></p>
+<div class="foot"><span class="last">Last contact 2h ago &middot; Tom</span><span class="acts"><a class="ib" href="#" aria-label="Call Priya Raman"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Priya Raman"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#D6E6DC">MD</span><div><h3><a href="#">Marcus &amp; Elena Doyle</a></h3><p class="meta"><span class="tag">Buyer</span> <span class="st s-hot">Offer made</span></p></div></div>
+<p class="intr">Apartment, Harbour Quarter</p><p class="bud num">$540k</p><p class="fu f-today"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Follow up: Today, 16:00</span></p>
+<div class="foot"><span class="last">Last contact Yesterday &middot; Sara</span><span class="acts"><a class="ib" href="#" aria-label="Call Marcus &amp; Elena Doyle"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Marcus &amp; Elena Doyle"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#EBDDB5">HB</span><div><h3><a href="#">Harold Bennett</a></h3><p class="meta"><span class="tag">Seller</span> <span class="st s-active">Valuation</span></p></div></div>
+<p class="intr">14 Larch Avenue</p><p class="bud num">est. $1.12M</p><p class="fu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Next: 15 Nov</span></p>
+<div class="foot"><span class="last">Last contact 3 days ago &middot; Tom</span><span class="acts"><a class="ib" href="#" aria-label="Call Harold Bennett"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Harold Bennett"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#D9DDEE">AK</span><div><h3><a href="#">Aisha Karim</a></h3><p class="meta"><span class="tag">Landlord</span> <span class="st s-won">Managing</span></p></div></div>
+<p class="intr">2 rental units, Millbrook</p><p class="bud num">$3,400/mo</p><p class="fu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Next: 20 Nov</span></p>
+<div class="foot"><span class="last">Last contact 1 week ago &middot; Sara</span><span class="acts"><a class="ib" href="#" aria-label="Call Aisha Karim"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Aisha Karim"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#EFD0D6">JE</span><div><h3><a href="#">Jonas Eriksen</a></h3><p class="meta"><span class="tag">Tenant</span> <span class="st s-active">Searching</span></p></div></div>
+<p class="intr">2-bed, Riverside</p><p class="bud num">up to $2,600/mo</p><p class="fu f-today"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Follow up: Today, 17:30</span></p>
+<div class="foot"><span class="last">Last contact 4h ago &middot; Dana</span><span class="acts"><a class="ib" href="#" aria-label="Call Jonas Eriksen"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Jonas Eriksen"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#D3E4E8">GO</span><div><h3><a href="#">Grace Oyelaran</a></h3><p class="meta"><span class="tag">Buyer</span> <span class="st s-new">New lead</span></p></div></div>
+<p class="intr">First home, Westgate</p><p class="bud num">up to $450k</p><p class="fu f-today"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Follow up: Today, 11:00</span></p>
+<div class="foot"><span class="last">Last contact 20 min ago &middot; Dana</span><span class="acts"><a class="ib" href="#" aria-label="Call Grace Oyelaran"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Grace Oyelaran"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#F3D9C8">TH</span><div><h3><a href="#">Tomas Herrera</a></h3><p class="meta"><span class="tag">Seller</span> <span class="st s-won">Listed</span></p></div></div>
+<p class="intr">88 Quarry Road</p><p class="bud num">$965k</p><p class="fu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Next: 17 Nov</span></p>
+<div class="foot"><span class="last">Last contact 2 days ago &middot; Tom</span><span class="acts"><a class="ib" href="#" aria-label="Call Tomas Herrera"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Tomas Herrera"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#D6E6DC">LC</span><div><h3><a href="#">Linda Chu</a></h3><p class="meta"><span class="tag">Buyer</span> <span class="st s-cold">Gone quiet</span></p></div></div>
+<p class="intr">Downtown condo</p><p class="bud num">$620k</p><p class="fu f-late"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Overdue since 3 Nov</span></p>
+<div class="foot"><span class="last">Last contact 6 weeks ago &middot; Sara</span><span class="acts"><a class="ib" href="#" aria-label="Call Linda Chu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Linda Chu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#EBDDB5">PN</span><div><h3><a href="#">Peter Novak</a></h3><p class="meta"><span class="tag">Investor</span> <span class="st s-hot">Negotiating</span></p></div></div>
+<p class="intr">Multi-unit, 4+ doors</p><p class="bud num">$2.1M</p><p class="fu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Next: 14 Nov</span></p>
+<div class="foot"><span class="last">Last contact Yesterday &middot; Dana</span><span class="acts"><a class="ib" href="#" aria-label="Call Peter Novak"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Peter Novak"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#D9DDEE">FA</span><div><h3><a href="#">Fatima Al-Sayed</a></h3><p class="meta"><span class="tag">Tenant</span> <span class="st s-won">Lease signed</span></p></div></div>
+<p class="intr">1-bed, Old Town</p><p class="bud num">$1,950/mo</p><p class="fu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Next: 1 Dec</span></p>
+<div class="foot"><span class="last">Last contact 5 days ago &middot; Dana</span><span class="acts"><a class="ib" href="#" aria-label="Call Fatima Al-Sayed"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Fatima Al-Sayed"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#EFD0D6">BW</span><div><h3><a href="#">Ben Whitaker</a></h3><p class="meta"><span class="tag">Seller</span> <span class="st s-active">Valuation</span></p></div></div>
+<p class="intr">27 Orchard Close</p><p class="bud num">est. $710k</p><p class="fu f-late"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Overdue since 10 Nov</span></p>
+<div class="foot"><span class="last">Last contact 9 days ago &middot; Tom</span><span class="acts"><a class="ib" href="#" aria-label="Call Ben Whitaker"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Ben Whitaker"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li><li class="card"><div class="top"><span class="av" style="background:#D3E4E8">RA</span><div><h3><a href="#">Ruth Adeyemi</a></h3><p class="meta"><span class="tag">Buyer</span> <span class="st s-active">Viewing booked</span></p></div></div>
+<p class="intr">Townhouse, Millbrook</p><p class="bud num">$690-740k</p><p class="fu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Next: 16 Nov</span></p>
+<div class="foot"><span class="last">Last contact Today, 09:15 &middot; Sara</span><span class="acts"><a class="ib" href="#" aria-label="Call Ruth Adeyemi"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a><a class="ib" href="#" aria-label="Email Ruth Adeyemi"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></span></div></li></ul>
+  <div class="more"><span>Showing 12 of 248</span><a class="btn btn-secondary" href="#">Show 12 more</a></div>
+  <p class="note">Mockup v1. All names, numbers and addresses are sample data.</p>
+</main>
+
+<!-- ===== Mockup toolbar: client feedback pins. Delete this block for real code. ===== -->
+<style>
+#mk-bar{position:fixed;right:16px;bottom:16px;z-index:1000;display:flex;gap:8px;font:500 13px/1 system-ui,sans-serif}
+#mk-bar button,#mk-bar a{height:36px;padding:0 14px;border-radius:999px;border:1px solid #5E6A7C;background:#fff;color:#0F172A;box-shadow:0 4px 6px rgb(15 23 42/.05),0 12px 32px rgb(15 23 42/.2);cursor:pointer;font:inherit;display:inline-flex;align-items:center;text-decoration:none}
+#mk-bar button[aria-pressed="true"]{background:#0F172A;color:#fff}
+body.mk-commenting, body.mk-commenting *{cursor:crosshair!important}
+.mk-pin{position:absolute;z-index:999;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:#BE123C;color:#fff;font:600 12px/24px system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px #fff;cursor:pointer;border:0;padding:0}
+#mk-panel{position:fixed;right:16px;bottom:64px;z-index:1000;width:min(360px,calc(100vw - 32px));max-height:60vh;overflow:auto;background:#fff;color:#0F172A;border:1px solid #CBD5E1;border-radius:12px;box-shadow:0 12px 32px rgb(15 23 42/.25);padding:16px;font:14px/1.5 system-ui,sans-serif}
+#mk-panel h3{margin:0 0 8px;font-size:15px}
+#mk-panel ol{padding-left:20px;margin:8px 0}
+#mk-panel li{margin-bottom:6px}
+#mk-panel small{color:#475569}
+#mk-panel .mkb{height:34px;padding:0 12px;border-radius:8px;border:1px solid #5E6A7C;background:#fff;color:#0F172A;font:500 13px system-ui,sans-serif;cursor:pointer}
+#mk-panel .mkb.p{background:#0F172A;color:#fff;border-color:#0F172A}
+@media (max-width:640px){#mk-bar{bottom:76px}}
+</style>
+<div id="mk-bar">
+  <a href="options-board.html">All options</a>
+  <button type="button" id="mk-comment" aria-pressed="false">Add comment</button>
+  <button type="button" id="mk-list">Feedback (<span id="mk-count">0</span>)</button>
+</div>
+<div id="mk-panel" hidden></div>
+<script>
+(() => {
+  const KEY = "mk-feedback:" + location.pathname;
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+  const save = (n) => { try { localStorage.setItem(KEY, JSON.stringify(n)); } catch {} };
+  let notes = load(), commenting = false;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  $("mk-comment").onclick = (e) => {
+    commenting = !commenting;
+    document.body.classList.toggle("mk-commenting", commenting);
+    e.currentTarget.setAttribute("aria-pressed", commenting);
+    e.currentTarget.textContent = commenting ? "Click the screen..." : "Add comment";
+  };
+  document.addEventListener("click", (e) => {
+    if (!commenting || e.target.closest("#mk-bar,#mk-panel,.mk-pin")) return;
+    e.preventDefault(); e.stopPropagation();
+    const near = (e.target.closest("button,a,h1,h2,h3,th,td,label,input,p,li") || e.target).textContent.trim().replace(/\s+/g," ").slice(0,40);
+    const text = prompt("Your comment" + (near ? ` (near "${near}")` : "") + ":");
+    $("mk-comment").click();
+    if (!text) return;
+    notes.push({ x: e.pageX / document.documentElement.scrollWidth, y: e.pageY, near, text });
+    save(notes); render();
+  }, true);
+  $("mk-list").onclick = () => { $("mk-panel").hidden = !$("mk-panel").hidden; render(); };
+  function asText() { return `Feedback on "${document.title}"\n` + notes.map((n, i) => `${i + 1}. ${n.text}${n.near ? `  [near "${n.near}"]` : ""}`).join("\n"); }
+  function render() {
+    document.querySelectorAll(".mk-pin").forEach(p => p.remove());
+    notes.forEach((n, i) => {
+      const p = document.createElement("button");
+      p.className = "mk-pin"; p.textContent = i + 1; p.title = n.text; p.setAttribute("aria-label", "Comment " + (i + 1) + ": " + n.text);
+      p.style.left = (n.x * 100) + "%"; p.style.top = n.y + "px";
+      p.onclick = () => { $("mk-panel").hidden = false; render(); };
+      document.body.appendChild(p);
+    });
+    $("mk-count").textContent = notes.length;
+    const panel = $("mk-panel");
+    if (panel.hidden) return;
+    panel.innerHTML = `<h3>Feedback on this option</h3>` +
+      (notes.length ? `<ol>${notes.map((n, i) => `<li>${esc(n.text)} ${n.near ? `<small>near "${esc(n.near)}"</small>` : ""} <button type="button" class="mkb" data-del="${i}" aria-label="Delete comment ${i + 1}">Delete</button></li>`).join("")}</ol>`
+                    : `<p><small>No comments yet. Click "Add comment", then click anywhere on the screen.</small></p>`) +
+      `<div style="display:flex;gap:8px;margin-top:8px"><button type="button" id="mk-copy" class="mkb p">Copy all</button><button type="button" id="mk-dl" class="mkb">Download .txt</button></div>`;
+    panel.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { notes.splice(+b.dataset.del, 1); save(notes); render(); });
+    $("mk-copy").onclick = async () => { try { await navigator.clipboard.writeText(asText()); $("mk-copy").textContent = "Copied"; } catch { prompt("Copy this:", asText()); } };
+    $("mk-dl").onclick = () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([asText()], { type: "text/plain" })); a.download = "feedback-" + (location.pathname.split("/").pop() || "screen").replace(/\.html?$/, "") + ".txt"; a.click(); };
+  }
+  render();
+})();
+</script>
+
+</body>
+</html>

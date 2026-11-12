@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account settings · Tempo</title>
+<!--
+Design brief
+Product: Tempo, project management web app used daily by small product teams
+Tone: calm, precise, quick        Density: compact-standard (14px body, 36px controls)
+Accent: indigo-blue #3B4BDB (darkened for AA)   Neutrals: cool grey
+Font: system stack                  Radius: 6px
+Primary task on this screen: update profile details and save them
+Saving model: Profile + password = explicit Save. Notifications = instant toggles with "Saved" feedback.
+Sample data only (Maya Okafor, Tempo workspace).
+-->
+<style>
+:root{
+  color-scheme: light dark;
+  --bg:#F8FAFC; --surface:#FFFFFF; --surface-2:#F1F5F9; --surface-3:#E2E8F0;
+  --border:#E2E8F0; --border-strong:#8B95A5;
+  --text:#0F172A; --text-muted:#475569; --text-subtle:#5B6678;
+  --accent:#3B4BDB; --accent-hover:#2F3DB8; --accent-fg:#FFFFFF; --accent-soft:#EEF0FD; --accent-text:#2F3DB8;
+  --success:#15803D; --success-soft:#F0FDF4; --success-text:#166534;
+  --danger:#DC2626; --danger-soft:#FEF2F2; --danger-text:#B91C1C; --danger-btn:#B91C1C; --danger-btn-hover:#991B1B;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius-sm:4px; --radius:6px;
+  --shadow-raised:0 1px 2px rgb(15 23 42/.06),0 1px 3px rgb(15 23 42/.10);
+  --shadow-overlay:0 4px 6px rgb(15 23 42/.05),0 12px 32px rgb(15 23 42/.14);
+  --ease-out:cubic-bezier(.2,0,0,1);
+  --control-h:36px; --sidebar-w:240px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B0F14; --surface:#12171E; --surface-2:#1A2029; --surface-3:#242B36;
+    --border:#262E3A; --border-strong:#5E6A7C;
+    --text:#E6E9EE; --text-muted:#A3ADBC; --text-subtle:#8792A2;
+    --accent:#4F5FE8; --accent-hover:#6573EE; --accent-fg:#FFFFFF; --accent-soft:#1B2150; --accent-text:#A5B0FA;
+    --success:#22C55E; --success-soft:#052E16; --success-text:#86EFAC;
+    --danger:#EF4444; --danger-soft:#2A0E0E; --danger-text:#FCA5A5; --danger-btn:#B91C1C; --danger-btn-hover:#DC2626;
+    --shadow-raised:0 1px 2px rgb(0 0 0/.4); --shadow-overlay:0 8px 32px rgb(0 0 0/.5);
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:80px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:400 14px/20px var(--font-sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.25;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button,input,select{font:inherit;color:inherit}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* App shell */
+.shell{display:grid;grid-template-columns:var(--sidebar-w) 1fr;min-height:100vh}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:var(--space-4) var(--space-3);display:flex;flex-direction:column;gap:var(--space-5);position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-1) var(--space-2);font-weight:600;font-size:16px}
+.brand-mark{width:24px;height:24px;border-radius:var(--radius-sm);background:var(--accent);display:grid;place-items:center}
+.nav{display:grid;gap:2px}
+.nav a{display:flex;align-items:center;gap:var(--space-3);height:36px;padding:0 var(--space-2);border-radius:var(--radius);color:var(--text-muted);text-decoration:none;font-weight:500}
+.nav a:hover{background:var(--surface-2);color:var(--text)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent-text)}
+.nav svg{flex:none}
+.sidebar .me{margin-top:auto;display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2);border-top:1px solid var(--border);padding-top:var(--space-4)}
+.me b{display:block;font-weight:500}
+.me span.meta{color:var(--text-subtle);font-size:12px;line-height:16px}
+
+.main{min-width:0}
+.topbar{display:none}
+.page{max-width:880px;margin:0 auto;padding:var(--space-6) var(--space-6) 96px}
+.page-head{margin-bottom:var(--space-5)}
+.page-head h1{font-size:24px}
+.page-head p{color:var(--text-muted);margin-top:var(--space-1)}
+
+/* Settings tabs-as-anchors */
+.subnav{display:flex;gap:var(--space-1);border-bottom:1px solid var(--border);margin-bottom:var(--space-6);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:var(--space-1)}
+.subnav a{padding:var(--space-2) var(--space-3);color:var(--text-muted);text-decoration:none;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px}
+.subnav a:hover{color:var(--text)}
+.subnav a.active{color:var(--accent-text);border-color:var(--accent)}
+
+/* Sections: no cards, separated by space and a divider */
+.section{display:grid;grid-template-columns:240px minmax(0,1fr);gap:var(--space-6);padding-bottom:var(--space-7);margin-bottom:var(--space-7);border-bottom:1px solid var(--border)}
+.section:last-of-type{border-bottom:0;margin-bottom:0}
+.section-intro h2{font-size:16px}
+.section-intro p{color:var(--text-muted);margin-top:var(--space-1)}
+.form{display:grid;gap:var(--space-5);max-width:480px}
+.field{display:grid;gap:var(--space-1)}
+label,.label{font-weight:500}
+.opt{color:var(--text-subtle);font-weight:400}
+.hint,.error{font-size:13px;line-height:18px}
+.hint{color:var(--text-muted)}
+.error{color:var(--danger-text);display:flex;gap:6px;align-items:flex-start}
+.error svg{flex:none;margin-top:1px}
+.error[hidden]{display:none}
+input[type=text],input[type=email],input[type=password],select{
+  height:var(--control-h);width:100%;padding:0 12px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);
+  transition:border-color 120ms var(--ease-out)}
+select{appearance:none;padding-right:36px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%238B95A5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+input:hover,select:hover{border-color:var(--text-subtle)}
+input[aria-invalid="true"]{border-color:var(--danger)}
+input:disabled{background:var(--surface-2);color:var(--text-subtle);cursor:not-allowed}
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:44px}
+.pw-toggle{position:absolute;right:2px;top:2px;width:32px;height:32px;border:0;background:transparent;border-radius:var(--radius-sm);color:var(--text-muted);display:grid;place-items:center;cursor:pointer}
+.pw-toggle:hover{background:var(--surface-2);color:var(--text)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);height:var(--control-h);padding:0 var(--space-4);border-radius:var(--radius);border:1px solid transparent;font-weight:500;cursor:pointer;white-space:nowrap;transition:background-color 120ms var(--ease-out),border-color 120ms var(--ease-out),transform 120ms var(--ease-out)}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-secondary{background:var(--surface);border-color:var(--border-strong);color:var(--text)}
+.btn-secondary:hover{background:var(--surface-2)}
+.btn-text{background:transparent;color:var(--text-muted)}
+.btn-text:hover{background:var(--surface-2);color:var(--text)}
+.btn[disabled],.btn[aria-disabled="true"]{opacity:.6;cursor:not-allowed;transform:none}
+.btn .spin{display:none}
+.btn.loading .spin{display:block}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.actions{display:flex;gap:var(--space-2);align-items:center}
+
+/* Avatar */
+.avatar{border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;font-weight:600;overflow:hidden;flex:none;object-fit:cover}
+.avatar-lg{width:64px;height:64px;font-size:20px}
+.avatar-sm{width:32px;height:32px;font-size:12px}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-row{display:flex;align-items:center;gap:var(--space-4)}
+.avatar-row .actions{flex-wrap:wrap}
+
+/* Password rules */
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-1);font-size:13px;line-height:18px;color:var(--text-muted)}
+.rules li{display:flex;gap:var(--space-2);align-items:center}
+.rules .dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border-strong);display:grid;place-items:center;flex:none;color:transparent}
+.rules li.ok{color:var(--success-text)}
+.rules li.ok .dot{background:var(--success);border-color:var(--success);color:#fff}
+.meter{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:var(--space-1)}
+.meter i{height:4px;border-radius:2px;background:var(--surface-3)}
+.meter[data-s="1"] i:nth-child(-n+1){background:var(--danger)}
+.meter[data-s="2"] i:nth-child(-n+2){background:#B45309}
+.meter[data-s="3"] i:nth-child(-n+3){background:var(--success)}
+.meter[data-s="4"] i{background:var(--success)}
+.strength{font-size:13px;color:var(--text-muted)}
+.summary{border:1px solid var(--danger);background:var(--danger-soft);color:var(--danger-text);border-radius:var(--radius);padding:var(--space-3) var(--space-4)}
+.summary[hidden]{display:none}
+.summary ul{margin:var(--space-1) 0 0;padding-left:var(--space-5)}
+.summary a{color:inherit}
+.session-note{display:flex;gap:var(--space-2);color:var(--text-muted);font-size:13px;line-height:18px}
+
+/* Notification rows */
+.prefs{display:grid;max-width:560px}
+.pref{display:grid;grid-template-columns:1fr auto;gap:var(--space-4);align-items:center;padding:var(--space-4) 0;border-top:1px solid var(--border)}
+.pref:first-child{border-top:0;padding-top:0}
+.pref b{font-weight:500;display:block}
+.pref .hint{margin-top:2px}
+.group-label{font-size:12px;line-height:16px;font-weight:600;color:var(--text-subtle);margin:var(--space-5) 0 var(--space-3)}
+.group-label:first-child{margin-top:0}
+.switch{position:relative;width:40px;height:24px;flex:none}
+.switch input{position:absolute;inset:-10px;width:60px;height:44px;margin:0;opacity:0;cursor:pointer;z-index:1}
+.switch .track{position:absolute;inset:0;border-radius:12px;background:var(--border-strong);transition:background-color 150ms var(--ease-out)}
+.switch .thumb{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgb(0 0 0/.3);transition:transform 150ms var(--ease-out);display:grid;place-items:center;color:var(--accent)}
+.switch .thumb svg{opacity:0}
+.switch input:checked ~ .track{background:var(--accent)}
+.switch input:checked ~ .thumb{transform:translateX(16px)}
+.switch input:checked ~ .thumb svg{opacity:1}
+.switch input:focus-visible ~ .track{outline:2px solid var(--accent);outline-offset:2px}
+.switch input:disabled{cursor:not-allowed}
+.switch input:disabled ~ .track{opacity:.5}
+.saved-tag{display:inline-flex;align-items:center;gap:var(--space-1);color:var(--success-text);font-size:13px;opacity:0;transition:opacity 150ms var(--ease-out)}
+.saved-tag.show{opacity:1}
+.freq{display:grid;gap:var(--space-1);max-width:280px;margin-top:var(--space-5)}
+
+/* Unsaved bar */
+.savebar{position:fixed;left:var(--sidebar-w);right:0;bottom:0;background:var(--surface);border-top:1px solid var(--border);box-shadow:var(--shadow-overlay);transform:translateY(110%);transition:transform 200ms var(--ease-out);z-index:20}
+.savebar.show{transform:none}
+.savebar-in{max-width:880px;margin:0 auto;padding:var(--space-3) var(--space-6);display:flex;align-items:center;justify-content:space-between;gap:var(--space-4)}
+.savebar p{color:var(--text-muted)}
+
+/* Toast */
+.toasts{position:fixed;right:var(--space-5);bottom:var(--space-5);display:grid;gap:var(--space-2);z-index:30}
+.toast{display:flex;gap:var(--space-3);align-items:center;background:var(--text);color:var(--bg);padding:var(--space-3) var(--space-4);border-radius:var(--radius);box-shadow:var(--shadow-overlay);animation:in 200ms var(--ease-out)}
+.toast.error-t{background:var(--danger-btn);color:#fff}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+@media (max-width:1024px){
+  .section{grid-template-columns:1fr;gap:var(--space-4)}
+  .page{padding:var(--space-5) var(--space-5) 96px}
+}
+@media (max-width:640px){
+  body{font-size:16px;line-height:24px}
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-4);background:var(--surface);border-bottom:1px solid var(--border)}
+  .topbar a{display:inline-flex;align-items:center;gap:var(--space-2);min-height:44px;color:var(--text-muted);text-decoration:none;font-weight:500}
+  .page{padding:var(--space-5) var(--space-4) 96px}
+  .page-head h1{font-size:20px}
+  input[type=text],input[type=email],input[type=password],select{height:44px;font-size:16px}
+  .btn{height:44px}
+  .pw-toggle{width:40px;height:40px}
+  .subnav{overflow-x:auto;margin-inline:calc(var(--space-4)*-1);padding-inline:var(--space-4)}
+  .subnav a{white-space:nowrap;min-height:44px;display:flex;align-items:center}
+  .savebar{left:0}
+  .savebar-in{padding:var(--space-3) var(--space-4);flex-direction:column;align-items:stretch}
+  .savebar .actions{flex-direction:row-reverse}
+  .savebar .actions .btn{flex:1}
+  .form .actions .btn-primary{flex:1}
+  .toasts{left:var(--space-4);right:var(--space-4)}
+  .hint,.error,.rules,.strength{font-size:14px;line-height:20px}
+  .switch{width:48px;height:28px}
+  .switch .thumb{width:24px;height:24px}
+  .switch input:checked ~ .thumb{transform:translateX(20px)}
+  .switch .track{border-radius:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-alert" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.75v3.5M8 10.75h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="shell">
+  <aside class="sidebar" aria-label="Workspace">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8.5 3.2 3L13 4.5"/></svg></span>
+      Tempo
+    </div>
+    <nav class="nav" aria-label="Main">
+      <a href="#"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5 10 4l7 5.5V16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+      <a href="#"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="m7 10 2 2 4-4"/></svg>My tasks</a>
+      <a href="#"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h8"/></svg>Projects</a>
+      <a href="#"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"/><path d="M2 16c.5-2.5 2.5-4 5-4s4.5 1.500 5 4M13 4.500a3 3 0 0 1 0 5.500M15 12.500c1.500.6 2.500 1.800 3 3.500"/></svg>Team</a>
+      <a href="#" aria-current="page"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="2.500"/><path d="M10 2.500v2M10 15.500v2M2.500 10h2M15.500 10h2M4.700 4.700l1.400 1.400M13.900 13.900l1.400 1.400M4.700 15.300l1.400-1.400M13.900 6.100l1.400-1.400"/></svg>Settings</a>
+    </nav>
+    <div class="me">
+      <span class="avatar avatar-sm" data-avatar aria-hidden="true">MO</span>
+      <div><b data-name-display>Maya Okafor</b><span class="meta">Product designer</span></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <a href="#"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 5-5 5 5 5"/></svg>Back to Tempo</a>
+      <span class="avatar avatar-sm" data-avatar aria-hidden="true">MO</span>
+    </header>
+
+    <main class="page" id="main">
+      <div class="page-head">
+        <h1>Account settings</h1>
+        <p>Manage your personal details, sign-in and the emails Tempo sends you.</p>
+      </div>
+
+      <nav class="subnav" aria-label="Settings sections">
+        <a href="#profile" class="active">Profile</a>
+        <a href="#password">Password</a>
+        <a href="#notifications">Notifications</a>
+      </nav>
+
+      <!-- PROFILE -->
+      <section class="section" id="profile" aria-labelledby="profile-h">
+        <div class="section-intro">
+          <h2 id="profile-h">Profile</h2>
+          <p>Shown to teammates on tasks, comments and mentions.</p>
+        </div>
+        <form class="form" id="profile-form" novalidate>
+          <div class="field">
+            <span class="label" id="avatar-label">Photo</span>
+            <div class="avatar-row" role="group" aria-labelledby="avatar-label">
+              <span class="avatar avatar-lg" data-avatar id="avatar-big" aria-hidden="true">MO</span>
+              <div>
+                <div class="actions">
+                  <button type="button" class="btn btn-secondary" id="avatar-btn">Upload photo</button>
+                  <button type="button" class="btn btn-text" id="avatar-remove" hidden>Remove</button>
+                </div>
+                <p class="hint" id="avatar-hint" style="margin-top:var(--space-2)">JPG or PNG, up to 2 MB</p>
+                <p class="error" id="avatar-error" role="alert" hidden><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+              </div>
+              <input type="file" id="avatar-input" accept="image/png,image/jpeg" class="sr-only" tabindex="-1" aria-label="Choose profile photo">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" autocomplete="name" value="Maya Okafor" required aria-describedby="name-error">
+            <p class="error" id="name-error" hidden><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" value="maya@northwind.studio" required aria-describedby="email-hint email-error">
+            <p class="hint" id="email-hint">Used to sign in. Changing it requires confirming the new address.</p>
+            <p class="error" id="email-error" hidden><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+          </div>
+
+          <div class="field">
+            <label for="tz">Time zone</label>
+            <select id="tz" name="tz" aria-describedby="tz-hint"></select>
+            <p class="hint" id="tz-hint">Due dates and digest times follow this zone. Local time there: <span id="tz-now" class="num"></span></p>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary" id="profile-save"><span class="spin" aria-hidden="true"></span><span class="lbl">Save changes</span></button>
+            <button type="button" class="btn btn-text" id="profile-cancel">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- PASSWORD -->
+      <section class="section" id="password" aria-labelledby="password-h">
+        <div class="section-intro">
+          <h2 id="password-h">Password</h2>
+          <p>Last changed 4 months ago.</p>
+        </div>
+        <form class="form" id="pw-form" novalidate autocomplete="on">
+          <input type="email" autocomplete="username" value="maya@northwind.studio" class="sr-only" tabindex="-1" aria-hidden="true" readonly>
+          <div class="summary" id="pw-summary" role="alert" tabindex="-1" hidden>
+            <b>Fix these before changing your password</b>
+            <ul></ul>
+          </div>
+
+          <div class="field">
+            <label for="pw-cur">Current password</label>
+            <div class="pw-wrap">
+              <input id="pw-cur" type="password" autocomplete="current-password" aria-describedby="pw-cur-error">
+              <button type="button" class="pw-toggle" aria-label="Show current password" aria-pressed="false" data-for="pw-cur"></button>
+            </div>
+            <p class="error" id="pw-cur-error" hidden><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+          </div>
+
+          <div class="field">
+            <label for="pw-new">New password</label>
+            <div class="pw-wrap">
+              <input id="pw-new" type="password" autocomplete="new-password" aria-describedby="pw-rules pw-new-error">
+              <button type="button" class="pw-toggle" aria-label="Show new password" aria-pressed="false" data-for="pw-new"></button>
+            </div>
+            <ul class="rules" id="pw-rules" aria-label="Password requirements">
+              <li data-rule="len"><span class="dot"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span>At least 10 characters</li>
+              <li data-rule="mix"><span class="dot"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span>A letter and a number</li>
+              <li data-rule="diff"><span class="dot"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span>Different from your current password</li>
+            </ul>
+            <div class="meter" id="pw-meter" data-s="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <p class="strength" id="pw-strength" aria-live="polite"></p>
+            <p class="error" id="pw-new-error" hidden><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+          </div>
+
+          <div class="field">
+            <label for="pw-conf">Confirm new password</label>
+            <div class="pw-wrap">
+              <input id="pw-conf" type="password" autocomplete="new-password" aria-describedby="pw-conf-error">
+              <button type="button" class="pw-toggle" aria-label="Show confirmation password" aria-pressed="false" data-for="pw-conf"></button>
+            </div>
+            <p class="error" id="pw-conf-error" hidden><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+          </div>
+
+          <p class="session-note">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:1px"><rect x="3" y="7" width="10" height="7" rx="1.500"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>
+            You'll stay signed in here. Other devices will be signed out.
+          </p>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary" id="pw-save"><span class="spin" aria-hidden="true"></span><span class="lbl">Update password</span></button>
+          </div>
+        </form>
+      </section>
+
+      <!-- NOTIFICATIONS -->
+      <section class="section" id="notifications" aria-labelledby="notif-h">
+        <div class="section-intro">
+          <h2 id="notif-h">Email notifications</h2>
+          <p>Changes here apply immediately. <span class="saved-tag" id="saved-tag" role="status"><svg width="14" height="14" aria-hidden="true"><use href="#i-check"/></svg>Saved</span></p>
+        </div>
+        <div>
+          <div class="prefs" id="prefs">
+            <p class="group-label">Activity on your work</p>
+            <div class="pref"><div><b id="n1">Assigned to you</b><p class="hint" id="n1h">When someone assigns you a task or project</p></div>
+              <label class="switch"><input type="checkbox" role="switch" data-key="assigned" aria-labelledby="n1" aria-describedby="n1h" checked><span class="track"></span><span class="thumb"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span></label></div>
+            <div class="pref"><div><b id="n2">Mentions</b><p class="hint" id="n2h">When a teammate @mentions you in a comment or description</p></div>
+              <label class="switch"><input type="checkbox" role="switch" data-key="mentions" aria-labelledby="n2" aria-describedby="n2h" checked><span class="track"></span><span class="thumb"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span></label></div>
+            <div class="pref"><div><b id="n3">Comments on tasks you follow</b><p class="hint" id="n3h">Replies and new comments on tasks you created or watch</p></div>
+              <label class="switch"><input type="checkbox" role="switch" data-key="comments" aria-labelledby="n3" aria-describedby="n3h"><span class="track"></span><span class="thumb"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span></label></div>
+            <div class="pref"><div><b id="n4">Due date reminders</b><p class="hint" id="n4h">One reminder the day before a task is due</p></div>
+              <label class="switch"><input type="checkbox" role="switch" data-key="due" aria-labelledby="n4" aria-describedby="n4h" checked><span class="track"></span><span class="thumb"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span></label></div>
+
+            <p class="group-label">Summaries</p>
+            <div class="pref"><div><b id="n5">Weekly project digest</b><p class="hint" id="n5h">Progress across your projects, sent Monday at 8:00 in your time zone</p></div>
+              <label class="switch"><input type="checkbox" role="switch" data-key="digest" aria-labelledby="n5" aria-describedby="n5h" checked><span class="track"></span><span class="thumb"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span></label></div>
+            <div class="pref"><div><b id="n6">Product updates</b><p class="hint" id="n6h">New features and tips, about once a month</p></div>
+              <label class="switch"><input type="checkbox" role="switch" data-key="product" aria-labelledby="n6" aria-describedby="n6h"><span class="track"></span><span class="thumb"><svg width="12" height="12" aria-hidden="true"><use href="#i-check"/></svg></span></label></div>
+          </div>
+
+          <div class="freq field">
+            <label for="batch">Send activity emails</label>
+            <select id="batch" data-key="batch">
+              <option value="instant">Instantly</option>
+              <option value="hourly" selected>Bundled hourly</option>
+              <option value="daily">Once a day</option>
+            </select>
+            <p class="hint">Bundling groups several updates into one email.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="savebar" id="savebar" role="region" aria-label="Unsaved changes" aria-hidden="true">
+  <div class="savebar-in">
+    <p>You have unsaved profile changes.</p>
+    <div class="actions">
+      <button type="button" class="btn btn-text" id="bar-discard" tabindex="-1">Discard</button>
+      <button type="button" class="btn btn-primary" id="bar-save" tabindex="-1">Save changes</button>
+    </div>
+  </div>
+</div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const EYE = '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.500 10S4.500 4.500 10 4.500 18.500 10 18.500 10 15.500 15.500 10 15.500 1.500 10 1.500 10z"/><circle cx="10" cy="10" r="2.500"/></svg>';
+  const EYE_OFF = '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l14 14M8.200 4.800A8 8 0 0 1 10 4.500c5.500 0 8.500 5.500 8.500 5.500a14 14 0 0 1-2.400 3M5.700 6.200A14 14 0 0 0 1.500 10S4.500 15.500 10 15.500c1.200 0 2.300-.3 3.200-.7M8.600 8.600a2.500 2.500 0 0 0 2.800 2.800"/></svg>';
+
+  /* ---------- toasts ---------- */
+  function toast(msg, isErr){
+    const t = document.createElement('div');
+    t.className = 'toast' + (isErr ? ' error-t' : '');
+    t.innerHTML = '<svg width="16" height="16" aria-hidden="true"><use href="#' + (isErr ? 'i-alert' : 'i-check') + '"/></svg><span></span>';
+    t.lastChild.textContent = msg;
+    $('#toasts').appendChild(t);
+    setTimeout(() => { t.style.transition = 'opacity 200ms'; t.style.opacity = 0; setTimeout(() => t.remove(), 220); }, 5000);
+  }
+
+  /* ---------- error helpers ---------- */
+  function setError(input, msg){
+    const err = $('#' + input.id + '-error');
+    if (msg){
+      input.setAttribute('aria-invalid', 'true');
+      err.hidden = false; err.querySelector('span').textContent = msg;
+    } else {
+      input.removeAttribute('aria-invalid');
+      err.hidden = true; err.querySelector('span').textContent = '';
+    }
+    return !msg;
+  }
+  function loading(btn, on, text){
+    btn.classList.toggle('loading', on); btn.disabled = on;
+    const l = $('.lbl', btn); if (l) l.textContent = on ? text : l.dataset.label;
+  }
+  $$('.btn .lbl').forEach(l => l.dataset.label = l.textContent);
+
+  /* ---------- timezones ---------- */
+  const zones = [
+    ['Pacific/Honolulu','Honolulu'],['America/Anchorage','Anchorage'],['America/Los_Angeles','Los Angeles'],['America/Denver','Denver'],
+    ['America/Chicago','Chicago'],['America/New_York','New York'],['America/Sao_Paulo','São Paulo'],['Atlantic/Reykjavik','Reykjavik'],
+    ['Europe/London','London'],['Europe/Berlin','Berlin'],['Europe/Athens','Athens'],['Africa/Lagos','Lagos'],['Africa/Nairobi','Nairobi'],
+    ['Asia/Dubai','Dubai'],['Asia/Kolkata','Mumbai, Kolkata'],['Asia/Bangkok','Bangkok'],['Asia/Singapore','Singapore'],
+    ['Asia/Tokyo','Tokyo'],['Australia/Sydney','Sydney'],['Pacific/Auckland','Auckland']
+  ];
+  function offset(tz){
+    try{
+      const p = new Intl.DateTimeFormat('en-US',{timeZone:tz,timeZoneName:'shortOffset'}).formatToParts(new Date()).find(x=>x.type==='timeZoneName');
+      return (p ? p.value : 'GMT').replace('GMT','UTC').replace(/^UTC$/,'UTC+0');
+    }catch(e){ return ''; }
+  }
+  const tz = $('#tz');
+  zones.forEach(([id,label]) => {
+    const o = document.createElement('option'); o.value = id; o.textContent = label + ' (' + offset(id) + ')'; tz.appendChild(o);
+  });
+  tz.value = 'Europe/Berlin';
+  function tzNow(){
+    try{ $('#tz-now').textContent = new Intl.DateTimeFormat('en-GB',{timeZone:tz.value,hour:'2-digit',minute:'2-digit',weekday:'short'}).format(new Date()); }catch(e){}
+  }
+  tzNow(); setInterval(tzNow, 30000);
+  tz.addEventListener('change', tzNow);
+
+  /* ---------- profile ---------- */
+  const pf = $('#profile-form'), nameI = $('#name'), emailI = $('#email');
+  const saved = { name: nameI.value, email: emailI.value, tz: tz.value, avatar: null };
+  const state = { avatar: null };
+  const initials = n => (n.trim().split(/\s+/).slice(0,2).map(w => w[0]).join('') || '?').toUpperCase();
+
+  function renderAvatar(){
+    const n = nameI.value;
+    $$('[data-avatar]').forEach(el => {
+      el.innerHTML = '';
+      if (state.avatar){ const im = document.createElement('img'); im.src = state.avatar; im.alt = ''; im.width = 64; im.height = 64; el.appendChild(im); }
+      else el.textContent = initials(n);
+    });
+    $('#avatar-btn').textContent = state.avatar ? 'Replace photo' : 'Upload photo';
+    $('#avatar-remove').hidden = !state.avatar;
+  }
+  $('#avatar-btn').addEventListener('click', () => $('#avatar-input').click());
+  $('#avatar-remove').addEventListener('click', () => { state.avatar = null; $('#avatar-input').value=''; $('#avatar-error').hidden = true; renderAvatar(); dirtyCheck(); });
+  $('#avatar-input').addEventListener('change', e => {
+    const f = e.target.files[0]; const err = $('#avatar-error');
+    if (!f) return;
+    if (!/^image\/(png|jpeg)$/.test(f.type)){ err.hidden = false; err.querySelector('span').textContent = 'That file isn’t a JPG or PNG. Choose a different image.'; e.target.value=''; return; }
+    if (f.size > 2*1024*1024){ err.hidden = false; err.querySelector('span').textContent = 'That image is ' + (f.size/1048576).toFixed(1) + ' MB. Choose one under 2 MB.'; e.target.value=''; return; }
+    err.hidden = true;
+    const r = new FileReader();
+    r.onload = () => { state.avatar = r.result; renderAvatar(); dirtyCheck(); };
+    r.readAsDataURL(f);
+  });
+
+  const validators = {
+    name: v => v.trim() ? '' : 'Enter your name so teammates recognise you',
+    email: v => !v.trim() ? 'Enter your email, like name@company.com' : (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Enter an email like name@company.com')
+  };
+  [nameI, emailI].forEach(i => {
+    i.addEventListener('blur', () => setError(i, validators[i.name](i.value)));
+    i.addEventListener('input', () => { if (i.getAttribute('aria-invalid')) setError(i, validators[i.name](i.value)); });
+  });
+  nameI.addEventListener('input', renderAvatar);
+
+  const bar = $('#savebar');
+  function isDirty(){ return nameI.value !== saved.name || emailI.value !== saved.email || tz.value !== saved.tz || state.avatar !== saved.avatar; }
+  function dirtyCheck(){
+    const d = isDirty();
+    bar.classList.toggle('show', d); bar.setAttribute('aria-hidden', String(!d));
+    $$('button', bar).forEach(b => b.tabIndex = d ? 0 : -1);
+  }
+  [nameI, emailI, tz].forEach(i => i.addEventListener('input', dirtyCheck));
+  tz.addEventListener('change', dirtyCheck);
+
+  function revert(){
+    nameI.value = saved.name; emailI.value = saved.email; tz.value = saved.tz; state.avatar = saved.avatar;
+    setError(nameI,''); setError(emailI,''); renderAvatar(); tzNow(); dirtyCheck();
+  }
+  $('#profile-cancel').addEventListener('click', revert);
+  $('#bar-discard').addEventListener('click', revert);
+
+  async function saveProfile(){
+    const eN = validators.name(nameI.value), eE = validators.email(emailI.value);
+    setError(nameI, eN); setError(emailI, eE);
+    if (eN || eE){ (eN ? nameI : emailI).focus(); return; }
+    const btns = [$('#profile-save'), $('#bar-save')];
+    btns.forEach(b => { b.disabled = true; });
+    $('#profile-save').classList.add('loading'); $('#profile-save .lbl').textContent = 'Saving…';
+    await wait(700);
+    const emailChanged = emailI.value.trim() !== saved.email;
+    saved.name = nameI.value.trim(); nameI.value = saved.name;
+    saved.tz = tz.value; saved.avatar = state.avatar;
+    $$('[data-name-display]').forEach(e => e.textContent = saved.name);
+    if (emailChanged) emailI.value = saved.email; /* stays until confirmed */
+    const requested = emailI.value;
+    btns.forEach(b => b.disabled = false);
+    $('#profile-save').classList.remove('loading'); $('#profile-save .lbl').textContent = 'Save changes';
+    dirtyCheck();
+    toast(emailChanged ? 'Profile saved. Check your new inbox to confirm the email change.' : 'Profile saved');
+  }
+  pf.addEventListener('submit', e => { e.preventDefault(); saveProfile(); });
+  $('#bar-save').addEventListener('click', saveProfile);
+  window.addEventListener('beforeunload', e => { if (isDirty()){ e.preventDefault(); e.returnValue = ''; } });
+  renderAvatar();
+
+  /* ---------- password ---------- */
+  $$('.pw-toggle').forEach(b => {
+    b.innerHTML = EYE;
+    b.addEventListener('click', () => {
+      const inp = $('#' + b.dataset.for); const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      b.setAttribute('aria-pressed', String(show));
+      b.setAttribute('aria-label', (show ? 'Hide ' : 'Show ') + b.getAttribute('aria-label').replace(/^(Show|Hide) /,''));
+      b.innerHTML = show ? EYE_OFF : EYE;
+    });
+  });
+  const cur = $('#pw-cur'), nw = $('#pw-new'), cf = $('#pw-conf');
+  const rules = {
+    len: v => v.length >= 10,
+    mix: v => /[A-Za-z]/.test(v) && /\d/.test(v),
+    diff: v => v.length > 0 && v !== cur.value
+  };
+  function ruleState(){
+    const v = nw.value; let n = 0;
+    $$('#pw-rules li').forEach(li => { const ok = rules[li.dataset.rule](v); li.classList.toggle('ok', ok); if (ok) n++; });
+    let s = n; if (n === 3 && v.length >= 14 && /[^A-Za-z0-9]/.test(v)) s = 4;
+    if (!v) s = 0;
+    $('#pw-meter').dataset.s = s;
+    $('#pw-strength').textContent = v ? ['','Weak','Fair','Good','Strong'][s] : '';
+  }
+  const checks = {
+    'pw-cur': () => cur.value ? '' : 'Enter your current password',
+    'pw-new': () => {
+      if (!nw.value) return 'Enter a new password';
+      if (!rules.len(nw.value)) return 'Use at least 10 characters';
+      if (!rules.mix(nw.value)) return 'Add at least one letter and one number';
+      if (!rules.diff(nw.value)) return 'Choose a password different from your current one';
+      return '';
+    },
+    'pw-conf': () => !cf.value ? 'Re-enter your new password' : (cf.value !== nw.value ? 'Passwords don’t match. Re-type the new password.' : '')
+  };
+  [cur, nw, cf].forEach(i => {
+    i.addEventListener('blur', () => { if (i.value || i.dataset.touched) { i.dataset.touched = 1; setError(i, checks[i.id]()); } });
+    i.addEventListener('input', () => {
+      ruleState();
+      if (i.getAttribute('aria-invalid')) setError(i, checks[i.id]());
+      if (i !== cf && cf.getAttribute('aria-invalid')) setError(cf, checks['pw-conf']());
+    });
+  });
+  const summary = $('#pw-summary');
+  $('#pw-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const errs = [];
+    [cur, nw, cf].forEach(i => { const m = checks[i.id](); setError(i, m); if (m) errs.push([i, m]); });
+    const ul = $('ul', summary); ul.innerHTML = '';
+    if (errs.length){
+      errs.forEach(([i, m]) => {
+        const li = document.createElement('li'); const a = document.createElement('a');
+        a.href = '#' + i.id; a.textContent = m;
+        a.addEventListener('click', ev => { ev.preventDefault(); i.focus(); });
+        li.appendChild(a); ul.appendChild(li);
+      });
+      summary.hidden = false; summary.focus();
+      return;
+    }
+    summary.hidden = true;
+    const btn = $('#pw-save'); btn.classList.add('loading'); btn.disabled = true; $('.lbl', btn).textContent = 'Updating…';
+    await wait(900);
+    /* Demo rule: the sample current password is "tempo-demo-1" */
+    if (cur.value !== 'tempo-demo-1'){
+      btn.classList.remove('loading'); btn.disabled = false; $('.lbl', btn).textContent = 'Update password';
+      setError(cur, 'That isn’t your current password. Check it and try again. (Demo: tempo-demo-1)');
+      cur.focus(); return;
+    }
+    btn.classList.remove('loading'); btn.disabled = false; $('.lbl', btn).textContent = 'Update password';
+    [cur, nw, cf].forEach(i => { i.value = ''; i.type = 'password'; delete i.dataset.touched; setError(i,''); });
+    $$('.pw-toggle').forEach(b => { b.setAttribute('aria-pressed','false'); b.innerHTML = EYE; b.setAttribute('aria-label', 'Show ' + b.getAttribute('aria-label').replace(/^(Show|Hide) /,'')); });
+    ruleState();
+    $('#password .section-intro p').textContent = 'Last changed just now.';
+    toast('Password updated. Other devices have been signed out.');
+  });
+  ruleState();
+
+  /* ---------- notifications (instant save) ---------- */
+  let tagTimer;
+  function flashSaved(){
+    const t = $('#saved-tag'); t.classList.add('show'); clearTimeout(tagTimer);
+    tagTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+  $$('#notifications [data-key]').forEach(el => {
+    el.addEventListener('change', async () => {
+      const prev = el.type === 'checkbox' ? !el.checked : null;
+      el.disabled = true;
+      await wait(250);
+      el.disabled = false;
+      flashSaved();
+    });
+  });
+
+  /* ---------- subnav active state ---------- */
+  const links = $$('.subnav a');
+  const secs = links.map(a => $(a.getAttribute('href')));
+  function spy(){
+    let idx = 0; const y = window.scrollY + 140;
+    secs.forEach((s, i) => { if (s.offsetTop <= y) idx = i; });
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) idx = secs.length - 1;
+    links.forEach((a, i) => { a.classList.toggle('active', i === idx); i === idx ? a.setAttribute('aria-current','true') : a.removeAttribute('aria-current'); });
+  }
+  window.addEventListener('scroll', spy, {passive:true}); spy();
+})();
+</script>
+</body>
+</html>

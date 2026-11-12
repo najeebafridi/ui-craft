@@ -1,0 +1,128 @@
+{
+  "dashboard.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 118,
+      "contrastFails": 4,
+      "contrastFailSamples": [
+        {
+          "text": "Sample data · November 2026",
+          "ratio": 4.37,
+          "size": 14
+        },
+        {
+          "text": "30 days",
+          "ratio": 4.44,
+          "size": 13
+        },
+        {
+          "text": "Delivered",
+          "ratio": 4.37,
+          "size": 12
+        },
+        {
+          "text": "Delivered",
+          "ratio": 4.37,
+          "size": 12
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        15,
+        18,
+        24,
+        28
+      ],
+      "minFontSize": 11.5,
+      "hasFocusStyle": false,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": false,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "Dashboard",
+        "Orders",
+        "Products",
+        "Inventory",
+        "Customers",
+        "Marketing",
+        "Settings",
+        "7 days",
+        "30 days",
+        "90 days"
+      ],
+      "interactiveCount": 10,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.268,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 10
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 110,
+      "contrastFails": 4,
+      "contrastFailSamples": [
+        {
+          "text": "Sample data · November 2026",
+          "ratio": 4.37,
+          "size": 14
+        },
+        {
+          "text": "30 days",
+          "ratio": 4.44,
+          "size": 13
+        },
+        {
+          "text": "Delivered",
+          "ratio": 4.37,
+          "size": 12
+        },
+        {
+          "text": "Delivered",
+          "ratio": 4.37,
+          "size": 12
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        15,
+        24,
+        28
+      ],
+      "minFontSize": 11.5,
+      "hasFocusStyle": false,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": false,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "7 days",
+        "30 days",
+        "90 days"
+      ],
+      "interactiveCount": 3,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.224,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 10
+    }
+  }
+}

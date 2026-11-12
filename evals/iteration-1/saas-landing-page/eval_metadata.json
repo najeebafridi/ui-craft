@@ -1,0 +1,5 @@
+{
+  "eval_name": "saas-landing-page",
+  "prompt": "Make a landing page for our product 'Minutely' \u2014 an AI tool that writes meeting notes and action items for small marketing agencies. Single HTML file. It needs to convince agency owners to start a free trial.",
+  "assertions": []
+}

@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: settings-form
+expected_outcome: |
+  A well-structured settings page with visible labels, correct input types and autocomplete, clear save behaviour, inline validation and error messages, keyboard accessible, consistent spacing.

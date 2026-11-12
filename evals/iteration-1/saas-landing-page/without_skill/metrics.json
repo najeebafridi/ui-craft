@@ -1,0 +1,106 @@
+{
+  "index.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 101,
+      "contrastFails": 1,
+      "contrastFailSamples": [
+        {
+          "text": "Notes ready",
+          "ratio": 3.08,
+          "size": 12
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        22,
+        24,
+        30,
+        38,
+        51,
+        61
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "Minutely",
+        "How it works",
+        "Features",
+        "Pricing",
+        "FAQ"
+      ],
+      "interactiveCount": 11,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.386,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 1,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 1,
+      "cssCustomProperties": 10
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 97,
+      "contrastFails": 1,
+      "contrastFailSamples": [
+        {
+          "text": "Notes ready",
+          "ratio": 3.08,
+          "size": 12
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        22,
+        24,
+        27,
+        30,
+        37,
+        51
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "Minutely"
+      ],
+      "interactiveCount": 7,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.386,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 1,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 1,
+      "cssCustomProperties": 10
+    }
+  }
+}

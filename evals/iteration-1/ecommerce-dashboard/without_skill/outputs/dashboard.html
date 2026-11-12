@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember & Wick – Store Dashboard</title>
+<style>
+:root{
+  --bg:#f6f3ee; --card:#fff; --ink:#2b2622; --muted:#7a7068; --line:#e8e2d9;
+  --accent:#b4622d; --accent-soft:#f6e6da; --good:#2f7d4f; --bad:#b3372f; --warn:#c98a12;
+}
+*{box-sizing:border-box;margin:0}
+body{font-family:Inter,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;min-height:100vh}
+aside{width:220px;background:#2b2622;color:#e9e1d6;padding:24px 16px;flex-shrink:0}
+.logo{font-weight:700;font-size:18px;letter-spacing:.3px;margin:0 8px 28px;display:flex;align-items:center;gap:10px}
+.logo i{width:12px;height:18px;background:var(--accent);border-radius:6px 6px 3px 3px;display:inline-block;box-shadow:0 -5px 0 -2px #f0b36a}
+nav a{display:block;padding:10px 12px;border-radius:8px;color:#c9bfb2;text-decoration:none;font-size:14px;margin-bottom:2px}
+nav a.on{background:#3d352f;color:#fff}
+main{flex:1;padding:28px 36px;max-width:1300px;min-width:0}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+h1{font-size:24px}
+header p{color:var(--muted);font-size:14px;margin-top:4px}
+.range{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.range button{border:0;background:none;padding:7px 14px;border-radius:8px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+.range button.on{background:var(--accent);color:#fff}
+.grid{display:grid;gap:18px}
+.kpis{grid-template-columns:repeat(4,1fr);margin-bottom:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h2{font-size:15px;font-weight:600;margin-bottom:4px}
+.sub{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+.kpi .label{color:var(--muted);font-size:13px}
+.kpi .val{font-size:28px;font-weight:700;margin:6px 0}
+.delta{font-size:12.5px;font-weight:600}
+.up{color:var(--good)}.down{color:var(--bad)}
+.delta span{color:var(--muted);font-weight:400}
+.row{grid-template-columns:2fr 1fr;margin-bottom:18px}
+.row2{grid-template-columns:1fr 1fr}
+svg{width:100%;height:auto;display:block}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:0 0 10px;text-transform:uppercase;letter-spacing:.5px}
+td{padding:11px 0;border-top:1px solid var(--line)}
+td.r,th.r{text-align:right}
+.bar{height:6px;background:var(--accent-soft);border-radius:3px;margin-top:6px;overflow:hidden;width:100%}
+.bar b{display:block;height:100%;background:var(--accent);border-radius:3px}
+.pill{font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:20px}
+.crit{background:#f8dedb;color:var(--bad)}.low{background:#fbefd2;color:#8a5d00}
+.status{font-size:12px;padding:3px 9px;border-radius:20px;background:#e5f2ea;color:var(--good);font-weight:600}
+.status.p{background:#fbefd2;color:#8a5d00}.status.s{background:#e3ecf8;color:#2c5aa0}
+.stock-meter{width:90px;height:6px;background:#eee7dd;border-radius:3px;display:inline-block;vertical-align:middle;margin-right:8px;overflow:hidden}
+.stock-meter b{display:block;height:100%}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.row,.row2{grid-template-columns:1fr}}
+@media(max-width:700px){aside{display:none}main{padding:18px}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo"><i></i>Ember &amp; Wick</div>
+  <nav>
+    <a class="on" href="#">Dashboard</a><a href="#">Orders</a><a href="#">Products</a><a href="#">Inventory</a><a href="#">Customers</a><a href="#">Marketing</a><a href="#">Settings</a>
+  </nav>
+</aside>
+<main>
+  <header>
+    <div><h1>Good morning, here's your shop today</h1><p>Sample data &middot; November 2026</p></div>
+    <div class="range" id="range"><button data-d="7">7 days</button><button data-d="30" class="on">30 days</button><button data-d="90">90 days</button></div>
+  </header>
+
+  <section class="grid kpis">
+    <div class="card kpi"><div class="label">Revenue</div><div class="val" id="k-rev"></div><div class="delta up">▲ 12.4% <span>vs previous period</span></div></div>
+    <div class="card kpi"><div class="label">Orders</div><div class="val" id="k-ord"></div><div class="delta up">▲ 8.1% <span>vs previous period</span></div></div>
+    <div class="card kpi"><div class="label">Average order value</div><div class="val" id="k-aov"></div><div class="delta up">▲ 3.9% <span>vs previous period</span></div></div>
+    <div class="card kpi"><div class="label">Repeat customers</div><div class="val">34%</div><div class="delta down">▼ 1.2% <span>vs previous period</span></div></div>
+  </section>
+
+  <section class="grid row">
+    <div class="card">
+      <h2>Sales over time</h2><div class="sub">Daily revenue, with the same period last month for comparison</div>
+      <div class="legend"><span><i style="background:var(--accent)"></i>This period</span><span><i style="background:#d9cfc2"></i>Previous</span></div>
+      <svg id="chart" viewBox="0 0 700 260" role="img" aria-label="Sales line chart"></svg>
+    </div>
+    <div class="card">
+      <h2>Sales by category</h2><div class="sub">Share of revenue</div>
+      <svg viewBox="0 0 200 200" style="max-width:190px;margin:0 auto" id="donut"></svg>
+      <div id="donutLegend" style="margin-top:14px;font-size:13px"></div>
+    </div>
+  </section>
+
+  <section class="grid row2" style="margin-bottom:18px">
+    <div class="card">
+      <h2>Best-selling products</h2><div class="sub">By units sold this period</div>
+      <table><thead><tr><th>Product</th><th class="r">Units</th><th class="r">Revenue</th></tr></thead><tbody id="best"></tbody></table>
+    </div>
+    <div class="card">
+      <h2>Low stock alerts</h2><div class="sub">Items at or below reorder level</div>
+      <table><thead><tr><th>Product</th><th>Stock</th><th class="r">Status</th></tr></thead><tbody id="stock"></tbody></table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Recent orders</h2><div class="sub">Latest activity from your store</div>
+    <table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Status</th><th class="r">Total</th></tr></thead><tbody id="orders"></tbody></table>
+  </section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>"$"+Math.round(n).toLocaleString("en-US");
+const products=[
+ ["Lavender Fields 8oz",412,10300],["Vanilla Bean Soy",368,8832],["Cedar & Smoke",291,7566],
+ ["Amber Honey Tin",254,4572],["Winter Spice Trio Set",187,6545],["Sea Salt & Sage",166,4150]];
+const stock=[
+ ["Cedar & Smoke",6,40],["Lavender Fields 8oz",11,60],["Winter Spice Trio Set",14,40],
+ ["Beeswax Taper Pair",18,50],["Amber Honey Tin",22,60]];
+const cats=[["Jar candles",46,"#b4622d"],["Gift sets",24,"#d99a5b"],["Tins & travel",17,"#7d8f69"],["Tapers & pillars",13,"#8a6a55"]];
+const orders=[
+ ["#3047","Maya Thompson","Lavender Fields 8oz × 2","Shipped","$48.00"],
+ ["#3046","Daniel Ortiz","Winter Spice Trio Set","Processing","$35.00"],
+ ["#3045","Priya Nair","Vanilla Bean Soy, Cedar & Smoke","Delivered","$51.00"],
+ ["#3044","Chloe Bennett","Amber Honey Tin × 3","Shipped","$54.00"],
+ ["#3043","Lucas Meyer","Sea Salt & Sage","Delivered","$25.00"]];
+
+$("best").innerHTML=products.map(p=>{const m=products[0][1];return `<tr><td>${p[0]}<div class="bar"><b style="width:${p[1]/m*100}%"></b></div></td><td class="r">${p[1]}</td><td class="r">${money(p[2])}</td></tr>`}).join("");
+$("stock").innerHTML=stock.map(s=>{const pct=s[1]/s[2]*100,c=s[1]<=10?"crit":"low",col=c==="crit"?"var(--bad)":"var(--warn)";
+ return `<tr><td>${s[0]}</td><td><span class="stock-meter"><b style="width:${pct}%;background:${col}"></b></span>${s[1]} left</td><td class="r"><span class="pill ${c}">${c==="crit"?"Critical":"Low"}</span></td></tr>`}).join("");
+const cls={Shipped:"s",Processing:"p",Delivered:""};
+$("orders").innerHTML=orders.map(o=>`<tr><td><b>${o[0]}</b></td><td>${o[1]}</td><td>${o[2]}</td><td><span class="status ${cls[o[3]]}">${o[3]}</span></td><td class="r">${o[4]}</td></tr>`).join("");
+
+// donut
+let a=-Math.PI/2,svg="";
+cats.forEach(c=>{const f=c[1]/100*2*Math.PI,r=80,x1=100+r*Math.cos(a),y1=100+r*Math.sin(a),x2=100+r*Math.cos(a+f),y2=100+r*Math.sin(a+f);
+ svg+=`<path d="M${x1} ${y1}A${r} ${r} 0 ${f>Math.PI?1:0} 1 ${x2} ${y2}" stroke="${c[2]}" stroke-width="26" fill="none"/>`;a+=f});
+$("donut").innerHTML=svg+`<text x="100" y="98" text-anchor="middle" font-size="12" fill="#7a7068">Total</text><text x="100" y="118" text-anchor="middle" font-size="18" font-weight="700" fill="#2b2622">4 lines</text>`;
+$("donutLegend").innerHTML=cats.map(c=>`<div style="display:flex;justify-content:space-between;padding:4px 0"><span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${c[2]};margin-right:8px"></i>${c[0]}</span><b>${c[1]}%</b></div>`).join("");
+
+// seeded data + chart
+function rnd(seed){return()=>(seed=(seed*16807)%2147483647)/2147483647}
+function render(days){
+  const r=rnd(42+days),cur=[],prev=[];
+  for(let i=0;i<days;i++){const base=days>40?750:800,wave=1+.18*Math.sin(i/2.2);cur.push(base*wave*(.8+r()*.4)*(1+i/days*.1));prev.push(base*.9*(1+.18*Math.sin(i/2.2+1))*(.8+r()*.4))}
+  const rev=cur.reduce((a,b)=>a+b,0),ord=Math.round(days*10.3),scale=days===30?24800/rev:1;
+  const R=rev*(days===30?scale:1);
+  $("k-rev").textContent=money(R);$("k-ord").textContent=ord.toLocaleString();$("k-aov").textContent="$"+(R/ord).toFixed(2);
+  const W=700,H=260,pl=44,pb=26,pt=10,max=Math.max(...cur,...prev)*1.1;
+  const X=i=>pl+i*(W-pl-10)/(days-1),Y=v=>H-pb-v/max*(H-pb-pt);
+  let g="";
+  for(let t=0;t<=4;t++){const v=max*t/4,y=Y(v);g+=`<line x1="${pl}" x2="${W-10}" y1="${y}" y2="${y}" stroke="#eee7dd"/><text x="${pl-8}" y="${y+4}" text-anchor="end" font-size="11" fill="#7a7068">$${Math.round(v)}</text>`}
+  const line=d=>d.map((v,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(v).toFixed(1)).join("");
+  const step=Math.ceil(days/6);
+  for(let i=0;i<days;i+=step)g+=`<text x="${X(i)}" y="${H-6}" text-anchor="middle" font-size="11" fill="#7a7068">${i===days-1?"Today":"-"+(days-1-i)+"d"}</text>`;
+  g+=`<path d="${line(prev)}" fill="none" stroke="#d9cfc2" stroke-width="2"/>`;
+  g+=`<path d="${line(cur)}L${X(days-1)} ${H-pb}L${X(0)} ${H-pb}Z" fill="#b4622d" opacity=".08"/>`;
+  g+=`<path d="${line(cur)}" fill="none" stroke="#b4622d" stroke-width="2.5" stroke-linejoin="round"/>`;
+  $("chart").innerHTML=g;
+}
+document.querySelectorAll("#range button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#range button").forEach(x=>x.classList.remove("on"));b.classList.add("on");render(+b.dataset.d)});
+render(30);
+</script>
+</body>
+</html>

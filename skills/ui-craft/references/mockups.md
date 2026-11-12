@@ -66,6 +66,7 @@ When the direction is not decided, make **2–3 options of the same screen** (no
 
 The template has a built-in feedback tool (bottom-right):
 
+- **Feedback** (small button, bottom-right) opens the panel and shows **Add comment** and a light/dark toggle. It starts collapsed so it does not cover the design.
 - **Add comment** → click anywhere on the screen → type a note. A numbered pin appears there.
 - **Feedback (n)** → see all notes → **Copy all** or **Download .txt** → paste it into email or chat.
 - Notes are saved in the client's own browser (localStorage). Nothing is sent anywhere.

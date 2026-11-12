@@ -39,13 +39,13 @@ a{color:var(--accent-text)}
 /* ---- App shell ---- */
 .shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
 .side{background:var(--surface);border-right:1px solid var(--border);padding:16px 12px;display:flex;flex-direction:column;gap:4px}
-.brand{font-weight:600;font-size:15px;padding:8px 12px 16px}
+.brand{font-weight:600;font-size:16px;padding:8px 12px 16px}
 .nav a{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--radius-sm);color:var(--text-muted);text-decoration:none;font-weight:500}
 .nav a:hover{background:var(--surface-2);color:var(--text)}
 .nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent-text)}
 .nav svg{width:18px;height:18px;flex:none}
 .side .bottom{margin-top:auto}
-main{padding:32px;max-width:1280px;width:100%}
+main{padding:32px;max-width:1280px;width:100%;min-width:0} /* min-width:0 stops wide tables from stretching the grid on phones */
 .page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
 h1{font-size:24px;line-height:1.25;font-weight:600;margin:0}
 .sub{color:var(--text-muted);margin:4px 0 0}
@@ -58,9 +58,9 @@ h1{font-size:24px;line-height:1.25;font-weight:600;margin:0}
 .btn-secondary:hover{background:var(--surface-2)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
-.kpi .label{color:var(--text-muted);font-size:13px}
+.kpi .label{color:var(--text-muted);font-size:14px}
 .kpi .value{font-size:24px;font-weight:600;margin-top:4px}
-.kpi .delta{font-size:13px;color:var(--text-muted)}
+.kpi .delta{font-size:12px;color:var(--text-muted)}
 .up{color:var(--success-text)} .down{color:var(--danger-text)}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .panel-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border)}
@@ -77,15 +77,18 @@ tbody tr:last-child td{border-bottom:0}
 .b-due{background:var(--warning-soft);color:var(--warning-text)}
 .b-late{background:var(--danger-soft);color:var(--danger-text)}
 .muted{color:var(--text-muted)}
-td a{color:var(--text);font-weight:500;text-decoration:none} td a:hover{color:var(--accent-text);text-decoration:underline}
+td a{color:var(--text);font-weight:500;text-decoration:none;display:inline-block;padding:12px 0} td a:hover{color:var(--accent-text);text-decoration:underline}
 
+.panel-head a{padding:8px 0}
+/* ---- Touch: compact controls grow to 44px ---- */
+@media (max-width:640px),(pointer:coarse){ .btn{height:44px} .panel-head a{padding:12px 0} #mk-bar button{height:44px} }
 /* ---- Responsive: phone gets a bottom tab bar ---- */
 @media (max-width:1024px){ .shell{grid-template-columns:72px 1fr} .nav a span,.brand span{display:none} .nav a{justify-content:center} }
 @media (max-width:640px){
   .shell{grid-template-columns:1fr} main{padding:16px 16px 88px}
   .side{position:fixed;bottom:0;left:0;right:0;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom));border-right:0;border-top:1px solid var(--border);z-index:10}
   .brand,.side .bottom{display:none} .nav{display:contents}
-  .nav a{flex:1;flex-direction:column;gap:2px;font-size:11px;min-height:48px;padding:6px 0} .nav a span{display:block}
+  .nav a{flex:1;flex-direction:column;gap:2px;font-size:12px;min-height:48px;padding:6px 0} .nav a span{display:block}
   .hide-sm{display:none}
 }
 </style>
@@ -140,7 +143,9 @@ td a{color:var(--text);font-weight:500;text-decoration:none} td a:hover{color:va
 
 <!-- ===== Mockup toolbar: theme toggle + client feedback pins. Delete this block for real code. ===== -->
 <style>
-#mk-bar{position:fixed;right:16px;bottom:16px;z-index:1000;display:flex;gap:8px;font:500 13px var(--font)}
+#mk-bar{position:fixed;right:16px;bottom:16px;z-index:1000;display:flex;gap:8px;font:500 14px var(--font);opacity:.85}
+#mk-bar:hover,#mk-bar:focus-within{opacity:1}
+#mk-tools:not([hidden]){display:flex;gap:8px}
 #mk-bar button{height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);box-shadow:var(--shadow-overlay);cursor:pointer;font:inherit}
 #mk-bar button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 body.mk-commenting, body.mk-commenting *{cursor:crosshair!important}
@@ -150,12 +155,14 @@ body.mk-commenting, body.mk-commenting *{cursor:crosshair!important}
 #mk-panel ol{padding-left:20px;margin:8px 0}
 #mk-panel li{margin-bottom:6px}
 #mk-panel small{color:var(--text-subtle)}
-@media (max-width:640px){#mk-bar{bottom:76px}}
+@media (max-width:640px),(pointer:coarse){#mk-bar{bottom:76px} #mk-bar button{height:44px}}
 </style>
 <div id="mk-bar">
-  <button type="button" id="mk-theme" aria-pressed="false">Dark</button>
-  <button type="button" id="mk-comment" aria-pressed="false">Add comment</button>
-  <button type="button" id="mk-list">Feedback (<span id="mk-count">0</span>)</button>
+  <span id="mk-tools" hidden>
+    <button type="button" id="mk-theme" aria-pressed="false">Dark</button>
+    <button type="button" id="mk-comment" aria-pressed="false">Add comment</button>
+  </span>
+  <button type="button" id="mk-list" aria-expanded="false">Feedback (<span id="mk-count">0</span>)</button>
 </div>
 <div id="mk-panel" hidden></div>
 <script>
@@ -188,7 +195,7 @@ body.mk-commenting, body.mk-commenting *{cursor:crosshair!important}
     notes.push({ x: e.pageX / document.documentElement.scrollWidth, y: e.pageY, near, text, at: new Date().toISOString() });
     save(notes); render();
   }, true);
-  $("mk-list").onclick = () => { $("mk-panel").hidden = !$("mk-panel").hidden; render(); };
+  $("mk-list").onclick = (e) => { const open = $("mk-panel").hidden; $("mk-panel").hidden = !open; $("mk-tools").hidden = !open; e.currentTarget.setAttribute("aria-expanded", open); render(); };
 
   function asText() {
     return `Feedback on "${document.title}"\n` + notes.map((n, i) => `${i + 1}. ${n.text}${n.near ? `  [near "${n.near}"]` : ""}`).join("\n");

@@ -1,0 +1,22 @@
+{
+ "client-options-crm": {
+  "X": "with_skill",
+  "Y": "without_skill"
+ },
+ "ecommerce-dashboard": {
+  "X": "without_skill",
+  "Y": "with_skill"
+ },
+ "mobile-booking": {
+  "X": "with_skill",
+  "Y": "without_skill"
+ },
+ "saas-landing-page": {
+  "X": "without_skill",
+  "Y": "with_skill"
+ },
+ "settings-form": {
+  "X": "without_skill",
+  "Y": "with_skill"
+ }
+}

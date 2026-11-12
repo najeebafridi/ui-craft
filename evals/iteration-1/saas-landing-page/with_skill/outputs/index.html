@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minutely: meeting notes and action items for marketing agencies</title>
+<meta name="description" content="Minutely writes your meeting notes and action items, so your agency team can stop typing and start doing. Start a free trial.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+/*
+  Design brief
+  Product: Minutely, AI meeting notes + action items for small marketing agencies
+  Tone: warm, practical, confident       Density: spacious marketing (16/18px body)
+  Accent: burnt orange #C2410C           Neutrals: warm grey
+  Font: Instrument Serif (display) + Inter   Radius: 8px
+  Primary task: agency owner starts a free trial (one solid CTA, repeated)
+*/
+:root {
+  color-scheme: light;
+  --bg: #FBF9F6;
+  --surface: #FFFFFF;
+  --surface-2: #F3EFE9;
+  --border: #E5DFD6;
+  --border-strong: #8A8378;
+  --text: #1C1917;
+  --text-muted: #57534E;
+  --accent: #C2410C;
+  --accent-hover: #9A3412;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #FFEDD5;
+  --accent-text: #9A3412;
+  --ink: #1C1917;
+  --ink-text: #F5F1EB;
+  --ink-muted: #C9C2B8;
+  --success-text: #166534;
+  --success-soft: #F0FDF4;
+
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px; --space-9: 96px;
+  --radius: 8px;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --shadow-raised: 0 1px 2px rgb(28 25 23 / .06), 0 1px 3px rgb(28 25 23 / .1);
+  --shadow-overlay: 0 4px 6px rgb(28 25 23 / .05), 0 16px 40px rgb(28 25 23 / .12);
+  --ease-out: cubic-bezier(.2, 0, 0, 1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 1rem/1.5 var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--surface); padding: 8px 16px; border-radius: var(--radius); z-index: 600; }
+.skip:focus { left: 8px; }
+
+.wrap { max-width: 1200px; margin-inline: auto; padding-inline: 16px; }
+@media (min-width: 640px) { .wrap { padding-inline: 24px; } }
+@media (min-width: 1024px) { .wrap { padding-inline: 32px; } }
+
+.display { font-family: var(--font-display); font-weight: 400; letter-spacing: -.02em; line-height: 1.05; }
+h1.display { font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem); }
+h2.display { font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem); line-height: 1.1; }
+.lead { font-size: 1.125rem; line-height: 1.6; color: var(--text-muted); max-width: 56ch; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px; border-radius: var(--radius); border: 1px solid transparent; font: 500 1rem/1 var(--font-sans); text-decoration: none; cursor: pointer; transition: background-color 120ms var(--ease-out), transform 120ms var(--ease-out); }
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-primary[disabled] { opacity: .6; cursor: not-allowed; }
+.btn-sm { min-height: 40px; padding: 0 16px; font-size: .875rem; }
+.link-quiet { color: var(--text); font-weight: 500; text-underline-offset: 4px; }
+.link-quiet:hover { color: var(--accent-text); }
+
+/* Header */
+.site-header { position: sticky; top: 0; z-index: 100; background: rgb(251 249 246 / .96); border-bottom: 1px solid var(--border); }
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+.logo { display: inline-flex; align-items: center; gap: 8px; font: 600 1.25rem/1 var(--font-sans); letter-spacing: -.02em; text-decoration: none; }
+.logo svg { width: 24px; height: 24px; }
+.nav { display: none; gap: 32px; }
+.nav a { text-decoration: none; font-size: .875rem; font-weight: 500; color: var(--text-muted); padding: 8px 0; }
+.nav a:hover { color: var(--text); }
+@media (min-width: 1024px) { .nav { display: flex; } }
+.header-actions { display: flex; align-items: center; gap: 16px; }
+.header-actions .link-quiet { display: none; font-size: .875rem; }
+@media (min-width: 640px) { .header-actions .link-quiet { display: inline; } }
+
+/* Hero */
+.hero { padding-block: 48px 64px; }
+@media (min-width: 1024px) { .hero { padding-block: 96px 96px; } }
+.hero-grid { display: grid; gap: 48px; align-items: center; }
+@media (min-width: 1024px) { .hero-grid { grid-template-columns: 5fr 6fr; gap: 64px; } }
+.hero-copy { display: grid; gap: 24px; justify-items: start; }
+.signup { display: grid; gap: 8px; width: 100%; max-width: 460px; }
+.signup label { font-size: .875rem; font-weight: 500; }
+.signup-row { display: grid; gap: 8px; }
+@media (min-width: 640px) { .signup-row { grid-template-columns: 1fr auto; } }
+.input { min-height: 48px; padding: 0 16px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); font: 400 1rem/1.5 var(--font-sans); color: var(--text); width: 100%; }
+.input::placeholder { color: #6B645B; }
+.input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.input[aria-invalid="true"] { border-color: #B91C1C; }
+.help { font-size: .875rem; color: var(--text-muted); }
+.err { display: none; align-items: center; gap: 8px; font-size: .875rem; color: #B91C1C; }
+.err.show { display: flex; }
+.ok { display: none; align-items: center; gap: 8px; padding: 12px 16px; border-radius: var(--radius); background: var(--success-soft); color: var(--success-text); font-size: .875rem; font-weight: 500; border: 1px solid #BBF7D0; }
+.ok.show { display: flex; }
+.signup.done .signup-row, .signup.done .help, .signup.done label { display: none; }
+
+/* Product mock */
+.mock { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-overlay); overflow: hidden; }
+.mock-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface-2); font-size: .875rem; }
+.mock-bar strong { font-weight: 600; }
+.mock-meta { color: var(--text-muted); font-size: .75rem; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 4px; font-size: .75rem; font-weight: 500; background: var(--success-soft); color: var(--success-text); white-space: nowrap; }
+.mock-body { padding: 24px 16px; display: grid; gap: 24px; }
+@media (min-width: 640px) { .mock-body { padding: 24px; } }
+.mock h3 { font-size: .75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+.mock ul.notes { display: grid; gap: 8px; font-size: .875rem; line-height: 1.5; }
+.mock ul.notes li { padding-left: 16px; position: relative; }
+.mock ul.notes li::before { content: ""; position: absolute; left: 0; top: 9px; width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted); }
+.tasks { display: grid; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); }
+.task { display: grid; grid-template-columns: 20px 1fr auto; gap: 12px; align-items: start; padding: 12px; font-size: .875rem; }
+.task + .task { border-top: 1px solid var(--border); }
+.task .box { width: 16px; height: 16px; margin-top: 2px; border: 1.5px solid var(--border-strong); border-radius: 4px; }
+.task .who { font-size: .75rem; color: var(--text-muted); white-space: nowrap; }
+.task .what { font-weight: 500; }
+.task .due { display: block; font-size: .75rem; color: var(--text-muted); font-weight: 400; }
+.mock-foot { padding: 12px 16px; border-top: 1px solid var(--border); font-size: .75rem; color: var(--text-muted); background: var(--surface-2); }
+
+/* Sections */
+section { padding-block: 64px; }
+@media (min-width: 1024px) { section { padding-block: 96px; } }
+.section-head { display: grid; gap: 16px; margin-bottom: 48px; max-width: 720px; }
+.alt { background: var(--surface-2); }
+
+/* Problem */
+.problem { display: grid; gap: 48px; }
+@media (min-width: 1024px) { .problem { grid-template-columns: 5fr 6fr; gap: 64px; align-items: start; } }
+.pain-list { display: grid; gap: 0; }
+.pain-list li { display: grid; gap: 4px; padding-block: 24px; border-top: 1px solid var(--border); }
+.pain-list li:last-child { border-bottom: 1px solid var(--border); }
+.pain-list b { font-weight: 600; font-size: 1.125rem; }
+.pain-list span { color: var(--text-muted); max-width: 56ch; }
+
+/* Steps */
+.steps { display: grid; gap: 32px; counter-reset: s; }
+@media (min-width: 1024px) { .steps { grid-template-columns: repeat(3, 1fr); gap: 48px; } }
+.steps li { display: grid; gap: 8px; counter-increment: s; padding-top: 16px; border-top: 2px solid var(--ink); align-content: start; }
+.steps li::before { content: "0" counter(s); font: 400 2rem/1 var(--font-display); color: var(--accent-text); }
+.steps h3 { font-size: 1.25rem; font-weight: 600; letter-spacing: -.01em; }
+.steps p { color: var(--text-muted); }
+
+/* Features */
+.feat { display: grid; gap: 32px; padding-block: 48px; border-top: 1px solid var(--border); align-items: center; }
+.feat:first-of-type { border-top: 0; padding-top: 0; }
+@media (min-width: 1024px) { .feat { grid-template-columns: 1fr 1fr; gap: 64px; } .feat.flip .feat-copy { order: 2; } }
+.feat-copy { display: grid; gap: 16px; justify-items: start; }
+.feat-copy h3 { font-size: 1.5rem; font-weight: 600; letter-spacing: -.015em; line-height: 1.25; }
+.feat-copy p { color: var(--text-muted); max-width: 52ch; }
+.feat-copy ul { display: grid; gap: 8px; font-size: .9375rem; }
+.feat-copy li { display: flex; gap: 8px; align-items: start; }
+.feat-copy li svg { flex: none; width: 20px; height: 20px; margin-top: 2px; color: var(--accent-text); }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; display: grid; gap: 16px; font-size: .875rem; }
+.panel h4 { margin: 0; font-size: .75rem; font-weight: 600; color: var(--text-muted); }
+.row { display: flex; justify-content: space-between; gap: 16px; padding-block: 12px; border-top: 1px solid var(--border); }
+.row:first-of-type { border-top: 0; }
+.row span:last-child { color: var(--text-muted); text-align: right; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; background: var(--accent-soft); color: var(--accent-text); font-size: .75rem; font-weight: 500; }
+.quote { padding: 12px 16px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 var(--radius) var(--radius) 0; }
+.quote small { display: block; color: var(--text-muted); font-size: .75rem; margin-top: 4px; }
+
+/* Compare band (dark) */
+.band { background: var(--ink); color: var(--ink-text); }
+.band .lead { color: var(--ink-muted); }
+.compare { display: grid; gap: 32px; margin-top: 48px; }
+@media (min-width: 1024px) { .compare { grid-template-columns: 1fr 1fr; gap: 64px; } }
+.compare h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 16px; }
+.compare ul { display: grid; gap: 12px; color: var(--ink-muted); }
+.compare li { padding-left: 24px; position: relative; }
+.compare li::before { content: ""; position: absolute; left: 0; top: 11px; width: 12px; height: 2px; background: var(--ink-muted); }
+.compare .after li { color: var(--ink-text); }
+.compare .after li::before { background: #FB923C; }
+.compare > div { padding-top: 24px; border-top: 1px solid #44403C; }
+
+/* FAQ */
+.faq { max-width: 760px; }
+.faq details { border-top: 1px solid var(--border); }
+.faq details:last-child { border-bottom: 1px solid var(--border); }
+.faq summary { cursor: pointer; padding: 24px 40px 24px 0; font-weight: 600; font-size: 1.125rem; list-style: none; position: relative; min-height: 48px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 8px; top: 20px; font-size: 1.5rem; font-weight: 400; color: var(--text-muted); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { padding: 0 40px 24px 0; color: var(--text-muted); max-width: 62ch; }
+
+/* Final CTA */
+.final { text-align: center; }
+.final .inner { display: grid; gap: 24px; justify-items: center; max-width: 680px; margin-inline: auto; }
+.final .lead { margin-inline: auto; }
+.final .signup { text-align: left; }
+
+/* Footer */
+footer { padding-block: 48px; border-top: 1px solid var(--border); font-size: .875rem; color: var(--text-muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: center; }
+footer nav { display: flex; flex-wrap: wrap; gap: 24px; }
+footer a { text-decoration: none; padding: 8px 0; }
+footer a:hover { color: var(--text); text-decoration: underline; }
+
+/* One signature motion: hero mock settles in */
+@media (prefers-reduced-motion: no-preference) {
+  .mock { animation: settle 400ms var(--ease-out) both; }
+  @keyframes settle { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Minutely home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#C2410C"/><path d="M7 16V8l5 5 5-5v8" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Minutely
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <a class="link-quiet" href="#">Log in</a>
+      <a class="btn btn-primary btn-sm" href="#trial">Start free trial</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- HERO -->
+  <div class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <h1 class="display">Your meetings, written up before you've left the call</h1>
+        <p class="lead">Minutely listens to your client calls and team meetings, then sends clear notes and action items with owners and due dates. No more Friday-afternoon recap emails.</p>
+        <form class="signup" id="trial" novalidate>
+          <label for="email-hero">Work email</label>
+          <div class="signup-row">
+            <input class="input" id="email-hero" type="email" name="email" autocomplete="email" placeholder="you@youragency.com" aria-describedby="help-hero err-hero">
+            <button class="btn btn-primary" type="submit">Start free trial</button>
+          </div>
+          <p class="help" id="help-hero">Free for 14 days. No credit card needed.</p>
+          <p class="err" id="err-hero" role="alert"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Enter an email like name@agency.com so we can set up your trial.</span></p>
+          <p class="ok" role="status"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Thanks. Check your inbox for a link to start your trial.</span></p>
+        </form>
+      </div>
+
+      <!-- Product visual (sample data) -->
+      <figure class="mock" style="margin:0" aria-label="Example of Minutely meeting notes">
+        <div class="mock-bar">
+          <div>
+            <strong>Brightside Bakery: campaign kickoff</strong>
+            <div class="mock-meta">Tue 12 Mar 2026 &middot; 38 min &middot; 4 attendees</div>
+          </div>
+          <span class="badge"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Notes ready</span>
+        </div>
+        <div class="mock-body">
+          <div>
+            <h3>Summary</h3>
+            <ul class="notes">
+              <li>Spring launch moves to 8 April; client wants a teaser post the week before.</li>
+              <li>Budget for paid social stays at $6,500. Influencer line is on hold until the launch date is confirmed.</li>
+              <li>Client prefers the warmer photo set for the homepage banner.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Action items</h3>
+            <div class="tasks">
+              <div class="task"><span class="box" aria-hidden="true"></span><span class="what">Send revised content calendar<span class="due">Due Fri 15 Mar</span></span><span class="who">Priya</span></div>
+              <div class="task"><span class="box" aria-hidden="true"></span><span class="what">Share warm photo set for banner approval<span class="due">Due Thu 14 Mar</span></span><span class="who">Marcus</span></div>
+              <div class="task"><span class="box" aria-hidden="true"></span><span class="what">Confirm influencer fees with client<span class="due">Due Mon 18 Mar</span></span><span class="who">Dana</span></div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="mock-foot">Sample meeting shown for illustration.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <section class="alt" aria-labelledby="problem-h">
+    <div class="wrap problem">
+      <div style="display:grid;gap:16px;align-content:start">
+        <h2 class="display" id="problem-h">Agency work runs on conversations. Most of what's said gets lost.</h2>
+        <p class="lead">You're on client calls all day. The details that decide whether a project goes well are the ones nobody writes down.</p>
+      </div>
+      <ul class="pain-list">
+        <li><b>Someone always ends up as the note-taker</b><span>Your best strategist spends the call typing instead of thinking, and still misses things.</span></li>
+        <li><b>Action items live in six places</b><span>A Slack thread, a half-finished doc, someone's memory. The client asks "who was doing that?" and nobody is sure.</span></li>
+        <li><b>Recap emails eat your Friday</b><span>Writing up the week's calls is unbilled time, and it's the first thing to slip when you're busy.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="display" id="how-h">Set it up once, then forget about notes</h2>
+        <p class="lead">Minutely works with the calendar and video tools your team already uses.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>Connect your calendar</h3><p>Minutely joins the meetings you pick, from Zoom, Google Meet or Microsoft Teams. Skip the ones you want private.</p></li>
+        <li><h3>Have the meeting</h3><p>Talk like you normally would. Minutely follows who said what and picks out decisions, questions and commitments.</p></li>
+        <li><h3>Get notes you can send</h3><p>A short summary and a checklist of action items land in your inbox within minutes. Edit, then share with the team or client.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="alt" id="features" aria-labelledby="feat-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="display" id="feat-h">Built for how agencies actually work</h2>
+        <p class="lead">Not a generic transcript. Notes organised around your clients, projects and deadlines.</p>
+      </div>
+
+      <div class="feat">
+        <div class="feat-copy">
+          <h3>Action items with an owner and a date</h3>
+          <p>Every commitment made in the meeting becomes a task with a name and a due date attached, so nothing is left as "someone will look into it".</p>
+          <ul>
+            <li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>Owners picked up from the conversation</li>
+            <li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>Unassigned items flagged for you to fill in</li>
+            <li><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>Send to your project tool or copy as a checklist</li>
+          </ul>
+        </div>
+        <div class="panel" aria-label="Example action items">
+          <h4>Open items for Brightside Bakery</h4>
+          <div>
+            <div class="row"><span>Send revised content calendar</span><span>Priya &middot; 15 Mar</span></div>
+            <div class="row"><span>Share warm photo set</span><span>Marcus &middot; 14 Mar</span></div>
+            <div class="row"><span>Confirm influencer fees</span><span><span class="tag">Needs owner</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feat flip">
+        <div class="feat-copy">
+          <h3>Client-ready recaps in one click</h3>
+          <p>Turn the notes into a short follow-up email in your agency's voice. Clients see you're on top of the details, and you skip the rewrite.</p>
+          <a class="link-quiet" href="#trial">Try it on your next client call</a>
+        </div>
+        <div class="panel" aria-label="Example recap email">
+          <h4>Draft recap email</h4>
+          <p><strong>Subject:</strong> Recap: spring campaign kickoff</p>
+          <p>Hi Sam, thanks for the time today. We're moving the launch to 8 April, keeping paid social at $6,500, and going with the warmer photo set. Priya will send the revised calendar by Friday.</p>
+        </div>
+      </div>
+
+      <div class="feat">
+        <div class="feat-copy">
+          <h3>Find what a client said, months later</h3>
+          <p>Search every meeting by client or keyword. When someone asks "didn't we agree on that in January?", you have the answer in seconds.</p>
+        </div>
+        <div class="panel" aria-label="Example search result">
+          <h4>Search: "revision rounds"</h4>
+          <div class="quote">"We'll include two rounds of revisions, and anything beyond that gets a separate quote."<small>Northside Dental &middot; 21 Jan 2026 &middot; kickoff call</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEFORE / AFTER -->
+  <section class="band" aria-labelledby="ba-h">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:0">
+        <h2 class="display" id="ba-h">Get the hours back for work you can bill</h2>
+        <p class="lead">Small teams feel every hour of admin. Minutely moves note-taking off your people's plates.</p>
+      </div>
+      <div class="compare">
+        <div>
+          <h3>Without Minutely</h3>
+          <ul>
+            <li>Someone types through the whole call</li>
+            <li>Recap written from memory, hours later</li>
+            <li>Action items scattered across chat and docs</li>
+            <li>Disputes about what was agreed</li>
+          </ul>
+        </div>
+        <div class="after">
+          <h3>With Minutely</h3>
+          <ul>
+            <li>Everyone is present in the conversation</li>
+            <li>Notes ready within minutes of the call ending</li>
+            <li>One checklist with owners and due dates</li>
+            <li>A searchable record of what was said</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="section-head"><h2 class="display" id="faq-h">Questions agency owners ask</h2></div>
+      <div class="faq">
+        <details><summary>Will my clients know the meeting is being recorded?</summary><p>Minutely joins as a visible participant, so everyone on the call can see it. We recommend telling clients up front, and you can add a line about it to your meeting invites.</p></details>
+        <details><summary>What happens to our client conversations?</summary><p>Your meeting content belongs to you. Notes are only visible to the people you share them with, and you can delete any meeting and its recording at any time.</p></details>
+        <details><summary>Do I need to change the tools we use?</summary><p>No. Minutely works alongside your calendar and video calls, and you can copy action items into whatever project tool your team prefers.</p></details>
+        <details><summary>How long does setup take?</summary><p>Connecting your calendar takes a couple of minutes. Your first notes arrive after your next meeting.</p></details>
+        <details><summary>What happens when the free trial ends?</summary><p>You choose whether to continue. We won't ask for a card to start, so you won't be charged by surprise.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="alt final" aria-labelledby="final-h">
+    <div class="wrap">
+      <div class="inner">
+        <h2 class="display" id="final-h">Make your next client call your last one with manual notes</h2>
+        <p class="lead">Start your free trial and see the notes from your first meeting today.</p>
+        <form class="signup" novalidate>
+          <label for="email-final">Work email</label>
+          <div class="signup-row">
+            <input class="input" id="email-final" type="email" name="email" autocomplete="email" placeholder="you@youragency.com" aria-describedby="help-final err-final">
+            <button class="btn btn-primary" type="submit">Start free trial</button>
+          </div>
+          <p class="help" id="help-final">Free for 14 days. No credit card needed.</p>
+          <p class="err" id="err-final" role="alert"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Enter an email like name@agency.com so we can set up your trial.</span></p>
+          <p class="ok" role="status"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Thanks. Check your inbox for a link to start your trial.</span></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Minutely home" style="color:var(--text)">Minutely</a>
+    <nav aria-label="Footer">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </nav>
+    <p>&copy; 2026 Minutely</p>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('form.signup').forEach(function (form) {
+  var input = form.querySelector('input');
+  var err = form.querySelector('.err');
+  var ok = form.querySelector('.ok');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+    err.classList.toggle('show', !valid);
+    input.setAttribute('aria-invalid', String(!valid));
+    if (!valid) { input.focus(); return; }
+    form.classList.add('done');
+    ok.classList.add('show');
+  });
+});
+</script>
+</body>
+</html>

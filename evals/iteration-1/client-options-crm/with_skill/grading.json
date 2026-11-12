@@ -1,0 +1,70 @@
+{
+  "expectations": [
+    {
+      "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+      "passed": true,
+      "evidence": "option-a.html: desktop: 0 fails []; phone: 0 fails [] | option-b.html: desktop: 0 fails []; phone: 0 fails [] | option-c.html: desktop: 0 fails []; phone: 0 fails [] | options-board.html: desktop: 0 fails []; phone: 0 fails []"
+    },
+    {
+      "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+      "passed": true,
+      "evidence": "option-a.html: hasFocusStyle=True | option-b.html: hasFocusStyle=True | option-c.html: hasFocusStyle=True | options-board.html: hasFocusStyle=True"
+    },
+    {
+      "text": "Smallest visible text is at least 12px",
+      "passed": false,
+      "evidence": "option-a.html: min=11px | option-b.html: min=13px | option-c.html: min=11px | options-board.html: min=13px"
+    },
+    {
+      "text": "No sideways scrolling at 390px phone width",
+      "passed": false,
+      "evidence": "option-a.html: overflow=True | option-b.html: overflow=False | option-c.html: overflow=False | options-board.html: overflow=False"
+    },
+    {
+      "text": "Uses at most 7 distinct font sizes on the desktop screen",
+      "passed": true,
+      "evidence": "option-a.html: sizes=[12, 13, 14, 16, 24] | option-b.html: sizes=[13, 14, 15, 16, 18, 22, 36] | option-c.html: sizes=[12, 13, 14, 16, 18, 24] | options-board.html: sizes=[13, 14, 15, 18]"
+    },
+    {
+      "text": "Every form control has an accessible label",
+      "passed": true,
+      "evidence": "option-a.html: unlabelled=[] | option-b.html: unlabelled=[] | option-c.html: unlabelled=[] | options-board.html: unlabelled=[]"
+    },
+    {
+      "text": "At least 80% of spacing values sit on the 4px grid",
+      "passed": false,
+      "evidence": "option-a.html: on-grid=0.785 | option-b.html: on-grid=0.946 | option-c.html: on-grid=0.79 | options-board.html: on-grid=0.596"
+    },
+    {
+      "text": "Respects prefers-reduced-motion (or has no motion at all)",
+      "passed": true,
+      "evidence": "option-a.html: reducedMotion=False motion=False | option-b.html: reducedMotion=False motion=False | option-c.html: reducedMotion=False motion=False | options-board.html: reducedMotion=False motion=False"
+    },
+    {
+      "text": "No emoji icons, lorem ipsum or placeholder-image services",
+      "passed": true,
+      "evidence": "option-a.html: emoji=0 lorem=False placeholderImgs=0 | option-b.html: emoji=0 lorem=False placeholderImgs=0 | option-c.html: emoji=0 lorem=False placeholderImgs=0 | options-board.html: emoji=0 lorem=False placeholderImgs=0"
+    },
+    {
+      "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+      "passed": false,
+      "evidence": "option-a.html: 38 small: ['Add contact', 'Search contacts', 'Type: AllBuyerSellerLandlordTe', 'Stage: All', 'Agent: All', 'Follow-up: Any'] | option-b.html: 23 small: ['Keystone', 'Show only these', 'All 248', 'Buyers 96', 'Sellers 58', 'Landlords & tenants 71'] | option-c.html: 11 small: ['Add contact', 'Search contacts', 'All 248', 'Due today 5', 'Buyers', 'Sellers'] | options-board.html: 9 small: ['Desktop', 'Phone', 'Copy my choice', 'Choose this one', 'Open full screen', 'Choose this one']"
+    },
+    {
+      "text": "Delivers 2-3 design option files plus one page that shows them side by side",
+      "passed": true,
+      "evidence": "files=['option-a.html', 'option-b.html', 'option-c.html', 'options-board.html']"
+    },
+    {
+      "text": "Gives the client a built-in way to leave or copy feedback",
+      "passed": true,
+      "evidence": "regex on HTML"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 4,
+    "total": 12,
+    "pass_rate": 0.667
+  }
+}

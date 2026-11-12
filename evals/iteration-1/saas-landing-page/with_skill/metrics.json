@@ -1,0 +1,100 @@
+{
+  "index.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 105,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        14,
+        15,
+        16,
+        18,
+        20,
+        24,
+        48,
+        72
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [
+        "Log in"
+      ],
+      "targetsUnder44": [
+        "Skip to content",
+        "Minutely",
+        "How it works",
+        "Features",
+        "FAQ",
+        "Log in",
+        "Start free trial",
+        "Try it on your next client cal",
+        "Minutely",
+        "Privacy",
+        "Terms",
+        "Contact"
+      ],
+      "interactiveCount": 16,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.973,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 1,
+      "cssCustomProperties": 32
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 101,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        14,
+        15,
+        16,
+        18,
+        20,
+        24,
+        32,
+        40
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "Skip to content",
+        "Minutely",
+        "Start free trial",
+        "Try it on your next client cal",
+        "Minutely",
+        "Privacy",
+        "Terms",
+        "Contact"
+      ],
+      "interactiveCount": 12,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.972,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 1,
+      "cssCustomProperties": 32
+    }
+  }
+}

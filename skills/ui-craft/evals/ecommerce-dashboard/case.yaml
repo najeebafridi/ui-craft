@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: ecommerce-dashboard
+expected_outcome: |
+  A clean, professional dashboard with contextual KPIs, a sales chart, top products and low-stock list; works on phone and desktop; accessible contrast and focus; no generic AI-look decoration.

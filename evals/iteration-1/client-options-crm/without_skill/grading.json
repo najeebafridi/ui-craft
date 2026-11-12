@@ -1,0 +1,70 @@
+{
+  "expectations": [
+    {
+      "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+      "passed": false,
+      "evidence": "option-a-classic-table.html: desktop: 18 fails [4.23, 4.38, 4.38]; phone: 18 fails [4.23, 4.38, 4.38] | option-b-card-grid.html: desktop: 35 fails [3.5, 3.5, 3.5]; phone: 35 fails [3.5, 3.5, 3.5] | option-c-split-dark.html: desktop: 0 fails []; phone: 0 fails []"
+    },
+    {
+      "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+      "passed": false,
+      "evidence": "option-a-classic-table.html: hasFocusStyle=False | option-b-card-grid.html: hasFocusStyle=False | option-c-split-dark.html: hasFocusStyle=False"
+    },
+    {
+      "text": "Smallest visible text is at least 12px",
+      "passed": false,
+      "evidence": "option-a-classic-table.html: min=11.6667px | option-b-card-grid.html: min=12px | option-c-split-dark.html: min=11.6667px"
+    },
+    {
+      "text": "No sideways scrolling at 390px phone width",
+      "passed": false,
+      "evidence": "option-a-classic-table.html: overflow=True | option-b-card-grid.html: overflow=False | option-c-split-dark.html: overflow=False"
+    },
+    {
+      "text": "Uses at most 7 distinct font sizes on the desktop screen",
+      "passed": true,
+      "evidence": "option-a-classic-table.html: sizes=[12, 13, 14, 16, 22] | option-b-card-grid.html: sizes=[12, 13, 14, 15, 18, 20, 34] | option-c-split-dark.html: sizes=[12, 13, 14, 22, 26]"
+    },
+    {
+      "text": "Every form control has an accessible label",
+      "passed": false,
+      "evidence": "option-a-classic-table.html: unlabelled=['text', 'select-one', 'select-one', 'select-one'] | option-b-card-grid.html: unlabelled=['text'] | option-c-split-dark.html: unlabelled=['text']"
+    },
+    {
+      "text": "At least 80% of spacing values sit on the 4px grid",
+      "passed": false,
+      "evidence": "option-a-classic-table.html: on-grid=0.824 | option-b-card-grid.html: on-grid=0.311 | option-c-split-dark.html: on-grid=0.511"
+    },
+    {
+      "text": "Respects prefers-reduced-motion (or has no motion at all)",
+      "passed": false,
+      "evidence": "option-a-classic-table.html: reducedMotion=False motion=False | option-b-card-grid.html: reducedMotion=False motion=True | option-c-split-dark.html: reducedMotion=False motion=False"
+    },
+    {
+      "text": "No emoji icons, lorem ipsum or placeholder-image services",
+      "passed": true,
+      "evidence": "option-a-classic-table.html: emoji=0 lorem=False placeholderImgs=0 | option-b-card-grid.html: emoji=0 lorem=False placeholderImgs=0 | option-c-split-dark.html: emoji=0 lorem=False placeholderImgs=0"
+    },
+    {
+      "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+      "passed": false,
+      "evidence": "option-a-classic-table.html: 4 small: ['INPUT', 'All typesBuyersSellers', 'Any agent', 'Sort: Last contact'] | option-b-card-grid.html: 1 small: ['+ Add contact'] | option-c-split-dark.html: 1 small: ['INPUT']"
+    },
+    {
+      "text": "Delivers 2-3 design option files plus one page that shows them side by side",
+      "passed": false,
+      "evidence": "files=['option-a-classic-table.html', 'option-b-card-grid.html', 'option-c-split-dark.html']"
+    },
+    {
+      "text": "Gives the client a built-in way to leave or copy feedback",
+      "passed": false,
+      "evidence": "regex on HTML"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 10,
+    "total": 12,
+    "pass_rate": 0.167
+  }
+}

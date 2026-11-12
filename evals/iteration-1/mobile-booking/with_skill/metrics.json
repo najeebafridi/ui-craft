@@ -1,0 +1,66 @@
+{
+  "booking.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 63,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        14,
+        16,
+        18,
+        20
+      ],
+      "minFontSize": 14,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [],
+      "interactiveCount": 19,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.938,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 2,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 45
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": true,
+      "textChecked": 63,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        14,
+        16,
+        18,
+        20
+      ],
+      "minFontSize": 14,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [],
+      "interactiveCount": 19,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.938,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 2,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 45
+    }
+  }
+}

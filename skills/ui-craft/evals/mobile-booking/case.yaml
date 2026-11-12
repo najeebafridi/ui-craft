@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: mobile-booking
+expected_outcome: |
+  A phone-first booking flow with large touch targets, a reachable primary action at the bottom, clear selected states, disabled/unavailable slots that are understandable, and a confirmation step.

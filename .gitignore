@@ -3,3 +3,6 @@ Thumbs.db
 node_modules/
 *.log
 .tmp/
+evals/.chrome-profile/
+evals/.audit-test/
+evals/*/blind/

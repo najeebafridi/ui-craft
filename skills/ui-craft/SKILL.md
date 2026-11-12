@@ -24,7 +24,7 @@ Works for any stack. Numbers are in CSS px; for native apps read px as pt (iOS) 
    Pick density, radius and tone from the table in §2. Name the one primary task; the screen is built around it.
 3. **Build structure first, then style.** Layout and hierarchy with real-looking content, then colour, then details (icons, shadows, motion). Never use lorem ipsum; write realistic labels, names, numbers.
 4. **Design every state**, not just the happy one: loading, empty, error, long text, many items, one item, no permission. See `references/feedback-states.md`.
-5. **Review before you say "done".** Run `references/review-checklist.md`. If you can take a screenshot or open a browser, look at the result at 375px and 1440px width and fix what you see. Remove anything that does not help the primary task.
+5. **Review before you say "done".** Run `references/review-checklist.md`. Then **look at the result**: if Node and Chrome are available, run `node <skill-dir>/scripts/ui-audit.mjs page.html` — it measures contrast, text sizes, tap targets and sideways scroll at 1440px and 390px and saves screenshots you can open. Otherwise use any browser or screenshot tool you have. Fix what you find, then remove anything that does not help the primary task.
 
 When asked for **quick mockups for a client**, follow `references/mockups.md` (one HTML file per screen, no build step, options side by side).
 
@@ -41,6 +41,8 @@ When asked for **quick mockups for a client**, follow `references/mockups.md` (o
 | Consumer / playful | 16px | standard | 12–16px | depends | warmer colours, softer shapes |
 
 Body text defaults to 16px; drop to 14px only for dense desktop tools (rows above). Never below 12px.
+
+**Compact density is for mouse and keyboard only.** On phones and touch screens every profile grows its controls to 44px (see §11). This is the rule most often forgotten.
 
 Tone → radius: sharp (2–4px) feels technical and serious; medium (6–8px) is the safe default; soft (12–16px) feels friendly. Choose once, use everywhere. A nested element's radius = parent radius minus the padding between them.
 
@@ -67,11 +69,11 @@ Details: `references/layout-spacing.md`.
 
 ## 5. Typography
 
-- **Type scale: 12, 14, 16, 18, 20, 24, 30, 36, 48, 60.** Use 4–6 sizes per screen at most.
+- **Type scale: 12, 14, 16, 18, 20, 24, 30, 36, 48, 60.** Use 4–6 sizes per app screen, up to 7 on a marketing page, all from this scale (no 13px, 15px, 17px).
 - Line height: 1.5 for body (16/24), 14/20 for dense UI text, 1.2–1.3 for headings, 1.1 for very large display text.
 - Weights: 400 regular, 500 medium, 600 semibold (700 only for big display). Max 3 weights per screen.
 - Fonts: use the project's font. Otherwise choose on purpose: one family for apps; at most two for marketing (e.g. a display face for headings + a neutral sans for text). A system font stack is fine for tools. Do not pick a font only because it is the default.
-- Headings in **sentence case**. Avoid ALL CAPS except tiny labels (11–12px, +0.05em letter-spacing), and use even those rarely.
+- Headings in **sentence case**. Avoid ALL CAPS except small labels (12px, +0.05em letter-spacing), and use even those rarely.
 - Numbers in tables, prices and stats: `font-variant-numeric: tabular-nums` so columns line up.
 - Never below 12px. Body text never lighter than ~4.5:1 contrast.
 
@@ -143,7 +145,17 @@ Details: `references/motion.md`.
 
 - Mobile is not "stack everything". Rethink: what is the one task here? Hide secondary panels behind a tab or sheet; keep the primary action reachable (bottom of screen on phones).
 - Phone: one column, full-width primary button, bottom tab bar for 3–5 top sections, inputs ≥ 16px font, targets ≥ 44px with 8px gaps.
+- **Grow controls on touch, even in compact apps.** A 32px desktop button is fine with a mouse and too small for a thumb. Add this to every screen that has compact controls:
+  ```css
+  @media (max-width: 640px), (pointer: coarse) {
+    button, .btn, input, select, [role="tab"], .nav a { min-height: 44px; }
+    input, select, textarea { font-size: 16px; }   /* stops iOS zoom */
+  }
+  ```
+  Icon buttons and small links get a 44×44px hit area with padding, even if the icon stays 20px.
 - Tables on phones become stacked cards or a list with the 2–3 key fields; keep the full table on desktop. Long lists (over ~200 rows) get pagination or virtual scrolling.
+- **Nothing may be wider than the screen.** Rows of chips, dates or tabs scroll inside their own box (`overflow-x: auto`), flex and grid children get `min-width: 0`, long words wrap or truncate, and wide tables sit in a scroll container or turn into cards. Sideways page scroll at 390px is a bug.
+- A pinned bottom bar (sticky action bar, tab bar) must never hide content: give the scrolling content `padding-bottom` equal to the bar's height plus the safe area.
 - Respect safe areas (`env(safe-area-inset-*)`), notches and home indicators.
 
 Details: `references/mobile-touch.md`.

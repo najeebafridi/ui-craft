@@ -1,0 +1,362 @@
+{
+  "option-a-classic-table.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 66,
+      "contrastFails": 18,
+      "contrastFailSamples": [
+        {
+          "text": "248",
+          "ratio": 4.23,
+          "size": 16
+        },
+        {
+          "text": "Name",
+          "ratio": 4.38,
+          "size": 12
+        },
+        {
+          "text": "Type",
+          "ratio": 4.38,
+          "size": 12
+        },
+        {
+          "text": "Phone",
+          "ratio": 4.38,
+          "size": 12
+        },
+        {
+          "text": "Interest",
+          "ratio": 4.38,
+          "size": 12
+        },
+        {
+          "text": "Agent",
+          "ratio": 4.38,
+          "size": 12
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        16,
+        22
+      ],
+      "minFontSize": 11.6667,
+      "hasFocusStyle": false,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": false,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "+ New contact",
+        "INPUT",
+        "All typesBuyersSellers",
+        "Any agent",
+        "Sort: Last contact"
+      ],
+      "interactiveCount": 5,
+      "unlabelledControls": [
+        "text",
+        "select-one",
+        "select-one",
+        "select-one"
+      ],
+      "spacingOn4pxGrid": 0.824,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 7
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": true,
+      "textChecked": 66,
+      "contrastFails": 18,
+      "contrastFailSamples": [
+        {
+          "text": "248",
+          "ratio": 4.23,
+          "size": 16
+        },
+        {
+          "text": "Name",
+          "ratio": 4.38,
+          "size": 12
+        },
+        {
+          "text": "Type",
+          "ratio": 4.38,
+          "size": 12
+        },
+        {
+          "text": "Phone",
+          "ratio": 4.38,
+          "size": 12
+        },
+        {
+          "text": "Interest",
+          "ratio": 4.38,
+          "size": 12
+        },
+        {
+          "text": "Agent",
+          "ratio": 4.38,
+          "size": 12
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        16,
+        22
+      ],
+      "minFontSize": 11.6667,
+      "hasFocusStyle": false,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": false,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "INPUT",
+        "All typesBuyersSellers",
+        "Any agent",
+        "Sort: Last contact"
+      ],
+      "interactiveCount": 5,
+      "unlabelledControls": [
+        "text",
+        "select-one",
+        "select-one",
+        "select-one"
+      ],
+      "spacingOn4pxGrid": 0.824,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 7
+    }
+  },
+  "option-b-card-grid.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 75,
+      "contrastFails": 35,
+      "contrastFailSamples": [
+        {
+          "text": "Home",
+          "ratio": 3.5,
+          "size": 14
+        },
+        {
+          "text": "Properties",
+          "ratio": 3.5,
+          "size": 14
+        },
+        {
+          "text": "Pipeline",
+          "ratio": 3.5,
+          "size": 14
+        },
+        {
+          "text": "Calendar",
+          "ratio": 3.5,
+          "size": 14
+        },
+        {
+          "text": "248 people across buyers, sellers and re",
+          "ratio": 3.5,
+          "size": 15
+        },
+        {
+          "text": "+ Add contact",
+          "ratio": 2.93,
+          "size": 14
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        15,
+        18,
+        20,
+        34
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": false,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [],
+      "interactiveCount": 2,
+      "unlabelledControls": [
+        "text"
+      ],
+      "spacingOn4pxGrid": 0.311,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 1,
+      "cssCustomProperties": 6
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 75,
+      "contrastFails": 35,
+      "contrastFailSamples": [
+        {
+          "text": "Home",
+          "ratio": 3.5,
+          "size": 14
+        },
+        {
+          "text": "Properties",
+          "ratio": 3.5,
+          "size": 14
+        },
+        {
+          "text": "Pipeline",
+          "ratio": 3.5,
+          "size": 14
+        },
+        {
+          "text": "Calendar",
+          "ratio": 3.5,
+          "size": 14
+        },
+        {
+          "text": "248 people across buyers, sellers and re",
+          "ratio": 3.5,
+          "size": 15
+        },
+        {
+          "text": "+ Add contact",
+          "ratio": 2.93,
+          "size": 14
+        }
+      ],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        15,
+        18,
+        20,
+        34
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": false,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "+ Add contact"
+      ],
+      "interactiveCount": 2,
+      "unlabelledControls": [
+        "text"
+      ],
+      "spacingOn4pxGrid": 0.311,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 1,
+      "cssCustomProperties": 6
+    }
+  },
+  "option-c-split-dark.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 55,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        22,
+        26
+      ],
+      "minFontSize": 11.6667,
+      "hasFocusStyle": false,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": false,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "INPUT",
+        "+ New"
+      ],
+      "interactiveCount": 2,
+      "unlabelledControls": [
+        "text"
+      ],
+      "spacingOn4pxGrid": 0.511,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 1,
+      "cssCustomProperties": 7
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 31,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        13,
+        14
+      ],
+      "minFontSize": 11.6667,
+      "hasFocusStyle": false,
+      "hasReducedMotion": false,
+      "hasTransitionOrAnimation": false,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "INPUT"
+      ],
+      "interactiveCount": 2,
+      "unlabelledControls": [
+        "text"
+      ],
+      "spacingOn4pxGrid": 0.658,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 1,
+      "cssCustomProperties": 7
+    }
+  }
+}
