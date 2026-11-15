@@ -642,7 +642,8 @@ $("#density").addEventListener("change", (e) => set({ density: e.target.value })
 $("#motion").addEventListener("change", (e) => set({ motion: e.target.value }));
 $("#reset").addEventListener("click", () => { state = { ...defaultsFor(state.dir), theme: state.theme, view: state.view, screen: state.screen }; paint(); });
 const flash = (btn, text) => { const old = btn.textContent; btn.textContent = text; setTimeout(() => (btn.textContent = old), 1400); };
-async function copyText(text, btn) { try { await navigator.clipboard.writeText(text); flash(btn, "Copied"); } catch { prompt("Copy this:", text); } }
+function copyOld(text) { const t = document.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;top:0;left:0;opacity:0"; (document.querySelector("dialog[open]") || document.body).append(t); t.select(); let ok = false; try { ok = document.execCommand("copy"); } catch {} t.remove(); return ok; }
+async function copyText(text, btn) { try { await navigator.clipboard.writeText(text); flash(btn, "Copied"); } catch { if (copyOld(text)) flash(btn, "Copied"); else prompt("Copy this:", text); } }
 $("#share").addEventListener("click", (e) => { clearTimeout(hashTimer); const q = new URLSearchParams(); for (const [k, s] of Object.entries(KEYS)) q.set(s, k === "accent" || k === "secondary" ? String(state[k]).replace("#", "") : state[k]); history.replaceState(null, "", "#" + q); copyText(location.href, e.currentTarget); });
 
 // ---------- export ----------
