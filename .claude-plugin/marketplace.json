@@ -1,6 +1,6 @@
 {
   "name": "ui-craft",
-  "description": "ui-craft: premium UI/UX design skill for AI coding agents.",
+  "description": "ui-craft: premium UI/UX design skills for AI coding agents (interface design and immersive web).",
   "owner": {
     "name": "najeebafridi"
   },
@@ -8,15 +8,18 @@
     {
       "name": "ui-craft",
       "source": "./",
-      "description": "Premium UI/UX design skill: 16 visual directions, colour theory and psychology, craft details, platform conventions, an accessible palette generator, a screen audit script, client mockups and product scoring.",
-      "version": "2.1.1",
+      "description": "Two skills on one theme. ui-craft: 16 visual directions, colour theory and psychology, craft details, platform conventions, an accessible palette generator, a screen audit script, client mockups and product scoring. immersive-web: 3D scenes, shaders, scroll storytelling and cinematic motion that stay fast and accessible.",
+      "version": "2.2.0",
       "category": "design",
       "tags": [
         "design",
         "ui",
         "ux",
         "accessibility",
-        "mockups"
+        "mockups",
+        "3d",
+        "webgl",
+        "motion"
       ]
     }
   ]

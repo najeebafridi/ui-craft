@@ -1,7 +1,7 @@
 {
   "name": "ui-craft",
-  "version": "2.1.1",
-  "description": "Premium UI/UX design skill for AI coding agents: art direction (16 visual directions), colour theory and psychology, human psychology and emotion, craft details, platform conventions (web, desktop, mobile, tablet), an accessible palette generator, a screen audit script, fast client mockups and scoring of existing products.",
+  "version": "2.2.0",
+  "description": "Premium UI/UX design for AI coding agents, in two skills on one shared theme. ui-craft: art direction (16 visual directions), colour theory and psychology, craft details, platform conventions (web, desktop, mobile), an accessible palette generator, a screen audit script, client mockups and product scoring. immersive-web: 3D scenes (Three.js, React Three Fiber, WebGL, WebGPU), shaders, scroll storytelling, cinematic motion and the path from Blender to the browser, with speed budgets and reduced-motion and no-WebGL fallbacks.",
   "author": {
     "name": "najeebafridi"
   },
@@ -18,7 +18,14 @@
     "dashboard",
     "mobile",
     "desktop",
-    "mockup"
+    "mockup",
+    "3d",
+    "webgl",
+    "threejs",
+    "shader",
+    "scroll-animation",
+    "immersive",
+    "motion"
   ],
   "homepage": "https://najeebafridi.github.io/ui-craft/"
 }

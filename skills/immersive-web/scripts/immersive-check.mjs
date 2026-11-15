@@ -41,17 +41,17 @@ const kill = setTimeout(() => { console.log("Timed out after 4 minutes."); chrom
 // Runs in the page before its own scripts: counts drawing work and notes which safety hooks the page installs.
 const PROBE = String.raw`(() => {
   if (window.__imm) return;
-  const S = window.__imm = { draws: 0, tris: 0, frames: 0, tick: 0, last: -1, raf: 0, ctx: [], media: [], lostHook: false, visHook: false, io: false, wheelBlock: false, d2: 0 };
+  const S = window.__imm = { draws: 0, tris: 0, frames: 0, tick: 0, last: -1, raf: 0, ctx: [], media: [], lostHook: false, visHook: false, io: false, wheelBlock: false, d2: 0, fd: 0, ft: 0, maxD: 0, maxT: 0 };
   const raf = window.requestAnimationFrame.bind(window);
   const loop = () => { S.tick++; raf(loop); }; raf(loop);
   window.requestAnimationFrame = (cb) => { S.raf++; return raf(cb); };
-  const mark = () => { if (S.last !== S.tick) { S.frames++; S.last = S.tick; } };
+  const mark = () => { if (S.last !== S.tick) { S.maxD = Math.max(S.maxD, S.fd); S.maxT = Math.max(S.maxT, S.ft); S.fd = 0; S.ft = 0; S.frames++; S.last = S.tick; } };
   for (const C of [window.WebGLRenderingContext, window.WebGL2RenderingContext]) {
     if (!C) continue; const P = C.prototype;
     for (const fn of ["drawArrays", "drawElements", "drawArraysInstanced", "drawElementsInstanced"]) {
       const o = P[fn]; if (!o) continue;
       P[fn] = function (mode, a, b, c, d) { S.draws++; mark(); const arrays = fn.startsWith("drawArrays"), count = arrays ? b : a, inst = fn.endsWith("Instanced") ? (arrays ? c : d) : 1;
-        S.tris += (mode === 4 ? Math.floor(count / 3) : mode === 5 || mode === 6 ? Math.max(0, count - 2) : 0) * (inst || 1); return o.apply(this, arguments); };
+        const t = (mode === 4 ? Math.floor(count / 3) : mode === 5 || mode === 6 ? Math.max(0, count - 2) : 0) * (inst || 1); S.tris += t; S.fd++; S.ft += t; return o.apply(this, arguments); };
     }
   }
   const C2 = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype;
@@ -93,6 +93,25 @@ const FACTS = String.raw`(() => {
     running: document.getAnimations ? document.getAnimations().filter((a) => a.playState === "running" && (() => { try { const t = a.effect.getComputedTiming(); return t.iterations === Infinity || t.duration * (t.iterations || 1) > 5000; } catch { return false; } })()).length : 0,
     probe: window.__imm ? { media: [...new Set(window.__imm.media)].filter((q) => /reduced|contrast|hover|pointer/.test(q)), lostHook: window.__imm.lostHook, visHook: window.__imm.visHook, io: window.__imm.io, wheelBlock: window.__imm.wheelBlock, contexts: window.__imm.ctx.length } : null };
 })()`;
+
+// Adds up the text a scripted visitor gets to see while scrolling (reveal-on-scroll content counts once it shows).
+const SEEN = String.raw`(() => {
+  const S = window.__immSeen || (window.__immSeen = { set: new WeakSet(), n: 0 });
+  const shown = (e) => { for (let n = e; n && n.nodeType === 1; n = n.parentElement) { const cs = getComputedStyle(n); if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) < 0.05) return false; } return true; };
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let n; (n = w.nextNode());) { const t = n.textContent.trim(); if (!t || S.set.has(n) || !n.parentElement || n.parentElement.closest("script,style,noscript,template,canvas,svg")) continue; if (shown(n.parentElement)) { S.set.add(n); S.n += t.length; } }
+  return S.n;
+})()`;
+
+// How many elements change place within 0.9s with no input. A ticking clock or a filling bar is not movement; a drifting or sliding element is.
+const MOVERS = String.raw`(async () => {
+  const els = [...document.body.querySelectorAll("*")].filter((e) => { const r = e.getBoundingClientRect(); return r.width * r.height > 400 && r.bottom > 0 && r.top < innerHeight; }).slice(0, 2500);
+  const snap = () => els.map((e) => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2, getComputedStyle(e).transform]; });
+  const a = snap(); await new Promise((r) => setTimeout(r, 900)); const b = snap();
+  return a.filter((p, i) => Math.abs(p[0] - b[i][0]) > 4 || Math.abs(p[1] - b[i][1]) > 4 || (p[2] !== b[i][2] && /matrix/.test(p[2] + b[i][2]) && (p[2] + b[i][2]).length > 12 && Math.hypot(p[0] - b[i][0], p[1] - b[i][1]) > 1)).length;
+})()`;
+
+const PEAK = `window.__imm ? { draws: Math.max(window.__imm.maxD, window.__imm.fd), tris: Math.max(window.__imm.maxT, window.__imm.ft) } : { draws: 0, tris: 0 }`;   // the busiest single frame so far
 
 async function cdp(wsUrl) {
   const ws = new WebSocket(wsUrl);
@@ -155,6 +174,9 @@ try {
   const D = result.passes.desktop = { facts: await ev(FACTS), weight: weigh(), errors: [...errors] };
   await shot("desktop-0-top");
   D.early = await sample(1500);
+  const screens = Math.min(30, Math.ceil(D.facts.pageScreens / 0.8));                 // walk the page once, so scroll-revealed content gets its chance
+  for (let i = 0; i <= screens; i++) { await ev(`window.scrollTo({ top: ${i} * innerHeight * 0.8, behavior: "instant" })`); await sleep(140); D.seenText = await ev(SEEN); }
+  await scrollTo(0); await sleep(400);
   const steps = [0.25, 0.5, 0.75, 1];
   for (let i = 0; i < steps.length; i++) { await scrollTo(steps[i]); await sleep(900); await shot(`desktop-${i + 1}-scroll-${steps[i] * 100}`); }
   D.offscreenCanvas = (await ev(FACTS)).canvases.filter((cv) => cv.shown && !cv.onScreen).length; D.offscreen = D.offscreenCanvas ? await sample(1500) : null;
@@ -165,6 +187,7 @@ try {
   const tabs = []; for (let i = 0; i < 3; i++) { await c.send("Input.dispatchKeyEvent", { type: "keyDown", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9 }); await c.send("Input.dispatchKeyEvent", { type: "keyUp", key: "Tab", code: "Tab", windowsVirtualKeyCode: 9 }); await sleep(80);
     tabs.push(await ev(`(() => { const e = document.activeElement; if (!e || e === document.body) return "(nothing)"; const r = e.getBoundingClientRect(); return e.tagName.toLowerCase() + " \"" + (e.textContent || e.getAttribute("aria-label") || "").trim().slice(0, 30) + "\"" + (r.width < 2 ? " (invisible)" : ""); })()`)); }
   D.tabStops = tabs;
+  D.peak = await ev(PEAK);
   const before = errors.length;
   D.contextLoss = await ev(`(() => { const s = window.__imm; if (!s || !s.ctx.length) return null; let n = 0; for (const g of s.ctx) { const e = g.getExtension("WEBGL_lose_context"); if (e && !g.isContextLost()) { e.loseContext(); n++; } } return n; })()`);
   if (D.contextLoss) { await sleep(900); await shot("desktop-5-after-context-loss"); D.contextLossErrors = errors.slice(before); }
@@ -175,12 +198,13 @@ try {
   const P = result.passes.phone = { facts: await ev(FACTS), errors: [...new Set(errors)] };
   await shot("phone-0-top"); P.early = await sample(1500);
   await scrollTo(0.5); await sleep(900); await shot("phone-1-middle"); await scrollTo(1); await sleep(900); await shot("phone-2-end");
+  P.peak = await ev(PEAK);
 
   // ---- 3. reduced motion ----
   await open({ width: 1440, height: 900, dpr: 1, mobile: false, reduced: true });
   const R = result.passes.reducedMotion = { facts: await ev(FACTS), errors: [...new Set(errors)] };
   await sleep(1500); R.idle = await sample(2000);
-  const a = await shot("reduced-0-top"); await sleep(900); const b = await c.send("Page.captureScreenshot", { format: "png" }); R.stillFrame = a === b.result?.data;
+  const a = await shot("reduced-0-top"); R.movers = await ev(MOVERS); const b = await c.send("Page.captureScreenshot", { format: "png" }); R.stillFrame = a === b.result?.data;
   await wheel(400); await sleep(250); const r1 = await ev("scrollY"); await sleep(1500); const r2 = await ev("scrollY"); R.wheel = { after250ms: Math.round(r1), settled: Math.round(r2) };
   await scrollTo(0.5); await sleep(900); await shot("reduced-1-middle"); R.afterScroll = await sample(1500);
 
@@ -199,12 +223,12 @@ try {
   // ---- verdicts ----
   const check = (points, ok, name, detail, fix) => result.checks.push({ points, ok: ok === null ? null : !!ok, name, detail, fix });
   const f = D.facts, w = D.weight, hasScene = f.canvases.length > 0 || f.modelViewers.length > 0 || (f.probe && f.probe.contexts > 0);
-  const textRatio = (x) => (f.text ? x.facts.text / f.text : 1);
-  check(15, J.facts.h1Shown && textRatio(J) >= 0.7, "Content is in the HTML (JavaScript off)", `${J.facts.text} of ${f.text} visible characters; h1 ${J.facts.h1 ? (J.facts.h1Shown ? "visible" : "HIDDEN") : "missing"}`, "Write the headings, copy and links as plain HTML. Never start content at opacity 0 waiting for a script: add the hidden state from JavaScript (for example a class on <html>), so the page reads without it.");
+  const textRatio = (x) => (f.text ? x.facts.text / f.text : 1), seen = Math.max(D.seenText || 0, f.text);
+  check(15, J.facts.h1Shown && J.facts.text >= seen * 0.7, "Content is in the HTML (JavaScript off)", `${J.facts.text} characters visible with scripts off, of ${seen} a scripted visitor sees while scrolling; h1 ${J.facts.h1 ? (J.facts.h1Shown ? "visible" : "HIDDEN") : "missing"}`, "Write the headings, copy and links as plain HTML. Never start content at opacity 0 waiting for a script: add the hidden state from JavaScript (for example a class on <html>), so the page reads without it.");
   check(15, !G.errors.length && G.facts.h1Shown && textRatio(G) >= 0.9, "Works without WebGL / WebGPU", `${G.errors.length} error(s)${G.errors[0] ? ": " + G.errors[0] : ""}; ${G.facts.text} of ${f.text} characters visible`, "Test for the context before building the scene; on failure leave the poster or CSS fallback in place and skip the scene code (assets/scene-shell.js does this).");
   const moving = R.idle && (R.idle.framesPerSec > 1.5 || R.afterScroll?.framesPerSec > 1.5), cssMoving = R.facts.running > 0, smooth = Math.abs(R.wheel.settled - R.wheel.after250ms) > 60;
   const reducedKnown = f.cssReducedMotion || (f.probe && f.probe.media.some((q) => /reduced-motion/.test(q)));
-  check(15, !moving && !cssMoving && !smooth && R.stillFrame && (reducedKnown || !hasScene), "Reduced motion: the page holds still", `${R.idle?.framesPerSec ?? 0} scene frames/s when idle, ${R.facts.running} looping or long CSS animation(s), smooth-scroll ${smooth ? "still on" : "off"}, two screenshots ${R.stillFrame ? "identical" : "DIFFER"}${reducedKnown ? "" : "; the page never asks for prefers-reduced-motion"}`, "Under prefers-reduced-motion draw single still frames (one per beat), turn off parallax, scrubbing, smooth-scroll and looping CSS animation, and keep short fades only.");
+  check(15, !moving && !cssMoving && !smooth && !R.movers && (reducedKnown || !hasScene), "Reduced motion: the page holds still", `${R.idle?.framesPerSec ?? 0} scene frames/s when idle, ${R.movers || 0} element(s) changing place, ${R.facts.running} looping or long CSS animation(s), smooth-scroll ${smooth ? "still on" : "off"}${R.stillFrame ? "" : "; the picture still changes between two screenshots (fine if that is live data, a clock or a video the person started)"}${reducedKnown ? "" : "; the page never asks for prefers-reduced-motion"}`, "Under prefers-reduced-motion draw single still frames (one per beat), turn off parallax, scrubbing, smooth-scroll and looping CSS animation, and keep short fades only.");
   const pre = w.scriptBeforePaintKB;
   check(10, pre === null ? null : pre <= 170, "Little script before first paint", pre === null ? "first paint not observed" : `${pre} KB of script requested before first paint (budget 170 KB); ${w.beforePaintKB} KB in all`, "Load the 3D engine with a dynamic import() after first paint (or when the scene is near the viewport). Keep the heading as real text so it paints first.");
   check(10, w.totalKB <= 4096, "Page weight", `${w.totalKB} KB total (script ${w.scriptKB}, images ${w.imageKB}, 3D assets ${w.assets3dKB}, fonts ${w.fontKB}); biggest: ${w.biggest.join("; ")}`, "Budget: first scene under about 1.5 MB on phones and 4 MB on desktop. Compress models (meshopt or Draco) and textures (KTX2 / WebP), cut texture size, lazy-load what is below the fold.");
@@ -231,7 +255,7 @@ try {
   if (!f.focusStyle) note("No :focus style in the CSS: keyboard users cannot see where they are.");
   if (!f.main) note("No <main> landmark.");
   if (D.tabStops.some((t) => /invisible|nothing/.test(t))) note("First Tab stops: " + D.tabStops.join(" -> ") + ". Focus should land on visible links and buttons in reading order.");
-  const peak = [D.early, P.early].filter(Boolean).reduce((m, s) => ({ draws: Math.max(m.draws, s.drawsPerFrame), tris: Math.max(m.tris, s.trisPerFrame) }), { draws: 0, tris: 0 });
+  const peak = [D.peak, P.peak].filter(Boolean).reduce((m, s) => ({ draws: Math.max(m.draws, s.draws), tris: Math.max(m.tris, s.tris) }), { draws: 0, tris: 0 });
   if (peak.draws > 100) note(`${peak.draws} draw calls per frame: aim for under 100 on phones (merge meshes, instance repeats, share materials).`);
   if (peak.tris > 150000) note(`${peak.tris.toLocaleString("en")} triangles per frame: aim for under about 100,000 on phones (simplify, use normal maps, lower detail far away).`);
   if (hasScene && f.probe && !f.probe.visHook && !resting) note("No visibilitychange listener: the scene may keep drawing in a hidden tab.");
@@ -242,7 +266,7 @@ try {
   // ---- report ----
   console.log(`\n${target}\n  Immersive check: ${result.score}/100 (measured parts only)\n`);
   for (const k of result.checks) console.log(`  ${k.ok === null ? "  -  " : k.ok ? " pass" : " FAIL"}  ${k.name}${k.ok === null ? " (not applicable)" : ""}\n         ${k.detail}${k.ok === false ? "\n         Fix: " + k.fix : ""}`);
-  console.log(`\n  Scene: ${f.canvases.length} canvas(es), ${peak.draws} draw calls and ${peak.tris.toLocaleString("en")} triangles per frame at most, page is ${f.pageScreens} screens long.`);
+  console.log(`\n  Scene: ${f.canvases.length} canvas(es), ${peak.draws} draw calls and ${peak.tris.toLocaleString("en")} triangles in the busiest frame, page is ${f.pageScreens} screens long.`);
   if (result.notes.length) console.log("\n  Notes:\n" + result.notes.map((n) => "   - " + n).join("\n"));
   console.log(`\n  Screenshots (open them all, phone as strictly as desktop): ${outDir}\n    desktop-*  phone-*  reduced-*  nowebgl-*  nojs-*`);
   if (jsonPath) writeFileSync(resolve(jsonPath), JSON.stringify(result, null, 2));
