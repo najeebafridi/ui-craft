@@ -1,0 +1,79 @@
+{
+  "ecommerce-dashboard": {
+    "X": {"premium": 8, "hierarchy": 7, "craft": 7, "fit": 9, "phone": 7, "approve": 8},
+    "Y": {"premium": 7, "hierarchy": 8, "craft": 8, "fit": 7, "phone": 7, "approve": 8},
+    "winner": "X",
+    "reason": "X has a distinct handmade-brand character (dark warm palette, serif headings, 'No. 01' best-seller numbering) while staying data-first: KPI strip with comparisons, a 'Stock running low' list with days-left badges, burn rates and a batch 'Create restock order' action. Y is cleaner and more legible but reads as a generic light admin template with a stock rust accent.",
+    "winner_weaknesses": [
+      "Sales chart panel has a large empty area below the plot because it is stretched to match the tall stock column",
+      "Dark brown-on-black palette lowers legibility of small meta text (SKU lines, 12px labels) and may feel heavy for daily use"
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "settings-form": {
+    "X": {"premium": 7, "hierarchy": 6, "craft": 7, "fit": 7, "phone": 7, "approve": 6},
+    "Y": {"premium": 7, "hierarchy": 8, "craft": 7, "fit": 7, "phone": 7, "approve": 8},
+    "winner": "Y",
+    "reason": "Y uses a clear two-column settings layout (section title and description left, fields right), has an explicit 'Save changes' primary button for the profile, grouped notification toggles ('Activity on your work', 'Summaries and product news') and a properly separated red 'Delete account' danger zone. X has no visible save action for profile fields and leaves a wide empty gutter left of the content.",
+    "winner_weaknesses": [
+      "Helper and toggle description text is very small and low-contrast (about 12px grey on near-black)",
+      "On phone the tab row is cut off ('Delete accou...') and the full-width Save button sits above an orphaned 'Cancel' text link"
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "mobile-booking": {
+    "X": {"premium": 7, "hierarchy": 7, "craft": 7, "fit": 7, "phone": 7, "approve": 6},
+    "Y": {"premium": 7, "hierarchy": 9, "craft": 8, "fit": 7, "phone": 9, "approve": 8},
+    "winner": "Y",
+    "reason": "Y shows the whole flow working: selected service and barber in tinted cards with check marks, 'Step 1 of 3' labels, time slots grouped Morning/Afternoon/Evening with crossed-out booked times, and a sticky bar 'Review booking, Fri 13 Mar at 10:30'. X shows only the empty state, so the time-slot picker, the key part of the brief, is never seen.",
+    "winner_weaknesses": [
+      "Visually plain: generic green-on-white with no barbershop character or imagery",
+      "Long vertical scroll: 13 time buttons plus four large service and barber cards push the date picker well below the fold"
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "saas-landing-page": {
+    "X": {"premium": 7, "hierarchy": 8, "craft": 7, "fit": 9, "phone": 8, "approve": 8},
+    "Y": {"premium": 7, "hierarchy": 8, "craft": 8, "fit": 6, "phone": 8, "approve": 7},
+    "winner": "X",
+    "reason": "X has a memorable, agency-appropriate voice: cobalt blue and yellow, a highlighted 'The follow-up' in the headline, a realistic recap card with decisions and owner-dated action items, and a 'What your client receives' email preview. Y is tidy and credible but looks like a standard teal SaaS template.",
+    "winner_weaknesses": [
+      "Heavy hard-offset shadows and saturated blue/yellow could read as loud or cheap to some agency buyers",
+      "Yellow integrations strip ('→ Zoom → Google Meet') uses plain text arrows instead of logos, which looks unfinished"
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "client-options-crm": {
+    "X": {"premium": 6, "hierarchy": 7, "craft": 7, "fit": 7, "phone": 7, "approve": 7},
+    "Y": {"premium": 8, "hierarchy": 8, "craft": 8, "fit": 8, "phone": 8, "approve": 8},
+    "winner": "Y",
+    "reason": "Y's three directions are more clearly distinct and each well executed: a clean standard table, an editorial serif 'Clients' list that feels high-end, and a dense dark power-user table with keyboard hints and a preview panel. X's options are a plain default table, warm action cards, and a dark list-detail whose detail pane is mostly empty.",
+    "winner_weaknesses": [
+      "Editorial option uses all-caps micro labels (BUYER, SELLER) and drops the budget column's prominence, reducing scanability",
+      "Dark option sets budgets, phones and dates in small monospace grey text that is hard to read, and its preview panel is sparse"
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "luxury-hotel-booking": {
+    "X": {"premium": 9, "hierarchy": 8, "craft": 8, "fit": 9, "phone": 8, "approve": 8},
+    "Y": {"premium": 7, "hierarchy": 7, "craft": 7, "fit": 6, "phone": 7, "approve": 6},
+    "winner": "X",
+    "reason": "X feels quietly expensive: restrained serif type, generous whitespace, a calm 'Your stay' summary with transparent tax line and total, and an inline rate choice (Flexible vs Advance) shown under the selected room. Y uses 'Only 2 left' / 'Only 1 left' badges, which undercut a luxury feel, and has busier tag chips and a misaligned 'Change dates' link.",
+    "winner_weaknesses": [
+      "Room images are flat illustrated placeholders, not photography, which a luxury client would never ship",
+      "Overuse of small letter-spaced uppercase labels (dates line, SELECT ROOM, CHOOSE YOUR RATE) lowers readability"
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "fake-scarcity badges 'Only 2 left' and 'Only 1 left' on room images"}
+  },
+  "mac-writing-app": {
+    "X": {"premium": 7, "hierarchy": 7, "craft": 7, "fit": 7, "phone": 7, "approve": 7},
+    "Y": {"premium": 8, "hierarchy": 8, "craft": 8, "fit": 9, "phone": 7, "approve": 8},
+    "winner": "Y",
+    "reason": "Y feels most like a native Mac app: source-list sidebar with blue selection and word counts per document, minimal toolbar with 'Saved to disk, 21:42', refined book typography with an italic standfirst and section break. X is solid but the heavy slab-serif title, teal accent and dense three-line sidebar items feel more web than macOS.",
+    "winner_weaknesses": [
+      "Floating word-goal pill overlaps the body text at the bottom of the editor, and its blue weekly bars are unlabeled",
+      "Narrow window gives no visible way to open the documents sidebar"
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  }
+}

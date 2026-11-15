@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Book a visit - Fade &amp; Co.</title>
+<!--
+Design brief
+Product: booking screen of a barbershop chain's mobile app (phone, one task)
+User and feeling: customer on the go, wants a slot fast; confident and unhurried -> clear, warm, no surprises (price + time shown before confirming)
+Direction: own "Barbershop ledger": warm paper neutrals, deep bottle-green accent (palette.mjs, #1F5F4A), light theme
+Type: Hanken Grotesk, 16px body, tabular numbers      Shape and depth: 12px cards / 8px controls, hairline ring + one soft raised level
+Density and motion: touch (44px+), crisp 120-300ms    Platform: mobile web, one column, sticky bottom action bar
+Signature: the confirmation is a ticket stub (notched, perforated) with the time set large
+Primary task: pick service, barber and time, then confirm.
+Sample data: names, prices and availability are made up for the mockup.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #FDF8F3; --surface: #FFFEFD; --surface-2: #F8F2EB; --surface-3: #EDE7DE;
+  --border: #E9E2D9; --border-strong: #94897B;
+  --text: #22190C; --text-muted: #61574A; --text-subtle: #766C5E;
+  --accent: #1F5F4A; --accent-hover: #0E523E; --accent-fg: #FFFFFF; --accent-soft: #E6F4EE; --accent-text: #1F5F4A; --focus: #1F5F4A;
+  --success: #0E8745; --danger-text: #B7191C;
+  --shadow-color: 44 31 13; --ring: rgb(44 31 13 / 0.08); --highlight: rgb(255 255 255 / 0.18);
+  --font: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --radius-sm: 8px; --radius: 12px; --radius-lg: 16px;
+  --shadow-raised: 0 0 0 1px var(--ring), 0 1px 2px rgb(var(--shadow-color) / .06), 0 2px 4px rgb(var(--shadow-color) / .05);
+  --shadow-button: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(var(--shadow-color) / .14);
+  --shadow-bar: 0 -1px 0 var(--border), 0 -8px 24px rgb(var(--shadow-color) / .06);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --bar-h: 132px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.5 var(--font); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+h1, h2, h3 { margin: 0; line-height: 1.2; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+button { font: inherit; color: inherit; }
+::selection { background: color-mix(in oklab, var(--accent) 24%, transparent); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+svg { flex: none; }
+.ico { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+.app { max-width: 430px; margin: 0 auto; min-height: 100dvh; background: var(--bg); position: relative; }
+@media (min-width: 431px) { body { background: var(--surface-3); } .app { box-shadow: 0 0 0 1px var(--ring); } }
+
+/* top bar */
+.top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 4px; height: 56px; padding: 0 8px 0 4px;
+  background: color-mix(in oklab, var(--bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.top.scrolled { box-shadow: 0 1px 0 var(--border); }
+.icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border: 0; background: none; border-radius: 50%; cursor: pointer; touch-action: manipulation; transition: background-color 120ms var(--ease-out), transform 120ms var(--ease-out); }
+.icon-btn:active { transform: scale(.94); background: var(--surface-3); }
+.top-title { font-size: 16px; font-weight: 600; letter-spacing: 0; }
+.top-title small { display: block; font-size: 12px; font-weight: 400; color: var(--text-muted); line-height: 16px; }
+
+main { padding: 8px 16px calc(var(--bar-h) + 24px + env(safe-area-inset-bottom)); }
+.intro h1 { font-size: 30px; letter-spacing: -0.025em; font-weight: 600; }
+.intro p { margin-top: 4px; color: var(--text-muted); font-size: 14px; line-height: 20px; }
+
+/* progress: three marks that follow the choices */
+.steps { display: flex; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+.steps li { flex: 1; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.steps li::before { content: ""; display: block; height: 4px; border-radius: 4px; background: var(--surface-3); margin-bottom: 8px; transition: background-color 200ms var(--ease-out); }
+.steps li.done { color: var(--text); }
+.steps li.done::before { background: var(--accent); }
+
+section.step { margin-top: 32px; }
+.step-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.step-head h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.015em; }
+.step-head .picked { font-size: 14px; color: var(--accent-text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+/* selectable rows */
+.opt { position: relative; display: block; cursor: pointer; }
+.opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.opt:has(input:disabled) { cursor: not-allowed; }
+.mark { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: grid; place-items: center; color: transparent; flex: none; transition: background-color 120ms var(--ease-out), border-color 120ms var(--ease-out); }
+.mark svg { width: 14px; height: 14px; stroke-width: 2.5; }
+.opt input:checked ~ .face .mark { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.opt input:focus-visible ~ .face { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* services: one grouped list */
+.list { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-raised); overflow: hidden; margin: 0; padding: 0; list-style: none; }
+.list li + li { border-top: 1px solid var(--border); }
+.service .face { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 12px 16px; transition: background-color 120ms var(--ease-out); }
+.service input:checked ~ .face { background: var(--accent-soft); }
+.service .name { font-weight: 500; line-height: 20px; }
+.service .meta { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.service .grow { flex: 1; min-width: 0; }
+.service .price { font-weight: 600; text-align: right; }
+.service .price small { display: block; font-size: 12px; font-weight: 400; color: var(--text-muted); line-height: 16px; }
+
+/* barbers: 2-column grid */
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.barber .face { display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 112px; padding: 12px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-raised); transition: box-shadow 120ms var(--ease-out), background-color 120ms var(--ease-out); }
+.barber input:checked ~ .face { background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent); }
+.barber .row { display: flex; align-items: flex-start; justify-content: space-between; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 14px; background: var(--surface-3); color: var(--text); outline: 1px solid var(--ring); outline-offset: -1px; }
+.avatar.any { background: var(--surface-2); color: var(--accent-text); }
+.barber .name { font-weight: 500; line-height: 20px; }
+.barber .meta { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.star { width: 12px; height: 12px; fill: currentColor; stroke: none; vertical-align: -1px; color: var(--text-muted); }
+
+/* dates: scroll inside own box */
+.dates { display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px 16px; padding: 4px 16px 8px; scroll-snap-type: x proximity; scrollbar-width: none; list-style: none; }
+.dates::-webkit-scrollbar { display: none; }
+.date { flex: none; scroll-snap-align: start; scroll-margin-left: 16px; }
+.date .face { width: 56px; height: 68px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-raised); transition: background-color 120ms var(--ease-out); }
+.date .dow { font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.date .dom { font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -0.015em; }
+.date input:checked ~ .face { background: var(--accent); box-shadow: var(--shadow-button); color: var(--accent-fg); }
+.date input:checked ~ .face .dow { color: color-mix(in oklab, var(--accent-fg) 85%, var(--accent)); }
+.date input:disabled ~ .face { background: transparent; box-shadow: 0 0 0 1px var(--border); opacity: .6; }
+
+/* time slots */
+.slots-wrap { min-height: 120px; }
+.group-label { font-size: 12px; line-height: 16px; color: var(--text-muted); margin: 16px 0 8px; font-weight: 500; }
+.group-label:first-child { margin-top: 0; }
+.slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.slot .face { height: 44px; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--surface); box-shadow: 0 0 0 1px var(--border-strong); font-weight: 500; transition: background-color 120ms var(--ease-out), box-shadow 120ms var(--ease-out); }
+.slot input:checked ~ .face { background: var(--accent); color: var(--accent-fg); box-shadow: var(--shadow-button); }
+.slot input:disabled ~ .face { background: var(--surface-2); box-shadow: 0 0 0 1px var(--border); color: var(--text-subtle); text-decoration: line-through; opacity: .75; }
+.legend { margin-top: 12px; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+
+/* skeleton + empty */
+.sk { height: 44px; border-radius: var(--radius-sm); background: linear-gradient(90deg, var(--surface-2), var(--surface-3), var(--surface-2)); background-size: 200% 100%; animation: sh 1.2s linear infinite; }
+@keyframes sh { to { background-position: -200% 0; } }
+.empty { padding: 24px 16px; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-raised); }
+.empty h3 { font-size: 16px; font-weight: 600; letter-spacing: 0; }
+.empty p { margin-top: 4px; font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.empty .btn { margin-top: 16px; }
+
+/* buttons */
+.btn { min-height: 44px; padding: 0 20px; border-radius: var(--radius-sm); border: 0; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; touch-action: manipulation;
+  transition: background-color 120ms var(--ease-out), transform 120ms var(--ease-out), box-shadow 120ms var(--ease-out); }
+.btn:active { transform: scale(.97); }
+.btn-primary { width: 100%; min-height: 52px; background: linear-gradient(in oklch, color-mix(in oklch, var(--accent) 94%, white), var(--accent)); color: var(--accent-fg); box-shadow: var(--shadow-button); font-weight: 600; }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary[aria-busy="true"] { pointer-events: none; }
+.btn-outline { background: var(--surface); box-shadow: 0 0 0 1px var(--border-strong); }
+.btn-text { background: none; color: var(--accent-text); }
+.spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid color-mix(in oklab, var(--accent-fg) 35%, transparent); border-top-color: var(--accent-fg); animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* sticky action bar */
+.bar { position: fixed; left: 50%; bottom: 0; width: 100%; max-width: 430px; transform: translateX(-50%); z-index: 6;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: var(--surface); box-shadow: var(--shadow-bar); }
+.sum { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; min-height: 40px; }
+.sum-text { min-width: 0; font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.sum-text strong { display: block; color: var(--text); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sum-total { text-align: right; flex: none; }
+.sum-total b { display: block; font-size: 24px; line-height: 28px; font-weight: 600; letter-spacing: -0.015em; }
+.sum-total span { font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.fine { margin-top: 8px; text-align: center; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+
+/* confirmation: the ticket stub (signature) */
+.done-view { padding: 8px 16px calc(32px + env(safe-area-inset-bottom)); }
+.done-view[hidden], main[hidden], .bar[hidden] { display: none; }
+.done-head { display: flex; align-items: center; gap: 12px; margin: 16px 0 24px; }
+.check { width: 40px; height: 40px; border-radius: 50%; background: var(--success); color: #fff; display: grid; place-items: center; animation: pop 400ms var(--ease-out) both; }
+.check svg { width: 22px; height: 22px; stroke-width: 2.5; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.done-head h2 { font-size: 24px; letter-spacing: -0.015em; font-weight: 600; }
+.done-head p { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.ticket { --notch: 12px; position: relative; background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-raised); animation: rise 300ms var(--ease-out) both; }
+@keyframes rise { from { transform: translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+.t-top { padding: 24px 24px 24px; }
+.t-label { font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.t-time { font-size: 48px; line-height: 1.05; font-weight: 600; letter-spacing: -0.03em; margin-top: 4px; color: var(--accent-text); }
+.t-date { font-size: 18px; line-height: 24px; font-weight: 500; margin-top: 4px; }
+.perf { position: relative; height: 0; border-top: 2px dashed var(--border-strong); margin: 0 var(--notch); opacity: .55; }
+.perf::before, .perf::after { content: ""; position: absolute; top: -13px; width: 24px; height: 24px; border-radius: 50%; background: var(--bg); box-shadow: inset 0 0 0 1px var(--ring); }
+.perf::before { left: calc(-1 * var(--notch) - 12px); }
+.perf::after { right: calc(-1 * var(--notch) - 12px); }
+.t-body { padding: 24px; display: grid; gap: 16px; }
+.kv { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+.kv dt { font-size: 14px; color: var(--text-muted); }
+.kv dd { margin: 0; font-weight: 500; text-align: right; min-width: 0; }
+.kv.total { padding-top: 16px; border-top: 1px solid var(--border); }
+.kv.total dd { font-size: 20px; font-weight: 600; }
+.loc { margin-top: 16px; display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 20px; color: var(--text-muted); }
+.loc strong { color: var(--text); font-weight: 500; display: block; }
+.done-actions { display: grid; gap: 8px; margin-top: 24px; }
+
+@media (max-width: 640px), (pointer: coarse) { button, .btn, input { min-height: 44px; } }
+@media (hover: hover) {
+  .service:hover input:not(:checked) ~ .face { background: var(--surface-2); }
+  .barber:hover input:not(:checked) ~ .face { background: var(--surface-2); }
+  .slot:hover input:not(:checked):not(:disabled) ~ .face { background: var(--accent-soft); }
+  .date:hover input:not(:checked):not(:disabled) ~ .face { background: var(--surface-2); }
+  .btn-outline:hover { background: var(--surface-2); }
+  .icon-btn:hover { background: var(--surface-3); }
+}
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (max-width: 340px) { .slots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.2A7 7 0 0 1 19 9.8C19 14.8 12 21 12 21z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c1.8.8 3 2.6 3 4.7"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></symbol>
+</svg>
+
+<div class="app">
+  <header class="top" id="top">
+    <button class="icon-btn" id="back" aria-label="Back"><svg class="ico"><use href="#i-back"/></svg></button>
+    <div class="top-title">Book a visit<small>Fade &amp; Co. Shoreditch</small></div>
+  </header>
+
+  <main id="main">
+    <div class="intro">
+      <h1>Book a visit</h1>
+      <p>Pick a service, your barber and a time. You pay in the shop.</p>
+      <ol class="steps" aria-label="Progress" id="steps">
+        <li data-k="service">Service</li><li data-k="barber">Barber</li><li data-k="time">Time</li>
+      </ol>
+    </div>
+
+    <section class="step" id="s-service" aria-labelledby="h-service">
+      <div class="step-head"><h2 id="h-service">Service</h2><span class="picked num" id="p-service"></span></div>
+      <fieldset style="border:0;padding:0;margin:0;min-width:0"><legend class="sr">Choose a service</legend>
+        <ul class="list" id="services"></ul>
+      </fieldset>
+    </section>
+
+    <section class="step" id="s-barber" aria-labelledby="h-barber">
+      <div class="step-head"><h2 id="h-barber">Barber</h2><span class="picked" id="p-barber"></span></div>
+      <fieldset style="border:0;padding:0;margin:0;min-width:0"><legend class="sr">Choose a barber</legend>
+        <ul class="grid" id="barbers"></ul>
+      </fieldset>
+    </section>
+
+    <section class="step" id="s-time" aria-labelledby="h-time">
+      <div class="step-head"><h2 id="h-time">Date and time</h2><span class="picked num" id="p-time"></span></div>
+      <fieldset style="border:0;padding:0;margin:0;min-width:0"><legend class="sr">Choose a date</legend>
+        <ul class="dates" id="dates"></ul>
+      </fieldset>
+      <fieldset style="border:0;padding:0;margin:0;min-width:0"><legend class="sr">Choose a time</legend>
+        <div class="slots-wrap" id="slots" aria-live="polite"></div>
+      </fieldset>
+      <p class="legend" id="legend"></p>
+    </section>
+  </main>
+
+  <div class="bar" id="bar">
+    <div class="sum" aria-live="polite">
+      <div class="sum-text"><span id="sum-hint">Nothing chosen yet</span><strong id="sum-line"></strong></div>
+      <div class="sum-total num"><b id="sum-price">£0</b><span id="sum-dur"></span></div>
+    </div>
+    <button class="btn btn-primary" id="go"><span id="go-label">Choose a service</span></button>
+    <p class="fine" id="fine">Free cancellation up to 2 hours before.</p>
+  </div>
+
+  <section class="done-view" id="done" hidden aria-labelledby="done-h" tabindex="-1">
+    <div class="done-head">
+      <div class="check"><svg class="ico"><use href="#i-check"/></svg></div>
+      <div><h2 id="done-h">You're booked</h2><p id="done-sub">Booking FC-4821 · confirmation sent to your phone</p></div>
+    </div>
+    <div class="ticket">
+      <div class="t-top">
+        <div class="t-label">Your appointment</div>
+        <div class="t-time num" id="t-time"></div>
+        <div class="t-date" id="t-date"></div>
+      </div>
+      <div class="perf" aria-hidden="true"></div>
+      <div class="t-body">
+        <dl style="margin:0;display:grid;gap:16px">
+          <div class="kv"><dt>Service</dt><dd id="t-service"></dd></div>
+          <div class="kv"><dt>Barber</dt><dd id="t-barber"></dd></div>
+          <div class="kv"><dt>Length</dt><dd class="num" id="t-dur"></dd></div>
+          <div class="kv total"><dt>To pay in shop</dt><dd class="num" id="t-price"></dd></div>
+        </dl>
+        <div class="loc"><svg class="ico"><use href="#i-pin"/></svg><div><strong>Fade &amp; Co. Shoreditch</strong>14 Redchurch Street, London E2 7DP</div></div>
+      </div>
+    </div>
+    <div class="done-actions">
+      <button class="btn btn-outline" id="cal"><svg class="ico"><use href="#i-cal"/></svg>Add to calendar</button>
+      <button class="btn btn-text" id="change">Change or cancel booking</button>
+    </div>
+  </section>
+</div>
+
+<script>
+/* Sample data for the mockup. "Today" is fixed so the screen is repeatable. */
+const TODAY = new Date(2026, 10, 16);           // Mon 16 Nov 2026
+const NOW_MIN = 11 * 60;                         // 11:00
+const SERVICES = [
+  { id: 'cut',   name: 'Haircut',            desc: 'Cut, wash and style',          min: 30, price: 25 },
+  { id: 'fade',  name: 'Skin fade',          desc: 'Cut, razor finish and style',  min: 45, price: 30 },
+  { id: 'beard', name: 'Beard trim',         desc: 'Shape, line-up and hot towel', min: 20, price: 15 },
+  { id: 'combo', name: 'Cut and beard',      desc: 'Haircut plus beard trim',      min: 60, price: 40 },
+  { id: 'shave', name: 'Hot towel shave',    desc: 'Straight razor, two towels',   min: 40, price: 32 },
+];
+const BARBERS = [
+  { id: 'any',   name: 'First available', role: 'Soonest slot with anyone', any: true },
+  { id: 'marcus',name: 'Marcus Reid',     role: 'Skin fades',   rating: '4.9', off: 2 },
+  { id: 'dami',  name: 'Dami Okafor',     role: 'Cuts, textured hair', rating: '4.9', off: 1 },
+  { id: 'josh',  name: 'Josh Patel',      role: 'Beards and shaves',  rating: '4.8', off: 3 },
+  { id: 'luca',  name: 'Luca Moretti',    role: 'Classic cuts', rating: '4.8', off: 4 },
+  { id: 'tomasz',name: 'Tomasz Nowak',    role: 'Cuts and fades', rating: '4.7', off: 5 },
+];
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2, '0');
+const hhmm = m => pad(Math.floor(m / 60)) + ':' + pad(m % 60);
+const fmtDay = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+const fmtLong = d => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+const gbp = n => '£' + n;
+const initials = n => n.split(' ').map(w => w[0]).join('');
+
+const DATES = Array.from({ length: 14 }, (_, i) => { const d = new Date(TODAY); d.setDate(d.getDate() + i); return d; });
+const state = { service: null, barber: null, date: 0, time: null };
+
+function hash(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0) % 100; }
+function closed(d) { return d.getDay() === 0; }
+function barberWorks(b, d) { return !closed(d) && (b.any || b.off !== d.getDay()); }
+function slotsFor(barberId, di) {
+  const d = DATES[di];
+  if (closed(d)) return { closed: true, slots: [] };
+  const list = barberId === 'any' ? BARBERS.filter(b => !b.any) : BARBERS.filter(b => b.id === barberId);
+  if (!list.some(b => barberWorks(b, d))) return { off: true, slots: [] };
+  const slots = [];
+  for (let m = 9 * 60; m <= 18 * 60 + 30; m += 30) {
+    if (di === 0 && m <= NOW_MIN + 30) continue;
+    const free = list.some(b => barberWorks(b, d) && hash(b.id + di + m) > 38);
+    slots.push({ m, free });
+  }
+  return { slots };
+}
+
+/* render: services */
+$('#services').innerHTML = SERVICES.map(s => `
+  <li class="service"><label class="opt">
+    <input type="radio" name="service" value="${s.id}">
+    <span class="face"><span class="mark"><svg class="ico"><use href="#i-check"/></svg></span>
+      <span class="grow"><span class="name">${s.name}</span><span class="meta" style="display:block">${s.desc}</span></span>
+      <span class="price num">${gbp(s.price)}<small>${s.min} min</small></span></span>
+  </label></li>`).join('');
+
+/* render: barbers */
+$('#barbers').innerHTML = BARBERS.map(b => `
+  <li class="barber"><label class="opt">
+    <input type="radio" name="barber" value="${b.id}">
+    <span class="face"><span class="row">
+      <span class="avatar ${b.any ? 'any' : ''}" aria-hidden="true">${b.any ? '<svg class="ico"><use href="#i-users"/></svg>' : initials(b.name)}</span>
+      <span class="mark"><svg class="ico"><use href="#i-check"/></svg></span></span>
+      <span><span class="name" style="display:block">${b.name}</span>
+      <span class="meta" style="display:block">${b.role}</span>
+      ${b.rating ? `<span class="meta num" style="display:block"><svg class="star"><use href="#i-star"/></svg> ${b.rating}</span>` : ''}</span></span>
+  </label></li>`).join('');
+
+/* render: dates */
+function renderDates() {
+  $('#dates').innerHTML = DATES.map((d, i) => {
+    const isClosed = closed(d);
+    const dis = isClosed || (state.barber && state.barber !== 'any' && !barberWorks(BARBERS.find(b => b.id === state.barber), d));
+    return `<li class="date"><label class="opt">
+      <input type="radio" name="date" value="${i}" ${i === state.date ? 'checked' : ''} ${dis ? 'disabled' : ''} aria-label="${fmtLong(d)}${isClosed ? ', closed' : dis ? ', barber is off' : ''}">
+      <span class="face"><span class="dow">${i === 0 ? 'Today' : d.toLocaleDateString('en-GB', { weekday: 'short' })}</span><span class="dom num">${d.getDate()}</span></span>
+    </label></li>`;
+  }).join('');
+}
+
+function renderSlots(loading) {
+  const box = $('#slots');
+  if (!state.barber) {
+    box.innerHTML = `<div class="empty"><h3>Choose a barber first</h3><p>Times depend on who cuts your hair. Pick a barber above to see their free slots.</p></div>`;
+    $('#legend').textContent = ''; return;
+  }
+  if (loading) { box.innerHTML = '<div class="slots" aria-busy="true">' + '<div class="sk"></div>'.repeat(9) + '</div>'; return; }
+  const r = slotsFor(state.barber, state.date);
+  const d = DATES[state.date];
+  const who = state.barber === 'any' ? 'our barbers' : BARBERS.find(b => b.id === state.barber).name.split(' ')[0];
+  if (r.closed) {
+    box.innerHTML = `<div class="empty"><h3>Closed on Sundays</h3><p>We open again Monday at 09:00. Pick another day to see times.</p><button class="btn btn-outline" data-next>See Monday</button></div>`; $('#legend').textContent = ''; return;
+  }
+  if (r.off) {
+    box.innerHTML = `<div class="empty"><h3>${who} is off on ${fmtLong(d).split(' ')[0]}</h3><p>Try another day, or choose first available to see every free slot.</p><button class="btn btn-outline" data-any>Show first available</button></div>`; $('#legend').textContent = ''; return;
+  }
+  const free = r.slots.filter(s => s.free);
+  if (!free.length) {
+    box.innerHTML = `<div class="empty"><h3>Fully booked on ${fmtDay(d)}</h3><p>${who === 'our barbers' ? 'Everyone is booked' : who + ' is booked'} all day. Try the next day.</p><button class="btn btn-outline" data-next>See next day</button></div>`; $('#legend').textContent = ''; return;
+  }
+  const groups = [['Morning', 0, 720], ['Afternoon', 720, 1020], ['Evening', 1020, 1440]];
+  box.innerHTML = groups.map(([label, a, b]) => {
+    const g = r.slots.filter(s => s.m >= a && s.m < b);
+    if (!g.length) return '';
+    return `<div class="group-label">${label}</div><ul class="slots">` + g.map(s => `
+      <li class="slot"><label class="opt"><input type="radio" name="time" value="${s.m}" ${s.free ? '' : 'disabled'} ${state.time === s.m ? 'checked' : ''}>
+      <span class="face num">${hhmm(s.m)}</span></label></li>`).join('') + '</ul>';
+  }).join('');
+  $('#legend').textContent = `${free.length} free times on ${fmtDay(d)}. Crossed-out times are taken.`;
+}
+
+let tmr;
+function refreshTimes() {
+  clearTimeout(tmr);
+  if (state.time != null) { const r = slotsFor(state.barber, state.date); const s = r.slots.find(x => x.m === state.time); if (!s || !s.free) state.time = null; }
+  renderSlots(true);
+  tmr = setTimeout(() => { renderSlots(false); update(); }, 350);
+  update();
+}
+
+function update() {
+  const sv = SERVICES.find(s => s.id === state.service);
+  const br = BARBERS.find(b => b.id === state.barber);
+  const d = DATES[state.date];
+  document.querySelectorAll('#steps li').forEach(li => li.classList.toggle('done', !!state[li.dataset.k]));
+  $('#p-service').textContent = sv ? `${gbp(sv.price)} · ${sv.min} min` : '';
+  $('#p-barber').textContent = br ? br.name : '';
+  $('#p-time').textContent = state.time != null ? `${fmtDay(d)}, ${hhmm(state.time)}` : '';
+  const bits = [sv && sv.name, br && (br.any ? 'First available' : br.name.split(' ')[0]), state.time != null && `${fmtDay(d)}, ${hhmm(state.time)}`].filter(Boolean);
+  $('#sum-hint').textContent = bits.length ? 'Your booking' : 'Nothing chosen yet';
+  $('#sum-line').textContent = bits.join(' · ');
+  $('#sum-price').textContent = sv ? gbp(sv.price) : '£0';
+  $('#sum-dur').textContent = sv ? `${sv.min} min` : '';
+  const next = !state.service ? 'service' : !state.barber ? 'barber' : state.time == null ? 'time' : null;
+  $('#go-label').textContent = next === 'service' ? 'Choose a service' : next === 'barber' ? 'Choose a barber' : next === 'time' ? 'Choose a time' : `Confirm booking · ${gbp(sv.price)}`;
+  $('#go').dataset.next = next || '';
+}
+
+document.addEventListener('change', e => {
+  const n = e.target.name; if (!n) return;
+  if (n === 'service') { state.service = e.target.value; update(); if (!state.barber) setTimeout(() => $('#s-barber').scrollIntoView({ block: 'start' }), 220); }
+  if (n === 'barber') { state.barber = e.target.value; renderDates(); refreshTimes(); setTimeout(() => $('#s-time').scrollIntoView({ block: 'start' }), 220); }
+  if (n === 'date') { state.date = +e.target.value; state.time = null; refreshTimes(); }
+  if (n === 'time') { state.time = +e.target.value; update(); }
+});
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-next]') && !e.target.closest('#go')) { let i = state.date + 1; while (i < DATES.length && closed(DATES[i])) i++; state.date = Math.min(i, DATES.length - 1); renderDates(); refreshTimes(); }
+  if (e.target.closest('[data-any]')) { state.barber = 'any'; document.querySelector('input[name=barber][value=any]').checked = true; renderDates(); refreshTimes(); }
+});
+
+$('#go').addEventListener('click', () => {
+  const nx = $('#go').dataset.next;
+  if (nx) { $('#s-' + nx).scrollIntoView({ block: 'start' }); return; }
+  const b = $('#go'); b.setAttribute('aria-busy', 'true'); $('#go-label').innerHTML = '<span class="spinner"></span> Confirming…';
+  setTimeout(() => {
+    const sv = SERVICES.find(s => s.id === state.service), br = BARBERS.find(x => x.id === state.barber), d = DATES[state.date];
+    const picked = br.any ? BARBERS.filter(x => !x.any && barberWorks(x, d) && hash(x.id + state.date + state.time) > 38)[0] : br;
+    $('#t-time').textContent = hhmm(state.time);
+    $('#t-date').textContent = fmtLong(d);
+    $('#t-service').textContent = sv.name;
+    $('#t-barber').textContent = picked.name;
+    $('#t-dur').textContent = sv.min + ' min';
+    $('#t-price').textContent = gbp(sv.price);
+    b.removeAttribute('aria-busy');
+    $('#main').hidden = true; $('#bar').hidden = true; $('#done').hidden = false;
+    $('.intro')?.scrollIntoView(); window.scrollTo(0, 0); $('#done').focus({ preventScroll: true });
+    $('#top .top-title').firstChild.textContent = 'Booking confirmed';
+  }, 900);
+});
+function backToBooking() {
+  $('#done').hidden = true; $('#main').hidden = false; $('#bar').hidden = false;
+  $('#top .top-title').firstChild.textContent = 'Book a visit'; update(); window.scrollTo(0, 0);
+}
+$('#change').addEventListener('click', backToBooking);
+$('#back').addEventListener('click', () => { if (!$('#done').hidden) backToBooking(); });
+$('#cal').addEventListener('click', () => { const t = $('#cal'); t.lastChild.textContent = 'Added to calendar'; });
+
+addEventListener('scroll', () => $('#top').classList.toggle('scrolled', scrollY > 4), { passive: true });
+renderDates(); renderSlots(false); update();
+</script>
+</body>
+</html>

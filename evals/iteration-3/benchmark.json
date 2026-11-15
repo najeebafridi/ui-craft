@@ -1,0 +1,1215 @@
+{
+  "metadata": {
+    "skill_name": "ui-craft",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-11-15T22:14:39Z",
+    "evals_run": [
+      "client-options-crm",
+      "ecommerce-dashboard",
+      "luxury-hotel-booking",
+      "mac-writing-app",
+      "mobile-booking",
+      "saas-landing-page",
+      "settings-form"
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": "client-options-crm",
+      "eval_name": "client-options-crm",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 13,
+        "failed": 0,
+        "total": 13,
+        "time_seconds": 485.5,
+        "tokens": 141446,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "option-a.html: desktop: 0 fails []; phone: 0 fails [] | option-b.html: desktop: 0 fails []; phone: 0 fails [] | option-c.html: desktop: 0 fails []; phone: 0 fails [] | options-board.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "option-a.html: hasFocusStyle=True | option-b.html: hasFocusStyle=True | option-c.html: hasFocusStyle=True | options-board.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "option-a.html: min=12px | option-b.html: min=12px | option-c.html: min=12px | options-board.html: min=14px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "option-a.html: overflow=False | option-b.html: overflow=False | option-c.html: overflow=False | options-board.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "option-a.html: sizes=[12, 14, 16, 24] | option-b.html: sizes=[12, 14, 16, 24, 48] | option-c.html: sizes=[12, 14, 20] | options-board.html: sizes=[14, 16, 18]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "option-a.html: unlabelled=[] | option-b.html: unlabelled=[] | option-c.html: unlabelled=[] | options-board.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "option-a.html: on-grid=0.9 | option-b.html: on-grid=0.841 | option-c.html: on-grid=0.847 | options-board.html: on-grid=0.978"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "option-a.html: reducedMotion=True motion=True | option-b.html: reducedMotion=True motion=True | option-c.html: reducedMotion=True motion=True | options-board.html: reducedMotion=False motion=False"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "option-a.html: emoji=0 lorem=False placeholderImgs=0 | option-b.html: emoji=0 lorem=False placeholderImgs=0 | option-c.html: emoji=0 lorem=False placeholderImgs=0 | options-board.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "option-a.html: 0 small: [] | option-b.html: 0 small: [] | option-c.html: 0 small: [] | options-board.html: 0 small: []"
+        },
+        {
+          "text": "Delivers 2-3 design option files plus one page that shows them side by side",
+          "passed": true,
+          "evidence": "files=['option-a.html', 'option-b.html', 'option-c.html', 'options-board.html']"
+        },
+        {
+          "text": "Gives the client a built-in way to leave or copy feedback",
+          "passed": true,
+          "evidence": "regex on HTML"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "option-a.html: 0 () | option-b.html: 0 () | option-c.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "ecommerce-dashboard",
+      "eval_name": "ecommerce-dashboard",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 12,
+        "failed": 0,
+        "total": 12,
+        "time_seconds": 402.8,
+        "tokens": 125951,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "dashboard.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "dashboard.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "dashboard.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "dashboard.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "dashboard.html: sizes=[12, 14, 16, 18, 20, 30]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "dashboard.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "dashboard.html: on-grid=1"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "dashboard.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "dashboard.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "dashboard.html: 0 small: []"
+        },
+        {
+          "text": "KPI figures are given context (vs previous period or a target)",
+          "passed": true,
+          "evidence": "regex on text"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "dashboard.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "luxury-hotel-booking",
+      "eval_name": "luxury-hotel-booking",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 13,
+        "failed": 0,
+        "total": 13,
+        "time_seconds": 348.2,
+        "tokens": 127418,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "room-selection.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "room-selection.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "room-selection.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "room-selection.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "room-selection.html: sizes=[12, 14, 16, 24, 30, 36, 48]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "room-selection.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "room-selection.html: on-grid=0.947"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "room-selection.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "room-selection.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "room-selection.html: 0 small: []"
+        },
+        {
+          "text": "Shows the total price for the whole stay before continuing",
+          "passed": true,
+          "evidence": "regex on text"
+        },
+        {
+          "text": "No pressure tactics (fake scarcity, countdowns, 'only N left', 'hurry')",
+          "passed": true,
+          "evidence": "regex on text"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "room-selection.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "mac-writing-app",
+      "eval_name": "mac-writing-app",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 13,
+        "failed": 0,
+        "total": 13,
+        "time_seconds": 300.6,
+        "tokens": 120443,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "index.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "index.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "index.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "index.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "index.html: sizes=[12, 13, 14, 18, 36]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "index.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "index.html: on-grid=0.943"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "index.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "index.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "index.html: 0 small: []"
+        },
+        {
+          "text": "Shows a daily word-count goal",
+          "passed": true,
+          "evidence": "regex on text"
+        },
+        {
+          "text": "Removes web habits from the app chrome (no text selection on chrome, or a window drag region)",
+          "passed": true,
+          "evidence": "regex on CSS"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "index.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "mobile-booking",
+      "eval_name": "mobile-booking",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 12,
+        "failed": 0,
+        "total": 12,
+        "time_seconds": 216.9,
+        "tokens": 113857,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "booking.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "booking.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "booking.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "booking.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "booking.html: sizes=[12, 14, 16, 20, 24, 30]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "booking.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "booking.html: on-grid=0.906"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "booking.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "booking.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "booking.html: 0 small: []"
+        },
+        {
+          "text": "Primary action is pinned to the bottom of the phone screen (fixed or sticky)",
+          "passed": true,
+          "evidence": "regex on CSS"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "booking.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "saas-landing-page",
+      "eval_name": "saas-landing-page",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 13,
+        "failed": 0,
+        "total": 13,
+        "time_seconds": 261.2,
+        "tokens": 116043,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "index.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "index.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "index.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "index.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "index.html: sizes=[12, 14, 16, 18, 20, 48, 60]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "index.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "index.html: on-grid=0.972"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "index.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "index.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "index.html: 1 small: ['Terms']"
+        },
+        {
+          "text": "No gradient text and no glassmorphism blur",
+          "passed": true,
+          "evidence": "regex on CSS"
+        },
+        {
+          "text": "No testimonials or customer quotes presented as real",
+          "passed": true,
+          "evidence": "regex on HTML"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "index.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "settings-form",
+      "eval_name": "settings-form",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 12,
+        "failed": 0,
+        "total": 12,
+        "time_seconds": 394.4,
+        "tokens": 139038,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "account-settings.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "account-settings.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "account-settings.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "account-settings.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "account-settings.html: sizes=[12, 14, 18, 20, 24]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "account-settings.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "account-settings.html: on-grid=0.948"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "account-settings.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "account-settings.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "account-settings.html: 0 small: []"
+        },
+        {
+          "text": "Email field uses type=email and password fields use current-password/new-password autocomplete",
+          "passed": true,
+          "evidence": "email=True current=True new=True"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "account-settings.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "client-options-crm",
+      "eval_name": "client-options-crm",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.923,
+        "passed": 12,
+        "failed": 1,
+        "total": 13,
+        "time_seconds": 616.6,
+        "tokens": 121004,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "option-a.html: desktop: 0 fails []; phone: 0 fails [] | option-b.html: desktop: 0 fails []; phone: 0 fails [] | option-c.html: desktop: 0 fails []; phone: 0 fails [] | options-board.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "option-a.html: hasFocusStyle=True | option-b.html: hasFocusStyle=True | option-c.html: hasFocusStyle=True | options-board.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "option-a.html: min=12px | option-b.html: min=12px | option-c.html: min=12px | options-board.html: min=14px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "option-a.html: overflow=False | option-b.html: overflow=False | option-c.html: overflow=False | options-board.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "option-a.html: sizes=[12, 14, 16, 24] | option-b.html: sizes=[12, 14, 16, 18, 20, 24, 36] | option-c.html: sizes=[12, 14, 18, 24] | options-board.html: sizes=[14, 16, 18]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "option-a.html: unlabelled=[] | option-b.html: unlabelled=[] | option-c.html: unlabelled=[] | options-board.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "option-a.html: on-grid=0.877 | option-b.html: on-grid=1 | option-c.html: on-grid=1 | options-board.html: on-grid=0.978"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "option-a.html: reducedMotion=False motion=False | option-b.html: reducedMotion=False motion=False | option-c.html: reducedMotion=False motion=False | options-board.html: reducedMotion=False motion=False"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "option-a.html: emoji=0 lorem=False placeholderImgs=0 | option-b.html: emoji=0 lorem=False placeholderImgs=0 | option-c.html: emoji=0 lorem=False placeholderImgs=0 | options-board.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "option-a.html: 0 small: [] | option-b.html: 0 small: [] | option-c.html: 1 small: ['All'] | options-board.html: 0 small: []"
+        },
+        {
+          "text": "Delivers 2-3 design option files plus one page that shows them side by side",
+          "passed": true,
+          "evidence": "files=['option-a.html', 'option-b.html', 'option-c.html', 'options-board.html']"
+        },
+        {
+          "text": "Gives the client a built-in way to leave or copy feedback",
+          "passed": true,
+          "evidence": "regex on HTML"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": false,
+          "evidence": "option-a.html: 1 (No text-wrap) | option-b.html: 3 (1 large heading(s) (32px+) with default letter-spacing; No text-wrap; No ) | option-c.html: 2 (No text-wrap; No )"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "ecommerce-dashboard",
+      "eval_name": "ecommerce-dashboard",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 12,
+        "failed": 0,
+        "total": 12,
+        "time_seconds": 315.7,
+        "tokens": 106456,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "dashboard.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "dashboard.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "dashboard.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "dashboard.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "dashboard.html: sizes=[12, 14, 16, 20, 24]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "dashboard.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "dashboard.html: on-grid=1"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "dashboard.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "dashboard.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "dashboard.html: 0 small: []"
+        },
+        {
+          "text": "KPI figures are given context (vs previous period or a target)",
+          "passed": true,
+          "evidence": "regex on text"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "dashboard.html: 1 (No text-wrap)"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "luxury-hotel-booking",
+      "eval_name": "luxury-hotel-booking",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.923,
+        "passed": 12,
+        "failed": 1,
+        "total": 13,
+        "time_seconds": 335.2,
+        "tokens": 104409,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "room-selection.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "room-selection.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "room-selection.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "room-selection.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": false,
+          "evidence": "room-selection.html: sizes=[12, 14, 16, 20, 24, 30, 36, 48]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "room-selection.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "room-selection.html: on-grid=0.805"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "room-selection.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "room-selection.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "room-selection.html: 1 small: ['Join the waiting list']"
+        },
+        {
+          "text": "Shows the total price for the whole stay before continuing",
+          "passed": true,
+          "evidence": "regex on text"
+        },
+        {
+          "text": "No pressure tactics (fake scarcity, countdowns, 'only N left', 'hurry')",
+          "passed": true,
+          "evidence": "regex on text"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "room-selection.html: 2 (3 large heading(s) (32px+) with default letter-spacing; No text-wrap)"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "mac-writing-app",
+      "eval_name": "mac-writing-app",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.846,
+        "passed": 11,
+        "failed": 2,
+        "total": 13,
+        "time_seconds": 339.5,
+        "tokens": 108093,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "index.html: desktop: 2 fails [4.43, 4.43]; phone: 2 fails [4.43, 4.43]"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "index.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "index.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "index.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "index.html: sizes=[12, 14, 18, 24, 36]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "index.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": false,
+          "evidence": "index.html: on-grid=0.797"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "index.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "index.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "index.html: 0 small: []"
+        },
+        {
+          "text": "Shows a daily word-count goal",
+          "passed": true,
+          "evidence": "regex on text"
+        },
+        {
+          "text": "Removes web habits from the app chrome (no text selection on chrome, or a window drag region)",
+          "passed": false,
+          "evidence": "regex on CSS"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "index.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "mobile-booking",
+      "eval_name": "mobile-booking",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.917,
+        "passed": 11,
+        "failed": 1,
+        "total": 12,
+        "time_seconds": 115.7,
+        "tokens": 97493,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "booking.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "booking.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "booking.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "booking.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "booking.html: sizes=[12, 14, 16, 18, 20]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "booking.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": false,
+          "evidence": "booking.html: on-grid=0.432"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "booking.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "booking.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "booking.html: 0 small: []"
+        },
+        {
+          "text": "Primary action is pinned to the bottom of the phone screen (fixed or sticky)",
+          "passed": true,
+          "evidence": "regex on CSS"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "booking.html: 1 (No text-wrap)"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "saas-landing-page",
+      "eval_name": "saas-landing-page",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.923,
+        "passed": 12,
+        "failed": 1,
+        "total": 13,
+        "time_seconds": 294.7,
+        "tokens": 109848,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "index.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "index.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "index.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "index.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": false,
+          "evidence": "index.html: sizes=[12, 14, 16, 18, 20, 24, 36, 48, 60]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "index.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "index.html: on-grid=0.908"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "index.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "index.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "index.html: 0 small: []"
+        },
+        {
+          "text": "No gradient text and no glassmorphism blur",
+          "passed": true,
+          "evidence": "regex on CSS"
+        },
+        {
+          "text": "No testimonials or customer quotes presented as real",
+          "passed": true,
+          "evidence": "regex on HTML"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "index.html: 0 ()"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": "settings-form",
+      "eval_name": "settings-form",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 12,
+        "failed": 0,
+        "total": 12,
+        "time_seconds": 288.9,
+        "tokens": 111172,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+          "passed": true,
+          "evidence": "settings.html: desktop: 0 fails []; phone: 0 fails []"
+        },
+        {
+          "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+          "passed": true,
+          "evidence": "settings.html: hasFocusStyle=True"
+        },
+        {
+          "text": "Smallest visible text is at least 12px",
+          "passed": true,
+          "evidence": "settings.html: min=12px"
+        },
+        {
+          "text": "No sideways scrolling at 390px phone width",
+          "passed": true,
+          "evidence": "settings.html: overflow=False"
+        },
+        {
+          "text": "Uses at most 7 distinct font sizes on the desktop screen",
+          "passed": true,
+          "evidence": "settings.html: sizes=[12, 14, 16, 20, 24]"
+        },
+        {
+          "text": "Every form control has an accessible label",
+          "passed": true,
+          "evidence": "settings.html: unlabelled=[]"
+        },
+        {
+          "text": "At least 80% of spacing values sit on the 4px grid",
+          "passed": true,
+          "evidence": "settings.html: on-grid=0.962"
+        },
+        {
+          "text": "Respects prefers-reduced-motion (or has no motion at all)",
+          "passed": true,
+          "evidence": "settings.html: reducedMotion=True motion=True"
+        },
+        {
+          "text": "No emoji icons, lorem ipsum or placeholder-image services",
+          "passed": true,
+          "evidence": "settings.html: emoji=0 lorem=False placeholderImgs=0"
+        },
+        {
+          "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+          "passed": true,
+          "evidence": "settings.html: 1 small: ['Settings']"
+        },
+        {
+          "text": "Email field uses type=email and password fields use current-password/new-password autocomplete",
+          "passed": true,
+          "evidence": "email=True current=True new=True"
+        },
+        {
+          "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+          "passed": true,
+          "evidence": "settings.html: 1 (No text-wrap)"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 344.2286,
+        "stddev": 92.133,
+        "min": 216.9,
+        "max": 485.5
+      },
+      "tokens": {
+        "mean": 126313.7143,
+        "stddev": 10703.3259,
+        "min": 113857,
+        "max": 141446
+      }
+    },
+    "old_skill": {
+      "pass_rate": {
+        "mean": 0.9331,
+        "stddev": 0.0534,
+        "min": 0.846,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 329.4714,
+        "stddev": 147.941,
+        "min": 115.7,
+        "max": 616.6
+      },
+      "tokens": {
+        "mean": 108353.5714,
+        "stddev": 7157.6361,
+        "min": 97493,
+        "max": 121004
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.07",
+      "time_seconds": "+14.8",
+      "tokens": "+17960"
+    }
+  },
+  "notes": []
+}

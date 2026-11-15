@@ -1,0 +1,30 @@
+{
+ "client-options-crm": {
+  "X": "with_skill",
+  "Y": "old_skill"
+ },
+ "ecommerce-dashboard": {
+  "X": "with_skill",
+  "Y": "old_skill"
+ },
+ "luxury-hotel-booking": {
+  "X": "with_skill",
+  "Y": "old_skill"
+ },
+ "mac-writing-app": {
+  "X": "old_skill",
+  "Y": "with_skill"
+ },
+ "mobile-booking": {
+  "X": "old_skill",
+  "Y": "with_skill"
+ },
+ "saas-landing-page": {
+  "X": "with_skill",
+  "Y": "old_skill"
+ },
+ "settings-form": {
+  "X": "old_skill",
+  "Y": "with_skill"
+ }
+}

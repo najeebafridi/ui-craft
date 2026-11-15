@@ -129,6 +129,12 @@ button, a, [role="button"] { touch-action: manipulation; } /* no double-tap zoom
 - Do pad for safe areas. Don't let a bar sit under the home indicator.
 - Do test at 375px and with the keyboard open.
 
+## One-screen flows
+
+- When a flow fits on one screen (pick a service, a person, a time), show every step's choices at once with a sensible default already selected ("Any barber", today, the next free slot). Do not lock a later step behind an earlier one unless it truly cannot be shown without it.
+- The summary bar always says something useful: the current selection and total, or the next thing to choose. Never an empty bar or a "$0" total.
+- Keep the first screen dense with the real choices; long introductions push the task below the fold.
+
 ## Common mistakes
 
 - Inputs at 14px, so iOS zooms the page on focus.

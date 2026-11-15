@@ -1,6 +1,6 @@
 # ui-craft
 
-**Design rules for AI coding agents.** With ui-craft, the screens your AI builds look professional and modern, are easy to use, and get done fast.
+**Design skill for AI coding agents.** With ui-craft, the screens your AI builds look premium, fit the people who use them, are easy to use, and get done fast.
 
 It works for any kind of software: web apps, dashboards, admin tools, desktop apps, mobile apps and marketing sites. It works in Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, Windsurf, Cline and any tool that reads `AGENTS.md`.
 
@@ -9,18 +9,51 @@ It works for any kind of software: web apps, dashboards, admin tools, desktop ap
 When your AI builds a screen, ui-craft makes it:
 
 1. **Check the project first.** If you already have colours, fonts or a component library, it uses them.
-2. **Write a short design brief** (tone, density, colour, font, corner radius, the one main task) before coding.
-3. **Follow clear rules with real numbers**: a spacing scale, a type scale, contrast that passes WCAG, 44px tap targets on phones, and loading, empty and error states.
-4. **Avoid the "AI-generated look"**: no purple gradients, no cards inside cards, no KPI numbers without context, no emoji icons.
-5. **Check the result**: a checklist plus an optional script that measures contrast, text sizes, tap targets and sideways scrolling, and takes screenshots.
-6. **Score your existing product**: point it at your live site or app and get a score out of 100, plus a ranked list of fixes.
+2. **Think about the person.** Who uses this, in what state of mind (rushed, anxious, sceptical, expert), and what should they feel?
+3. **Choose a visual direction on purpose.** 16 ready directions, from a quiet developer tool to a luxury house to a playful learning app. Each sets colours, fonts, shape, depth, motion and voice that belong together.
+4. **Build colours properly.** One command turns your brand colour into a full light and dark colour system where every text and border colour passes accessibility contrast.
+5. **Follow clear rules with real numbers**: spacing and type scales, 44px tap targets on phones, loading, empty and error states, platform conventions for iOS, Android, Mac and Windows.
+6. **Finish like a designer**: layered shadows, tuned letter-spacing, press feedback, one signature detail. These small things are what make a screen look expensive.
+7. **Check the result** with a script that scores the page, lists fixes and saves screenshots.
+8. **Stay honest.** It uses psychology to reduce effort and build trust, and refuses manipulative "dark patterns".
 
-It also helps you **win client approval fast**: one clickable HTML file per screen, two or three design options side by side, and a built-in "click to comment" feedback tool. No build step needed.
+It also helps you **win client approval fast** (clickable mockups, design options side by side, click-to-comment feedback) and **score an existing product** out of 100 with a ranked list of fixes.
 
-**Example.** Ask *"Build a dashboard for my candle shop"*:
+**Example.** Ask *"Build the room-selection screen for our luxury hotel booking app"*:
 
-- **Without ui-craft:** often no keyboard focus styles, 11px text, random spacing, and navigation that disappears on phones.
-- **With ui-craft:** a design brief first, KPIs with "vs last month", a low-stock table with a clear action, a phone layout, and passing contrast.
+- **Without ui-craft:** a generic card grid in default blue.
+- **With ui-craft:** it picks the "Maison" direction (warm stone neutrals, a deep green, a display serif, square corners, lots of space), writes a brief about the guest and the feeling, shows the full price for the stay, and finishes the details.
+
+### The 16 directions
+
+Open [skills/ui-craft/assets/directions/gallery.html](skills/ui-craft/assets/directions/gallery.html) in a browser to see them all, in light and dark.
+
+| Direction | For |
+|---|---|
+| Calm productivity | general SaaS, task tools, CRMs |
+| Quiet instrument | developer tools, power-user B2B |
+| Paper and ink | writing, notes, docs, publishing |
+| Studio gloss | premium consumer products, flagship pages |
+| Maison | luxury, hotels, fashion, private banking |
+| Apothecary editorial | skincare, craft food, boutiques |
+| Soft wellness | meditation, therapy, patient and family apps |
+| Playful game-feel | learning, kids, habit apps |
+| Trusted ledger | banking, accounting, invoicing |
+| Neo-bank bold | consumer fintech, bold consumer apps |
+| Public clarity | government, health portals, forms for everyone |
+| Open-air marketplace | travel, rentals, food delivery |
+| Stage dark | music, video, gaming, events |
+| Athletic monument | sportswear, campaigns, product drops |
+| Graph-paper technical | APIs, infrastructure, data and AI platforms |
+| Bright workshop | creative tools, agencies, launch pages |
+
+### A palette from your brand colour
+
+```bash
+node .agents/skills/ui-craft/scripts/palette.mjs --accent "#0F766E" --neutral warm --out theme.css
+```
+
+You get background, surface, text, border, accent, status and chart colours for light and dark themes. Every pair is checked: if white text would fail on your brand colour, the script adjusts it and tells you.
 
 ## Install
 
@@ -67,22 +100,26 @@ For every project, copy the folder to `~/.agents/skills/ui-craft` instead.
 
 ```
 skills/ui-craft/
-  SKILL.md                  the core rules (short; always loaded)
+  SKILL.md                  the core rules and workflow (short; always loaded)
   references/               detailed guides, loaded only when needed
-    layout-spacing.md   color-dark-mode.md   typography.md     forms.md
-    tables-lists.md     dashboards-charts.md navigation.md     feedback-states.md
-    accessibility.md    motion.md            mobile-touch.md   review-checklist.md
-    mockups.md          (fast client mockups: which screens first, options, feedback)
-    review-mode.md      (score an existing product and rank fixes)
+    directions.md       premium-craft.md     color-theory.md      psychology-emotion.md
+    platforms.md        layout-spacing.md    color-dark-mode.md   typography.md
+    forms.md            tables-lists.md      dashboards-charts.md navigation.md
+    feedback-states.md  accessibility.md     motion.md            mobile-touch.md
+    review-checklist.md mockups.md           review-mode.md
   assets/
-    tokens.css              starter colours, spacing, type (light + dark, contrast-checked)
+    tokens.css              base design tokens (light + dark, contrast-checked)
+    directions/             16 visual directions (one small CSS file each) + gallery.html
     mockup-template.html    one-file screen mockup with a feedback tool
-    options-board.html      show 2–3 design options side by side
+    options-board.html      show 2-3 design options side by side
   scripts/
-    ui-audit.mjs            measure and score a page or live URL (needs Node 22+ and Chrome)
+    palette.mjs             build an accessible colour system from a brand colour
+    ui-audit.mjs            measure, score and screenshot a page or live URL (needs Chrome)
   evals/                    test cases used to check the skill
-AGENTS.md                   the same rules for Codex, Cursor, Gemini, Copilot…
+AGENTS.md                   the same core rules for Codex, Cursor, Gemini, Copilot…
 ```
+
+Both scripts need Node 22 or newer and no npm packages.
 
 ### The audit script (also used by review mode)
 
@@ -143,7 +180,7 @@ You get plain HTML files you can zip or host. The client clicks **Feedback** →
 
 ## How it was made
 
-- **Curated, not compiled.** The rules come from public design systems (Material, Apple HIG, Fluent, Radix, shadcn, Carbon, GOV.UK), from WCAG 2.2, and from the best existing AI design rule sets. Everything is rewritten in our own words. Where sources disagree, we picked one rule and wrote down why: [research/conflicts.md](research/conflicts.md). Sources and licences: [research/sources.md](research/sources.md) and [CREDITS.md](CREDITS.md).
+- **Curated, not compiled.** The rules come from public design systems (Material, Apple HIG, Fluent, Radix, shadcn, Carbon, GOV.UK), from WCAG 2.2, from research on colour, emotion and trust, from the writing of respected interface craftspeople, and from the best existing AI design rule sets. Claims are graded by evidence, and popular myths are named as myths. Everything is rewritten in our own words. Where sources disagree, we picked one rule and wrote down why: [research/conflicts.md](research/conflicts.md). Sources and licences: [research/sources.md](research/sources.md) and [CREDITS.md](CREDITS.md).
 - **Tested.** The same 5 screens were built with and without the skill, then measured automatically and judged blind from screenshots. Results: [evals/RESULTS.md](evals/RESULTS.md).
 
 ## Updating the rules
@@ -152,6 +189,12 @@ Edit `skills/ui-craft/SKILL.md` or the reference files, then rebuild `AGENTS.md`
 
 ```bash
 python tools/build-agents-md.py
+```
+
+To change a direction or the base tokens, edit `tools/build-directions.mjs` and run it. It regenerates `tokens.css`, the direction files and the gallery, and fails if any colour pair misses contrast:
+
+```bash
+node tools/build-directions.mjs
 ```
 
 To re-run the tests (needs Node and Chrome), build the screens into `evals/iteration-N/<case>/<config>/outputs/`, then:

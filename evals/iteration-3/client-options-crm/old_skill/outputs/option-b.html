@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts - Option B (Mockup v1)</title>
+<style>
+:root{--bg:#FAF7F2;--surface:#fff;--surface-2:#F3EDE3;--border:#E6DED0;--border-strong:#7A6F60;--text:#2A2118;--muted:#5E5446;--accent:#A53D17;--accent-fg:#fff;--accent-soft:#FBEDE6;--hot:#9F1D1D;--hot-bg:#FDECEC;--warm:#8A4B06;--warm-bg:#FEF3DC;--cold:#3F4A56;--cold-bg:#EAEEF2;--font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--serif:Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/24px var(--font)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+header{background:var(--surface);border-bottom:1px solid var(--border)}
+.top{max-width:1200px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;gap:32px}
+.logo{font:600 20px/28px var(--serif);color:var(--accent)}
+nav{display:flex;gap:8px;flex:1;min-width:0}
+nav a{padding:8px 12px;border-radius:8px;text-decoration:none;color:var(--muted);font-weight:500;min-height:40px;display:inline-flex;align-items:center}
+nav a:hover{background:var(--surface-2)}
+nav a[aria-current]{color:var(--text);box-shadow:inset 0 -2px 0 var(--accent);border-radius:0}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;font-weight:600;font-size:14px}
+main{max-width:1200px;margin:0 auto;padding:48px 32px 64px}
+.head{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:flex-end;margin-bottom:32px}
+h1{font:600 36px/44px var(--serif);margin:0}
+.sub{color:var(--muted);margin:4px 0 0}
+.btn{height:44px;padding:0 24px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:500 16px var(--font);cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn:hover{background:var(--surface-2)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{background:#862F10}
+.tools{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-bottom:24px}
+.tools input{height:44px;width:340px;max-width:100%;border:1px solid var(--border-strong);border-radius:8px;padding:0 16px;font:16px var(--font);background:var(--surface);color:var(--text)}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{height:44px;padding:0 16px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);font:500 14px var(--font);color:var(--text);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--text);border-color:var(--text);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.card:hover{border-color:var(--border-strong)}
+.who{display:flex;gap:16px;align-items:center;min-width:0}
+.pic{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font:600 20px var(--serif);flex:none}
+.Buyer{background:#DCE8F5;color:#1E3A5F}.Seller{background:#DDEBDD;color:#1F4A24}.Tenant{background:#F2E1F0;color:#5B2457}.Landlord{background:#F6E6C8;color:#6B4308}
+.who h2{margin:0;font-size:18px;line-height:24px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who p{margin:0;color:var(--muted);font-size:14px;line-height:20px}
+.want{font-size:14px;line-height:20px;margin:0;color:var(--text)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.val{font:600 24px/32px var(--serif);color:var(--text);font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px;border-radius:14px;font-weight:500;font-size:14px}
+.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.Hot{color:var(--hot);background:var(--hot-bg)}.Warm{color:var(--warm);background:var(--warm-bg)}.Cold{color:var(--cold);background:var(--cold-bg)}
+.acts{display:flex;gap:8px;border-top:1px solid var(--border);padding-top:16px}
+.acts .btn{flex:1;justify-content:center;padding:0 12px}
+.empty{grid-column:1/-1;text-align:center;padding:64px 16px;color:var(--muted)}
+.tag{position:fixed;right:16px;bottom:16px;background:var(--text);color:#fff;padding:4px 12px;border-radius:8px;font-size:12px}
+@media (max-width:640px){
+ .top{padding:0 16px;gap:16px}.logo{font-size:18px}
+ nav a:nth-child(n+3){display:none}nav a{min-height:44px}
+ main{padding:24px 16px 48px}h1{font-size:30px;line-height:36px}
+ .head .btn{width:100%;justify-content:center}.head>div:last-child{width:100%}
+ .seg{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-bottom:4px}.seg button{white-space:nowrap}
+ .tools{flex-direction:column;align-items:stretch}
+ .tag{display:none}
+}
+</style></head><body>
+<header><div class="top">
+ <span class="logo">Harbourline</span>
+ <nav aria-label="Main"><a href="#">Properties</a><a href="#" aria-current="page">Contacts</a><a href="#">Viewings</a><a href="#">Reports</a></nav>
+ <span class="avatar" aria-label="Signed in as Priya Nair">PN</span>
+</div></header>
+<main>
+ <div class="head">
+  <div><h1>Your contacts</h1><p class="sub">Hot leads are first. Call or email straight from the card.</p></div>
+  <div><button class="btn btn-primary">Add contact</button></div>
+ </div>
+ <div class="tools">
+  <input type="search" id="q" placeholder="Search name, phone or property" aria-label="Search contacts">
+  <div class="seg" role="group" aria-label="Filter by type" id="seg"></div>
+ </div>
+ <div class="grid" id="grid" aria-live="polite"></div>
+</main>
+<div class="tag">Mockup v1 - sample data</div>
+<script src="data.js"></script>
+<script>
+const types=["All","Buyer","Seller","Tenant","Landlord"];let cur="All";
+const seg=document.getElementById("seg"),q=document.getElementById("q"),grid=document.getElementById("grid");
+const order={Hot:0,Warm:1,Cold:2};
+const ph='<svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>';
+const ml='<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
+function draw(){
+ seg.innerHTML=types.map(t=>`<button aria-pressed="${t===cur}" data-t="${t}">${t==="All"?"Everyone":t+"s"}</button>`).join("");
+ const s=q.value.toLowerCase();
+ const L=CONTACTS.filter(c=>(cur==="All"||c.t===cur)&&(!s||(c.n+c.ph+c.want).toLowerCase().includes(s))).sort((a,b)=>order[a.s]-order[b.s]);
+ grid.innerHTML=L.map(c=>`<article class="card"><div class="who"><span class="pic ${c.t}" aria-hidden="true">${ini(c.n)}</span><div style="min-width:0"><h2>${c.n}</h2><p>${c.t} · Agent ${c.ag}</p></div></div>
+ <p class="want">${c.want}</p>
+ <div class="meta"><span class="badge ${c.s}">${c.s} lead</span><span>${c.last}</span></div>
+ <div class="val">${money(c)}</div>
+ <div class="acts"><button class="btn btn-primary" style="background:${c.s==="Hot"?"":"var(--surface)"};color:${c.s==="Hot"?"":"var(--text)"};border-color:${c.s==="Hot"?"":"var(--border-strong)"}">${ph}Call</button><button class="btn">${ml}Email</button></div></article>`).join("")
+ ||`<div class="empty"><p>No contacts match this search.</p><button class="btn" onclick="q.value='';cur='All';draw()">Clear search</button></div>`;
+}
+seg.onclick=e=>{const b=e.target.closest("button");if(b){cur=b.dataset.t;draw()}};
+q.addEventListener("input",draw);draw();
+</script></body></html>

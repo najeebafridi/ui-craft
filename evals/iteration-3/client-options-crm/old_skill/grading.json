@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+      "passed": true,
+      "evidence": "option-a.html: desktop: 0 fails []; phone: 0 fails [] | option-b.html: desktop: 0 fails []; phone: 0 fails [] | option-c.html: desktop: 0 fails []; phone: 0 fails [] | options-board.html: desktop: 0 fails []; phone: 0 fails []"
+    },
+    {
+      "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+      "passed": true,
+      "evidence": "option-a.html: hasFocusStyle=True | option-b.html: hasFocusStyle=True | option-c.html: hasFocusStyle=True | options-board.html: hasFocusStyle=True"
+    },
+    {
+      "text": "Smallest visible text is at least 12px",
+      "passed": true,
+      "evidence": "option-a.html: min=12px | option-b.html: min=12px | option-c.html: min=12px | options-board.html: min=14px"
+    },
+    {
+      "text": "No sideways scrolling at 390px phone width",
+      "passed": true,
+      "evidence": "option-a.html: overflow=False | option-b.html: overflow=False | option-c.html: overflow=False | options-board.html: overflow=False"
+    },
+    {
+      "text": "Uses at most 7 distinct font sizes on the desktop screen",
+      "passed": true,
+      "evidence": "option-a.html: sizes=[12, 14, 16, 24] | option-b.html: sizes=[12, 14, 16, 18, 20, 24, 36] | option-c.html: sizes=[12, 14, 18, 24] | options-board.html: sizes=[14, 16, 18]"
+    },
+    {
+      "text": "Every form control has an accessible label",
+      "passed": true,
+      "evidence": "option-a.html: unlabelled=[] | option-b.html: unlabelled=[] | option-c.html: unlabelled=[] | options-board.html: unlabelled=[]"
+    },
+    {
+      "text": "At least 80% of spacing values sit on the 4px grid",
+      "passed": true,
+      "evidence": "option-a.html: on-grid=0.877 | option-b.html: on-grid=1 | option-c.html: on-grid=1 | options-board.html: on-grid=0.978"
+    },
+    {
+      "text": "Respects prefers-reduced-motion (or has no motion at all)",
+      "passed": true,
+      "evidence": "option-a.html: reducedMotion=False motion=False | option-b.html: reducedMotion=False motion=False | option-c.html: reducedMotion=False motion=False | options-board.html: reducedMotion=False motion=False"
+    },
+    {
+      "text": "No emoji icons, lorem ipsum or placeholder-image services",
+      "passed": true,
+      "evidence": "option-a.html: emoji=0 lorem=False placeholderImgs=0 | option-b.html: emoji=0 lorem=False placeholderImgs=0 | option-c.html: emoji=0 lorem=False placeholderImgs=0 | options-board.html: emoji=0 lorem=False placeholderImgs=0"
+    },
+    {
+      "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+      "passed": true,
+      "evidence": "option-a.html: 0 small: [] | option-b.html: 0 small: [] | option-c.html: 1 small: ['All'] | options-board.html: 0 small: []"
+    },
+    {
+      "text": "Delivers 2-3 design option files plus one page that shows them side by side",
+      "passed": true,
+      "evidence": "files=['option-a.html', 'option-b.html', 'option-c.html', 'options-board.html']"
+    },
+    {
+      "text": "Gives the client a built-in way to leave or copy feedback",
+      "passed": true,
+      "evidence": "regex on HTML"
+    },
+    {
+      "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+      "passed": false,
+      "evidence": "option-a.html: 1 (No text-wrap) | option-b.html: 3 (1 large heading(s) (32px+) with default letter-spacing; No text-wrap; No ) | option-c.html: 2 (No text-wrap; No )"
+    }
+  ],
+  "summary": {
+    "passed": 12,
+    "failed": 1,
+    "total": 13,
+    "pass_rate": 0.923
+  }
+}

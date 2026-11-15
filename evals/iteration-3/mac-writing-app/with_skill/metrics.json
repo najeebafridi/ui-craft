@@ -1,0 +1,82 @@
+{
+  "index.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 46,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        18,
+        36
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "INPUT",
+        "Chapter 7: The Salt Road1,180",
+        "Chapter 6: What the tide kept3",
+        "Chapter 5: Ines at the ferry2,",
+        "Notes and timeline864",
+        "On writing before breakfast1,7",
+        "Letter to a younger editor2,20",
+        "The case for the semicolon940",
+        "Overheard on the 14 bus212",
+        "Opening lines, loose158",
+        "New",
+        "Focus mode",
+        "Edit goal"
+      ],
+      "interactiveCount": 13,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.943,
+      "gradientElements": 2,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 303
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 17,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        13,
+        14,
+        18,
+        30
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [],
+      "interactiveCount": 1,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.774,
+      "gradientElements": 2,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 303
+    }
+  }
+}

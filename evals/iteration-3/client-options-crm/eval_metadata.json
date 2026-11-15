@@ -1,0 +1,5 @@
+{
+  "eval_name": "client-options-crm",
+  "prompt": "A client wants a CRM for their real-estate agency. Before we write any real code I need quick mockups so they can approve the look: show them the contacts list screen in 2 or 3 different design directions they can compare and comment on. Keep it simple, no build step.",
+  "assertions": []
+}

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts - Mockup v1 (sample data)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#0A0C10;--surface:#131519;--surface-2:#1C1E22;--surface-3:#25282C;--border:#282A2F;--border-strong:#6F7277;--text:#E6E8EB;--text-muted:#9EA0A3;--text-subtle:#8E9093;--accent:#3570E7;--accent-hover:#2762D8;--accent-fg:#fff;--accent-soft:#112344;--accent-text:#72A3FE;--focus:#72A3FE;--success-text:#7DC08F;--warning-text:#D6A26F;--info-text:#75B3F2;--font-sans:"Geist",ui-sans-serif,system-ui,"Segoe UI",sans-serif;--font-mono:"Geist Mono",ui-monospace,Menlo,Consolas,monospace;--text-body:14px;--radius-sm:4px;--radius:6px;--radius-lg:10px;--dur-fast:90ms}
+*{box-sizing:border-box}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 var(--text-body)/1.5 var(--font-sans);-webkit-font-smoothing:antialiased}
+h1,h2,p{margin:0}h1,h2{text-wrap:balance}.chip{min-width:44px}
+button,input{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+[hidden]{display:none!important}
+.num{font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.badge i{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.s-info{color:var(--info-text)}.s-accent{color:var(--accent-text)}.s-warning{color:var(--warning-text)}.s-success{color:var(--success-text)}.s-neutral{color:var(--text-muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.app{display:grid;grid-template-columns:56px minmax(0,1fr);min-height:100vh}
+.rail{border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 0;background:var(--surface);position:sticky;top:0;height:100vh}
+.rail a{width:40px;height:40px;display:grid;place-items:center;border-radius:var(--radius);color:var(--text-muted);transition:background var(--dur-fast),color var(--dur-fast)}
+.rail a:hover{background:var(--surface-3);color:var(--text)}
+.rail a[aria-current]{background:var(--accent-soft);color:var(--accent-text)}
+.rail .lg{margin-bottom:12px;font:600 14px var(--font-mono);color:var(--text)}
+.split{display:grid;grid-template-columns:minmax(0,1fr) 340px;min-height:100vh}
+.list{min-width:0;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:12px;padding:0 16px;height:48px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:2}
+h1{font-size:14px;font-weight:600;letter-spacing:-.01em;margin-right:8px}
+.count{color:var(--text-muted);font-family:var(--font-mono);font-size:12px}
+.search{position:relative;flex:1;max-width:360px;margin-left:auto}
+.search input{width:100%;height:32px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);padding:0 40px 0 12px}
+.search input::placeholder{color:var(--text-subtle)}
+kbd{font:500 12px var(--font-mono);color:var(--text-muted);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 6px;background:var(--surface-2)}
+.search kbd{position:absolute;right:8px;top:4px}
+.btn{height:32px;padding:0 12px;border-radius:var(--radius);border:1px solid var(--border-strong);background:var(--surface-2);cursor:pointer;display:inline-flex;gap:8px;align-items:center;font-weight:500;white-space:nowrap;transition:background var(--dur-fast)}
+.btn:hover{background:var(--surface-3)}.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:inset 0 1px 0 rgb(255 255 255/.12)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn kbd{background:rgb(0 0 0/.25);border-color:transparent;color:#fff}
+.chips{display:flex;gap:4px;padding:8px 16px;border-bottom:1px solid var(--border);overflow-x:auto}
+.chip{height:28px;padding:0 12px;border-radius:var(--radius-sm);border:0;background:transparent;color:var(--text-muted);cursor:pointer;white-space:nowrap;font-weight:500}
+.chip:hover{background:var(--surface-2);color:var(--text)}
+.chip[aria-pressed=true]{background:var(--surface-3);color:var(--text)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-weight:500;font-size:12px;color:var(--text-muted);padding:0 16px;height:32px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:0 16px;height:36px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--surface-2)}
+tbody tr[aria-selected=true]{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)}
+td.name{font-weight:500}
+.mono{font-family:var(--font-mono);font-size:12px;color:var(--text-muted)}
+.prop{max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.muted{color:var(--text-muted)}
+.badge{font-size:12px}
+.panel{border-left:1px solid var(--border);background:var(--surface);padding:24px;display:flex;flex-direction:column;gap:24px;position:sticky;top:0;height:100vh;overflow:auto}
+.panel h2{font-size:20px;letter-spacing:-.015em;font-weight:600;line-height:1.25}
+.panel .role{color:var(--text-muted);margin-top:4px}
+dl{margin:0;display:grid;grid-template-columns:96px 1fr;gap:12px 16px}
+dt{color:var(--text-muted);font-size:12px;padding-top:2px}dd{margin:0}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.hint{color:var(--text-muted);font-size:12px;margin-top:auto}
+.empty{padding:48px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}.empty h2{font-size:16px}.empty p{color:var(--text-muted);margin-bottom:8px}
+.note{padding:12px 16px}
+@media (max-width:1700px){.c-agent,th:nth-child(7),.c-type,th:nth-child(2){display:none}}
+@media (max-width:1100px){.split{grid-template-columns:minmax(0,1fr)}.panel{display:none}}
+@media (max-width:760px){
+ .app{grid-template-columns:minmax(0,1fr)}.rail{display:none}
+ .bar{flex-wrap:wrap;height:auto;padding:12px 16px;position:static}.search{flex-basis:100%;order:3;max-width:none;margin:0}.search kbd{display:none}
+ .btn kbd{display:none}.bar .btn{margin-left:auto}
+ thead{display:none}table,tbody{display:block}
+ tbody tr{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+ tbody tr[hidden]{display:none}
+ td{display:block;height:auto;padding:0;border:0;white-space:normal}
+ td.name{grid-column:1}td.c-stage{grid-column:2;grid-row:1}td.c-prop{grid-column:1/-1}td.c-phone{grid-column:1/-1}td.c-type,td.c-budget,td.c-last{display:none}.prop{max-width:none}
+}
+@media (max-width:640px),(pointer:coarse){.btn,.chip,.search input{min-height:44px}.search input{font-size:16px}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="rail" aria-label="Primary"><span class="lg">H</span>
+ <a href="#" aria-label="Dashboard" title="Dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></svg></a>
+ <a href="#" aria-label="Contacts" title="Contacts" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></a>
+ <a href="#" aria-label="Viewings" title="Viewings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v16H3zM3 10h18M8 3v4M16 3v4"/></svg></a>
+ <a href="#" aria-label="Reports" title="Reports"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></a>
+ <a href="#" aria-label="Settings" title="Settings" style="margin-top:auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></a>
+</nav>
+<div class="split">
+<main class="list">
+ <div class="bar"><h1>Contacts</h1><span class="count" id="count" aria-live="polite">12 contacts</span>
+  <div class="search"><label class="sr" for="q">Search contacts</label><input id="q" type="search" placeholder="Search"><kbd>/</kbd></div>
+  <button class="btn btn-primary" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>New contact <kbd>N</kbd></button></div>
+ <div class="chips" role="group" aria-label="Filter by type"><button type="button" class="chip" data-stage="all" aria-pressed="true">All</button><button type="button" class="chip" data-stage="Buyer" aria-pressed="false">Buyers</button><button type="button" class="chip" data-stage="Seller" aria-pressed="false">Sellers</button><button type="button" class="chip" data-stage="Landlord" aria-pressed="false">Landlords</button><button type="button" class="chip" data-stage="Investor" aria-pressed="false">Investors</button></div>
+ <table>
+  <thead><tr><th>Name</th><th>Type</th><th>Stage</th><th>Interested in</th><th>Budget</th><th>Phone</th><th>Agent</th><th>Last</th></tr></thead>
+  <tbody>
+   <tr data-row data-i="0" data-group="Buyer" aria-selected="true"><td class="name">Priya Raman</td><td class="c-type muted">Buyer</td><td class="c-stage"><span class="badge s-accent"><i></i>Viewing booked</span></td><td class="c-prop"><div class="prop">3-bed townhouse, Fitzroy North</div></td><td class="c-budget mono">$1.1M - $1.3M</td><td class="c-phone mono">0412 889 301</td><td class="c-agent muted">Tom Hayes</td><td class="c-last mono">Today</td></tr>
+   <tr data-row data-i="1" data-group="Seller"><td class="name">Marcus & Elena Doyle</td><td class="c-type muted">Seller</td><td class="c-stage"><span class="badge s-warning"><i></i>Offer received</span></td><td class="c-prop"><div class="prop">14 Banksia Street, Brunswick</div></td><td class="c-budget mono">Listing $1.45M</td><td class="c-phone mono">0407 255 118</td><td class="c-agent muted">Anna Kovac</td><td class="c-last mono">2h ago</td></tr>
+   <tr data-row data-i="2" data-group="Investor"><td class="name">Samuel Okafor</td><td class="c-type muted">Investor</td><td class="c-stage"><span class="badge s-neutral"><i></i>Nurturing</span></td><td class="c-prop"><div class="prop">Off-the-plan units, Footscray</div></td><td class="c-budget mono">$600K - $750K</td><td class="c-phone mono">0433 706 942</td><td class="c-agent muted">Tom Hayes</td><td class="c-last mono">3 days ago</td></tr>
+   <tr data-row data-i="3" data-group="Buyer"><td class="name">Hannah Whitfield</td><td class="c-type muted">Buyer</td><td class="c-stage"><span class="badge s-info"><i></i>New lead</span></td><td class="c-prop"><div class="prop">2-bed apartment, Carlton</div></td><td class="c-budget mono">$750K - $850K</td><td class="c-phone mono">0421 640 087</td><td class="c-agent muted">Anna Kovac</td><td class="c-last mono">Yesterday</td></tr>
+   <tr data-row data-i="4" data-group="Landlord"><td class="name">Daniel Nguyen</td><td class="c-type muted">Landlord</td><td class="c-stage"><span class="badge s-success"><i></i>Under contract</span></td><td class="c-prop"><div class="prop">Lease renewal, 6/22 Rae Street</div></td><td class="c-budget mono">$620 per week</td><td class="c-phone mono">0498 312 575</td><td class="c-agent muted">Mei Tanaka</td><td class="c-last mono">4 Nov</td></tr>
+   <tr data-row data-i="5" data-group="Seller"><td class="name">Grace Alderton</td><td class="c-type muted">Seller</td><td class="c-stage"><span class="badge s-info"><i></i>Appraisal booked</span></td><td class="c-prop"><div class="prop">31 Station Road, Northcote</div></td><td class="c-budget mono">Est. $1.8M</td><td class="c-phone mono">0415 904 266</td><td class="c-agent muted">Tom Hayes</td><td class="c-last mono">Mon</td></tr>
+   <tr data-row data-i="6" data-group="Buyer"><td class="name">Viktor Petrov</td><td class="c-type muted">Buyer</td><td class="c-stage"><span class="badge s-warning"><i></i>Offer made</span></td><td class="c-prop"><div class="prop">4-bed house, Coburg</div></td><td class="c-budget mono">$1.3M - $1.5M</td><td class="c-phone mono">0402 118 739</td><td class="c-agent muted">Mei Tanaka</td><td class="c-last mono">Yesterday</td></tr>
+   <tr data-row data-i="7" data-group="Buyer"><td class="name">Aisha Rahman</td><td class="c-type muted">Buyer</td><td class="c-stage"><span class="badge s-info"><i></i>New lead</span></td><td class="c-prop"><div class="prop">Any 2-bed near Merri Creek</div></td><td class="c-budget mono">$650K - $720K</td><td class="c-phone mono">0449 570 623</td><td class="c-agent muted">Anna Kovac</td><td class="c-last mono">5 days ago</td></tr>
+   <tr data-row data-i="8" data-group="Investor"><td class="name">Callum Reid</td><td class="c-type muted">Investor</td><td class="c-stage"><span class="badge s-accent"><i></i>Viewing booked</span></td><td class="c-prop"><div class="prop">Duplex, Preston</div></td><td class="c-budget mono">$1.0M - $1.2M</td><td class="c-phone mono">0417 833 094</td><td class="c-agent muted">Tom Hayes</td><td class="c-last mono">Today</td></tr>
+   <tr data-row data-i="9" data-group="Seller"><td class="name">Lucia Moretti</td><td class="c-type muted">Seller</td><td class="c-stage"><span class="badge s-neutral"><i></i>Nurturing</span></td><td class="c-prop"><div class="prop">22 Hope Street, Brunswick West</div></td><td class="c-budget mono">Est. $1.2M</td><td class="c-phone mono">0426 391 850</td><td class="c-agent muted">Mei Tanaka</td><td class="c-last mono">2 weeks ago</td></tr>
+   <tr data-row data-i="10" data-group="Buyer"><td class="name">Ben & Jo Carter</td><td class="c-type muted">Buyer</td><td class="c-stage"><span class="badge s-success"><i></i>Under contract</span></td><td class="c-prop"><div class="prop">3-bed house, Thornbury</div></td><td class="c-budget mono">$1.05M</td><td class="c-phone mono">0431 262 417</td><td class="c-agent muted">Anna Kovac</td><td class="c-last mono">3 Nov</td></tr>
+   <tr data-row data-i="11" data-group="Landlord"><td class="name">Fatima Haddad</td><td class="c-type muted">Landlord</td><td class="c-stage"><span class="badge s-info"><i></i>Appraisal booked</span></td><td class="c-prop"><div class="prop">2 investment units, Reservoir</div></td><td class="c-budget mono">$540 per week</td><td class="c-phone mono">0408 725 361</td><td class="c-agent muted">Mei Tanaka</td><td class="c-last mono">Tue</td></tr>
+  </tbody>
+ </table>
+ <div id="empty" class="empty" hidden><h2>No contacts match</h2><p>Try a different name or suburb, or clear the filters.</p><button type="button" class="btn" id="clear">Clear filters</button></div>
+ <p class="mono note">Sample data for mockup</p>
+</main>
+<aside class="panel" aria-label="Contact preview" id="panel"></aside>
+</div></div>
+<script>
+const q=document.getElementById('q'),chips=[...document.querySelectorAll('[data-stage]')],rows=[...document.querySelectorAll('[data-row]')],cnt=document.getElementById('count'),empty=document.getElementById('empty');
+let st='all';
+function f(){const t=q.value.trim().toLowerCase();let n=0;rows.forEach(r=>{const ok=(st==='all'||r.dataset.group===st)&&(!t||r.textContent.toLowerCase().includes(t));r.hidden=!ok;if(ok)n++});cnt.textContent=n+(n===1?' contact':' contacts');empty.hidden=n>0}
+q.addEventListener('input',f);
+chips.forEach(c=>c.addEventListener('click',()=>{st=c.dataset.stage;chips.forEach(x=>x.setAttribute('aria-pressed',x===c));f()}));
+document.getElementById('clear')?.addEventListener('click',()=>{q.value='';st='all';chips.forEach(x=>x.setAttribute('aria-pressed',x.dataset.stage==='all'));f();q.focus()});
+rows.forEach(r=>r.addEventListener('click',e=>{if(e.target.closest('a,button'))return;rows.forEach(x=>x.removeAttribute('aria-selected'));r.setAttribute('aria-selected','true');window.pick&&window.pick(+r.dataset.i)}));
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}});
+
+const D=[["Priya Raman","Buyer","Viewing booked","3-bed townhouse, Fitzroy North","$1.1M - $1.3M","Tom Hayes","Today","0412 889 301"],["Marcus & Elena Doyle","Seller","Offer received","14 Banksia Street, Brunswick","Listing $1.45M","Anna Kovac","2h ago","0407 255 118"],["Samuel Okafor","Investor","Nurturing","Off-the-plan units, Footscray","$600K - $750K","Tom Hayes","3 days ago","0433 706 942"],["Hannah Whitfield","Buyer","New lead","2-bed apartment, Carlton","$750K - $850K","Anna Kovac","Yesterday","0421 640 087"],["Daniel Nguyen","Landlord","Under contract","Lease renewal, 6/22 Rae Street","$620 per week","Mei Tanaka","4 Nov","0498 312 575"],["Grace Alderton","Seller","Appraisal booked","31 Station Road, Northcote","Est. $1.8M","Tom Hayes","Mon","0415 904 266"],["Viktor Petrov","Buyer","Offer made","4-bed house, Coburg","$1.3M - $1.5M","Mei Tanaka","Yesterday","0402 118 739"],["Aisha Rahman","Buyer","New lead","Any 2-bed near Merri Creek","$650K - $720K","Anna Kovac","5 days ago","0449 570 623"],["Callum Reid","Investor","Viewing booked","Duplex, Preston","$1.0M - $1.2M","Tom Hayes","Today","0417 833 094"],["Lucia Moretti","Seller","Nurturing","22 Hope Street, Brunswick West","Est. $1.2M","Mei Tanaka","2 weeks ago","0426 391 850"],["Ben & Jo Carter","Buyer","Under contract","3-bed house, Thornbury","$1.05M","Anna Kovac","3 Nov","0431 262 417"],["Fatima Haddad","Landlord","Appraisal booked","2 investment units, Reservoir","$540 per week","Mei Tanaka","Tue","0408 725 361"]];const SK={"New lead":"info","Appraisal booked":"info","Viewing booked":"accent","Offer made":"warning","Offer received":"warning","Under contract":"success","Nurturing":"neutral"};
+window.pick=function(i){const d=D[i];document.getElementById('panel').innerHTML='<div><h2>'+d[0]+'</h2><p class="role">'+d[1]+' &middot; with '+d[5]+'</p></div><dl><dt>Stage</dt><dd><span class="badge s-'+SK[d[2]]+'"><i></i>'+d[2]+'</span></dd><dt>Interested in</dt><dd>'+d[3]+'</dd><dt>Budget</dt><dd class="mono">'+d[4]+'</dd><dt>Phone</dt><dd class="mono">'+d[7]+'</dd><dt>Last contact</dt><dd>'+d[6]+'</dd></dl><div class="acts"><button class="btn btn-primary" type="button">Log a call</button><button class="btn" type="button">Book viewing</button></div><p class="hint">Click a row to preview. Press <kbd>/</kbd> to search.</p>'};
+window.pick(0);</script>
+</body>
+</html>

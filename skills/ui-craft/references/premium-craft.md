@@ -107,19 +107,20 @@ Maths and the eye disagree. Trust the eye, then encode the fix.
 
 Each product gets **one** thing a user could name: tactile buttons, a perfectly set ledger of numbers, a monumental headline, a breathing shape. Build it with care, give it room, and keep everything else quiet. Without one, the result is competent and forgettable; with three, it is noisy.
 
-## 9. The finishing pass (15 minutes, in this order)
+## 9. The finishing pass (in this order)
 
-1. **Squint.** Is there exactly one hero and one primary action? Quiet whatever competes.
-2. **Edges.** Do things share left edges and baselines? Fix every near-miss.
-3. **Spacing.** Only scale values; group gaps at least 2x inner gaps; add whitespace, remove borders.
-4. **Type.** 4-6 sizes; headings tracked tighter; numbers tabular; headings balanced.
-5. **Colour.** Mostly neutral; accent in a few high-value spots; text contrast passes.
-6. **Depth.** One technique; layered tinted shadows or rings; concentric radii.
-7. **States.** Hover, focus, pressed, disabled, loading, empty, error all exist and look intended.
-8. **Motion.** Press feedback instant; one orchestrated moment at most; reduced motion handled.
-9. **Content.** Nothing placeholder; copy specific; confirmations exact.
-10. **Signature.** Present, single, and given room.
-11. Run `scripts/ui-audit.mjs`, open both screenshots, and fix what you see.
+1. **Working state.** The screen opens in use: real data, defaults selected, the main interaction visible, the main action visible. No empty or locked first view.
+2. **Squint.** Is there exactly one hero and one primary action? Quiet whatever competes.
+3. **Edges.** Do things share left edges and baselines? Fix every near-miss.
+4. **Spacing.** Only scale values; group gaps at least 2x inner gaps; add whitespace, remove borders. No dead space: no card stretched to match a neighbour, no mostly-empty panel.
+5. **Type.** 4-6 sizes; headings tracked tighter; numbers tabular; headings balanced.
+6. **Colour.** Mostly neutral; accent in a few high-value spots; text contrast passes. A bold direction keeps its big colour fields to the hero and one band; the rest stays calm enough to trust.
+7. **Depth.** One technique; layered tinted shadows or rings; concentric radii.
+8. **States.** Hover, focus, pressed, disabled, loading, empty, error all exist and look intended.
+9. **Motion.** Press feedback instant; one orchestrated moment at most; reduced motion handled.
+10. **Content.** Nothing placeholder; copy specific; confirmations exact. Photos are real, or quiet tonal blocks with a caption; never crude drawings standing in for photos.
+11. **Signature.** Present, single, and given room.
+12. **Phone.** Run `scripts/ui-audit.mjs` and open both screenshots. Judge the phone view as strictly as the desktop: nothing clipped or covered by a floating element, rows not squeezed, the key content and primary action in the first screen.
 
 ## Tells of a cheap-looking interface
 

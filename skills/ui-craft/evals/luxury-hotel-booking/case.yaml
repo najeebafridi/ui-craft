@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: luxury-hotel-booking
+expected_outcome: |
+  A room-selection screen that feels like a luxury brand (restraint, space, fine typography, considered colour), with clear room choices, honest total price for the stay, what is included, and one obvious way to continue; works on tablet and phone; accessible.

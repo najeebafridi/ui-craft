@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+      "passed": true,
+      "evidence": "index.html: desktop: 0 fails []; phone: 0 fails []"
+    },
+    {
+      "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+      "passed": true,
+      "evidence": "index.html: hasFocusStyle=True"
+    },
+    {
+      "text": "Smallest visible text is at least 12px",
+      "passed": true,
+      "evidence": "index.html: min=12px"
+    },
+    {
+      "text": "No sideways scrolling at 390px phone width",
+      "passed": true,
+      "evidence": "index.html: overflow=False"
+    },
+    {
+      "text": "Uses at most 7 distinct font sizes on the desktop screen",
+      "passed": true,
+      "evidence": "index.html: sizes=[12, 14, 16, 18, 20, 48, 60]"
+    },
+    {
+      "text": "Every form control has an accessible label",
+      "passed": true,
+      "evidence": "index.html: unlabelled=[]"
+    },
+    {
+      "text": "At least 80% of spacing values sit on the 4px grid",
+      "passed": true,
+      "evidence": "index.html: on-grid=0.972"
+    },
+    {
+      "text": "Respects prefers-reduced-motion (or has no motion at all)",
+      "passed": true,
+      "evidence": "index.html: reducedMotion=True motion=True"
+    },
+    {
+      "text": "No emoji icons, lorem ipsum or placeholder-image services",
+      "passed": true,
+      "evidence": "index.html: emoji=0 lorem=False placeholderImgs=0"
+    },
+    {
+      "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+      "passed": true,
+      "evidence": "index.html: 1 small: ['Terms']"
+    },
+    {
+      "text": "No gradient text and no glassmorphism blur",
+      "passed": true,
+      "evidence": "regex on CSS"
+    },
+    {
+      "text": "No testimonials or customer quotes presented as real",
+      "passed": true,
+      "evidence": "regex on HTML"
+    },
+    {
+      "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+      "passed": true,
+      "evidence": "index.html: 0 ()"
+    }
+  ],
+  "summary": {
+    "passed": 13,
+    "failed": 0,
+    "total": 13,
+    "pass_rate": 1.0
+  }
+}

@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quill - Main window (Mockup v1)</title>
+<!--
+Design brief
+Product: Mac writing app (Electron) for novelists and essayists, used for hours daily
+Tone: calm, quiet, bookish           Density: compact chrome (14px), generous editor (18px serif)
+Accent: deep teal #0F766E            Neutrals: warm grey
+Font: system SF stack UI + Charter/Georgia serif for writing    Radius: 6px
+Primary task: keep writing in the open document and hit today's word goal
+Sample data: all documents, titles and counts are sample content.
+-->
+<style>
+:root{
+  color-scheme: light dark;
+  --bg:#FBFAF8; --sidebar:#F1EFEB; --surface:#FFFFFF; --surface-2:#EAE7E1; --surface-3:#DEDAD2;
+  --border:#E2DED6; --border-strong:#8A857B;
+  --text:#1C1B19; --text-muted:#57534C; --text-subtle:#6B665E;
+  --accent:#0F766E; --accent-hover:#0B5F59; --accent-fg:#FFFFFF; --accent-soft:#DCEFEC; --accent-text:#0B5F59;
+  --radius-sm:4px; --radius:6px;
+  --font-ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,"Segoe UI",sans-serif;
+  --font-write:"New York","Charter","Iowan Old Style",Georgia,serif;
+  --shadow-overlay:0 4px 6px rgb(0 0 0/.05),0 12px 32px rgb(0 0 0/.14);
+  --ease-out:cubic-bezier(.22,1,.36,1);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1A1917; --sidebar:#222120; --surface:#262523; --surface-2:#2F2E2B; --surface-3:#3A3935;
+  --border:#33312E; --border-strong:#8C877D; --text:#EAE8E3; --text-muted:#B0ABA2; --text-subtle:#98938A;
+  --accent:#2DA396; --accent-hover:#3BB5A7; --accent-fg:#0A1F1D; --accent-soft:#17332F; --accent-text:#6FD3C7;
+  --shadow-overlay:0 8px 32px rgb(0 0 0/.5);}}
+:root[data-theme="dark"]{
+  --bg:#1A1917; --sidebar:#222120; --surface:#262523; --surface-2:#2F2E2B; --surface-3:#3A3935;
+  --border:#33312E; --border-strong:#8C877D; --text:#EAE8E3; --text-muted:#B0ABA2; --text-subtle:#98938A;
+  --accent:#2DA396; --accent-hover:#3BB5A7; --accent-fg:#0A1F1D; --accent-soft:#17332F; --accent-text:#6FD3C7;
+  --shadow-overlay:0 8px 32px rgb(0 0 0/.5);}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 14px/20px var(--font-ui);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+svg.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.app{display:grid;grid-template-columns:260px minmax(0,1fr);height:100vh}
+
+/* Sidebar */
+.side{background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0;min-width:0}
+.traffic{height:48px;display:flex;align-items:center;gap:8px;padding:0 16px;flex:none}
+.traffic span{width:12px;height:12px;border-radius:50%;display:block}
+.traffic .r{background:#FF5F57}.traffic .y{background:#FEBC2E}.traffic .g{background:#28C840}
+.side-tools{display:flex;gap:8px;padding:0 16px 12px}
+.search{flex:1;min-width:0;display:flex;align-items:center;gap:8px;height:32px;padding:0 8px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);color:var(--text-muted)}
+.search input{flex:1;min-width:0;border:0;background:none;outline:0;color:var(--text);font:inherit}
+.search input::placeholder{color:var(--text-subtle)}
+.search:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.icon-btn{width:32px;height:32px;display:grid;place-items:center;border-radius:var(--radius);color:var(--text-muted);transition:background-color 120ms,color 120ms}
+.icon-btn:hover{background:var(--surface-2);color:var(--text)}
+.icon-btn:active{background:var(--surface-3)}
+.icon-btn.solid{background:var(--accent);color:var(--accent-fg)}
+.icon-btn.solid:hover{background:var(--accent-hover)}
+.list{flex:1;min-height:0;overflow:auto;padding:0 8px 8px}
+.group{margin:0 0 16px}
+.group h2{font-size:12px;line-height:16px;font-weight:600;color:var(--text-subtle);margin:0;padding:8px 8px 4px;letter-spacing:.02em}
+.doc{width:100%;display:block;text-align:left;padding:8px;border-radius:var(--radius);transition:background-color 120ms}
+.doc:hover{background:var(--surface-2)}
+.doc:active{background:var(--surface-3)}
+.doc[aria-current="true"]{background:var(--accent-soft)}
+.doc .t{display:flex;justify-content:space-between;gap:8px;font-weight:500}
+.doc .t b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc[aria-current="true"] .t b{color:var(--accent-text)}
+.doc .t time{font-size:12px;color:var(--text-subtle);flex:none}
+.doc .p{font-size:12px;line-height:16px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
+.doc .m{font-size:12px;line-height:16px;color:var(--text-subtle);margin-top:2px}
+
+/* Goal (sidebar footer) */
+.goal{border-top:1px solid var(--border);padding:16px;flex:none}
+.goal-row{display:flex;align-items:baseline;justify-content:space-between}
+.goal h2{font-size:12px;line-height:16px;font-weight:600;color:var(--text-subtle);margin:0}
+.goal .edit{font-size:12px;color:var(--accent-text);padding:4px;border-radius:var(--radius-sm)}
+.goal .edit:hover{text-decoration:underline}
+.goal .big{font-size:24px;line-height:28px;font-weight:600;margin-top:4px}
+.goal .big small{font-size:14px;font-weight:400;color:var(--text-muted)}
+.bar{height:6px;border-radius:3px;background:var(--surface-3);margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:3px;transition:width 300ms var(--ease-out)}
+.goal p{margin:8px 0 0;font-size:12px;line-height:16px;color:var(--text-muted)}
+.week{display:flex;gap:4px;margin-top:12px}
+.week span{flex:1;height:24px;border-radius:var(--radius-sm);background:var(--surface-3);display:grid;place-items:center;font-size:12px;line-height:16px;color:var(--text-muted)}
+.week span.hit{background:var(--accent);color:var(--accent-fg)}
+.week span.today{outline:2px solid var(--accent);outline-offset:1px}
+
+/* Main */
+.main{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--bg)}
+.toolbar{height:48px;display:flex;align-items:center;gap:4px;padding:0 16px;border-bottom:1px solid var(--border);flex:none}
+.toolbar .sp{flex:1}
+.toolbar .sep{width:1px;height:16px;background:var(--border);margin:0 8px}
+.crumb{color:var(--text-muted);display:flex;gap:8px;align-items:center;min-width:0;overflow:hidden;white-space:nowrap}
+.crumb b{font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis}
+.saved{font-size:12px;color:var(--text-subtle);margin-right:8px;white-space:nowrap}
+.btn{height:32px;padding:0 12px;border-radius:var(--radius);border:1px solid var(--border-strong);color:var(--text);display:inline-flex;align-items:center;gap:8px;font-weight:500;transition:background-color 120ms}
+.btn:hover{background:var(--surface-2)}.btn:active{background:var(--surface-3)}
+.tb-fmt{display:flex;gap:4px;align-items:center}
+.tb-fmt .icon-btn[aria-pressed="true"]{background:var(--surface-3);color:var(--text)}
+.scroller{flex:1;min-height:0;overflow:auto;scroll-padding-top:48px}
+.page{max-width:680px;margin:0 auto;padding:64px 32px 96px}
+.page h1{font:600 36px/40px var(--font-write);margin:0 0 8px;letter-spacing:-.01em;outline:0;text-wrap:balance}
+.meta{color:var(--text-subtle);font-size:12px;line-height:16px;margin:0 0 32px}
+.prose{font:400 18px/32px var(--font-write);outline:0;caret-color:var(--accent)}
+.prose p{margin:0 0 16px}
+.prose blockquote{margin:0 0 16px;padding-left:16px;border-left:2px solid var(--border-strong);color:var(--text-muted);font-style:italic}
+.page ::selection{background:var(--accent-soft)}
+
+/* Status bar */
+.status{height:40px;border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 16px;color:var(--text-muted);font-size:12px;line-height:16px;flex:none;background:var(--bg)}
+.status .sp{flex:1}
+.mini{display:flex;align-items:center;gap:8px}
+.mini .bar{width:96px;margin:0}
+.toast{position:fixed;left:50%;bottom:56px;transform:translate(-50%,8px);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:var(--radius);box-shadow:var(--shadow-overlay);opacity:0;pointer-events:none;transition:opacity 200ms var(--ease-out),transform 200ms var(--ease-out)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.menu-btn{display:none}
+@media (max-width:1023px){.app{grid-template-columns:220px minmax(0,1fr)}.page{padding:48px 24px 96px}}
+@media (max-width:640px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;inset:0 20% 0 0;z-index:5;transform:translateX(-100%);transition:transform 250ms var(--ease-out);box-shadow:var(--shadow-overlay)}
+  .app.open .side{transform:none}
+  .menu-btn{display:grid}
+  .tb-fmt,.saved,.toolbar .sep{display:none!important}
+  .page{padding:24px 16px 96px}.page h1{font-size:30px;line-height:36px}
+  .mini .bar{width:56px}.hide-s{display:none}
+}
+@media (max-width:640px),(pointer:coarse){
+  button,.btn,.search{min-height:44px}.icon-btn{width:44px;height:44px}
+  input{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="side" aria-label="Documents">
+    <div class="traffic" aria-hidden="true"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+    <div class="side-tools">
+      <label class="search"><svg class="i" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg><span class="sr">Search documents</span><input id="q" type="search" placeholder="Search documents"></label>
+      <button class="icon-btn solid" aria-label="New document" title="New document (Cmd N)"><svg class="i" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></svg></button>
+    </div>
+    <nav class="list" id="list" aria-label="Document list"></nav>
+    <section class="goal" aria-labelledby="gh">
+      <div class="goal-row"><h2 id="gh">Today's goal</h2><button class="edit" id="editGoal">Change goal</button></div>
+      <div class="big num"><span id="gWords">0</span> <small>/ <span id="gTarget">1,000</span> words</small></div>
+      <div class="bar" role="progressbar" aria-labelledby="gh" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="gBarWrap"><i id="gBar"></i></div>
+      <p id="gMsg"></p>
+      <div class="week" role="img" aria-label="Goal met Monday, Tuesday, Thursday and Friday"><span class="hit">M</span><span class="hit">T</span><span>W</span><span class="hit">T</span><span class="hit">F</span><span class="today" id="todayCell">S</span><span>S</span></div>
+    </section>
+  </aside>
+
+  <div class="main">
+    <header class="toolbar">
+      <button class="icon-btn menu-btn" id="menu" aria-label="Show documents"><svg class="i" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="2"/><path d="M6 3v10"/></svg></button>
+      <div class="crumb"><span>Novel</span><span aria-hidden="true">/</span><b id="crumbTitle">Chapter 3: The Salt Road</b></div>
+      <span class="sp"></span>
+      <span class="saved" id="saved">Saved</span>
+      <div class="tb-fmt">
+        <button class="icon-btn" aria-pressed="false" aria-label="Bold" title="Bold (Cmd B)" data-cmd="bold"><svg class="i" viewBox="0 0 16 16"><path d="M5 3h3.5a2.25 2.25 0 0 1 0 4.5H5zM5 7.5h4a2.25 2.25 0 0 1 0 4.5H5z"/></svg></button>
+        <button class="icon-btn" aria-pressed="false" aria-label="Italic" title="Italic (Cmd I)" data-cmd="italic"><svg class="i" viewBox="0 0 16 16"><path d="M10 3H7M9 13H6M9.5 3 6.5 13"/></svg></button>
+        <span class="sep"></span>
+        <button class="btn" id="focus"><svg class="i" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2"/><path d="M2 5V3h2M12 3h2v2M14 11v2h-2M4 13H2v-2"/></svg><span id="focusLbl">Enter focus mode</span></button>
+      </div>
+    </header>
+
+    <div class="scroller" id="scroller">
+      <article class="page">
+        <h1 contenteditable="true" spellcheck="false" id="title" aria-label="Document title">Chapter 3: The Salt Road</h1>
+        <p class="meta num">Novel &middot; Edited 4 minutes ago &middot; <span id="metaWords">0</span> words</p>
+        <div class="prose" id="editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Document text" spellcheck="true">
+          <p>Marta woke before the others, as she always did, to the sound of the tide pulling gravel back across the harbour wall. The lamp had burned down to a thumb of grey wax. Somewhere below, a gull argued with the morning and lost.</p>
+          <p>She dressed in the dark. Wool stockings, the heavy skirt her mother had hemmed twice, her father's coat with its pockets still smelling faintly of tar. In the left pocket she found the letter again, folded to the size of a playing card, and she did not read it, because she knew it by heart.</p>
+          <blockquote>The road to Aldmouth is eleven miles, and the salt carts will not wait for anyone.</blockquote>
+          <p>Eleven miles. She had walked farther for worse reasons. At the door she paused, listening to Tomas breathe in the loft, slow and even, a boy who still believed the world kept its promises. She left the bread on the table where he would find it and pulled the latch closed behind her with both hands, the way you close a door on a sleeping child.</p>
+          <p>Outside, the fog had settled over the marsh like a held breath. The path was only a darker idea of the ground. She followed it by memory and by the cold seeping through the soles of her boots, and when the first cart rattled out of the murk ahead of her, she was not surprised to see who was driving it.</p>
+          <p>&ldquo;You came,&rdquo; Henrik said, without turning his head.</p>
+          <p>&ldquo;You said you wouldn&rsquo;t wait.&rdquo;</p>
+          <p>&ldquo;I said a great many things.&rdquo; He held out a hand, and after a moment she took it and climbed up beside him among the sacks, each one stamped with the grey crest of the Aldmouth works. The horse leaned into the harness. Behind them the village went on sleeping, and ahead the road began, white as a seam, running out toward the sea.</p>
+        </div>
+      </article>
+    </div>
+
+    <footer class="status">
+      <span class="num"><b id="sWords" style="font-weight:500;color:var(--text)">0</b> words</span>
+      <span class="num hide-s"><span id="sChars">0</span> characters</span>
+      <span class="num hide-s"><span id="sRead">0</span> min read</span>
+      <span class="sp"></span>
+      <span class="mini"><span class="num"><span id="sToday">0</span> / <span id="sTarget">1,000</span> today</span><span class="bar" aria-hidden="true"><i id="sBar"></i></span></span>
+    </footer>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const docs=[
+ {g:"Today",items:[
+  ["Chapter 3: The Salt Road","Now","Marta woke before the others, as she always did...","Sample: 1,284 words",true],
+  ["Chapter 2: Harbour Lights","Yesterday","The ferry came in late, and the whole town...","3,412 words"],
+  ["Scene notes: Henrik","Mon","Quiet, practical, hides his fear behind jokes...","412 words"]]},
+ {g:"Novel: The Salt Road",items:[
+  ["Chapter 1: Gravel and Tide","12 Nov","Nobody in Saltmarsh locked their doors until...","4,108 words"],
+  ["Outline, second draft","8 Nov","Act one: Marta leaves. Act two: the works at Aldmouth...","1,950 words"],
+  ["Character sheet","2 Nov","Marta Veldt, 27, ferry hand's daughter...","860 words"]]},
+ {g:"Essays",items:[
+  ["On rereading old novels","30 Oct","I keep a shelf of books I am afraid to reopen...","2,236 words"],
+  ["Why I write in the morning","19 Oct","There is a particular silence before the street wakes...","1,142 words"]]}
+];
+docs[0].items[0][3]="318 words";
+const list=document.getElementById('list');
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+function render(f){
+  f=f||"";list.innerHTML="";let n=0;
+  docs.forEach(g=>{
+    const its=g.items.filter(d=>(d[0]+d[2]).toLowerCase().includes(f));
+    if(!its.length)return;
+    const s=document.createElement('section');s.className='group';
+    s.innerHTML='<h2>'+g.g+'</h2>';
+    its.forEach(d=>{n++;
+      const b=document.createElement('button');b.className='doc';b.setAttribute('aria-current',d[4]?'true':'false');
+      b.innerHTML='<div class="t"><b>'+d[0]+'</b><time>'+d[1]+'</time></div><div class="p">'+d[2]+'</div><div class="m num">'+d[3]+'</div>';
+      b.onclick=()=>toast("Sample data: only Chapter 3 is open in this mockup");
+      s.appendChild(b);});
+    list.appendChild(s);});
+  if(!n){list.innerHTML='<div style="padding:24px 16px;color:var(--text-muted)"><b style="color:var(--text);font-weight:500">No documents match "'+esc(f)+'"</b><br>Try a different word, or create a new document.</div>'}
+}
+render();
+document.getElementById('q').addEventListener('input',e=>render(e.target.value.trim().toLowerCase()));
+
+const ed=document.getElementById('editor');
+let target=1000, base=null;
+const fmt=n=>n.toLocaleString('en-US');
+function count(t){const m=t.trim().match(/\S+/g);return m?m.length:0}
+const $=id=>document.getElementById(id);
+function update(){
+  const t=ed.innerText, w=count(t);
+  if(base===null)base=w;
+  // Sample: 716 words already written today elsewhere; words added in this session count on top.
+  const today=716+Math.max(0,w-base);
+  const pct=Math.min(100,Math.round(today/target*100));
+  $('sWords').textContent=fmt(w);$('metaWords').textContent=fmt(w);
+  $('sChars').textContent=fmt(t.replace(/\s/g,'').length);
+  $('sRead').textContent=Math.max(1,Math.round(w/230));
+  $('gWords').textContent=fmt(today);$('sToday').textContent=fmt(today);
+  $('gTarget').textContent=fmt(target);$('sTarget').textContent=fmt(target);
+  $('gBar').style.width=pct+'%';$('sBar').style.width=pct+'%';
+  $('gBarWrap').setAttribute('aria-valuenow',pct);
+  const left=target-today;
+  $('gMsg').textContent=left>0?fmt(left)+' words to go ('+pct+'%)':'Goal reached. '+fmt(today-target)+' words past it.';
+  $('todayCell').classList.toggle('hit',left<=0);
+}
+let st;
+ed.addEventListener('input',()=>{update();const s=$('saved');s.textContent='Saving...';clearTimeout(st);st=setTimeout(()=>s.textContent='Saved',700)});
+update();
+$('title').addEventListener('input',e=>{$('crumbTitle').textContent=e.target.textContent});
+$('title').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();ed.focus()}});
+$('editGoal').onclick=()=>{
+  const v=prompt("Daily word goal",target);const n=parseInt(String(v||"").replace(/,/g,''),10);
+  if(n>0){target=n;update();toast("Daily goal set to "+fmt(n)+" words")}
+};
+document.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('mousedown',e=>{e.preventDefault();document.execCommand(b.dataset.cmd)}));
+document.addEventListener('selectionchange',()=>document.querySelectorAll('[data-cmd]').forEach(b=>b.setAttribute('aria-pressed',String(document.queryCommandState(b.dataset.cmd)))));
+const app=$('app');
+$('menu').onclick=()=>app.classList.toggle('open');
+ed.addEventListener('focus',()=>app.classList.remove('open'));
+$('focus').onclick=()=>{
+  const on=app.classList.toggle('focusmode');
+  document.querySelector('.side').style.display=on?'none':'';
+  app.style.gridTemplateColumns=on?'minmax(0,1fr)':'';
+  $('focusLbl').textContent=on?'Leave focus mode':'Enter focus mode';
+};
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),4000)}
+</script>
+</body>
+</html>

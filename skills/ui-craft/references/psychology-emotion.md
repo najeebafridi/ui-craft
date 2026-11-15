@@ -54,7 +54,7 @@ Trust grows slowly from consistent, honest behaviour and breaks at once on a hid
 
 - **Working memory holds about four chunks.** Break long numbers, forms and processes into small groups and steps. ("Seven plus or minus two" is outdated, and was never a rule for menus.)
 - **Recognition beats recall.** Show options, recent items and examples instead of asking people to remember. Labels beside icons.
-- **Defaults are powerful** (among the best-replicated findings). Set each default to what is best for most users and easy to change. Never pre-tick something that costs money or gives away data.
+- **Defaults are powerful** (among the best-replicated findings). Set each default to what is best for most users and easy to change, so the screen works from the first second (today's date, the next free slot, "any available"). Never pre-tick something that costs money or gives away data.
 - **Progressive disclosure.** Show the basics; reveal advanced options on request. Never bury price, terms or opt-outs this way.
 - **Bigger and closer is faster to hit** (Fitts). Primary actions large and near the thumb or pointer. Never make "accept" large and "decline" tiny.
 - **One thing stands out only if one thing is different.** One highlighted plan, one primary button.

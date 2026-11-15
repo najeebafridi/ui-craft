@@ -1,0 +1,344 @@
+{
+  "measuredAt": "2026-11-15T22:11:31.160Z",
+  "pages": [
+    {
+      "target": "evals/iteration-3/client-options-crm/with_skill/outputs/option-a.html",
+      "total": 100,
+      "grade": "A",
+      "areas": [
+        {
+          "area": "Text contrast",
+          "max": 20,
+          "got": 20,
+          "problem": "",
+          "fix": "Darken text to reach 4.5:1 (3:1 for 24px+ text). Muted grey on white: ~#5B6B82 or darker. Check text on tinted backgrounds too.",
+          "ref": "references/color-dark-mode.md"
+        },
+        {
+          "area": "Tap & click targets",
+          "max": 15,
+          "got": 15,
+          "problem": "",
+          "fix": "Add `@media (max-width:640px),(pointer:coarse){button,.btn,input,select,[role=tab],nav a{min-height:44px}}`; give icon buttons and small links 44x44 padding.",
+          "ref": "references/mobile-touch.md"
+        },
+        {
+          "area": "Responsive layout",
+          "max": 15,
+          "got": 15,
+          "problem": "",
+          "fix": "Find the wide element: add `min-width:0` to flex/grid children, `overflow-x:auto` to chip/date rows, turn wide tables into cards on phones.",
+          "ref": "references/layout-spacing.md"
+        },
+        {
+          "area": "Keyboard focus",
+          "max": 10,
+          "got": 10,
+          "problem": "",
+          "fix": "Add `:focus-visible{outline:2px solid var(--accent);outline-offset:2px}`; never remove outlines without a replacement.",
+          "ref": "references/accessibility.md"
+        },
+        {
+          "area": "Text size",
+          "max": 10,
+          "got": 10,
+          "problem": "",
+          "fix": "Nothing below 12px. Body 16px (14px only in dense desktop tools); phone inputs 16px.",
+          "ref": "references/typography.md"
+        },
+        {
+          "area": "Type consistency",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Use the scale 12/14/16/18/20/24/30/36/48/60 and only 4-6 sizes per screen (7 on marketing pages).",
+          "ref": "references/typography.md"
+        },
+        {
+          "area": "Form labels",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Give every input a visible <label for> above it (a placeholder is not a label); icon-only controls get aria-label.",
+          "ref": "references/forms.md"
+        },
+        {
+          "area": "Spacing system",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Use only 4, 8, 12, 16, 24, 32, 48, 64, 96 for padding, margin and gap (best as CSS variables).",
+          "ref": "references/layout-spacing.md"
+        },
+        {
+          "area": "Page structure",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "One <h1> per page, then h2, h3 in order; use header/nav/main landmarks.",
+          "ref": "references/accessibility.md"
+        },
+        {
+          "area": "Motion",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Add a `@media (prefers-reduced-motion: reduce)` block; list transition properties instead of `all`.",
+          "ref": "references/motion.md"
+        },
+        {
+          "area": "Content & polish",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Use SVG icons from one set, realistic content and real images; drop gradient text.",
+          "ref": "references/review-checklist.md"
+        }
+      ],
+      "fixes": [],
+      "craft": [],
+      "fontSizes": [
+        12,
+        14,
+        16,
+        24
+      ],
+      "screenshots": [
+        "D:\\Projects\\design-skill\\evals\\iteration-3\\client-options-crm\\with_skill\\screens-audit\\option-a-desktop.png",
+        "D:\\Projects\\design-skill\\evals\\iteration-3\\client-options-crm\\with_skill\\screens-audit\\option-a-phone.png"
+      ]
+    },
+    {
+      "target": "evals/iteration-3/client-options-crm/with_skill/outputs/option-b.html",
+      "total": 99,
+      "grade": "A",
+      "areas": [
+        {
+          "area": "Text contrast",
+          "max": 20,
+          "got": 20,
+          "problem": "",
+          "fix": "Darken text to reach 4.5:1 (3:1 for 24px+ text). Muted grey on white: ~#5B6B82 or darker. Check text on tinted backgrounds too.",
+          "ref": "references/color-dark-mode.md"
+        },
+        {
+          "area": "Tap & click targets",
+          "max": 15,
+          "got": 15,
+          "problem": "",
+          "fix": "Add `@media (max-width:640px),(pointer:coarse){button,.btn,input,select,[role=tab],nav a{min-height:44px}}`; give icon buttons and small links 44x44 padding.",
+          "ref": "references/mobile-touch.md"
+        },
+        {
+          "area": "Responsive layout",
+          "max": 15,
+          "got": 15,
+          "problem": "",
+          "fix": "Find the wide element: add `min-width:0` to flex/grid children, `overflow-x:auto` to chip/date rows, turn wide tables into cards on phones.",
+          "ref": "references/layout-spacing.md"
+        },
+        {
+          "area": "Keyboard focus",
+          "max": 10,
+          "got": 10,
+          "problem": "",
+          "fix": "Add `:focus-visible{outline:2px solid var(--accent);outline-offset:2px}`; never remove outlines without a replacement.",
+          "ref": "references/accessibility.md"
+        },
+        {
+          "area": "Text size",
+          "max": 10,
+          "got": 10,
+          "problem": "",
+          "fix": "Nothing below 12px. Body 16px (14px only in dense desktop tools); phone inputs 16px.",
+          "ref": "references/typography.md"
+        },
+        {
+          "area": "Type consistency",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Use the scale 12/14/16/18/20/24/30/36/48/60 and only 4-6 sizes per screen (7 on marketing pages).",
+          "ref": "references/typography.md"
+        },
+        {
+          "area": "Form labels",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Give every input a visible <label for> above it (a placeholder is not a label); icon-only controls get aria-label.",
+          "ref": "references/forms.md"
+        },
+        {
+          "area": "Spacing system",
+          "max": 5,
+          "got": 4.3,
+          "problem": "Only 84% of spacing values are on the 4px grid",
+          "fix": "Use only 4, 8, 12, 16, 24, 32, 48, 64, 96 for padding, margin and gap (best as CSS variables).",
+          "ref": "references/layout-spacing.md"
+        },
+        {
+          "area": "Page structure",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "One <h1> per page, then h2, h3 in order; use header/nav/main landmarks.",
+          "ref": "references/accessibility.md"
+        },
+        {
+          "area": "Motion",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Add a `@media (prefers-reduced-motion: reduce)` block; list transition properties instead of `all`.",
+          "ref": "references/motion.md"
+        },
+        {
+          "area": "Content & polish",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Use SVG icons from one set, realistic content and real images; drop gradient text.",
+          "ref": "references/review-checklist.md"
+        }
+      ],
+      "fixes": [
+        {
+          "area": "Spacing system",
+          "max": 5,
+          "got": 4.3,
+          "problem": "Only 84% of spacing values are on the 4px grid",
+          "fix": "Use only 4, 8, 12, 16, 24, 32, 48, 64, 96 for padding, margin and gap (best as CSS variables).",
+          "ref": "references/layout-spacing.md"
+        }
+      ],
+      "craft": [],
+      "fontSizes": [
+        12,
+        14,
+        16,
+        24,
+        48
+      ],
+      "screenshots": [
+        "D:\\Projects\\design-skill\\evals\\iteration-3\\client-options-crm\\with_skill\\screens-audit\\option-b-desktop.png",
+        "D:\\Projects\\design-skill\\evals\\iteration-3\\client-options-crm\\with_skill\\screens-audit\\option-b-phone.png"
+      ]
+    },
+    {
+      "target": "evals/iteration-3/client-options-crm/with_skill/outputs/option-c.html",
+      "total": 99,
+      "grade": "A",
+      "areas": [
+        {
+          "area": "Text contrast",
+          "max": 20,
+          "got": 20,
+          "problem": "",
+          "fix": "Darken text to reach 4.5:1 (3:1 for 24px+ text). Muted grey on white: ~#5B6B82 or darker. Check text on tinted backgrounds too.",
+          "ref": "references/color-dark-mode.md"
+        },
+        {
+          "area": "Tap & click targets",
+          "max": 15,
+          "got": 15,
+          "problem": "",
+          "fix": "Add `@media (max-width:640px),(pointer:coarse){button,.btn,input,select,[role=tab],nav a{min-height:44px}}`; give icon buttons and small links 44x44 padding.",
+          "ref": "references/mobile-touch.md"
+        },
+        {
+          "area": "Responsive layout",
+          "max": 15,
+          "got": 15,
+          "problem": "",
+          "fix": "Find the wide element: add `min-width:0` to flex/grid children, `overflow-x:auto` to chip/date rows, turn wide tables into cards on phones.",
+          "ref": "references/layout-spacing.md"
+        },
+        {
+          "area": "Keyboard focus",
+          "max": 10,
+          "got": 10,
+          "problem": "",
+          "fix": "Add `:focus-visible{outline:2px solid var(--accent);outline-offset:2px}`; never remove outlines without a replacement.",
+          "ref": "references/accessibility.md"
+        },
+        {
+          "area": "Text size",
+          "max": 10,
+          "got": 10,
+          "problem": "",
+          "fix": "Nothing below 12px. Body 16px (14px only in dense desktop tools); phone inputs 16px.",
+          "ref": "references/typography.md"
+        },
+        {
+          "area": "Type consistency",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Use the scale 12/14/16/18/20/24/30/36/48/60 and only 4-6 sizes per screen (7 on marketing pages).",
+          "ref": "references/typography.md"
+        },
+        {
+          "area": "Form labels",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Give every input a visible <label for> above it (a placeholder is not a label); icon-only controls get aria-label.",
+          "ref": "references/forms.md"
+        },
+        {
+          "area": "Spacing system",
+          "max": 5,
+          "got": 4.3,
+          "problem": "Only 85% of spacing values are on the 4px grid",
+          "fix": "Use only 4, 8, 12, 16, 24, 32, 48, 64, 96 for padding, margin and gap (best as CSS variables).",
+          "ref": "references/layout-spacing.md"
+        },
+        {
+          "area": "Page structure",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "One <h1> per page, then h2, h3 in order; use header/nav/main landmarks.",
+          "ref": "references/accessibility.md"
+        },
+        {
+          "area": "Motion",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Add a `@media (prefers-reduced-motion: reduce)` block; list transition properties instead of `all`.",
+          "ref": "references/motion.md"
+        },
+        {
+          "area": "Content & polish",
+          "max": 5,
+          "got": 5,
+          "problem": "",
+          "fix": "Use SVG icons from one set, realistic content and real images; drop gradient text.",
+          "ref": "references/review-checklist.md"
+        }
+      ],
+      "fixes": [
+        {
+          "area": "Spacing system",
+          "max": 5,
+          "got": 4.3,
+          "problem": "Only 85% of spacing values are on the 4px grid",
+          "fix": "Use only 4, 8, 12, 16, 24, 32, 48, 64, 96 for padding, margin and gap (best as CSS variables).",
+          "ref": "references/layout-spacing.md"
+        }
+      ],
+      "craft": [],
+      "fontSizes": [
+        12,
+        14,
+        20
+      ],
+      "screenshots": [
+        "D:\\Projects\\design-skill\\evals\\iteration-3\\client-options-crm\\with_skill\\screens-audit\\option-c-desktop.png",
+        "D:\\Projects\\design-skill\\evals\\iteration-3\\client-options-crm\\with_skill\\screens-audit\\option-c-phone.png"
+      ]
+    }
+  ]
+}

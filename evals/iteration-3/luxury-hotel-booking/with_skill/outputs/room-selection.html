@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Choose your room · Maison Verrier Lisbon</title>
+<!--
+Design brief
+Product: room selection step of a boutique luxury hotel group's booking app (responsive web; phone, tablet, desktop)
+User and feeling: affluent guest, dates already chosen, a little wary of hidden costs -> unhurried, assured, certain of the price and the terms
+Direction: Maison (space as the luxury); deep green accent #0B4834, warm neutrals, light theme
+Type: Cormorant Garamond display + Hanken Grotesk text, 16px body; small tracked capitals for labels
+Shape and depth: square corners, hairlines, no shadows (overlay only for the mobile bar edge)
+Density and motion: spacious, slow page-level fade, instant controls
+Signature: space as the luxury - one room at a time given generous room, each with its price and terms stated plainly
+Primary task: pick a room and rate, then continue to payment
+SAMPLE DATA: hotel, prices and policies are fictional. Room pictures are illustrations standing in for photography.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Hanken+Grotesk:wght@300;400;500&display=swap">
+<style>
+/* ---- tokens: Maison direction (light) ---- */
+:root {
+  color-scheme: light;
+  --bg: #FCF9F3; --surface: #FFFEFD; --surface-2: #F8F3EB; --surface-3: #EDE7DE;
+  --border: #E8E2D8; --border-strong: #938A7B;
+  --text: #21190C; --text-muted: #60584A; --text-subtle: #766D5F;
+  --accent: #0B4834; --accent-hover: #003C29; --accent-fg: #FFFFFF; --accent-soft: #E7F4EE; --accent-text: #0B4834;
+  --focus: #0B4834;
+  --danger-text: #B7191C;
+  --shadow-color: 43 32 12;
+  --font-display: "Cormorant Garamond", ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --dur-fast: 180ms; --dur-base: 320ms; --dur-slow: 560ms;
+  --ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --control-h: 48px;
+  --bar-h: 88px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #100B05; --surface: #19140C; --surface-2: #221D15; --surface-3: #2C271E;
+    --border: #2F2920; --border-strong: #777166;
+    --text: #EBE7E1; --text-muted: #A49F97; --text-subtle: #948F88;
+    --accent: #356D57; --accent-hover: #28604A; --accent-soft: #192821; --accent-text: #86AF9D; --focus: #86AF9D;
+    --danger-text: #F78B80;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 96px; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 16px/1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+h1, h2, h3, .num, .big, .amt, .rp b { font-variant-numeric: lining-nums tabular-nums; }
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 500; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+::selection { background: color-mix(in oklab, var(--accent) 24%, transparent); }
+.num { font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.caps { font-size: 12px; line-height: 16px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; color: var(--text-muted); }
+
+.skip { position: absolute; left: 16px; top: -64px; background: var(--surface); padding: 12px 16px; border: 1px solid var(--border-strong); z-index: 20; color: var(--text); }
+.skip:focus { top: 8px; }
+
+/* ---- header ---- */
+.top {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.top-in { max-width: 1200px; margin: 0 auto; padding: 0 16px; min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: inline-flex; flex-direction: column; justify-content: center; min-height: 44px; font-family: var(--font-display); font-size: 24px; font-weight: 500; letter-spacing: 0.01em; text-decoration: none; color: var(--text); line-height: 1; white-space: nowrap; }
+.brand small { display: block; font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; font-weight: 400; }
+.steps { display: none; gap: 24px; }
+.steps li { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); padding: 8px 0; border-bottom: 1px solid transparent; }
+.steps li[aria-current="step"] { color: var(--text); border-bottom-color: var(--text); }
+.steps li.done { color: var(--text-muted); }
+.step-short { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+.step-short b { color: var(--text); font-weight: 500; }
+
+/* ---- layout ---- */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 32px 16px calc(var(--bar-h) + 32px + env(safe-area-inset-bottom)); }
+.layout { display: grid; gap: 48px; grid-template-columns: minmax(0, 1fr); }
+.back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--text-muted); text-decoration: none; font-size: 14px; }
+.back:hover { color: var(--text); }
+.back svg { width: 16px; height: 16px; }
+.intro { padding: 16px 0 48px; max-width: 640px; }
+.intro h1 { font-size: 36px; line-height: 1.1; letter-spacing: -0.02em; margin-top: 12px; }
+.intro p { color: var(--text-muted); margin-top: 16px; }
+.intro .caps { display: block; }
+
+/* ---- rooms ---- */
+.rooms { display: grid; gap: 48px; }
+.room { display: grid; gap: 24px; padding-top: 48px; border-top: 1px solid var(--border); }
+.room:first-child { border-top: 0; padding-top: 0; }
+.room-pic { position: relative; aspect-ratio: 4 / 3; background: var(--surface-3); overflow: hidden; outline: 1px solid rgb(var(--shadow-color) / .08); outline-offset: -1px; }
+.room-pic svg { width: 100%; height: 100%; display: block; }
+.room-body { display: grid; gap: 16px; align-content: start; min-width: 0; }
+.room h3 { font-size: 30px; line-height: 1.15; letter-spacing: -0.015em; }
+.room .meta { margin-top: 8px; }
+.room p.desc { color: var(--text-muted); max-width: 52ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: 14px; color: var(--text-muted); }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts svg { width: 16px; height: 16px; flex: none; }
+details.more { font-size: 14px; }
+details.more summary { cursor: pointer; display: inline-flex; align-items: center; min-height: 44px; color: var(--text); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--border-strong); list-style: none; }
+details.more summary::-webkit-details-marker { display: none; }
+details.more summary:hover { text-decoration-color: var(--text); }
+details.more ul { display: grid; gap: 8px; padding: 4px 0 8px; color: var(--text-muted); }
+details.more li { padding-left: 16px; position: relative; }
+details.more li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 6px; height: 1px; background: var(--border-strong); }
+
+.room-foot { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px 24px; padding-top: 16px; border-top: 1px solid var(--border); }
+.from { display: grid; gap: 2px; }
+.from .big { font-family: var(--font-display); font-size: 30px; line-height: 1.1; font-weight: 500; letter-spacing: -0.015em; }
+.from .big span { font-family: var(--font-sans); font-size: 14px; letter-spacing: 0; color: var(--text-muted); font-weight: 400; }
+.from .sub { font-size: 14px; color: var(--text-muted); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: var(--control-h); padding: 0 32px; border: 1px solid var(--text); background: transparent; color: var(--text);
+  font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; cursor: pointer; border-radius: 0;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.btn:active { transform: scale(.99); }
+.btn svg { width: 16px; height: 16px; }
+@media (hover: hover) { .btn:hover { background: var(--text); color: var(--bg); } }
+.btn[aria-pressed="true"] { background: var(--surface-2); border-color: var(--accent); color: var(--accent-text); }
+@media (hover: hover) { .btn[aria-pressed="true"]:hover { background: var(--surface-2); color: var(--accent-text); } }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+@media (hover: hover) { .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--accent-fg); } }
+.btn-primary[disabled] { background: var(--surface-3); border-color: var(--surface-3); color: var(--text-subtle); cursor: not-allowed; }
+.btn-primary.loading { pointer-events: none; }
+.spin { width: 16px; height: 16px; border: 1.5px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; display: none; }
+.loading .spin { display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.room.selected { }
+.room.selected .room-pic { outline: 2px solid var(--accent); outline-offset: -2px; }
+.room.unavailable .room-pic svg { filter: grayscale(.9) opacity(.55); }
+.room.unavailable h3, .room.unavailable .desc { color: var(--text-muted); }
+.na { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; font-size: 14px; color: var(--text-muted); padding-top: 16px; border-top: 1px solid var(--border); }
+.na a { color: var(--text); text-underline-offset: 4px; display: inline-flex; align-items: center; min-height: 44px; }
+
+/* rates */
+.rates { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: 0; }
+.rates legend { padding: 0; margin-bottom: 12px; }
+.rate { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 4px 16px; padding: 16px; min-height: 72px; border: 1px solid var(--border-strong); background: var(--surface); cursor: pointer; align-items: start; }
+.rate + .rate { margin-top: -1px; }
+.rate input { appearance: none; margin: 2px 0 0; width: 20px; height: 20px; border: 1px solid var(--border-strong); border-radius: 50%; background: var(--surface); display: grid; place-content: center; cursor: pointer; }
+.rate input::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); transform: scale(0); transition: transform var(--dur-fast) var(--ease-out); }
+.rate input:checked { border-color: var(--accent); }
+.rate input:checked::after { transform: scale(1); }
+.rate:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); position: relative; z-index: 1; box-shadow: inset 0 0 0 1px var(--accent); }
+.rate:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; z-index: 2; }
+.rate .rt { font-weight: 500; }
+.rate .rd { grid-column: 2; font-size: 14px; color: var(--text-muted); }
+.rate .rp { grid-column: 3; grid-row: 1 / span 2; text-align: right; display: grid; align-content: start; }
+.rate .rp b { font-family: var(--font-display); font-size: 24px; font-weight: 500; line-height: 1.1; }
+.rate .rp span { font-size: 12px; color: var(--text-muted); }
+@media (hover: hover) { .rate:hover { background: var(--surface-2); } .rate:has(input:checked):hover { background: var(--accent-soft); } }
+.rate-wrap { animation: fade var(--dur-base) var(--ease-out); }
+@keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* included */
+.included { margin-top: 96px; padding-top: 48px; border-top: 1px solid var(--border); }
+.included h2 { font-size: 30px; line-height: 1.15; letter-spacing: -0.015em; }
+.included > p { color: var(--text-muted); margin-top: 8px; max-width: 52ch; }
+.inc-list { display: grid; gap: 0; margin-top: 32px; }
+.inc-list li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-top: 1px solid var(--border); }
+.inc-list li:last-child { border-bottom: 1px solid var(--border); }
+.inc-list svg { width: 20px; height: 20px; margin-top: 2px; color: var(--accent-text); }
+.inc-list b { font-weight: 500; display: block; }
+.inc-list span { color: var(--text-muted); font-size: 14px; }
+
+/* summary */
+.summary { border-top: 1px solid var(--text); padding-top: 24px; }
+.summary h2 { font-size: 24px; letter-spacing: -0.01em; line-height: 1.2; }
+.sum-dates { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.sum-dates b { display: block; font-weight: 500; margin-top: 4px; }
+.sum-dates span.s { display: block; font-size: 14px; color: var(--text-muted); }
+.sum-row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; font-size: 14px; }
+.sum-row dt { color: var(--text-muted); }
+.sum-row dd { margin: 0; text-align: right; }
+.sum-block { padding: 16px 0; border-bottom: 1px solid var(--border); }
+.sum-block dl { margin: 0; }
+.sum-room { padding: 24px 0 8px; }
+.sum-room .name { font-family: var(--font-display); font-size: 24px; line-height: 1.2; font-weight: 500; }
+.sum-room .rate-name { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+.sum-empty { color: var(--text-muted); font-size: 14px; padding: 24px 0 8px; }
+.total { display: flex; justify-content: space-between; align-items: baseline; padding: 24px 0 8px; gap: 16px; }
+.total .lbl { font-size: 14px; }
+.total .amt { font-family: var(--font-display); font-size: 36px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 500; }
+.sum-note { font-size: 14px; color: var(--text-muted); padding-bottom: 24px; }
+.sum-cta { display: none; }
+.concierge { margin-top: 24px; font-size: 14px; color: var(--text-muted); }
+.concierge a { color: var(--text); text-underline-offset: 4px; }
+.changeable { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; color: var(--text); text-underline-offset: 4px; }
+
+/* bottom bar (phone, tablet) */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  background: var(--surface); border-top: 1px solid var(--border-strong);
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+}
+.bar-in { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.bar-t { min-width: 0; }
+.bar-t .amt { font-family: var(--font-display); font-size: 24px; line-height: 1.1; font-weight: 500; display: block; }
+.bar-t .sub { font-size: 12px; color: var(--text-muted); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar .btn { flex: none; padding: 0 24px; }
+.status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.toast { position: fixed; left: 16px; right: 16px; bottom: calc(var(--bar-h) + 16px + env(safe-area-inset-bottom)); max-width: 480px; margin: 0 auto; background: var(--text); color: var(--bg); padding: 16px 24px; font-size: 14px; z-index: 12; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+.toast.show { opacity: 1; transform: none; }
+
+/* page fade-in, the one signature motion */
+.fade-in { animation: fade var(--dur-slow) var(--ease-out) both; }
+
+/* ---- 640+ ---- */
+@media (min-width: 640px) {
+  .top-in { padding: 0 24px; }
+  .wrap { padding-left: 24px; padding-right: 24px; }
+  .intro h1 { font-size: 48px; letter-spacing: -0.03em; }
+  .room { grid-template-columns: 280px minmax(0, 1fr); gap: 32px; }
+  .room-pic { aspect-ratio: 5 / 4; align-self: start; }
+  .rates-row { grid-column: 1 / -1; }
+  .inc-list { grid-template-columns: 1fr 1fr; column-gap: 48px; }
+  .inc-list li:nth-last-child(2) { border-bottom: 1px solid var(--border); }
+  .step-short { display: none; }
+  .steps { display: flex; }
+  .bar { padding-left: 24px; padding-right: 24px; }
+}
+@media (min-width: 640px) and (max-width: 1023px) { .steps li:not([aria-current="step"]) { display: none; } .steps { display: flex; } }
+@media (min-width: 768px) and (max-width: 1023px) { .steps li { display: block !important; } .steps { gap: 16px; } }
+
+/* ---- 1024+ ---- */
+@media (min-width: 1024px) {
+  .top-in { padding: 0 32px; min-height: 72px; }
+  .wrap { padding: 32px 32px 96px; }
+  .layout { grid-template-columns: minmax(0, 1fr) 360px; gap: 64px; align-items: start; }
+  .summary-col { position: sticky; top: 104px; }
+  .summary { }
+  .sum-cta { display: inline-flex; width: 100%; margin-top: 24px; }
+  .bar { display: none; }
+  .toast { bottom: 32px; }
+  .room { grid-template-columns: 320px minmax(0, 1fr); }
+  .summary-inline-note { display: none; }
+}
+@media (min-width: 1024px) { .intro { padding-bottom: 64px; } }
+
+/* ---- touch: grow controls ---- */
+@media (max-width: 640px), (pointer: coarse) {
+  .btn, .rate, details.more summary { min-height: 48px; }
+  .btn { min-height: 48px; }
+}
+@media (max-width: 400px) { .bar .btn { padding: 0 16px; } .bar-t .amt { font-size: 24px; } }
+@media (prefers-reduced-motion: reduce) {
+  .fade-in, .rate-wrap { animation: none; }
+  .toast { transition: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#rooms">Skip to rooms</a>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#" aria-label="Maison Verrier Lisbon, home">Maison Verrier<small>Lisbon · Chiado</small></a>
+    <nav aria-label="Booking progress">
+      <ol class="steps">
+        <li class="done">Dates</li>
+        <li aria-current="step">Room</li>
+        <li>Your details</li>
+        <li>Payment</li>
+      </ol>
+      <p class="step-short">Step <b>2</b> of 4 · Room</p>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap fade-in" id="main">
+  <a class="back" href="#"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>Change dates</a>
+
+  <div class="layout">
+    <div>
+      <section class="intro" aria-labelledby="h1">
+        <span class="caps">Sun 14 – Wed 17 March 2027 · 3 nights · 2 guests</span>
+        <h1 id="h1">Choose your room</h1>
+        <p>Four rooms overlook the courtyard garden and the river. Every rate includes breakfast and the details listed below.</p>
+      </section>
+
+      <h2 class="sr-only">Rooms</h2>
+      <div class="rooms" id="rooms" role="list"></div>
+
+      <section class="included" aria-labelledby="inc-h">
+        <h2 id="inc-h">Included in every stay</h2>
+        <p>Nothing here is added to your total.</p>
+        <ul class="inc-list">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11h14v2a7 7 0 0 1-14 0z"/><path d="M9 4c0 1.5 1.5 1.5 1.5 3M13 4c0 1.5 1.5 1.5 1.5 3"/></svg>
+            <div><b>Breakfast in the courtyard</b><span>Served 7:30 – 11:00, or to your room at no extra charge.</span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 15l18-5-2-3-6 1.5L7 5 5 6l4 5-4 1-2-1.5z"/><path d="M3 20h18"/></svg>
+            <div><b>Private airport transfer</b><span>One way, from Humberto Delgado Airport. Please share your flight 48 hours ahead.</span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>
+            <div><b>Late check-out until 14:00</b><span>Standard check-out is 12:00. Check-in from 15:00.</span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8l-1 7a3 3 0 0 1-6 0z"/><path d="M12 13v8M8.5 21h7"/></svg>
+            <div><b>Welcome glass and evening turndown</b><span>A glass of Colares wine on arrival, and your bed prepared each evening.</span></div>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <aside class="summary-col" aria-label="Your stay">
+      <div class="summary" id="summary">
+        <h2>Your stay</h2>
+        <div class="sum-dates">
+          <div><span class="caps">Arrive</span><b>Sun 14 Mar 2027</b><span class="s">From 15:00</span></div>
+          <div><span class="caps">Depart</span><b>Wed 17 Mar 2027</b><span class="s">Until 12:00</span></div>
+        </div>
+        <div class="sum-block" style="padding-top:12px"><dl><div class="sum-row"><dt>Guests</dt><dd>2 adults</dd></div><div class="sum-row" style="padding-top:0"><dt>Length</dt><dd>3 nights</dd></div></dl></div>
+        <div id="sum-body"></div>
+        <button type="button" class="btn btn-primary sum-cta" id="cta-desktop"><span class="spin" aria-hidden="true"></span><span class="lbl">Continue to payment</span></button>
+        <p class="concierge">Prefer to book by phone? Our concierge is on <a href="tel:+351210000000">+351 210 000 000</a>, 08:00 – 22:00.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="bar" role="region" aria-label="Booking total">
+  <div class="bar-in">
+    <div class="bar-t"><span class="amt num" id="bar-amt">—</span><span class="sub" id="bar-sub">Choose a room to continue</span></div>
+    <button type="button" class="btn btn-primary" id="cta-bar"><span class="spin" aria-hidden="true"></span><span class="lbl">Continue</span></button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var NIGHTS = 3, GUESTS = 2, CITY_TAX = 4; // EUR per guest per night
+  var eur0 = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  var eur2 = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 });
+  var fmt = function (n) { return eur0.format(n).replace('€', '€'); };
+
+  var ROOMS = [
+    { id: 'garden', name: 'Deluxe Garden Room', size: 32, bed: 'King bed', view: 'Courtyard garden', price: 420, tone: 'garden',
+      desc: 'A quiet corner room beside the orange trees, with linen drapes and a deep soaking bath.',
+      more: ['King bed, 180 × 200 cm, with Portuguese linen', 'Marble bathroom with soaking bath and separate shower', 'Writing desk and reading armchair', 'Nespresso machine and a stocked honesty bar'] },
+    { id: 'river', name: 'Superior River Room', size: 38, bed: 'King bed', view: 'River Tagus', price: 560, tone: 'river',
+      desc: 'Tall windows and a private balcony above the river, with the evening light on the water.',
+      more: ['King bed, 180 × 200 cm, with Portuguese linen', 'Private balcony with two chairs', 'Marble bathroom with walk-in rain shower', 'Writing desk and reading armchair'] },
+    { id: 'junior', name: 'Junior Suite', size: 52, bed: 'King bed', view: 'River and rooftops', price: 780, tone: 'suite',
+      desc: 'A bedroom and sitting room in one, with a window seat and a long view across the old town.',
+      more: ['King bed and a separate sitting area with sofa', 'Window seat facing the river', 'Marble bathroom with soaking bath and walk-in shower', 'Dressing room with wardrobe'] },
+    { id: 'verrier', name: 'Verrier Suite', size: 84, bed: 'King bed', view: 'River, 270 degrees', price: 1380, tone: 'grand', unavailable: true,
+      desc: 'Our top-floor suite with a terrace, a dining table for four and a private entrance.',
+      more: [] }
+  ];
+  var RATES = [
+    { id: 'flex', name: 'Flexible rate', factor: 1, line: 'Free cancellation until 11 Mar 2027, 18:00. Charged at check-out.', terms: 'Free cancellation until 11 Mar, 18:00' },
+    { id: 'saver', name: 'Advance rate', factor: 0.9, line: 'Charged today. Non-refundable. Dates can be changed once, free of charge.', terms: 'Charged today, non-refundable' }
+  ];
+
+  var state = { room: 'river', rate: 'flex' };
+
+  function scene(tone) {
+    var p = {
+      garden: { wall: ['#EDE3D3', '#E2D5C0'], floor: '#B9A68B', win: ['#DCE6CF', '#B7C9A2'], accent: '#6C7F5B' },
+      river:  { wall: ['#EFE6D8', '#E4D8C4'], floor: '#BCA98D', win: ['#E6EBEF', '#BFD0DB'], accent: '#7C8E98' },
+      suite:  { wall: ['#EBDFCC', '#DFD0B8'], floor: '#B09B7C', win: ['#F0E7D2', '#D9C9A5'], accent: '#8D7A58' },
+      grand:  { wall: ['#E7DBC8', '#D9CAB0'], floor: '#A89475', win: ['#EAE1CE', '#CDBD98'], accent: '#7E6D4D' }
+    }[tone];
+    var id = 'g' + tone;
+    var windowSvg = tone === 'garden'
+      ? '<rect x="236" y="52" width="104" height="150" fill="url(#w' + id + ')"/><circle cx="262" cy="170" r="30" fill="#7E9266" opacity=".55"/><circle cx="310" cy="160" r="38" fill="#6C7F5B" opacity=".5"/><circle cx="288" cy="196" r="26" fill="#5E7150" opacity=".45"/>'
+      : tone === 'river'
+      ? '<rect x="236" y="52" width="104" height="150" fill="url(#w' + id + ')"/><rect x="236" y="150" width="104" height="52" fill="#9DB4C2" opacity=".7"/><path d="M236 152h104" stroke="#fff" stroke-opacity=".6"/>'
+      : '<path d="M226 202V92a52 52 0 0 1 104 0v110z" fill="url(#w' + id + ')"/><path d="M226 150h104" stroke="#fff" stroke-opacity=".4"/>';
+    var bars = tone === 'suite' || tone === 'grand' ? '' : '<path d="M288 52v150M236 120h104" stroke="#F6F0E5" stroke-width="3"/>';
+    var frame = tone === 'suite' || tone === 'grand' ? '<path d="M226 202V92a52 52 0 0 1 104 0v110z" fill="none" stroke="#F6F0E5" stroke-width="5"/><path d="M278 40v162" stroke="#F6F0E5" stroke-width="3"/>' : '<rect x="236" y="52" width="104" height="150" fill="none" stroke="#F6F0E5" stroke-width="5"/>';
+    return '<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of the room in soft morning light">' +
+      '<defs><linearGradient id="b' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + p.wall[0] + '"/><stop offset="1" stop-color="' + p.wall[1] + '"/></linearGradient>' +
+      '<linearGradient id="w' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + p.win[0] + '"/><stop offset="1" stop-color="' + p.win[1] + '"/></linearGradient>' +
+      '<linearGradient id="l' + id + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset="1" stop-color="#fff" stop-opacity=".22"/></linearGradient></defs>' +
+      '<rect width="400" height="300" fill="url(#b' + id + ')"/>' +
+      '<rect y="214" width="400" height="86" fill="' + p.floor + '"/><rect y="212" width="400" height="3" fill="#000" opacity=".08"/>' +
+      windowSvg + bars + frame +
+      '<path d="M236 202h104l40 98H196z" fill="#fff" opacity=".16"/>' +
+      '<rect x="40" y="96" width="132" height="62" fill="' + p.accent + '" opacity=".35"/>' +
+      '<rect x="46" y="102" width="120" height="50" fill="none" stroke="#fff" stroke-opacity=".5"/>' +
+      '<rect x="36" y="150" width="148" height="50" fill="#F4EEE3"/>' +
+      '<rect x="28" y="196" width="164" height="30" fill="#F8F4EB"/><rect x="28" y="214" width="164" height="12" fill="#CFC3AE"/>' +
+      '<rect x="44" y="140" width="52" height="24" fill="#FFFEFA"/><rect x="104" y="140" width="52" height="24" fill="#FFFEFA"/>' +
+      '<rect x="28" y="188" width="164" height="14" fill="' + p.accent + '" opacity=".75"/>' +
+      '<rect x="12" y="170" width="14" height="58" fill="#5B4A33" opacity=".85"/><circle cx="19" cy="160" r="9" fill="#F6E7C1"/>' +
+      '<rect width="400" height="300" fill="url(#l' + id + ')"/></svg>';
+  }
+
+  var icons = {
+    size: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2.5 2.5h11v11h-11zM2.5 6.5h4v7"/></svg>',
+    bed: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M2 12.5V4M2 9.5h12v3M14 9.5V7a1.5 1.5 0 0 0-1.5-1.5H7v4"/></svg>',
+    view: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></svg>',
+    guests: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true"><circle cx="8" cy="5" r="2.5"/><path d="M3 13.5c.5-3 2.5-4.5 5-4.5s4.5 1.5 5 4.5"/></svg>',
+    check: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m3 8.5 3.2 3L13 4.5"/></svg>'
+  };
+
+  function nightly(room, rate) { return Math.round(room.price * rate.factor); }
+  function rateById(id) { return RATES.filter(function (r) { return r.id === id; })[0]; }
+  function roomById(id) { return ROOMS.filter(function (r) { return r.id === id; })[0]; }
+
+  function roomHtml(r) {
+    var sel = state.room === r.id;
+    var facts = '<ul class="facts">' +
+      '<li>' + icons.size + r.size + ' m²</li>' +
+      '<li>' + icons.bed + r.bed + '</li>' +
+      '<li>' + icons.view + r.view + '</li>' +
+      '<li>' + icons.guests + 'Up to 2 guests</li></ul>';
+    var head = '<div class="room-pic" aria-hidden="false">' + scene(r.tone) + '</div>';
+    if (r.unavailable) {
+      return '<article class="room unavailable" role="listitem" aria-labelledby="t-' + r.id + '">' + head +
+        '<div class="room-body"><div><h3 id="t-' + r.id + '">' + r.name + '</h3></div>' +
+        '<p class="desc">' + r.desc + '</p>' + facts +
+        '<div class="na"><span>Not available for 14 – 17 March.</span><a href="#">See the nearest available dates</a></div></div></article>';
+    }
+    var rates = '';
+    if (sel) {
+      rates = '<div class="rates-row rate-wrap"><fieldset class="rates"><legend class="caps">Choose your rate</legend>' +
+        RATES.map(function (rt) {
+          var n = nightly(r, rt);
+          return '<label class="rate"><input type="radio" name="rate" value="' + rt.id + '"' + (state.rate === rt.id ? ' checked' : '') + '>' +
+            '<span class="rt">' + rt.name + '</span>' +
+            '<span class="rp num"><b>' + fmt(n) + '</b><span>per night</span></span>' +
+            '<span class="rd">' + rt.line + '</span></label>';
+        }).join('') + '</fieldset></div>';
+    }
+    return '<article class="room' + (sel ? ' selected' : '') + '" role="listitem" aria-labelledby="t-' + r.id + '">' + head +
+      '<div class="room-body"><div><h3 id="t-' + r.id + '">' + r.name + '</h3></div>' +
+      '<p class="desc">' + r.desc + '</p>' + facts +
+      '<details class="more"><summary>Room details</summary><ul>' + r.more.map(function (m) { return '<li>' + m + '</li>'; }).join('') + '</ul></details>' +
+      '<div class="room-foot"><div class="from num"><span class="big">' + fmt(r.price) + ' <span>per night</span></span><span class="sub">' + fmt(r.price * NIGHTS) + ' for ' + NIGHTS + ' nights, breakfast included</span></div>' +
+      '<button type="button" class="btn" data-room="' + r.id + '" aria-pressed="' + sel + '">' + (sel ? icons.check + 'Selected' : 'Select room') + '</button></div></div>' +
+      rates + '</article>';
+  }
+
+  function summary() {
+    var r = roomById(state.room), rt = rateById(state.rate);
+    var n = nightly(r, rt), rooms = n * NIGHTS, tax = CITY_TAX * GUESTS * NIGHTS, total = rooms + tax;
+    var body = '<div class="sum-room"><div class="name">' + r.name + '</div><div class="rate-name">' + rt.name + ' · breakfast included</div></div>' +
+      '<div class="sum-block" style="border-bottom:0"><dl>' +
+      '<div class="sum-row"><dt>' + NIGHTS + ' nights × ' + fmt(n) + '</dt><dd class="num">' + eur2.format(rooms) + '</dd></div>' +
+      '<div class="sum-row"><dt>City tax, ' + GUESTS + ' guests × ' + NIGHTS + ' nights × ' + fmt(CITY_TAX) + '</dt><dd class="num">' + eur2.format(tax) + '</dd></div></dl></div>' +
+      '<div class="total" style="border-top:1px solid var(--border)"><span class="lbl caps" style="color:var(--text)">Total</span><span class="amt num">' + eur2.format(total) + '</span></div>' +
+      '<p class="sum-note">All taxes and fees are included. ' + (rt.id === 'flex' ? 'Nothing is charged until check-out.' : 'Your card is charged ' + eur2.format(total) + ' at the next step.') + '</p>';
+    document.getElementById('sum-body').innerHTML = body;
+    document.getElementById('bar-amt').textContent = eur2.format(total);
+    document.getElementById('bar-sub').textContent = r.name + ' · ' + NIGHTS + ' nights, taxes included';
+  }
+
+  function render(focusSel) {
+    var host = document.getElementById('rooms');
+    var open = Array.prototype.map.call(host.querySelectorAll('details.more'), function (d) { return d.open; });
+    host.innerHTML = ROOMS.map(roomHtml).join('');
+    Array.prototype.forEach.call(host.querySelectorAll('details.more'), function (d, i) { if (open[i]) d.open = true; });
+    summary();
+    if (focusSel) { var b = host.querySelector('[data-room="' + focusSel + '"]'); if (b) b.focus(); }
+  }
+
+  document.getElementById('rooms').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-room]');
+    if (!b || b.getAttribute('aria-pressed') === 'true') return;
+    state.room = b.getAttribute('data-room');
+    render(state.room);
+  });
+  document.getElementById('rooms').addEventListener('change', function (e) {
+    if (e.target.name === 'rate') { state.rate = e.target.value; summary(); }
+  });
+  // keep rate cards from replaying their entrance when only the rate changes
+  function go(btn) {
+    var toast = document.getElementById('toast');
+    btn.classList.add('loading');
+    btn.querySelector('.lbl').dataset.t = btn.querySelector('.lbl').textContent;
+    btn.querySelector('.lbl').textContent = 'One moment';
+    setTimeout(function () {
+      btn.classList.remove('loading');
+      btn.querySelector('.lbl').textContent = btn.querySelector('.lbl').dataset.t;
+      var r = roomById(state.room);
+      toast.textContent = r.name + ' for 14 – 17 March. Continuing to payment (sample screen).';
+      toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 5000);
+    }, 700);
+  }
+  document.getElementById('cta-desktop').addEventListener('click', function () { go(this); });
+  document.getElementById('cta-bar').addEventListener('click', function () { go(this); });
+
+  render();
+})();
+</script>
+</body>
+</html>

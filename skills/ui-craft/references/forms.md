@@ -151,6 +151,10 @@ input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 - Don't: validate while typing, or show an error before the user touched the field.
 - Don't: use a select for 2–3 options, or a toggle that needs a Save button.
 
+## Save is always findable
+
+Show the Save or Continue button from the start. With explicit save, it can sit in a quiet state until something changes and then become the solid primary button; an "unsaved changes" bar may add to it, never replace it. With auto-save, say so next to the section ("Changes save automatically") and confirm each save quietly.
+
 ## Common mistakes
 - Placeholder-only fields, so the label disappears mid-typing.
 - Error text that says "Invalid" with no fix, or errors shown only as a red border.

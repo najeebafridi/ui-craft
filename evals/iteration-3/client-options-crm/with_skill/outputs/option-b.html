@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts - Mockup v1 (sample data)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Hanken+Grotesk:wght@300;400;500&display=swap">
+<style>
+:root{color-scheme:light;--bg:#FCF9F3;--surface:#FFFEFD;--surface-2:#F8F3EB;--surface-3:#EDE7DE;--border:#E8E2D8;--border-strong:#938A7B;--text:#21190C;--text-muted:#60584A;--text-subtle:#766D5F;--accent:#0B4834;--accent-hover:#003C29;--accent-fg:#fff;--accent-soft:#E7F4EE;--accent-text:#0B4834;--focus:#0B4834;--success-text:#00783B;--warning-text:#8E5300;--info-text:#0065B0;--font-display:"Cormorant Garamond",ui-serif,Georgia,serif;--font-sans:"Hanken Grotesk",ui-sans-serif,system-ui,"Segoe UI",sans-serif;--text-body:16px;--dur-fast:180ms}
+*{box-sizing:border-box}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 var(--text-body)/1.5 var(--font-sans);-webkit-font-smoothing:antialiased}
+h1,h2,p{margin:0}h1,h2{text-wrap:balance}.chip{min-width:44px}
+button,input{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+[hidden]{display:none!important}
+.num{font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.badge i{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.s-info{color:var(--info-text)}.s-accent{color:var(--accent-text)}.s-warning{color:var(--warning-text)}.s-success{color:var(--success-text)}.s-neutral{color:var(--text-muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+header.top{border-bottom:1px solid var(--border)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;height:72px;gap:24px}
+.mark{font:500 24px/1 var(--font-display);letter-spacing:.01em}
+nav{display:flex;gap:32px;overflow-x:auto}
+nav a{font-size:12px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--text-muted);padding:8px 0;border-bottom:1px solid transparent;white-space:nowrap;transition:color var(--dur-fast),border-color var(--dur-fast)}
+nav a:hover{color:var(--text)}
+nav a[aria-current]{color:var(--text);border-color:var(--text)}
+.intro{padding:64px 0 32px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+h1{font:500 48px/1.1 var(--font-display);letter-spacing:-.03em}
+.sub{color:var(--text-muted);margin-top:8px}
+.btn{height:48px;padding:0 32px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font-size:14px;letter-spacing:.04em;cursor:pointer;transition:background var(--dur-fast)}
+.btn:hover{background:var(--accent-hover)}.btn:active{transform:scale(.98)}
+.empty .btn{background:transparent;color:var(--text);border-color:var(--border-strong)}
+.tools{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--text);border-bottom:1px solid var(--border)}
+.chips{display:flex;gap:24px;overflow-x:auto;max-width:100%}
+.chip{background:none;border:0;border-bottom:1px solid transparent;padding:8px 0;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.chip:hover{color:var(--text)}
+.chip[aria-pressed=true]{color:var(--text);border-color:var(--accent)}
+.search input{height:48px;width:280px;max-width:100%;border:0;border-bottom:1px solid var(--border-strong);background:transparent;padding:0 4px;border-radius:0}
+.search input::placeholder{color:var(--text-subtle)}
+ul{list-style:none;margin:0;padding:0}
+li[data-row]{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,2fr) minmax(0,1.4fr) 120px;gap:24px;align-items:center;padding:24px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background var(--dur-fast)}
+li[data-row]:hover,li[aria-selected=true]{background:var(--surface-2)}
+.name{font:500 24px/1.2 var(--font-display);letter-spacing:-.015em}
+.role{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-top:4px}
+.budget{color:var(--text-muted);font-size:14px;margin-top:4px}
+.agent{font-size:14px;color:var(--text-muted);margin-top:4px}
+.last{text-align:right;font-size:14px;color:var(--text-muted)}
+.badge{font-size:14px;color:var(--text)!important}
+.badge i{width:6px;height:6px;border-radius:0;transform:rotate(45deg)}
+.badge.s-success i{background:var(--success-text)}.badge.s-warning i{background:var(--warning-text)}.badge.s-info i{background:var(--info-text)}.badge.s-accent i{background:var(--accent)}.badge.s-neutral i{background:var(--text-subtle)}
+.meta{display:flex;justify-content:space-between;padding:24px 0 64px;color:var(--text-muted);font-size:14px}
+.empty{padding:64px 0;text-align:center}.empty h2{font:500 30px var(--font-display)}.empty p{color:var(--text-muted);margin:8px 0 24px}
+@media (max-width:860px){.wrap{padding:0 16px}h1{font-size:36px}.intro{padding:32px 0 24px}li[data-row]{grid-template-columns:1fr auto;gap:8px 16px;padding:16px 0}li[hidden]{display:none}li .pcol{grid-column:1/-1;grid-row:2}li .last{grid-column:2;grid-row:1}li .scol{grid-column:1/-1}header nav{display:none}}
+@media (max-width:640px),(pointer:coarse){.btn,.chip,.search input{min-height:44px}.search input{font-size:16px}.chip{padding:12px 0}}
+
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><span class="mark">Harbourline</span><nav aria-label="Primary"><a href="#">Overview</a><a href="#" aria-current="page">Clients</a><a href="#">Viewings</a><a href="#">Portfolio</a></nav></div></header>
+<main class="wrap">
+ <div class="intro"><div><h1>Clients</h1><p class="sub">Twelve relationships under care, most recent first.</p></div><button class="btn" type="button">Add client</button></div>
+ <div class="tools"><div class="chips" role="group" aria-label="Filter by type"><button type="button" class="chip" data-stage="all" aria-pressed="true">All</button><button type="button" class="chip" data-stage="Buyer" aria-pressed="false">Buyers</button><button type="button" class="chip" data-stage="Seller" aria-pressed="false">Sellers</button><button type="button" class="chip" data-stage="Landlord" aria-pressed="false">Landlords</button><button type="button" class="chip" data-stage="Investor" aria-pressed="false">Investors</button></div>
+ <div class="search"><label class="sr" for="q">Search clients</label><input id="q" type="search" placeholder="Search by name or suburb"></div></div>
+ <ul>
+  <li data-row data-i="0" data-group="Buyer"><div><div class="name">Priya Raman</div><div class="role">Buyer</div></div><div class="pcol"><div>3-bed townhouse, Fitzroy North</div><div class="budget num">$1.1M - $1.3M</div></div><div class="scol"><span class="badge s-accent"><i></i>Viewing booked</span><div class="agent">With Tom Hayes</div></div><div class="last">Today</div></li>
+  <li data-row data-i="1" data-group="Seller"><div><div class="name">Marcus & Elena Doyle</div><div class="role">Seller</div></div><div class="pcol"><div>14 Banksia Street, Brunswick</div><div class="budget num">Listing $1.45M</div></div><div class="scol"><span class="badge s-warning"><i></i>Offer received</span><div class="agent">With Anna Kovac</div></div><div class="last">2h ago</div></li>
+  <li data-row data-i="2" data-group="Investor"><div><div class="name">Samuel Okafor</div><div class="role">Investor</div></div><div class="pcol"><div>Off-the-plan units, Footscray</div><div class="budget num">$600K - $750K</div></div><div class="scol"><span class="badge s-neutral"><i></i>Nurturing</span><div class="agent">With Tom Hayes</div></div><div class="last">3 days ago</div></li>
+  <li data-row data-i="3" data-group="Buyer"><div><div class="name">Hannah Whitfield</div><div class="role">Buyer</div></div><div class="pcol"><div>2-bed apartment, Carlton</div><div class="budget num">$750K - $850K</div></div><div class="scol"><span class="badge s-info"><i></i>New lead</span><div class="agent">With Anna Kovac</div></div><div class="last">Yesterday</div></li>
+  <li data-row data-i="4" data-group="Landlord"><div><div class="name">Daniel Nguyen</div><div class="role">Landlord</div></div><div class="pcol"><div>Lease renewal, 6/22 Rae Street</div><div class="budget num">$620 per week</div></div><div class="scol"><span class="badge s-success"><i></i>Under contract</span><div class="agent">With Mei Tanaka</div></div><div class="last">4 Nov</div></li>
+  <li data-row data-i="5" data-group="Seller"><div><div class="name">Grace Alderton</div><div class="role">Seller</div></div><div class="pcol"><div>31 Station Road, Northcote</div><div class="budget num">Est. $1.8M</div></div><div class="scol"><span class="badge s-info"><i></i>Appraisal booked</span><div class="agent">With Tom Hayes</div></div><div class="last">Mon</div></li>
+  <li data-row data-i="6" data-group="Buyer"><div><div class="name">Viktor Petrov</div><div class="role">Buyer</div></div><div class="pcol"><div>4-bed house, Coburg</div><div class="budget num">$1.3M - $1.5M</div></div><div class="scol"><span class="badge s-warning"><i></i>Offer made</span><div class="agent">With Mei Tanaka</div></div><div class="last">Yesterday</div></li>
+  <li data-row data-i="7" data-group="Buyer"><div><div class="name">Aisha Rahman</div><div class="role">Buyer</div></div><div class="pcol"><div>Any 2-bed near Merri Creek</div><div class="budget num">$650K - $720K</div></div><div class="scol"><span class="badge s-info"><i></i>New lead</span><div class="agent">With Anna Kovac</div></div><div class="last">5 days ago</div></li>
+  <li data-row data-i="8" data-group="Investor"><div><div class="name">Callum Reid</div><div class="role">Investor</div></div><div class="pcol"><div>Duplex, Preston</div><div class="budget num">$1.0M - $1.2M</div></div><div class="scol"><span class="badge s-accent"><i></i>Viewing booked</span><div class="agent">With Tom Hayes</div></div><div class="last">Today</div></li>
+  <li data-row data-i="9" data-group="Seller"><div><div class="name">Lucia Moretti</div><div class="role">Seller</div></div><div class="pcol"><div>22 Hope Street, Brunswick West</div><div class="budget num">Est. $1.2M</div></div><div class="scol"><span class="badge s-neutral"><i></i>Nurturing</span><div class="agent">With Mei Tanaka</div></div><div class="last">2 weeks ago</div></li>
+  <li data-row data-i="10" data-group="Buyer"><div><div class="name">Ben & Jo Carter</div><div class="role">Buyer</div></div><div class="pcol"><div>3-bed house, Thornbury</div><div class="budget num">$1.05M</div></div><div class="scol"><span class="badge s-success"><i></i>Under contract</span><div class="agent">With Anna Kovac</div></div><div class="last">3 Nov</div></li>
+  <li data-row data-i="11" data-group="Landlord"><div><div class="name">Fatima Haddad</div><div class="role">Landlord</div></div><div class="pcol"><div>2 investment units, Reservoir</div><div class="budget num">$540 per week</div></div><div class="scol"><span class="badge s-info"><i></i>Appraisal booked</span><div class="agent">With Mei Tanaka</div></div><div class="last">Tue</div></li>
+ </ul>
+ <div id="empty" class="empty" hidden><h2>No contacts match</h2><p>Try a different name or suburb, or clear the filters.</p><button type="button" class="btn" id="clear">Clear filters</button></div>
+ <div class="meta"><span id="count" aria-live="polite">12 contacts</span><span>Sample data for mockup</span></div>
+</main>
+<script>
+const q=document.getElementById('q'),chips=[...document.querySelectorAll('[data-stage]')],rows=[...document.querySelectorAll('[data-row]')],cnt=document.getElementById('count'),empty=document.getElementById('empty');
+let st='all';
+function f(){const t=q.value.trim().toLowerCase();let n=0;rows.forEach(r=>{const ok=(st==='all'||r.dataset.group===st)&&(!t||r.textContent.toLowerCase().includes(t));r.hidden=!ok;if(ok)n++});cnt.textContent=n+(n===1?' contact':' contacts');empty.hidden=n>0}
+q.addEventListener('input',f);
+chips.forEach(c=>c.addEventListener('click',()=>{st=c.dataset.stage;chips.forEach(x=>x.setAttribute('aria-pressed',x===c));f()}));
+document.getElementById('clear')?.addEventListener('click',()=>{q.value='';st='all';chips.forEach(x=>x.setAttribute('aria-pressed',x.dataset.stage==='all'));f();q.focus()});
+rows.forEach(r=>r.addEventListener('click',e=>{if(e.target.closest('a,button'))return;rows.forEach(x=>x.removeAttribute('aria-selected'));r.setAttribute('aria-selected','true');window.pick&&window.pick(+r.dataset.i)}));
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}});
+</script>
+</body>
+</html>

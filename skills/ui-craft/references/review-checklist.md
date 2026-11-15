@@ -7,6 +7,11 @@ Load this before you say a screen is done. Answer each line yes or no. Fix every
 - [ ] There is one signature detail, built with care, and nothing competes with it.
 - [ ] Platform conventions are respected (navigation, back, system font and controls on native).
 
+## Working state
+- [ ] The first view shows the screen in use: real data, sensible defaults selected, the main interaction and main action visible.
+- [ ] No dead space: no card stretched to match a neighbour, no mostly-empty panel, no dead "$0" totals.
+- [ ] Nothing floating covers content at any width.
+
 ## Purpose & hierarchy
 - [ ] The one primary task of this screen is clear within 3 seconds.
 - [ ] There is exactly one solid primary button per screen or section.

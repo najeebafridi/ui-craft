@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts - Mockup v1 (sample data)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{color-scheme:light;--bg:#FBF9F6;--surface:#FFFEFD;--surface-2:#F6F3EF;--surface-3:#EBE7E3;--border:#E6E2DE;--border-strong:#8F8A83;--text:#1E1A14;--text-muted:#5D5852;--text-subtle:#726D66;--accent:#1C6FD2;--accent-hover:#0461C3;--accent-fg:#fff;--accent-soft:#E7F1FF;--accent-text:#156ACD;--focus:#1C6FD2;--success-text:#00783B;--warning-text:#8E5300;--info-text:#0065B0;--ring:rgb(39 32 24/.08);--font-sans:"Inter",ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;--text-body:14px;--radius-sm:6px;--radius:8px;--radius-lg:12px;--shadow-raised:0 0 0 1px var(--ring),0 1px 2px rgb(39 32 24/.06),0 2px 4px rgb(39 32 24/.05);--shadow-button:inset 0 1px 0 rgb(255 255 255/.18),0 1px 2px rgb(39 32 24/.14);--control-h:36px;--dur-fast:120ms}
+*{box-sizing:border-box}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 var(--text-body)/1.5 var(--font-sans);-webkit-font-smoothing:antialiased}
+h1,h2,p{margin:0}h1,h2{text-wrap:balance}.chip{min-width:44px}
+button,input{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+[hidden]{display:none!important}
+.num{font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.badge i{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.s-info{color:var(--info-text)}.s-accent{color:var(--accent-text)}.s-warning{color:var(--warning-text)}.s-success{color:var(--success-text)}.s-neutral{color:var(--text-muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.side{background:var(--surface-2);border-right:1px solid var(--border);padding:16px 12px;display:flex;flex-direction:column;gap:24px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:8px;padding:0 8px;font-weight:600;font-size:16px;letter-spacing:-.01em}
+.brand b{width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:12px}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav a{display:flex;align-items:center;gap:12px;height:36px;padding:0 8px;border-radius:var(--radius-sm);text-decoration:none;color:var(--text-muted);font-weight:500;transition:background var(--dur-fast),color var(--dur-fast)}
+.nav a:hover{background:var(--surface-3);color:var(--text)}
+.nav a[aria-current]{background:var(--surface);color:var(--text);box-shadow:var(--shadow-raised)}
+.me{margin-top:auto;display:flex;gap:8px;align-items:center;padding:8px;font-size:14px}
+.av{width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;font-size:12px;font-weight:600;flex:none}
+main{padding:32px;max-width:1280px;width:100%}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font-size:24px;line-height:1.25;font-weight:600;letter-spacing:-.022em}
+.sub{color:var(--text-muted);margin-top:4px}
+.btn{height:var(--control-h);padding:0 16px;border-radius:var(--radius);border:1px solid var(--border-strong);background:var(--surface);font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background var(--dur-fast),transform var(--dur-fast)}
+.btn:hover{background:var(--surface-2)}.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);box-shadow:var(--shadow-button)}
+.btn-primary:hover{background:var(--accent-hover)}
+.bar{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:24px 0 16px}
+.search{position:relative;flex:1 1 280px;max-width:360px}
+.search svg{position:absolute;left:12px;top:9px;color:var(--text-muted)}
+.search input{width:100%;height:36px;padding:0 12px 0 40px;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px;max-width:100%}
+.chip{height:32px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--text-muted);font-weight:500;cursor:pointer;white-space:nowrap}
+.chip:hover{background:var(--surface-3)}
+.chip[aria-pressed=true]{background:var(--accent-soft);border-color:transparent;color:var(--accent-text)}
+.card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-raised);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-weight:500;font-size:12px;color:var(--text-muted);padding:0 16px;height:36px;background:var(--surface-2);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:0 16px;height:48px;border-bottom:1px solid var(--border);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer;transition:background var(--dur-fast)}
+tbody tr:hover{background:var(--surface-2)}
+tbody tr[aria-selected=true]{background:var(--accent-soft)}
+.who{display:flex;gap:12px;align-items:center}
+.who strong{font-weight:500;display:block}
+.who small{color:var(--text-muted);font-size:12px}
+.prop{max-width:280px;overflow:hidden;text-overflow:ellipsis}
+.muted{color:var(--text-muted)}
+.foot{padding:12px 16px;color:var(--text-muted);border-top:1px solid var(--border);font-size:12px;display:flex;justify-content:space-between}
+.empty{padding:48px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty h2{font-size:16px}.empty p{color:var(--text-muted);margin-bottom:8px}
+.top{display:none}
+@media (max-width:1024px){.app{grid-template-columns:minmax(0,1fr)}.side{display:none}.top{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface-2);border-bottom:1px solid var(--border)}main{padding:24px 16px 48px}}
+@media (max-width:760px){
+ thead{display:none}
+ table,tbody{display:block}
+ tbody tr{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+ tbody tr[hidden]{display:none}
+ td{display:block;height:auto;padding:0;border:0;white-space:normal}
+ td.c-who{grid-column:1/2}td.c-stage{grid-column:2/3;grid-row:1}
+ td.c-prop{grid-column:1/-1;padding-left:40px}td.c-budget,td.c-agent,td.c-last{display:none}
+ .prop{max-width:none}
+}
+@media (max-width:640px),(pointer:coarse){.btn,.search input{min-height:44px}.chip{min-height:44px}.nav a{min-height:44px}.search input{font-size:16px}.search svg{top:13px}}
+
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side" aria-label="Main">
+ <div class="brand"><b>H</b>Harbourline</div>
+ <nav class="nav" aria-label="Primary">
+  <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></svg>Dashboard</a>
+  <a href="#" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>Contacts</a>
+  <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v16H3zM3 10h18M8 3v4M16 3v4"/></svg>Viewings</a>
+  <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Reports</a>
+  <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Settings</a>
+ </nav>
+ <div class="me"><span class="av">TH</span><span>Tom Hayes</span></div>
+</aside>
+<div>
+<div class="top"><div class="brand"><b>H</b>Harbourline</div><span class="av">TH</span></div>
+<main>
+ <div class="head"><div><h1>Contacts</h1><p class="sub">Buyers, sellers, landlords and investors across your agency</p></div>
+ <button class="btn btn-primary" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Add contact</button></div>
+ <div class="bar">
+  <div class="search"><label class="sr" for="q">Search contacts</label><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm10 2-4.3-4.3"/></svg><input id="q" type="search" placeholder="Search name, suburb or phone"></div>
+  <div class="chips" role="group" aria-label="Filter by type"><button type="button" class="chip" data-stage="all" aria-pressed="true">All</button><button type="button" class="chip" data-stage="Buyer" aria-pressed="false">Buyers</button><button type="button" class="chip" data-stage="Seller" aria-pressed="false">Sellers</button><button type="button" class="chip" data-stage="Landlord" aria-pressed="false">Landlords</button><button type="button" class="chip" data-stage="Investor" aria-pressed="false">Investors</button></div>
+ </div>
+ <div class="card">
+ <table>
+  <thead><tr><th>Name</th><th>Stage</th><th>Interested in</th><th>Budget</th><th>Agent</th><th>Last contact</th></tr></thead>
+  <tbody>
+   <tr data-row data-i="0" data-group="Buyer"><td class="c-who"><div class="who"><span class="av">PR</span><div><strong>Priya Raman</strong><small>Buyer</small></div></div></td><td class="c-stage"><span class="badge s-accent"><i></i>Viewing booked</span></td><td class="c-prop"><div class="prop">3-bed townhouse, Fitzroy North</div></td><td class="c-budget num">$1.1M - $1.3M</td><td class="c-agent muted">Tom Hayes</td><td class="c-last muted">Today</td></tr>
+   <tr data-row data-i="1" data-group="Seller"><td class="c-who"><div class="who"><span class="av">ME</span><div><strong>Marcus & Elena Doyle</strong><small>Seller</small></div></div></td><td class="c-stage"><span class="badge s-warning"><i></i>Offer received</span></td><td class="c-prop"><div class="prop">14 Banksia Street, Brunswick</div></td><td class="c-budget num">Listing $1.45M</td><td class="c-agent muted">Anna Kovac</td><td class="c-last muted">2h ago</td></tr>
+   <tr data-row data-i="2" data-group="Investor"><td class="c-who"><div class="who"><span class="av">SO</span><div><strong>Samuel Okafor</strong><small>Investor</small></div></div></td><td class="c-stage"><span class="badge s-neutral"><i></i>Nurturing</span></td><td class="c-prop"><div class="prop">Off-the-plan units, Footscray</div></td><td class="c-budget num">$600K - $750K</td><td class="c-agent muted">Tom Hayes</td><td class="c-last muted">3 days ago</td></tr>
+   <tr data-row data-i="3" data-group="Buyer"><td class="c-who"><div class="who"><span class="av">HW</span><div><strong>Hannah Whitfield</strong><small>Buyer</small></div></div></td><td class="c-stage"><span class="badge s-info"><i></i>New lead</span></td><td class="c-prop"><div class="prop">2-bed apartment, Carlton</div></td><td class="c-budget num">$750K - $850K</td><td class="c-agent muted">Anna Kovac</td><td class="c-last muted">Yesterday</td></tr>
+   <tr data-row data-i="4" data-group="Landlord"><td class="c-who"><div class="who"><span class="av">DN</span><div><strong>Daniel Nguyen</strong><small>Landlord</small></div></div></td><td class="c-stage"><span class="badge s-success"><i></i>Under contract</span></td><td class="c-prop"><div class="prop">Lease renewal, 6/22 Rae Street</div></td><td class="c-budget num">$620 per week</td><td class="c-agent muted">Mei Tanaka</td><td class="c-last muted">4 Nov</td></tr>
+   <tr data-row data-i="5" data-group="Seller"><td class="c-who"><div class="who"><span class="av">GA</span><div><strong>Grace Alderton</strong><small>Seller</small></div></div></td><td class="c-stage"><span class="badge s-info"><i></i>Appraisal booked</span></td><td class="c-prop"><div class="prop">31 Station Road, Northcote</div></td><td class="c-budget num">Est. $1.8M</td><td class="c-agent muted">Tom Hayes</td><td class="c-last muted">Mon</td></tr>
+   <tr data-row data-i="6" data-group="Buyer"><td class="c-who"><div class="who"><span class="av">VP</span><div><strong>Viktor Petrov</strong><small>Buyer</small></div></div></td><td class="c-stage"><span class="badge s-warning"><i></i>Offer made</span></td><td class="c-prop"><div class="prop">4-bed house, Coburg</div></td><td class="c-budget num">$1.3M - $1.5M</td><td class="c-agent muted">Mei Tanaka</td><td class="c-last muted">Yesterday</td></tr>
+   <tr data-row data-i="7" data-group="Buyer"><td class="c-who"><div class="who"><span class="av">AR</span><div><strong>Aisha Rahman</strong><small>Buyer</small></div></div></td><td class="c-stage"><span class="badge s-info"><i></i>New lead</span></td><td class="c-prop"><div class="prop">Any 2-bed near Merri Creek</div></td><td class="c-budget num">$650K - $720K</td><td class="c-agent muted">Anna Kovac</td><td class="c-last muted">5 days ago</td></tr>
+   <tr data-row data-i="8" data-group="Investor"><td class="c-who"><div class="who"><span class="av">CR</span><div><strong>Callum Reid</strong><small>Investor</small></div></div></td><td class="c-stage"><span class="badge s-accent"><i></i>Viewing booked</span></td><td class="c-prop"><div class="prop">Duplex, Preston</div></td><td class="c-budget num">$1.0M - $1.2M</td><td class="c-agent muted">Tom Hayes</td><td class="c-last muted">Today</td></tr>
+   <tr data-row data-i="9" data-group="Seller"><td class="c-who"><div class="who"><span class="av">LM</span><div><strong>Lucia Moretti</strong><small>Seller</small></div></div></td><td class="c-stage"><span class="badge s-neutral"><i></i>Nurturing</span></td><td class="c-prop"><div class="prop">22 Hope Street, Brunswick West</div></td><td class="c-budget num">Est. $1.2M</td><td class="c-agent muted">Mei Tanaka</td><td class="c-last muted">2 weeks ago</td></tr>
+   <tr data-row data-i="10" data-group="Buyer"><td class="c-who"><div class="who"><span class="av">BJ</span><div><strong>Ben & Jo Carter</strong><small>Buyer</small></div></div></td><td class="c-stage"><span class="badge s-success"><i></i>Under contract</span></td><td class="c-prop"><div class="prop">3-bed house, Thornbury</div></td><td class="c-budget num">$1.05M</td><td class="c-agent muted">Anna Kovac</td><td class="c-last muted">3 Nov</td></tr>
+   <tr data-row data-i="11" data-group="Landlord"><td class="c-who"><div class="who"><span class="av">FH</span><div><strong>Fatima Haddad</strong><small>Landlord</small></div></div></td><td class="c-stage"><span class="badge s-info"><i></i>Appraisal booked</span></td><td class="c-prop"><div class="prop">2 investment units, Reservoir</div></td><td class="c-budget num">$540 per week</td><td class="c-agent muted">Mei Tanaka</td><td class="c-last muted">Tue</td></tr>
+  </tbody>
+ </table>
+ <div id="empty" class="empty" hidden><h2>No contacts match</h2><p>Try a different name or suburb, or clear the filters.</p><button type="button" class="btn" id="clear">Clear filters</button></div>
+ <div class="foot"><span id="count" aria-live="polite">12 contacts</span><span>Sample data for mockup</span></div>
+ </div>
+</main></div></div>
+<script>
+const q=document.getElementById('q'),chips=[...document.querySelectorAll('[data-stage]')],rows=[...document.querySelectorAll('[data-row]')],cnt=document.getElementById('count'),empty=document.getElementById('empty');
+let st='all';
+function f(){const t=q.value.trim().toLowerCase();let n=0;rows.forEach(r=>{const ok=(st==='all'||r.dataset.group===st)&&(!t||r.textContent.toLowerCase().includes(t));r.hidden=!ok;if(ok)n++});cnt.textContent=n+(n===1?' contact':' contacts');empty.hidden=n>0}
+q.addEventListener('input',f);
+chips.forEach(c=>c.addEventListener('click',()=>{st=c.dataset.stage;chips.forEach(x=>x.setAttribute('aria-pressed',x===c));f()}));
+document.getElementById('clear')?.addEventListener('click',()=>{q.value='';st='all';chips.forEach(x=>x.setAttribute('aria-pressed',x.dataset.stage==='all'));f();q.focus()});
+rows.forEach(r=>r.addEventListener('click',e=>{if(e.target.closest('a,button'))return;rows.forEach(x=>x.removeAttribute('aria-selected'));r.setAttribute('aria-selected','true');window.pick&&window.pick(+r.dataset.i)}));
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}});
+</script>
+</body>
+</html>

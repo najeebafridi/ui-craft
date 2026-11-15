@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ui-craft options board: show 2–3 design options of the SAME screen side by side.
+     Put it next to the option files, e.g. option-a.html, option-b.html, option-c.html.
+     Edit the OPTIONS list at the bottom (file, name, one-line idea). Open in a browser. No build step. -->
+<title>Contacts list - Pick a direction (Mockup v1)</title>
+<style>
+:root{--bg:#F1F5F9;--surface:#FFF;--border:#E2E8F0;--border-strong:#7C8BA1;--text:#0F172A;--muted:#475569;--accent:#2563EB;--accent-fg:#FFF;--accent-soft:#EFF6FF;--font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 var(--font)}
+header{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:16px 24px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+h1{font-size:18px;margin:0;font-weight:600}
+header p{margin:4px 0 0;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:var(--surface);color:var(--text);padding:0 16px;height:36px;font:500 14px var(--font);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.board{display:grid;gap:24px;padding:24px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.opt{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.opt.chosen{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.opt-head{padding:12px 16px;border-bottom:1px solid var(--border)}
+.opt-head h2{font-size:16px;margin:0}
+.opt-head p{margin:4px 0 0;color:var(--muted)}
+.frame-wrap{position:relative;overflow:hidden;background:#fff;border-bottom:1px solid var(--border)}
+.frame-wrap iframe{position:absolute;top:0;left:0;border:0;transform-origin:0 0}
+.opt-foot{display:flex;flex-direction:column;gap:8px;padding:12px 16px}
+.opt-foot textarea{width:100%;min-height:64px;padding:8px 12px;border:1px solid var(--border-strong);border-radius:8px;font:16px/1.5 var(--font);resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{height:36px;padding:0 16px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:500 14px var(--font);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+footer{padding:0 24px 32px}
+@media (max-width:640px),(pointer:coarse){.btn,.seg button{height:44px} header{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Contacts list: pick a direction</h1>
+    <p>Same screen, same data, three looks. Choose one, or say what to mix.</p>
+  </div>
+  <div class="row">
+    <div class="seg" role="group" aria-label="Preview width">
+      <button type="button" data-w="1440" aria-pressed="true">Desktop</button>
+      <button type="button" data-w="390" aria-pressed="false">Phone</button>
+    </div>
+    <button type="button" class="btn btn-primary" id="copy">Copy my choice</button>
+  </div>
+</header>
+
+<div class="board" id="board"></div>
+<footer><p style="color:var(--muted)">Tip: click “Open full screen” to try an option for real. Your notes stay in this browser until you copy them.</p></footer>
+
+<script>
+// ---- Edit this list ----
+const OPTIONS = [
+  { file: "option-a.html", name: "A · Calm and clear", idea: "Sidebar, friendly blue, a clean table with avatars. For agents who work the list all day." },
+  { file: "option-b.html", name: "B · Refined and spacious", idea: "Serif names, hairlines, deep green, lots of space. For a boutique or premium-property agency." },
+  { file: "option-c.html", name: "C · Fast and dark", idea: "Dark, dense, keyboard-first with a contact preview panel. For busy teams on big screens." },
+];
+// ------------------------
+
+const KEY = "mk-options:" + location.pathname;
+let state; try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch { state = {}; }
+state.notes ||= {};
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {} };
+let width = 1440;
+const HEIGHT = { 1440: 900, 390: 844 };
+
+const board = document.getElementById("board");
+board.innerHTML = OPTIONS.map((o, i) => `
+  <article class="opt" data-i="${i}">
+    <div class="opt-head"><h2>${o.name}</h2><p>${o.idea}</p></div>
+    <div class="frame-wrap"><iframe src="${o.file}" title="${o.name} preview" loading="lazy" tabindex="-1"></iframe></div>
+    <div class="opt-foot">
+      <label for="n${i}" style="font-weight:500">What do you like or dislike?</label>
+      <textarea id="n${i}" data-i="${i}" placeholder="e.g. Like the chart, but the colours feel too strong"></textarea>
+      <div class="row">
+        <button type="button" class="btn pick" data-i="${i}">Choose this one</button>
+        <a class="btn" href="${o.file}" target="_blank" rel="noopener">Open full screen</a>
+      </div>
+    </div>
+  </article>`).join("");
+
+function layout() {
+  document.querySelectorAll(".frame-wrap").forEach(w => {
+    const f = w.querySelector("iframe");
+    const scale = Math.min(1, w.clientWidth / width);
+    f.style.width = width + "px"; f.style.height = HEIGHT[width] + "px";
+    f.style.transform = `scale(${scale})`;
+    w.style.height = HEIGHT[width] * scale + "px";
+  });
+}
+function paint() {
+  document.querySelectorAll(".opt").forEach(el => {
+    const chosen = +el.dataset.i === state.choice;
+    el.classList.toggle("chosen", chosen);
+    const b = el.querySelector(".pick"); b.textContent = chosen ? "Chosen" : "Choose this one";
+    b.classList.toggle("btn-primary", chosen); b.setAttribute("aria-pressed", chosen);
+  });
+  document.querySelectorAll("textarea").forEach(t => t.value = state.notes[t.dataset.i] || "");
+}
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => {
+  width = +b.dataset.w;
+  document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  layout();
+});
+board.addEventListener("click", e => { const b = e.target.closest(".pick"); if (b) { state.choice = +b.dataset.i; save(); paint(); } });
+board.addEventListener("input", e => { if (e.target.matches("textarea")) { state.notes[e.target.dataset.i] = e.target.value; save(); } });
+document.getElementById("copy").onclick = async () => {
+  const lines = [`${document.title}`, `Choice: ${state.choice != null ? OPTIONS[state.choice].name : "not chosen yet"}`, ""];
+  OPTIONS.forEach((o, i) => { if (state.notes[i]) lines.push(`${o.name}: ${state.notes[i]}`); });
+  const text = lines.join("\n");
+  try { await navigator.clipboard.writeText(text); document.getElementById("copy").textContent = "Copied"; } catch { prompt("Copy this:", text); }
+};
+addEventListener("resize", layout);
+layout(); paint();
+</script>
+</body>
+</html>

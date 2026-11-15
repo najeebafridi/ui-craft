@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choose your room · Maison Verane (mockup v1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/*
+ Design brief
+ Product: booking web app for a small group of boutique luxury hotels; step 2 of 3 (room selection)
+ Tone: quiet, unhurried, confident     Density: spacious (16px body)
+ Accent: bronze #7A5A2B on warm ivory   Neutrals: warm stone / espresso ink
+ Font: Cormorant Garamond (display) + Inter (text)   Radius: 2px (sharp, tailored)
+ Primary task: pick one room and rate, then continue to payment
+*/
+:root{
+  color-scheme: light;
+  --bg:#F7F3EC; --surface:#FFFFFF; --surface-2:#EFE9DE; --surface-3:#E4DCCD;
+  --border:#E1D9CA; --border-strong:#8C7F6C;
+  --text:#1F1A15; --text-muted:#5C5247; --text-subtle:#6B6054;
+  --accent:#7A5A2B; --accent-hover:#634620; --accent-soft:#F3EADB;
+  --ink:#1F1A15; --ink-hover:#38302A; --ink-fg:#F7F3EC;
+  --success-text:#35603F; --warning-text:#8A4B12;
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:32px;--space-7:48px;--space-8:64px;
+  --font-display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --font-sans:"Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --radius:2px;
+  --shadow-raised:0 1px 2px rgb(31 26 21/.06), 0 1px 3px rgb(31 26 21/.08);
+  --shadow-overlay:0 4px 8px rgb(31 26 21/.06), 0 16px 40px rgb(31 26 21/.16);
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --bar-h:88px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:96px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/24px var(--font-sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,dl,dd{margin:0;padding:0}
+ul{list-style:none}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.num{font-variant-numeric:tabular-nums}
+
+/* Header */
+.site-header{background:var(--surface);border-bottom:1px solid var(--border)}
+.header-inner{max-width:1280px;margin:0 auto;padding:16px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font:500 24px/1 var(--font-display);letter-spacing:.14em;text-transform:uppercase;color:var(--text);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.brand small{display:none}
+.header-link{font-size:14px;line-height:20px;color:var(--text-muted);text-decoration:none;min-height:44px;display:inline-flex;align-items:center;padding:0 4px}
+.header-link:hover{color:var(--text);text-decoration:underline;text-underline-offset:4px}
+
+/* Stepper */
+.steps{max-width:1280px;margin:0 auto;padding:0 16px}
+.steps ol{list-style:none;margin:0;padding:16px 0;display:flex;gap:8px;font-size:14px;line-height:20px;color:var(--text-muted);overflow-x:auto}
+.steps li{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.steps .n{width:24px;height:24px;border:1px solid var(--border-strong);border-radius:50%;display:inline-grid;place-items:center;font-size:12px;line-height:1}
+.steps .done .n{background:var(--accent);border-color:var(--accent);color:#fff}
+.steps .current{color:var(--text);font-weight:500}
+.steps .current .n{border-color:var(--ink);background:var(--ink);color:var(--ink-fg)}
+.steps li+li::before{content:"";width:16px;height:1px;background:var(--border-strong);margin-right:8px}
+
+/* Page */
+main{max-width:1280px;margin:0 auto;padding:16px 16px calc(var(--bar-h) + 32px + env(safe-area-inset-bottom))}
+.page-head{padding:16px 0 24px}
+.page-head h1{font:500 36px/1.1 var(--font-display);letter-spacing:-.005em}
+.page-head p{margin-top:8px;color:var(--text-muted);max-width:60ch}
+
+.stay{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;padding:16px 0;border-block:1px solid var(--border);margin-bottom:32px}
+.stay div{min-width:0}
+.stay dt{font-size:12px;line-height:16px;color:var(--text-subtle);letter-spacing:.04em;text-transform:uppercase}
+.stay dd{margin-top:4px;font-size:16px;line-height:24px;font-weight:500}
+.stay dd span{display:block;font-weight:400;font-size:14px;line-height:20px;color:var(--text-muted)}
+.stay a{grid-column:1/-1;font-size:14px;line-height:20px;color:var(--accent);text-underline-offset:4px;min-height:44px;display:inline-flex;align-items:center;justify-self:start}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px}
+
+/* Rate switch */
+.rate-head{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
+.rate-head h2{font:500 24px/1.2 var(--font-display);font-size:30px}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);padding:2px;gap:2px}
+.seg label{position:relative;cursor:pointer}
+.seg input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.seg span{display:flex;flex-direction:column;justify-content:center;min-height:56px;padding:8px 16px;border-radius:1px;transition:background-color .15s var(--ease-out),color .15s var(--ease-out)}
+.seg strong{font-weight:500;font-size:14px;line-height:20px}
+.seg em{font-style:normal;font-size:12px;line-height:16px;color:var(--text-muted)}
+.seg input:checked+span{background:var(--ink);color:var(--ink-fg)}
+.seg input:checked+span em{color:#D9CFBE}
+.seg input:not(:checked):hover+span{background:var(--surface-2)}
+.seg input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Room cards */
+.rooms{display:grid;gap:24px}
+.room{position:relative;display:grid;grid-template-columns:minmax(0,1fr);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);transition:border-color .2s var(--ease-out),box-shadow .2s var(--ease-out)}
+.room:hover{border-color:var(--border-strong)}
+.room.is-selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow-raised)}
+.room.is-soldout{background:transparent}
+.room.is-soldout .room-art svg{opacity:.5;filter:grayscale(.6)}
+.room-art{aspect-ratio:16/10;background:var(--surface-2);position:relative;overflow:hidden}
+.room-art svg{display:block;width:100%;height:100%}
+.tag{position:absolute;top:12px;left:12px;background:var(--ink);color:var(--ink-fg);font-size:12px;line-height:16px;padding:4px 8px;border-radius:var(--radius);letter-spacing:.02em}
+.tag.scarce{background:var(--surface);color:var(--warning-text);border:1px solid var(--warning-text)}
+.room-body{padding:24px 16px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.room h3{font:500 30px/1.1 var(--font-display)}
+.facts{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:14px;line-height:20px;color:var(--text-muted)}
+.facts li{display:flex;align-items:center;gap:6px}
+.facts svg{width:16px;height:16px;flex:none}
+.room-desc{color:var(--text-muted);max-width:56ch}
+.hl{display:flex;flex-wrap:wrap;gap:8px}
+.hl li{font-size:12px;line-height:16px;padding:4px 8px;background:var(--accent-soft);color:var(--accent-hover);border-radius:var(--radius)}
+details.more summary{cursor:pointer;font-size:14px;line-height:20px;color:var(--accent);min-height:44px;display:inline-flex;align-items:center;gap:8px;list-style:none;text-underline-offset:4px}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:"";width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s var(--ease-out)}
+details.more[open] summary::after{transform:rotate(-135deg)}
+details.more summary:hover{text-decoration:underline}
+details.more ul{display:grid;gap:8px;padding:8px 0 4px;font-size:14px;line-height:20px;color:var(--text-muted)}
+details.more li::before{content:"–";margin-right:8px;color:var(--accent)}
+
+.room-foot{display:flex;flex-direction:column;gap:16px;padding-top:16px;border-top:1px solid var(--border)}
+.price{display:flex;flex-direction:column;gap:2px}
+.price .per{font-family:var(--font-display);font-size:36px;line-height:1.1;font-weight:500}
+.price .per small{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-muted);font-weight:400}
+.price .total{font-size:14px;line-height:20px;color:var(--text-muted)}
+.price .was{text-decoration:line-through;color:var(--text-subtle);margin-right:6px}
+.policy{font-size:14px;line-height:20px;display:flex;gap:8px;align-items:flex-start;color:var(--text-muted)}
+.policy svg{width:16px;height:16px;flex:none;margin-top:2px}
+.policy.ok{color:var(--success-text)}
+.policy.warn{color:var(--warning-text)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:var(--radius);border:1px solid transparent;font-size:16px;font-weight:500;line-height:24px;cursor:pointer;text-decoration:none;transition:background-color .15s var(--ease-out),border-color .15s var(--ease-out),color .15s var(--ease-out),transform .1s var(--ease-out)}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--ink);color:var(--ink-fg)}
+.btn-primary:hover{background:var(--ink-hover)}
+.btn-secondary{background:transparent;color:var(--text);border-color:var(--border-strong)}
+.btn-secondary:hover{background:var(--surface-2)}
+.btn[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn[aria-pressed="true"]:hover{background:var(--accent-hover)}
+.btn[disabled]{background:var(--surface-3);color:var(--text-subtle);cursor:not-allowed;border-color:transparent}
+.btn.is-loading{pointer-events:none}
+.btn .spin{width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.room .btn{width:100%}
+.soldout-note{font-size:14px;line-height:20px;color:var(--text-muted);padding:12px 16px;border:1px dashed var(--border-strong);border-radius:var(--radius)}
+.soldout-note a{color:var(--accent);display:inline-block;padding:10px 4px;margin:-10px 0}
+
+/* Included */
+.included{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+.included h2{font:500 30px/1.1 var(--font-display)}
+.included>p{margin-top:8px;color:var(--text-muted);max-width:60ch}
+.inc-grid{display:grid;gap:24px 32px;margin-top:24px;grid-template-columns:minmax(0,1fr)}
+.inc-grid li{display:grid;grid-template-columns:24px 1fr;gap:12px}
+.inc-grid svg{width:24px;height:24px;color:var(--accent)}
+.inc-grid strong{display:block;font-weight:500}
+.inc-grid span{display:block;font-size:14px;line-height:20px;color:var(--text-muted);margin-top:2px}
+
+/* Summary */
+.summary{display:none}
+.summary h2{font:500 24px/1.2 var(--font-display);font-size:24px}
+.summary .sum-room{margin-top:16px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.summary .sum-room strong{display:block;font:500 20px/1.2 var(--font-display);font-size:20px}
+.summary .sum-room span{font-size:14px;line-height:20px;color:var(--text-muted)}
+.lines{display:grid;gap:8px;padding:16px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:20px}
+.lines div{display:flex;justify-content:space-between;gap:16px}
+.lines dt{color:var(--text-muted)}
+.lines dd{margin:0}
+.grand{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0}
+.grand dt{font-size:14px;color:var(--text-muted)}
+.grand dd{margin:0;font:500 30px/1.1 var(--font-display)}
+.summary .btn{width:100%}
+.summary .fine{margin-top:12px;font-size:12px;line-height:16px;color:var(--text-subtle);text-align:left}
+.sum-inc{margin-top:16px;padding-top:16px;border-top:1px solid var(--border);display:grid;gap:8px;font-size:14px;line-height:20px;color:var(--text-muted)}
+.sum-inc li{display:flex;gap:8px}
+.sum-inc svg{width:16px;height:16px;color:var(--success-text);flex:none;margin-top:2px}
+
+/* Mobile bar */
+.bar{position:fixed;inset:auto 0 0 0;z-index:20;background:var(--surface);border-top:1px solid var(--border-strong);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:var(--bar-h)}
+.bar .t{min-width:0}
+.bar .t span{display:block;font-size:12px;line-height:16px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .t strong{display:block;font:500 24px/1.1 var(--font-display)}
+.bar .btn{flex:none;padding:0 24px}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:calc(var(--bar-h) + 16px);transform:translate(-50%,8px);background:var(--ink);color:var(--ink-fg);padding:12px 16px;border-radius:var(--radius);font-size:14px;line-height:20px;opacity:0;pointer-events:none;transition:opacity .2s var(--ease-out),transform .2s var(--ease-out);box-shadow:var(--shadow-overlay);max-width:calc(100vw - 32px);z-index:30}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* Tablet */
+@media (min-width:640px){
+  .header-inner,.steps,main{padding-inline:24px}
+  .stay{grid-template-columns:repeat(4,auto) ;justify-content:space-between;align-items:start}
+  .stay a{grid-column:auto;justify-self:end;align-self:center}
+  .rate-head{flex-direction:row;align-items:flex-end;justify-content:space-between}
+  .seg{min-width:420px}
+  .room{grid-template-columns:240px minmax(0,1fr)}
+  .room-art{aspect-ratio:auto;min-height:100%}
+  .room-body{padding:24px}
+  .room-foot{flex-direction:row;align-items:center;justify-content:space-between;gap:24px}
+  .room-foot .actions{flex:none;width:200px}
+  .inc-grid{grid-template-columns:1fr 1fr}
+  .toast{bottom:calc(var(--bar-h) + 16px)}
+}
+@media (min-width:1024px){
+  .header-inner,.steps,main{padding-inline:32px}
+  .page-head h1{font-size:48px}
+  .layout{grid-template-columns:minmax(0,1fr) 360px;gap:48px;align-items:start}
+  .summary{display:block;position:sticky;top:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+  .bar{display:none}
+  main{padding-bottom:64px}
+  .room{grid-template-columns:320px minmax(0,1fr)}
+  .inc-grid{grid-template-columns:1fr 1fr}
+  .toast{bottom:32px}
+}
+@media (min-width:1440px){
+  .room{grid-template-columns:360px minmax(0,1fr)}
+}
+
+/* Touch */
+@media (max-width:640px),(pointer:coarse){
+  button,.btn,summary{min-height:44px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 18V6M3 14h18v4M21 14v-2a3 3 0 00-3-3h-7v5M7 11.5h.01" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-area" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-guest" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-view" viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+    <symbol id="i-cup" viewBox="0 0 24 24"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5V9zM17 10h1.5a2.5 2.5 0 010 5H17M8 3v3M12 3v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><path d="M4 16v-4l2-5h12l2 5v4M4 16h16M4 16v2.5M20 16v2.5M7.5 13h.01M16.5 13h.01" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-spa" viewBox="0 0 24 24"><path d="M12 20c-4.5 0-8-3-8-8 4.5 0 8 3 8 8zm0 0c4.5 0 8-3 8-8-4.5 0-8 3-8 8zm0 0c-2-2.5-2-7 0-12 2 5 2 9.500 0 12z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 7.500V12l3 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wine" viewBox="0 0 24 24"><path d="M7 3h10l-.5 6a4.500 4.500 0 01-9 0L7 3zM12 13.500V20M8.500 20h7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M3 9.500a13 13 0 0118 0M6 13a8.500 8.500 0 0112 0M9 16.500a4 4 0 016 0M12 20h.01" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 11v5M12 8h.01" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.500" width="14" height="9.500" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 10.500V8a4 4 0 018 0v2.500" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#" aria-label="Maison Verane, home">Maison Verane</a>
+    <a class="header-link" href="#">Need help? +44 20 7946 0321</a>
+  </div>
+</header>
+
+<nav class="steps" aria-label="Booking progress">
+  <ol>
+    <li class="done"><span class="n"><svg width="12" height="12"><use href="#i-check"/></svg></span>Dates</li>
+    <li class="current" aria-current="step"><span class="n">2</span>Room</li>
+    <li><span class="n">3</span>Payment</li>
+  </ol>
+</nav>
+
+<main id="main">
+  <div class="page-head">
+    <h1>Choose your room</h1>
+    <p>Every stay includes breakfast served to your table and private airport transfer. Sample data for mockup purposes.</p>
+  </div>
+
+  <dl class="stay" aria-label="Your stay">
+    <div><dt>Hotel</dt><dd>Maison Verane Lake Como<span>Bellagio, Italy</span></dd></div>
+    <div><dt>Check-in</dt><dd>Fri 12 Jun 2026<span>from 3:00 pm</span></dd></div>
+    <div><dt>Check-out</dt><dd>Mon 15 Jun 2026<span>until 12:00 pm</span></dd></div>
+    <div><dt>Guests</dt><dd>2 adults<span>3 nights</span></dd></div>
+    <a href="#">Change dates</a>
+  </dl>
+
+  <div class="layout">
+    <div>
+      <div class="rate-head">
+        <h2>Available rooms</h2>
+        <fieldset style="border:0;padding:0;margin:0;min-width:0">
+          <legend class="sr-only">Rate type</legend>
+          <div class="seg">
+            <label><input type="radio" name="rate" value="flex" checked><span><strong>Flexible</strong><em>Free cancellation until 7 days before</em></span></label>
+            <label><input type="radio" name="rate" value="adv"><span><strong>Advance, save 12%</strong><em>Non-refundable, pay now</em></span></label>
+          </div>
+        </fieldset>
+      </div>
+
+      <ul class="rooms" id="rooms"></ul>
+
+      <section class="included" aria-labelledby="inc-h">
+        <h2 id="inc-h">Included in every stay</h2>
+        <p>The details we handle so that you do not have to.</p>
+        <ul class="inc-grid">
+          <li><svg aria-hidden="true"><use href="#i-cup"/></svg><div><strong>Breakfast at your table</strong><span>Served on the terrace or in your room, 7:00 to 11:30 am.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-car"/></svg><div><strong>Private transfer</strong><span>Chauffeured from Milan Malpensa or Linate, both ways.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-spa"/></svg><div><strong>Spa and thermal garden</strong><span>Unlimited access. Treatments are booked separately.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-clock"/></svg><div><strong>Late check-out until 2:00 pm</strong><span>Subject to availability, confirmed on the morning of departure.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-wine"/></svg><div><strong>Welcome aperitivo</strong><span>A glass of Franciacorta and local specialities on arrival.</span></div></li>
+          <li><svg aria-hidden="true"><use href="#i-wifi"/></svg><div><strong>Wi-Fi and concierge</strong><span>Complimentary, with a named concierge for the length of your stay.</span></div></li>
+        </ul>
+      </section>
+    </div>
+
+    <aside class="summary" aria-labelledby="sum-h">
+      <h2 id="sum-h">Your stay</h2>
+      <div class="sum-room"><strong id="s-name"></strong><span id="s-meta"></span></div>
+      <dl class="lines" id="s-lines"></dl>
+      <dl style="margin:0"><div class="grand"><dt>Total</dt><dd class="num" id="s-total"></dd></div></dl>
+      <button class="btn btn-primary js-continue" type="button">Continue to payment <svg width="20" height="20" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      <p class="fine" id="s-fine"></p>
+      <ul class="sum-inc">
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>Breakfast and private transfer</li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>Spa and thermal garden access</li>
+        <li><svg aria-hidden="true"><use href="#i-check"/></svg>Late check-out until 2:00 pm</li>
+      </ul>
+    </aside>
+  </div>
+</main>
+
+<div class="bar" role="region" aria-label="Booking total">
+  <div class="t"><span id="b-label"></span><strong class="num" id="b-total"></strong></div>
+  <button class="btn btn-primary js-continue" type="button">Continue <svg width="20" height="20" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var NIGHTS = 3, TAX = 0.10, ADV = 0.88;
+  var ROOMS = [
+    {id:'deluxe', name:'Deluxe Garden Room', area:38, bed:'King bed', guests:2, view:'Garden view', price:640, left:null,
+     desc:'A calm room of pale oak and linen, opening onto the terraced garden. Marble bathroom with a deep soaking bath.',
+     hl:['Soaking bath','Garden terrace'],
+     more:['Hand-stitched king bed, 400-thread linen','Marble bathroom, rain shower and bath','Nespresso Professional and tea selection','Complimentary minibar, refreshed daily'],
+     sky:['#E9DFCB','#D5C6A6'], ground:'#8E8467'},
+    {id:'junior', name:'Junior Suite with Terrace', area:52, bed:'King bed', guests:2, view:'Lake view', price:890, left:2,
+     desc:'Separate sitting area and a private terrace above the water. Our most requested room for a first stay.',
+     hl:['Private terrace','Lake view','Separate lounge'],
+     more:['Private terrace with daybed and breakfast table','Dressing room and walk-in wardrobe','Freestanding stone bath beside the window','Bang & Olufsen sound system'],
+     sky:['#DDE3E4','#B7C5C8'], ground:'#6E7F82'},
+    {id:'premier', name:'Premier Suite, Lake Front', area:68, bed:'King bed', guests:3, view:'Panoramic lake view', price:1240, left:1,
+     desc:'Corner suite with floor-to-ceiling windows on two sides, a dining table for four and a second bathroom.',
+     hl:['Corner windows','Dining area','Butler on request'],
+     more:['Two bathrooms, one with a steam shower','Dining table for four, private in-room dining','Fireplace in the lounge','Personal butler on request'],
+     sky:['#EADBD0','#CDAF9B'], ground:'#7B6252'},
+    {id:'residence', name:'The Residence', area:110, bed:'Two king beds', guests:4, view:'Lake and garden', price:2180, left:0,
+     desc:'The entire top floor: two bedrooms, a library and a rooftop terrace with a private plunge pool.',
+     hl:['Two bedrooms','Rooftop terrace','Plunge pool'],
+     more:[],
+     sky:['#E4E0D6','#C3BCA8'], ground:'#6F6A58'}
+  ];
+  var state = {room:'junior', rate:'flex'};
+  var $ = function(s,r){return (r||document).querySelector(s)};
+  var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+  var fmt = function(n){return '€' + Math.round(n).toLocaleString('en-GB')};
+  var nightly = function(r){return state.rate==='adv' ? r.price*ADV : r.price};
+
+  function art(r){
+    var id = 'g-'+r.id;
+    return '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of the '+r.name+'">'+
+      '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+r.sky[0]+'"/><stop offset="1" stop-color="'+r.sky[1]+'"/></linearGradient></defs>'+
+      '<rect width="320" height="200" fill="url(#'+id+')"/>'+
+      '<rect x="190" y="26" width="104" height="116" fill="#F7F3EC" opacity=".55"/>'+
+      '<path d="M190 100l30-26 22 18 20-14 32 24v40H190z" fill="'+r.ground+'" opacity=".5"/>'+
+      '<rect x="190" y="26" width="104" height="116" fill="none" stroke="#F7F3EC" stroke-width="3"/>'+
+      '<path d="M242 26v116M190 84h104" stroke="#F7F3EC" stroke-width="2"/>'+
+      '<rect x="0" y="150" width="320" height="50" fill="'+r.ground+'" opacity=".35"/>'+
+      '<rect x="26" y="102" width="132" height="48" rx="2" fill="#FBF8F2"/>'+
+      '<rect x="26" y="84" width="14" height="66" fill="#3A322A"/>'+
+      '<rect x="40" y="104" width="118" height="14" fill="#E6DCCB"/>'+
+      '<rect x="46" y="94" width="34" height="14" rx="4" fill="#fff"/>'+
+      '<rect x="86" y="94" width="34" height="14" rx="4" fill="#fff"/>'+
+      '<rect x="22" y="150" width="140" height="6" fill="#3A322A" opacity=".5"/>'+
+    '</svg>';
+  }
+
+  function ico(n){return '<svg aria-hidden="true"><use href="#i-'+n+'"/></svg>'}
+
+  function renderRooms(){
+    var html = ROOMS.map(function(r){
+      var sold = r.left===0, sel = state.room===r.id && !sold;
+      var tag = sold ? '<span class="tag">Sold out for your dates</span>' : (r.left && r.left<=2 ? '<span class="tag scarce">Only '+r.left+' left</span>' : '');
+      var per = nightly(r), total = per*NIGHTS;
+      var policy = state.rate==='adv'
+        ? '<p class="policy warn">'+ico('lock')+'<span>Non-refundable. Charged in full when you book.</span></p>'
+        : '<p class="policy ok">'+ico('check')+'<span>Free cancellation until 5 Jun 2026. Pay at the hotel.</span></p>';
+      var more = r.more.length ? '<details class="more"><summary>Room details</summary><ul>'+r.more.map(function(m){return '<li>'+m+'</li>'}).join('')+'</ul></details>' : '';
+      var foot = sold
+        ? '<div class="soldout-note">Not available on 12 to 15 Jun. <a href="#">Join the waiting list</a> or ask our concierge about nearby dates.</div>'
+        : '<div class="room-foot"><div class="price"><span class="per num">'+(state.rate==='adv'?'<span class="was" style="font-family:var(--font-sans);font-size:14px;line-height:20px;font-weight:400">'+fmt(r.price)+'</span>':'')+fmt(per)+' <small>per night</small></span><span class="total num">'+fmt(total)+' for '+NIGHTS+' nights, before taxes</span>'+policy+'</div>'+
+          '<div class="actions"><button type="button" class="btn '+(sel?'':'btn-secondary')+'" data-room="'+r.id+'" aria-pressed="'+sel+'" aria-label="'+(sel?'Selected: ':'Select ')+r.name+'">'+(sel?'<svg width="20" height="20" aria-hidden="true"><use href="#i-check"/></svg>Selected':'Select this room')+'</button></div></div>';
+      return '<li class="room'+(sel?' is-selected':'')+(sold?' is-soldout':'')+'">'+
+        '<div class="room-art">'+art(r)+tag+'</div>'+
+        '<div class="room-body"><header><h3>'+r.name+'</h3></header>'+
+        '<ul class="facts"><li>'+ico('area')+r.area+' m²</li><li>'+ico('bed')+r.bed+'</li><li>'+ico('guest')+'Up to '+r.guests+' guests</li><li>'+ico('view')+r.view+'</li></ul>'+
+        '<p class="room-desc">'+r.desc+'</p>'+
+        '<ul class="hl">'+r.hl.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'+
+        more+foot+'</div></li>';
+    }).join('');
+    $('#rooms').innerHTML = html;
+  }
+
+  function current(){return ROOMS.filter(function(r){return r.id===state.room})[0]}
+
+  function renderSummary(){
+    var r = current(), per = nightly(r), sub = per*NIGHTS, tax = sub*TAX, total = sub+tax;
+    $('#s-name').textContent = r.name;
+    $('#s-meta').textContent = (state.rate==='adv'?'Advance rate, non-refundable':'Flexible rate') + ' · 2 adults';
+    var lines = '<div><dt>'+fmt(per)+' × '+NIGHTS+' nights</dt><dd class="num">'+fmt(sub)+'</dd></div>';
+    if(state.rate==='adv') lines += '<div><dt>Advance rate saving (12%)</dt><dd class="num">included</dd></div>';
+    lines += '<div><dt>Taxes and service (10%)</dt><dd class="num">'+fmt(tax)+'</dd></div>';
+    $('#s-lines').innerHTML = lines;
+    $('#s-total').textContent = fmt(total);
+    $('#s-fine').textContent = state.rate==='adv' ? 'You will be charged '+fmt(total)+' at the next step.' : 'You will not be charged until you arrive. A card is needed to hold the room.';
+    $('#b-label').textContent = r.name+' · '+NIGHTS+' nights, taxes included';
+    $('#b-total').textContent = fmt(total);
+  }
+
+  function render(){ renderRooms(); renderSummary(); }
+
+  var toastT;
+  function toast(msg){
+    var t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(function(){t.classList.remove('show')},5000);
+  }
+
+  $('#rooms').addEventListener('click', function(e){
+    var b = e.target.closest('[data-room]'); if(!b) return;
+    var open = $$('details[open]').map(function(d){return d.closest('.room').querySelector('h3').textContent});
+    state.room = b.getAttribute('data-room'); render();
+    $$('.room').forEach(function(el){ if(open.indexOf(el.querySelector('h3').textContent)>-1){ var d=$('details',el); if(d) d.open=true; } });
+    var nb = $('[data-room="'+state.room+'"]'); if(nb) nb.focus();
+  });
+  $$('input[name=rate]').forEach(function(i){
+    i.addEventListener('change', function(){ state.rate = i.value; render(); });
+  });
+  $$('.js-continue').forEach(function(b){
+    b.addEventListener('click', function(){
+      var label = b.innerHTML; b.classList.add('is-loading'); b.disabled = true;
+      b.innerHTML = '<span class="spin" aria-hidden="true"></span>Preparing payment';
+      setTimeout(function(){
+        b.classList.remove('is-loading'); b.disabled = false; b.innerHTML = label;
+        toast('Mockup: this would open the payment step for '+current().name+'.');
+      }, 900);
+    });
+  });
+  render();
+})();
+</script>
+</body>
+</html>

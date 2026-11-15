@@ -22,7 +22,8 @@ async function cdp(wsUrl) {
   await new Promise((r, j) => { ws.onopen = r; ws.onerror = j; });
   let id = 0; const pending = new Map(); const listeners = [];
   ws.onmessage = (m) => { const d = JSON.parse(m.data); if (d.id && pending.has(d.id)) { pending.get(d.id)(d); pending.delete(d.id); } else listeners.forEach((f) => f(d)); };
-  const send = (method, params = {}) => new Promise((r) => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
+  // every command gives up after 20s, so one stuck page can never hang the run
+  const send = (method, params = {}) => new Promise((r) => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); setTimeout(() => { if (pending.delete(i)) r({ error: { message: method + " timed out" } }); }, 20000); });
   return { send, on: (f) => listeners.push(f), close: () => ws.close() };
 }
 
@@ -80,6 +81,7 @@ async function measure(file, outDir) {
     const t = await (await fetch(`http://127.0.0.1:${PORT}/json/new?about:blank`, { method: "PUT" })).json();
     const c = await cdp(t.webSocketDebuggerUrl);
     await c.send("Page.enable"); await c.send("Runtime.enable");
+    c.on((d) => { if (d.method === "Page.javascriptDialogOpening") c.send("Page.handleJavaScriptDialog", { accept: true }); });  // alerts and "leave page?" prompts would block everything
     await c.send("Emulation.setDeviceMetricsOverride", { width: w, height: h, deviceScaleFactor: 1, mobile });
     if (mobile) await c.send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
     const loaded = new Promise((r) => c.on((d) => d.method === "Page.loadEventFired" && r()));
@@ -108,3 +110,4 @@ try {
     console.log("ok", run, files.length, "file(s)");
   }
 } finally { chrome.kill(); }
+process.exit(process.exitCode ?? 0);  // never wait on leftover browser connections

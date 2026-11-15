@@ -10,3 +10,5 @@ evals/*/*/*/screens/
 evals/*/*/*/audit/
 evals/review-test/*.png
 evals/skill-snapshot-v1/
+evals/*/blind-*/
+evals/*/*/*/screens-audit/

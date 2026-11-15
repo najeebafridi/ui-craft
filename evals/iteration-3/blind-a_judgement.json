@@ -1,0 +1,58 @@
+{
+  "ecommerce-dashboard": {
+    "X": {"premium":8,"hierarchy":7,"craft":7,"fit":9,"phone":6,"approve":8},
+    "Y": {"premium":6,"hierarchy":8,"craft":7,"fit":6,"phone":8,"approve":7},
+    "winner": "X",
+    "reason": "X has a real brand voice for a handmade candle shop: warm dark palette, serif headings, a single olive-green accent and editorial 'No. 01' best-seller numbering, with the headline sentence 'Sales are up on the previous 30 days' above a clear dashed comparison line. Y is cleaner and easier to scan, with a bold rust highlight on the top seller, but it reads as a generic light SaaS template.",
+    "winner_weaknesses": ["The sales chart card has a large dead empty block under the axis because it is stretched to match the tall stock list, which looks unfinished.", "At phone width the top nav is cramped, the stock list is very long with a checkbox per row before the best sellers, and the first stock row's red bar is hard to read on the dark brown."],
+    "manipulative_patterns": {"X": "none (urgency is factual days-left data)", "Y": "none"}
+  },
+  "settings-form": {
+    "X": {"premium":7,"hierarchy":8,"craft":7,"fit":7,"phone":7,"approve":8},
+    "Y": {"premium":8,"hierarchy":7,"craft":8,"fit":7,"phone":5,"approve":7},
+    "winner": "X",
+    "reason": "X uses a clear label-left, fields-right layout with horizontal tabs, section dividers, a live password-rules checklist and a separate bordered Delete account zone, so each task is easy to find and the page feels complete. Y has nicer type and a calm grouped notification card, but the notification rows break badly on a phone (each toggle drops to its own line) and there is no delete-account section.",
+    "winner_weaknesses": ["The left-label column leaves a big empty gutter on desktop, and the dark blue accents on near-black are somewhat generic.", "On phone the tab row is clipped ('Delete accou...') and tabs and sections both exist, so navigation is redundant; helper text is small and low-contrast."],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "mobile-booking": {
+    "X": {"premium":7,"hierarchy":8,"craft":7,"fit":7,"phone":9,"approve":8},
+    "Y": {"premium":7,"hierarchy":6,"craft":8,"fit":7,"phone":6,"approve":6},
+    "winner": "X",
+    "reason": "X shows the whole flow with clear selected states (green-tinted card with a check), a date strip, grouped morning/afternoon/evening time slots with crossed-out booked times, and a sticky bar summarising 'Skin fade with Marcus $34.00' above a contextual CTA 'Review booking, Fri 13 Mar at 10:30'. Y has finer typography and a 2-column barber grid, but nothing is preselected, times are hidden behind 'Choose a barber first', and the footer shows a dead '£0' with a 'Choose a service' button.",
+    "winner_weaknesses": ["Very long single scroll with three stacked sections; the numbered 'Step 1 of 3' labels all appear at once, which is confusing.", "Visually plain: same white-card-with-green pattern repeated, and the barber avatars are initials only so a barbershop brand feel is weak; some text is small and grey."],
+    "manipulative_patterns": {"X": "none", "Y": "none (free cancellation note is factual)"}
+  },
+  "saas-landing-page": {
+    "X": {"premium":7,"hierarchy":8,"craft":7,"fit":8,"phone":8,"approve":7},
+    "Y": {"premium":6,"hierarchy":7,"craft":7,"fit":5,"phone":8,"approve":6},
+    "winner": "X",
+    "reason": "X has a memorable identity for a marketing-agency audience: saturated blue hero, a yellow highlighted 'The follow-up' in a tight bold headline, an offset-shadow meeting-notes card with realistic action items, and strong yellow trial CTAs repeated in the nav and hero. Y is tidy and legible with a good product mock, but the teal-on-white layout with a generic 'Your team talks' headline is a stock SaaS template with no distinct character.",
+    "winner_weaknesses": ["Very loud: heavy blue field, yellow band and thick offset shadows can feel more playful than trustworthy, and the yellow-on-blue combination is harsh over a long page.", "Visible gaps in the hero (large empty space under the card and CTAs) and the 'Made for agencies' strip is thin proof with no real customer evidence."],
+    "manipulative_patterns": {"X": "none ('14 days free, no card needed' is a factual offer)", "Y": "none"}
+  },
+  "client-options-crm": {
+    "X": {"premium":8,"hierarchy":7,"craft":8,"fit":8,"phone":7,"approve":8},
+    "Y": {"premium":6,"hierarchy":7,"craft":7,"fit":6,"phone":7,"approve":6},
+    "winner": "X",
+    "reason": "X gives three truly distinct directions: a friendly SaaS table with avatars and coloured stage dots, a serif editorial 'Clients' list with generous rows on warm paper, and a dark dense keyboard-driven table with a right-hand preview panel (mono numerals, '/' to search). Y's options are also different in kind (table, card grid, dark master-detail) but are more template-like, and the card grid with big serif prices and a Call button on every card is repetitive.",
+    "winner_weaknesses": ["Option 1 and the editorial option show only the list: no row actions, no bulk selection or sort affordance, so the practical value to agents is lower than the look.", "The dark option's small mono text and low-contrast grey meta feel tiny, and its right panel is mostly empty space."],
+    "manipulative_patterns": {"X": "none", "Y": "none (Hot/Warm/Cold labels are CRM status, not pressure on a user)"}
+  },
+  "luxury-hotel-booking": {
+    "X": {"premium":8,"hierarchy":8,"craft":7,"fit":8,"phone":7,"approve":8},
+    "Y": {"premium":6,"hierarchy":6,"craft":6,"fit":6,"phone":6,"approve":5},
+    "winner": "X",
+    "reason": "X feels restrained and expensive: a Cormorant-style serif for 'Choose your room' and room names, tracked small caps for the stage nav, thin hairline dividers, ample whitespace, a calm cream palette, and a clean 'Your stay' summary with a dark-green 'Continue to payment'. Y adds 'Only 2 left' and 'Only 1 left' badges, feature chips and a filled dark toggle bar, which cheapen it and put manipulation into a luxury context.",
+    "winner_weaknesses": ["The room images are flat vector illustrations of a bed and window, which are not photography and undercut the luxury claim; all rooms look nearly identical.", "'Select room' as a plain outline button plus the inline rate picker below make the flow slightly awkward, and the summary panel has an empty heavy top rule with lots of unused space."],
+    "manipulative_patterns": {"X": "none", "Y": "fake or unverified scarcity badges: 'Only 2 left', 'Only 1 left' on room cards"}
+  },
+  "mac-writing-app": {
+    "X": {"premium":6,"hierarchy":7,"craft":6,"fit":6,"phone":6,"approve":6},
+    "Y": {"premium":8,"hierarchy":8,"craft":8,"fit":8,"phone":7,"approve":8},
+    "winner": "Y",
+    "reason": "Y feels like a considered writing app: a quiet sidebar with grouped documents and word counts, a generous serif manuscript with an italic subtitle, a minimal title bar ('Saved to disk, 21:42', full-screen icon) and a floating goal capsule with a progress ring, '438 to go' and a small weekly bar chart. X reads more like a web app: heavy teal goal block in the sidebar, bold title and B/I toolbar, a bright 'Enter focus mode' button and a dense list with previews.",
+    "winner_weaknesses": ["The floating goal capsule overlaps the last line of text at the bottom, and on phone it covers the paragraph being read with no way to dismiss it.", "The weekly bars are unlabeled blue bars with no day or value, so they are decoration rather than information; the sidebar has no scannable selected-state beyond a plain blue fill."],
+    "manipulative_patterns": {"X": "none (goal streak days are mild gamification)", "Y": "none (goal ring is mild gamification)"}
+  }
+}

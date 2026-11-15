@@ -29,8 +29,9 @@ Numbers are in CSS px; for native apps read px as pt (iOS, macOS), dp (Android) 
    Primary task on this screen: review this month's run and approve it
    ```
 5. **Build structure first, then style.** Layout and hierarchy with real content, then the system (tokens), then detail. No lorem ipsum: write realistic names, numbers and copy. Build the signature early and keep everything else quieter than it.
+   **Show it working.** The first view is the screen in use: real data, sensible defaults already selected, the main interaction visible. Never open on an all-empty or locked state, a dead "$0" total, or a key step hidden until an earlier one is done.
 6. **Design every state**: loading, empty, error, success, long text, many items, one item, no permission (`.agents/skills/ui-craft/references/feedback-states.md`).
-7. **Finish and check.** Do the finishing pass in `.agents/skills/ui-craft/references/premium-craft.md`. Then **look at the result**: with Node and Chrome available, run `node .agents/skills/ui-craft/scripts/ui-audit.mjs page.html`. It scores contrast, sizes, tap targets and overflow at 1440px and 390px, notes craft problems, and saves screenshots; open them. Fix what you see, then remove anything that does not help the primary task. Checklist: `.agents/skills/ui-craft/references/review-checklist.md`.
+7. **Finish and check.** Do the finishing pass in `.agents/skills/ui-craft/references/premium-craft.md`. Then **look at the result**: with Node and Chrome available, run `node .agents/skills/ui-craft/scripts/ui-audit.mjs page.html`. It scores contrast, sizes, tap targets and overflow at 1440px and 390px, notes craft problems, and saves screenshots. **Open both screenshots and judge the phone one as strictly as the desktop one**: nothing clipped, covered or squeezed, the key content in the first screen. Fix what you see, then remove anything that does not help the primary task. Checklist: `.agents/skills/ui-craft/references/review-checklist.md`.
 
 Quick mockups for a client: `.agents/skills/ui-craft/references/mockups.md`. Reviewing or scoring an existing product: `.agents/skills/ui-craft/references/review-mode.md`.
 
@@ -63,6 +64,7 @@ Body text defaults to 16px; 14px only in dense desktop tools. Never below 12px. 
 - Page side padding: 16px mobile, 24px tablet, 32px or more desktop. Content max-width 1200-1440px (apps), 1120-1280px (marketing); reading text 65-75 characters.
 - Lay out with grid or flex and `gap`. Align on both axes: neighbours share left edges and baselines. Near-misses look amateur.
 - Outer padding is at least the inner gap. When unsure, add whitespace and remove a border.
+- **No dead space.** Do not stretch a card to match a taller neighbour (`align-items: start`), and do not leave a panel mostly empty: give it real content, shrink it, or remove it.
 - Density is a decision: spacious or compact, always exact. Breakpoints 640, 1024, 1440; check 375 and 1440 at minimum.
 
 Details: `.agents/skills/ui-craft/references/layout-spacing.md`.
@@ -109,10 +111,11 @@ Details: `.agents/skills/ui-craft/references/premium-craft.md`.
 - Buttons and inputs: 40px default, 32-36px compact, 44-48px touch. Horizontal padding about twice the vertical. Label = verb + object ("Create invoice"). Icon-only buttons need `aria-label` and a tooltip.
 - **Focus ring always visible** for keyboard users: 2px `--focus`, 2px offset. Never `outline: none` without a replacement.
 - Inputs: visible label above (a placeholder is not a label), `--border-strong` edge, helper text below, error below with icon and words. Long forms add an error summary on top.
+- A form's main action (Save, Continue) is visible from the start. It may look quieter until something changes; it never appears only after an edit.
 - A toggle switch takes effect at once; a checkbox applies on save.
 - Cards only for separate, comparable things. Not around every section; never cards inside cards.
 - Icons: one set, one stroke width, sized to the text beside them. Never emoji as icons.
-- Images: real content, fixed `aspect-ratio`, meaningful `alt`, a 1px inner outline. No placeholder services.
+- Images: real content, fixed `aspect-ratio`, meaningful `alt`, a 1px inner outline. No placeholder services. With no real photo yet, use a quiet tonal block in the final crop with a small caption ("Photograph: garden room"); never a crude drawing of the subject, which cheapens everything around it.
 - Modals only for short focused tasks; prefer inline editing or a side panel.
 - Destructive actions: danger colour, named ("Delete project"), confirmed or undoable. Undo beats confirm for frequent actions.
 
@@ -170,7 +173,7 @@ Details: `.agents/skills/ui-craft/references/motion.md`.
   }
   ```
 - **Nothing is wider than the screen.** Chip and date rows scroll inside their own box, flex and grid children get `min-width: 0`, long words wrap, tables become cards or a list of key fields on phones. Sideways page scroll at 390px is a bug.
-- A pinned bottom bar never hides content: pad the scroller by the bar's height plus the safe area. Respect `env(safe-area-inset-*)`.
+- A pinned bottom bar never hides content: pad the scroller by the bar's height plus the safe area. Respect `env(safe-area-inset-*)`. The same goes for anything floating (a goal pill, a chat button, a toolbar): dock it or reserve its space, at every width.
 
 Details: `.agents/skills/ui-craft/references/mobile-touch.md`.
 

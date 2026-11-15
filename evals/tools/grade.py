@@ -51,6 +51,18 @@ SPECIFIC = {
         ("No testimonials or customer quotes presented as real",
          lambda m, h: not re.search(r"testimonial|<blockquote", h, re.I), lambda m, h: "regex on HTML"),
     ],
+    "luxury-hotel-booking": [
+        ("Shows the total price for the whole stay before continuing",
+         lambda m, h: bool(re.search(r"total", h, re.I)), lambda m, h: "regex on text"),
+        ("No pressure tactics (fake scarcity, countdowns, 'only N left', 'hurry')",
+         lambda m, h: not re.search(r"only \d+ (rooms? )?left|hurry|selling fast|countdown|\d+ people (are )?(viewing|looking)", h, re.I), lambda m, h: "regex on text"),
+    ],
+    "mac-writing-app": [
+        ("Shows a daily word-count goal",
+         lambda m, h: bool(re.search(r"goal", h, re.I)) and bool(re.search(r"words?", h, re.I)), lambda m, h: "regex on text"),
+        ("Removes web habits from the app chrome (no text selection on chrome, or a window drag region)",
+         lambda m, h: bool(re.search(r"user-select:\s*none|app-region:\s*drag", h)), lambda m, h: "regex on CSS"),
+    ],
     "client-options-crm": [
         ("Delivers 2-3 design option files plus one page that shows them side by side",
          lambda m, h: 2 <= len([f for f in FILES if re.search(r"option", f, re.I) and not re.search(r"board|index|compare", f, re.I)]) <= 3 and bool(re.search(r"<iframe", h)),
@@ -73,7 +85,7 @@ for case in sorted(Path(sys.argv[1]).iterdir()):
         html = "\n".join((run / "outputs" / f).read_text(encoding="utf-8", errors="ignore") for f in metrics)
         results = []
         for text, check, ev in GENERAL + SPECIFIC.get(case.name, []):
-            if text.startswith(("KPI", "Email", "Primary", "No gradient", "No testimonials", "Delivers", "Gives")):
+            if text.startswith(("KPI", "Email", "Primary", "No gradient", "No testimonials", "Delivers", "Gives", "Shows", "No pressure", "Removes")):
                 ok = check(None, html); evidence = ev(None, html)
             else:
                 oks, evs = [], []
@@ -81,6 +93,12 @@ for case in sorted(Path(sys.argv[1]).iterdir()):
                     oks.append(check(m, html)); evs.append(f"{f}: {ev(m, html)}")
                 ok = all(oks); evidence = " | ".join(evs)
             results.append({"text": text, "passed": bool(ok), "evidence": evidence[:600]})
+        audit = run / "audit.json"
+        if audit.exists():
+            pages = [p for p in json.loads(audit.read_text(encoding="utf-8"))["pages"] if "craft" in p]
+            worst = max((len(p["craft"]) for p in pages), default=0)
+            results.append({"text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+                            "passed": worst <= 2, "evidence": " | ".join(f'{Path(p["target"]).name}: {len(p["craft"])} ({"; ".join(c.split(":")[0] for c in p["craft"][:4])})' for p in pages)[:600]})
         passed = sum(r["passed"] for r in results)
         (run / "grading.json").write_text(json.dumps({
             "expectations": results,

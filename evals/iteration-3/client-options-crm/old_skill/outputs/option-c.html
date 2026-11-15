@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacts - Option C (Mockup v1)</title>
+<style>
+:root{--bg:#0F1318;--surface:#171C23;--surface-2:#1F252E;--border:#2A323D;--border-strong:#7C8899;--text:#E6E8EB;--muted:#A3ACB9;--accent:#5EEAD4;--accent-fg:#06201C;--accent-soft:#12302D;--hot:#FCA5A5;--warm:#FCD34D;--cold:#A3ACB9;--font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/20px var(--font);display:grid;grid-template-columns:64px minmax(320px,420px) minmax(0,1fr)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.rail{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 0}
+.rail a{width:40px;height:40px;display:grid;place-items:center;border-radius:8px;color:var(--muted)}
+.rail a:hover{background:var(--surface-2);color:var(--text)}
+.rail a[aria-current]{background:var(--accent-soft);color:var(--accent)}
+.list{border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0;min-width:0}
+.lh{padding:16px;border-bottom:1px solid var(--border);display:grid;gap:12px}
+.lh h1{margin:0;font-size:18px;line-height:24px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.lh input{height:36px;border:1px solid var(--border-strong);border-radius:6px;background:var(--bg);color:var(--text);padding:0 12px;font:14px var(--font);width:100%}
+.tabs{display:flex;gap:4px;overflow-x:auto}
+.tabs button{height:36px;padding:0 12px;border-radius:6px;border:0;background:none;color:var(--muted);font:500 14px var(--font);cursor:pointer;white-space:nowrap}
+.tabs button:hover{background:var(--surface-2)}
+.tabs button[aria-pressed=true]{background:var(--surface-2);color:var(--text)}
+.items{overflow-y:auto;flex:1;list-style:none;margin:0;padding:0}
+.items button{width:100%;text-align:left;display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 16px;border:0;border-bottom:1px solid var(--border);border-left:3px solid transparent;background:none;color:var(--text);font:14px/20px var(--font);cursor:pointer;min-height:64px}
+.items button:hover{background:var(--surface)}
+.items button[aria-current=true]{background:var(--surface-2);border-left-color:var(--accent)}
+.pic{width:40px;height:40px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:grid;place-items:center;font-weight:600;font-size:14px}
+.nm{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+.ln{color:var(--muted);font-size:12px;line-height:16px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500}
+.dot::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.Hot{color:var(--hot)}.Warm{color:var(--warm)}.Cold{color:var(--cold)}
+.detail{padding:32px;overflow-y:auto;min-width:0}
+.dh{display:flex;gap:16px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.dh .pic{width:64px;height:64px;font-size:24px}
+.dh h2{margin:0;font-size:24px;line-height:32px;font-weight:600}
+.dh p{margin:0;color:var(--muted)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
+.btn{height:36px;padding:0 16px;border-radius:6px;border:1px solid var(--border-strong);background:none;color:var(--text);font:500 14px var(--font);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:var(--surface-2)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{background:#99F6E4}
+dl{display:grid;grid-template-columns:140px 1fr;gap:12px 16px;margin:0;max-width:560px}
+dt{color:var(--muted)}dd{margin:0}
+.big{font-size:24px;line-height:32px;font-weight:600;font-variant-numeric:tabular-nums}
+h3{font-size:14px;margin:32px 0 12px;font-weight:600;color:var(--muted)}
+.tl{list-style:none;margin:0;padding:0;border-left:1px solid var(--border);max-width:560px}
+.tl li{padding:0 0 16px 16px;position:relative}
+.tl li::before{content:"";position:absolute;left:-4px;top:7px;width:7px;height:7px;border-radius:50%;background:var(--border-strong)}
+.tl span{color:var(--muted)}
+.back{display:none}
+.tag{position:fixed;right:16px;bottom:16px;background:var(--text);color:var(--bg);padding:4px 12px;border-radius:6px;font-size:12px}
+@media (max-width:1024px){body{grid-template-columns:64px minmax(280px,360px) minmax(0,1fr)}.detail{padding:24px}}
+@media (max-width:640px){
+ body{display:block;height:auto}
+ .rail{flex-direction:row;position:fixed;bottom:0;left:0;right:0;height:64px;justify-content:space-around;border-top:1px solid var(--border);border-right:0;padding:0;z-index:5}
+ .rail a{width:44px;height:44px}
+ .list{border:0;padding-bottom:80px}
+ .detail{display:none;padding:16px 16px 96px}
+ body.open .list{display:none}body.open .detail{display:block}
+ .back{display:inline-flex;margin-bottom:16px}
+ .btn,.lh input,.tabs button,.lh h1 .btn{min-height:44px;height:44px}.lh input{font-size:16px}
+ .items button{min-height:64px}
+ dl{grid-template-columns:1fr;gap:4px}dd{margin-bottom:12px}
+ .tag{display:none}
+}
+</style></head><body>
+<nav class="rail" aria-label="Main">
+ <a href="#" aria-label="Properties"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></a>
+ <a href="#" aria-label="Contacts" aria-current="page"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 4a4 4 0 010 8M22 21c0-3-2-5-4-5.5"/></svg></a>
+ <a href="#" aria-label="Viewings"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></a>
+ <a href="#" aria-label="Reports"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></a>
+</nav>
+<section class="list" aria-label="Contacts list">
+ <div class="lh">
+  <h1>Contacts <button class="btn btn-primary">Add contact</button></h1>
+  <input type="search" id="q" placeholder="Search name, phone or property" aria-label="Search contacts">
+  <div class="tabs" id="tabs" role="group" aria-label="Filter by type"></div>
+ </div>
+ <ul class="items" id="items"></ul>
+</section>
+<section class="detail" id="detail" aria-live="polite" aria-label="Contact details"></section>
+<div class="tag">Mockup v1 - sample data</div>
+<script src="data.js"></script>
+<script>
+const types=["All","Buyer","Seller","Tenant","Landlord"];let cur="All",sel=0;
+const tabs=document.getElementById("tabs"),items=document.getElementById("items"),detail=document.getElementById("detail"),q=document.getElementById("q");
+const ph='<svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg>';
+let L=[];
+function draw(){
+ tabs.innerHTML=types.map(t=>`<button aria-pressed="${t===cur}" data-t="${t}">${t}</button>`).join("");
+ const s=q.value.toLowerCase();
+ L=CONTACTS.filter(c=>(cur==="All"||c.t===cur)&&(!s||(c.n+c.ph+c.want).toLowerCase().includes(s)));
+ if(sel>=L.length)sel=0;
+ items.innerHTML=L.map((c,i)=>`<li><button data-i="${i}" aria-current="${i===sel}"><span class="pic" aria-hidden="true">${ini(c.n)}</span><span style="min-width:0"><span class="nm">${c.n}</span><span class="ln">${c.t} · ${c.want}</span></span><span style="text-align:right"><span class="dot ${c.s}">${c.s}</span><span class="ln">${c.last}</span></span></button></li>`).join("")||`<li style="padding:32px 16px;color:var(--muted)">No contacts match this search. Try a different name or clear the filter.</li>`;
+ const c=L[sel];
+ detail.innerHTML=c?`<button class="btn back" id="bk"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>All contacts</button>
+ <div class="dh"><span class="pic" aria-hidden="true">${ini(c.n)}</span><div><h2>${c.n}</h2><p>${c.t} · Agent ${c.ag} · <span class="dot ${c.s}">${c.s} lead</span></p></div></div>
+ <div class="btns"><button class="btn btn-primary">${ph}Call ${c.ph}</button><button class="btn">Send email</button><button class="btn">Book viewing</button></div>
+ <dl><dt>Looking for</dt><dd>${c.want}</dd><dt>${c.t==="Tenant"||c.t==="Landlord"?"Rent":"Budget"}</dt><dd class="big">${money(c)}</dd><dt>Email</dt><dd>${c.em}</dd><dt>Last contact</dt><dd>${c.last}</dd></dl>
+ <h3>Recent activity</h3><ul class="tl"><li>Viewing booked <span>· Sat 21 Nov, 10:30</span></li><li>Emailed 3 matching listings <span>· ${c.last}</span></li><li>Added to Harbourline by ${c.ag} <span>· 2 Nov 2026</span></li></ul>`:"";
+ const bk=document.getElementById("bk");if(bk)bk.onclick=()=>document.body.classList.remove("open");
+}
+tabs.onclick=e=>{const b=e.target.closest("button");if(b){cur=b.dataset.t;sel=0;draw()}};
+items.onclick=e=>{const b=e.target.closest("button");if(b){sel=+b.dataset.i;document.body.classList.add("open");draw()}};
+q.addEventListener("input",()=>{sel=0;draw()});draw();
+</script></body></html>

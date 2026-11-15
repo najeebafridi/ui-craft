@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+      "passed": true,
+      "evidence": "room-selection.html: desktop: 0 fails []; phone: 0 fails []"
+    },
+    {
+      "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+      "passed": true,
+      "evidence": "room-selection.html: hasFocusStyle=True"
+    },
+    {
+      "text": "Smallest visible text is at least 12px",
+      "passed": true,
+      "evidence": "room-selection.html: min=12px"
+    },
+    {
+      "text": "No sideways scrolling at 390px phone width",
+      "passed": true,
+      "evidence": "room-selection.html: overflow=False"
+    },
+    {
+      "text": "Uses at most 7 distinct font sizes on the desktop screen",
+      "passed": false,
+      "evidence": "room-selection.html: sizes=[12, 14, 16, 20, 24, 30, 36, 48]"
+    },
+    {
+      "text": "Every form control has an accessible label",
+      "passed": true,
+      "evidence": "room-selection.html: unlabelled=[]"
+    },
+    {
+      "text": "At least 80% of spacing values sit on the 4px grid",
+      "passed": true,
+      "evidence": "room-selection.html: on-grid=0.805"
+    },
+    {
+      "text": "Respects prefers-reduced-motion (or has no motion at all)",
+      "passed": true,
+      "evidence": "room-selection.html: reducedMotion=True motion=True"
+    },
+    {
+      "text": "No emoji icons, lorem ipsum or placeholder-image services",
+      "passed": true,
+      "evidence": "room-selection.html: emoji=0 lorem=False placeholderImgs=0"
+    },
+    {
+      "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+      "passed": true,
+      "evidence": "room-selection.html: 1 small: ['Join the waiting list']"
+    },
+    {
+      "text": "Shows the total price for the whole stay before continuing",
+      "passed": true,
+      "evidence": "regex on text"
+    },
+    {
+      "text": "No pressure tactics (fake scarcity, countdowns, 'only N left', 'hurry')",
+      "passed": true,
+      "evidence": "regex on text"
+    },
+    {
+      "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+      "passed": true,
+      "evidence": "room-selection.html: 2 (3 large heading(s) (32px+) with default letter-spacing; No text-wrap)"
+    }
+  ],
+  "summary": {
+    "passed": 12,
+    "failed": 1,
+    "total": 13,
+    "pass_rate": 0.923
+  }
+}
