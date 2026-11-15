@@ -54,4 +54,34 @@ Ideas only; no text copied. Short CSS values such as shadow layers or easing cur
 - **Fonts named in the directions** are all under the SIL Open Font License: Inter, Geist, Geist Mono, JetBrains Mono, IBM Plex, Newsreader, Cormorant Garamond, Hanken Grotesk, Libre Caslon Text, Nunito, Nunito Sans, Baloo 2, Space Grotesk, Manrope, Public Sans, Figtree, Barlow Condensed, Outfit, Anton, Bricolage Grotesque, DM Sans. The skill links to them on Google Fonts; it does not bundle font files.
 - **Other AI design skills checked for approach:** Anthropic frontend-design (Apache-2.0), Impeccable by Paul Bakaus (Apache-2.0), Taste Skill by Leonxlnx (MIT), ui-ux-pro-max (MIT).
 
+## Version 2.2 sources (immersive-web skill, mixing guide)
+
+Ideas only; no text or code copied. Everything in `skills/immersive-web/` (guides, `theme-bridge.js`, `scene-shell.js`, the starter page, the check script) and the Studio's 3D scene is our own writing. API names, file-format facts and published limits are facts, not prose. Sources the research could not open are not listed as read.
+
+| Source | Author | Licence | What it shaped |
+|---|---|---|---|
+| [three.js](https://threejs.org/) manual and docs | mrdoob and contributors | MIT | Render on demand, pixel ratio, cleanup, lights and shadows, colour management, tone mapping, TSL, loaders |
+| [React Three Fiber](https://r3f.docs.pmnd.rs/), [drei](https://drei.docs.pmnd.rs/), [gltfjsx](https://github.com/pmndrs/gltfjsx) | Poimandres | MIT | On-demand frame loop, adaptive quality, draw-call guidance, contact shadows, GLB to component |
+| [postprocessing](https://github.com/pmndrs/postprocessing) | Poimandres | Zlib | Which effects cost what |
+| [glTF-Transform](https://gltf-transform.dev/) | Don McCurdy | MIT | The optimise pipeline for models |
+| [meshoptimizer / gltfpack](https://github.com/zeux/meshoptimizer) | Arseny Kapoulkine | MIT | Geometry compression choice |
+| [Draco](https://github.com/google/draco) | Google | Apache-2.0 | Geometry compression choice |
+| [model-viewer](https://modelviewer.dev/) | Google | Apache-2.0 | The simple "show one model" path: poster, lazy loading |
+| [Filament material notes](https://google.github.io/filament/) | Google | Apache-2.0 | Safe ranges for base colour, metalness and roughness |
+| [Lenis](https://github.com/darkroomengineering/lenis) | darkroom.engineering | MIT | What smooth-scroll libraries do, and their reduced-motion behaviour |
+| [Scrollama](https://github.com/russellsamora/scrollama) | Russell Samora | MIT | The sticky-scene, scrolling-steps pattern |
+| [WCAG 2.2](https://www.w3.org/TR/WCAG22/) Understanding pages (2.2.2, 2.3.1, 2.3.3) and technique C39 | W3C | W3C Document License | Pause, stop, hide; flashing; motion from interaction; reduced motion |
+| [web.dev](https://web.dev/) and [Chrome for Developers](https://developer.chrome.com/) | Google | CC BY 4.0 (text) | Core Web Vitals thresholds, performance budgets, scroll-driven animations, View Transitions, autoplay policy |
+| [Poly Haven](https://polyhaven.com/license), [ambientCG](https://ambientcg.com/) | their teams | CC0 (assets) | Named as safe asset sources; no assets are bundled |
+
+Learned from, never copied (no open licence, share-alike, or licence not confirmed):
+
+- **3D and shaders:** Khronos Group (glTF 2.0 specification, KTX Artist Guide, 3D Commerce asset guidelines, PBR Neutral tone mapper), MDN Web Docs (WebGL best practices, context loss, WebGPU, device signals; CC-BY-SA, not copied), Discover three.js by Lewy Blue, the three.js forum (Don McCurdy and Michael Herzog on limits), The Book of Shaders by Patricio Gonzalez Vivo and Jen Lowe, Maxime Heckel's shader articles, Bundlephobia (package size).
+- **Blender:** the Blender Manual (glTF add-on, baking; CC-BY-SA, not copied), Bruno Simon's public notes on baking, Google Scene Viewer asset limits.
+- **Shader technique:** Inigo Quilez (articles on palettes, distance functions and noise; known from earlier reading, the pages could not be re-opened this time).
+- **Scroll, motion and accessibility:** Nielsen Norman Group (scrolljacking, animation purpose), Val Head (motion sensitivity, A List Apart), the WebKit team (responsive design for motion), The Pudding (responsive scrollytelling), 14islands (progressive enhancement with WebGL), Bramus Van Damme (scroll-driven animation demos), the GSAP docs (GSAP is free to use but not open source: the skill names it and never bundles it), Motion (motion.dev), Frank Thomas and Ollie Johnston's twelve principles of animation.
+- **Beyond the web:** Electron and Tauri docs, Apple developer documentation (SwiftUI shader effects, Reduce Motion), Android Developers (AGSL, animator settings), Flutter docs (fragment shaders, disableAnimations), Software Mansion (Reanimated accessibility), Rive and Lottie docs, Microsoft Learn (Mica).
+
+The check script drives Chrome through the DevTools protocol and uses no third-party code. Notes on each source: [research/v3/](research/v3/).
+
 Full notes on each source, with licences and where they were checked: [research/sources.md](research/sources.md).

@@ -2,6 +2,8 @@
 
 **Design skill for AI coding agents.** With ui-craft, the screens your AI builds look premium, fit the people who use them, are easy to use, and get done fast.
 
+The plugin holds two skills that share one theme. **ui-craft** designs the interface. **immersive-web** adds 3D scenes, shaders, scroll stories and cinematic motion on top, and keeps them fast and accessible. Each loads only when its kind of work comes up.
+
 It works for any kind of software: web apps, dashboards, admin tools, desktop apps, mobile apps and marketing sites. It works in Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, Windsurf, Cline and any tool that reads `AGENTS.md`.
 
 ## Try it in your browser: ui-craft Studio
@@ -12,8 +14,9 @@ A free visual tool, no install and no AI needed:
 
 1. Pick one of 16 visual directions.
 2. Set your brand colour, fonts, corner shape, depth, density and motion.
-3. Watch four live screens change (dashboard, landing page, mobile app, components), in light and dark, on desktop and phone.
-4. Export the theme for **CSS, Tailwind, SwiftUI, Jetpack Compose, Flutter or JSON**, plus a **design brief** to paste into any AI coding tool.
+3. Watch five live screens change (dashboard, landing page, mobile app, components, and an **Immersive** screen with a real 3D scene that follows your theme), in light and dark, on desktop and phone.
+4. Choose how much 3D and scroll effect the product should carry: none, a quiet accent, one hero moment, or a scroll story. The Immersive screen can also be previewed with reduced motion and with no WebGL.
+5. Export the theme for **CSS, Tailwind, SwiftUI, Jetpack Compose, Flutter or JSON**, plus a **design brief** to paste into any AI coding tool. The brief includes an "Immersive and motion" section.
 
 Every colour is checked for accessibility contrast as you go. "Copy link" gives you a link to send to a client.
 
@@ -68,6 +71,35 @@ node .agents/skills/ui-craft/scripts/palette.mjs --accent "#0F766E" --neutral wa
 
 You get background, surface, text, border, accent, status and chart colours for light and dark themes. Every pair is checked: if white text would fail on your brand colour, the script adjusts it and tells you.
 
+## Immersive web: 3D, shaders and scroll stories
+
+Ask for a 3D hero, a shader, a scroll-driven story, page transitions, or "make it feel cinematic", and the **immersive-web** skill takes over. It works with Three.js, React Three Fiber, plain WebGL, WebGPU and CSS, and covers the path from Blender to the browser.
+
+It follows eight hard rules:
+
+1. **Content first.** Headings, copy and buttons are real HTML. The scene sits on top and can vanish without loss.
+2. **Three states for every effect:** full, a still version for people who ask for reduced motion, and a fallback when the device has no WebGL.
+3. **A speed budget.** Text paints first, the 3D engine loads after, phones get a lighter scene.
+4. **One signature moment per page**, not effects everywhere.
+5. **Never take over the scroll.**
+6. **Keyboard and screen readers** reach everything real.
+7. **Motion rests, sound waits, nothing flashes.**
+8. **Original and licensed** work only.
+
+**One theme drives everything.** The scene reads the same theme tokens as the page (`--accent`, `--bg`, `--surface`, the motion tokens), so any of the 16 directions can colour a 3D scene, a shader palette or a motion style, in light and dark. Each direction also says how far to go, on a ladder from 0 (still) to 3 (scroll story). A finance tool stays at 0; a product launch may go to 3.
+
+**It mixes.** `skills/ui-craft/references/mixing.md` explains how to borrow the language of one genre for another medium (a game or sci-fi look on a website, film-style motion in a desktop app) while the platform keeps its normal navigation, accessibility holds and the work stays original. `skills/immersive-web/references/beyond-web.md` covers desktop apps (Electron, Tauri, native), mobile apps and dashboards, and says plainly where 3D does not belong.
+
+**It checks its own work:**
+
+```bash
+node .agents/skills/immersive-web/scripts/immersive-check.mjs page.html
+```
+
+The script opens the page five ways (desktop, phone, reduced motion, no WebGL, no JavaScript). It measures page weight, what loads before first paint, draw calls, the phone's pixel ratio, native scrolling, and whether the scene pauses off screen. It saves screenshots of every case. It cannot measure frame rate or judge beauty.
+
+**Honest limit:** an AI can direct a scene, light it, write shaders and wire a model in. It cannot sculpt film-quality 3D art from nothing. For that you still need a 3D artist or a licensed model.
+
 ## Install
 
 
@@ -80,9 +112,9 @@ You get background, surface, text, border, accent, status and chart colours for 
 
 Or from a terminal: `claude plugin marketplace add najeebafridi/ui-craft`, then `claude plugin install ui-craft@ui-craft`.
 
-The skill loads by itself whenever you ask for UI work. You can also call it directly with `/ui-craft:ui-craft`.
+Both skills load by themselves: ui-craft whenever you ask for UI work, immersive-web when you ask for 3D, shaders, scroll animation or a cinematic feel. You can also call them directly with `/ui-craft:ui-craft` and `/ui-craft:immersive-web`.
 
-**Without the plugin system:** copy the `skills/ui-craft` folder to `~/.claude/skills/ui-craft` (all your projects) or `.claude/skills/ui-craft` (one project).
+**Without the plugin system:** copy the `skills/ui-craft` and `skills/immersive-web` folders to `~/.claude/skills/` (all your projects) or `.claude/skills/` (one project).
 
 ### Codex, Cursor, Gemini CLI, GitHub Copilot, Windsurf
 
@@ -92,6 +124,7 @@ These tools read skills from a shared folder, `.agents/skills/`. Copy the skill 
 git clone https://github.com/najeebafridi/ui-craft /tmp/ui-craft
 mkdir -p .agents/skills
 cp -r /tmp/ui-craft/skills/ui-craft .agents/skills/ui-craft
+cp -r /tmp/ui-craft/skills/immersive-web .agents/skills/immersive-web   # optional: 3D, shaders, scroll stories
 cp /tmp/ui-craft/AGENTS.md ./AGENTS.md        # or paste its contents into your existing AGENTS.md
 ```
 
@@ -119,7 +152,7 @@ skills/ui-craft/
     platforms.md        layout-spacing.md    color-dark-mode.md   typography.md
     forms.md            tables-lists.md      dashboards-charts.md navigation.md
     feedback-states.md  accessibility.md     motion.md            mobile-touch.md
-    review-checklist.md mockups.md           review-mode.md
+    review-checklist.md mockups.md           review-mode.md       mixing.md
   assets/
     tokens.css              base design tokens (light + dark, contrast-checked)
     directions/             16 visual directions (one small CSS file each) + gallery.html
@@ -129,11 +162,21 @@ skills/ui-craft/
     palette.mjs             build an accessible colour system from a brand colour
     ui-audit.mjs            measure, score and screenshot a page or live URL (needs Chrome)
   evals/                    test cases used to check the skill
+skills/immersive-web/
+  SKILL.md                  hard rules, workflow, budgets, the immersion ladder (short)
+  references/               theme-bridge, scene-camera, materials-lighting, shaders, scroll-storytelling,
+                            cinematic-motion, blender-pipeline, performance, accessibility-fallbacks, beyond-web
+  assets/
+    theme-bridge.js         reads the theme tokens for a 3D scene, shader or canvas
+    scene-shell.js          scene life cycle with fallbacks, reduced motion and pausing built in
+    starter.html            a working page with both; replace its placeholder scene
+  scripts/
+    immersive-check.mjs     test a page five ways and screenshot each (needs Chrome)
 AGENTS.md                   the same core rules for Codex, Cursor, Gemini, Copilot…
 docs/index.html             the Studio (one self-contained page, hosted on GitHub Pages)
 ```
 
-Both scripts need Node 22 or newer and no npm packages.
+All scripts need Node 22 or newer and no npm packages.
 
 ### The audit script (also used by review mode)
 
@@ -213,6 +256,12 @@ node tools/build-directions.mjs
 
 ```bash
 node tools/build-studio.mjs
+```
+
+The Studio's Immersive screen and the immersive starter page are built from `skills/immersive-web/assets/theme-bridge.js` and `scene-shell.js`. After changing either, run the Studio build above and:
+
+```bash
+node tools/build-immersive.mjs
 ```
 
 To re-run the tests (needs Node and Chrome), build the screens into `evals/iteration-N/<case>/<config>/outputs/`, then:

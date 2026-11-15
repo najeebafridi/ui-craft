@@ -50,7 +50,7 @@ export function mountScene(host, hooks, options = {}) {
   const opt = { need: "webgl", maxPixelRatio: 2, touchMaxPixelRatio: 1.5, minScale: 0.5, lazy: true, rootMargin: "200px", slowFrameMs: 24, ...options };
   const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
   const state = { mode: "fallback", reduced: opt.reduced ?? reducedQuery.matches, visible: false, width: 0, height: 0, pixelRatio: 1, scale: 1, tier: deviceTier() };
-  let canvas = host.querySelector("canvas"), ready = false, starting = false, dead = false, raf = 0, last = 0, wanted = false, slow = 0, quick = 0;
+  let canvas = host.querySelector("canvas"), ready = false, starting = false, dead = false, wired = false, raf = 0, last = 0, wanted = false, slow = 0, quick = 0;
   const setMode = (m) => { state.mode = m; host.dataset.scene = m; };
   setMode("fallback");
 
@@ -89,11 +89,14 @@ export function mountScene(host, hooks, options = {}) {
     starting = true;
     try {
       if (!canvas) { canvas = document.createElement("canvas"); canvas.setAttribute("aria-hidden", "true"); host.append(canvas); }
-      canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); fail(); });
-      canvas.addEventListener("webglcontextrestored", () => { ready = false; starting = false; start(); });
+      if (!wired) {                                           // once per canvas, however often the scene restarts
+        wired = true;
+        canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); fail(); });
+        canvas.addEventListener("webglcontextrestored", () => { if (!ready && !starting) start(); });
+      }
       const ok = await hooks.init(canvas, state);
       if (ok === false || dead) { starting = false; return; }
-      ready = true; state.width = 0; measure(); hooks.resize?.(state.width, state.height, state.pixelRatio); invalidate();
+      ready = true; state.width = 0; measure();             // measure() calls resize() and asks for the first frame
     } catch (err) { fail(err); }
     starting = false;
   }

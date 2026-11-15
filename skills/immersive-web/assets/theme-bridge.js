@@ -42,7 +42,7 @@ export function readColor(name, scope = document.documentElement) {
   if (!getComputedStyle(scope).getPropertyValue(name).trim()) return null;
   const probe = document.createElement("span");
   probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;color:var(${name})`;
-  scope.append(probe);
+  (scope === document.documentElement && document.body ? document.body : scope).append(probe);
   const css = getComputedStyle(probe).color;
   probe.remove();
   const [r, g, b, a] = parseColor(css);

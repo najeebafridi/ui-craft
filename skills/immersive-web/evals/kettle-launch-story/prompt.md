@@ -1,0 +1,8 @@
+---
+tags: [skill-creator]
+max_turns: 40
+timeout_seconds: 1200
+allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, Bash]
+---
+
+We're a small pottery in Stoke-on-Trent launching a hand-thrown ceramic pour-over kettle called Tern (£48, three glazes: chalk, sea green, ink). Build the launch page as one HTML file. We want it to feel immersive and cinematic, a 3D or scroll-driven experience people remember, not a normal shop page. Most of our customers arrive from Instagram on their phones. We don't have a 3D model or photos yet.
