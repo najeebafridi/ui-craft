@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account settings · Tideline</title>
+<!--
+Design brief
+Product: Tideline, project management web app for product teams (desktop first, works on phones)
+User and feeling: someone mid-workday making a quick change -> in control, nothing risky, fast
+Direction: Calm productivity; accent blue, warm neutrals, light + dark follow the OS
+Type: Inter 14px body (dense desktop tool)   Shape and depth: 8px radius, soft two-layer shadow with 1px ring
+Density and motion: compact 36px controls (44px on touch), crisp 120-200ms
+Signature: a check that draws itself on every save, plus a live "local time" readout under the timezone
+Primary task on this screen: update profile details (explicit Save); notifications auto-save
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #FBF9F6; --surface: #FFFEFD; --surface-2: #F6F3EF; --surface-3: #EBE7E3;
+  --border: #E6E2DE; --border-strong: #8F8A83;
+  --text: #1E1A14; --text-muted: #5D5852; --text-subtle: #726D66;
+  --accent: #1C6FD2; --accent-hover: #0461C3; --accent-fg: #FFFFFF; --accent-soft: #E7F1FF; --accent-text: #156ACD; --focus: #1C6FD2;
+  --success: #0E8745; --success-soft: #E8F9EB; --success-text: #00783B;
+  --danger: #D63E38; --danger-soft: #FFEFED; --danger-text: #B7191C;
+  --info-soft: #EBF5FF; --info-text: #0065B0;
+  --shadow-color: 39 32 24; --shadow-strength: 1;
+  --ring: rgb(39 32 24 / 0.08); --highlight: rgb(255 255 255 / 0.18);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --tracking-heading: -0.015em; --tracking-display: -0.022em;
+  --radius-sm: 6px; --radius: 8px; --radius-lg: 12px;
+  --shadow-raised: 0 0 0 1px var(--ring), 0 1px 2px rgb(var(--shadow-color) / calc(0.06 * var(--shadow-strength))), 0 2px 4px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength)));
+  --shadow-overlay: 0 0 0 1px var(--ring), 0 4px 8px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength))), 0 12px 24px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength)));
+  --shadow-button: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(var(--shadow-color) / calc(0.14 * var(--shadow-strength)));
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 120ms; --dur-base: 200ms; --press-scale: 0.97;
+  --control-h: 36px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0E0C08; --surface: #171411; --surface-2: #201E1A; --surface-3: #2A2723;
+    --border: #2D2A25; --border-strong: #75716C;
+    --text: #EAE7E4; --text-muted: #A29F9C; --text-subtle: #928F8C;
+    --accent-soft: #0F2440; --accent-text: #6DA7F4;
+    --success: #399559; --success-soft: #0F2817; --success-text: #7DC08F;
+    --danger: #D34D44; --danger-soft: #341916; --danger-text: #F78B80;
+    --info-soft: #0F2336; --info-text: #75B3F2;
+    --shadow-color: 0 0 0; --shadow-strength: 3; --ring: rgb(255 255 255 / 0.09); --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 72px; scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 14px/20px var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { margin: 0; font-weight: 600; line-height: 1.25; letter-spacing: var(--tracking-heading); text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+[hidden] { display: none !important; }
+.sec { position: relative; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- shell ---------- */
+.app { display: grid; grid-template-columns: 232px minmax(0, 1fr); min-height: 100vh; }
+.side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 16px; padding: 16px 12px; background: var(--surface-2); border-right: 1px solid var(--border); }
+.ws { display: flex; align-items: center; gap: 8px; padding: 4px 8px; font-weight: 600; letter-spacing: var(--tracking-heading); }
+.ws .logo { width: 24px; height: 24px; border-radius: 6px; background: var(--accent); color: var(--accent-fg); display: grid; place-items: center; font-size: 12px; font-weight: 600; }
+.nav { display: grid; gap: 2px; }
+.nav-label { padding: 0 8px 4px; font-size: 12px; font-weight: 500; color: var(--text-muted); }
+.nav a { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 8px; border-radius: var(--radius-sm); color: var(--text-muted); text-decoration: none; font-weight: 500; transition: background-color var(--dur-fast), color var(--dur-fast); }
+.nav a:hover { background: var(--surface-3); color: var(--text); }
+.nav a[aria-current="page"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-raised); }
+.me { margin-top: auto; display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: var(--radius); min-width: 0; }
+.me b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.me span { display: block; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.me > div { min-width: 0; }
+.av { flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-text); font-weight: 600; letter-spacing: 0; overflow: hidden; }
+.av.sm { width: 28px; height: 28px; font-size: 12px; }
+
+.mobbar { display: none; }
+
+main { min-width: 0; padding: 32px 32px 96px; }
+.wrap { max-width: 880px; margin: 0 auto; }
+.crumbs { font-size: 12px; line-height: 16px; color: var(--text-muted); margin-bottom: 8px; }
+.crumbs a { color: inherit; text-decoration: none; }
+.crumbs a:hover { color: var(--text); text-decoration: underline; }
+.head { margin-bottom: 24px; }
+.head h1 { font-size: 24px; letter-spacing: var(--tracking-display); }
+.head p { color: var(--text-muted); margin-top: 4px; }
+
+.cols { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 32px; align-items: start; }
+.toc { position: sticky; top: 24px; display: grid; gap: 2px; }
+.toc a { display: block; padding: 6px 12px; border-radius: var(--radius-sm); color: var(--text-muted); text-decoration: none; font-weight: 500; border-left: 2px solid transparent; transition: color var(--dur-fast), background-color var(--dur-fast); }
+.toc a:hover { color: var(--text); background: var(--surface-2); }
+.toc a.on { color: var(--accent-text); background: var(--accent-soft); }
+
+/* sections: one surface each, separated by space; no cards inside */
+.sections { display: grid; gap: 32px; min-width: 0; }
+.sec { background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-raised); }
+.sec-h { padding: 20px 24px 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.sec-h h2 { font-size: 18px; }
+.sec-h p { color: var(--text-muted); margin-top: 4px; }
+.sec-b { padding: 24px; }
+.sec-f { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-top: 1px solid var(--border); background: var(--surface-2); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+.sec-f .grow { flex: 1; min-width: 0; }
+
+/* ---------- fields ---------- */
+.field { display: grid; gap: 4px; }
+.field > label, .legend { font-weight: 500; }
+.opt { font-weight: 400; color: var(--text-muted); }
+.hint { font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.error { display: none; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; color: var(--danger-text); font-weight: 500; }
+.field.bad .error { display: flex; }
+.stack { display: grid; gap: 16px; }
+.row2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+input[type=text], input[type=email], input[type=password], select {
+  width: 100%; height: var(--control-h); padding: 0 12px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+select { appearance: none; padding-right: 36px; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23726D66' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+input:hover, select:hover { border-color: var(--text-muted); }
+input:focus-visible, select:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-color: var(--focus); }
+.field.bad input { border-color: var(--danger); }
+.pw { position: relative; }
+.pw input { padding-right: 76px; }
+.pw .show { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); height: 28px; padding: 0 8px; border: 0; background: none; border-radius: var(--radius-sm); color: var(--accent-text); font-weight: 500; font-size: 12px; cursor: pointer; }
+.pw .show:hover { background: var(--accent-soft); }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--control-h); padding: 0 16px; border-radius: var(--radius-sm); border: 1px solid transparent; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background-color var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast), transform var(--dur-fast) var(--ease-out); }
+.btn:active { transform: scale(var(--press-scale)); }
+.btn-primary { background: var(--accent); color: var(--accent-fg); box-shadow: var(--shadow-button); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-quiet { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+.btn-quiet:hover { background: var(--surface-2); }
+.btn-text { background: none; color: var(--text-muted); padding: 0 12px; }
+.btn-text:hover { color: var(--text); background: var(--surface-3); }
+.btn-sm { height: 32px; padding: 0 12px; }
+.btn[aria-busy=true] { pointer-events: none; opacity: .85; }
+.spin { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- profile ---------- */
+.avatar-row { display: flex; align-items: center; gap: 16px; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+.avatar-big { width: 64px; height: 64px; font-size: 24px; box-shadow: inset 0 0 0 1px var(--ring); background-size: cover; background-position: center; }
+.avatar-row .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.avatar-row b { font-weight: 500; }
+.tz-now { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12px; line-height: 16px; }
+.tz-now strong { color: var(--text); font-weight: 500; }
+
+/* ---------- password rules ---------- */
+.rules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 4px 16px; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.rules li { display: flex; align-items: center; gap: 8px; }
+.rules .dot { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: grid; place-items: center; flex: none; }
+.rules .dot svg { width: 10px; height: 10px; stroke: var(--accent-fg); stroke-width: 2.5; opacity: 0; }
+.rules li.ok { color: var(--text); }
+.rules li.ok .dot { background: var(--success); border-color: var(--success); }
+.rules li.ok .dot svg { opacity: 1; }
+.meter { display: flex; gap: 4px; margin-top: 8px; }
+.meter i { flex: 1; height: 4px; border-radius: 2px; background: var(--surface-3); transition: background-color var(--dur-base); }
+.meter[data-s="1"] i:nth-child(-n+1) { background: var(--danger); }
+.meter[data-s="2"] i:nth-child(-n+2) { background: #AB6500; }
+.meter[data-s="3"] i:nth-child(-n+3), .meter[data-s="4"] i { background: var(--success); }
+.strength { font-size: 12px; line-height: 16px; color: var(--text-muted); margin-top: 4px; min-height: 16px; }
+
+/* ---------- notifications (toggles apply instantly) ---------- */
+.autosave { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; color: var(--text-muted); white-space: nowrap; padding-top: 4px; }
+.group + .group { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+.group h3 { font-size: 14px; margin-bottom: 4px; letter-spacing: 0; }
+.opt-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
+.opt-row + .opt-row { border-top: 1px solid var(--border); }
+.opt-row .t { min-width: 0; }
+.opt-row .t b { font-weight: 500; display: block; }
+.opt-row .t span { color: var(--text-muted); font-size: 12px; line-height: 16px; display: block; margin-top: 2px; }
+.sw { position: relative; flex: none; width: 44px; height: 44px; margin: -12px -4px -12px 0; }
+.sw input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+.sw .track { position: absolute; left: 4px; top: 12px; width: 36px; height: 20px; border-radius: 10px; background: var(--border-strong); transition: background-color var(--dur-base) var(--ease-out); }
+.sw .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / .25); transition: transform var(--dur-base) var(--ease-out); }
+.sw input:checked + .track { background: var(--accent); }
+.sw input:checked + .track::after { transform: translateX(16px); }
+.sw input:focus-visible + .track { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sw-state { width: 24px; font-size: 12px; color: var(--text-muted); text-align: right; flex: none; }
+.ctl { display: flex; align-items: center; gap: 12px; }
+.freq { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; padding: 0; border: 0; }
+.freq legend { padding: 0; font-weight: 500; margin-bottom: 8px; }
+.freq label { position: relative; }
+.freq input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.freq span { display: flex; align-items: center; height: 32px; padding: 0 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-weight: 500; color: var(--text-muted); transition: background-color var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast); }
+.freq label:hover span { background: var(--surface-2); }
+.freq input:checked + span { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-text); }
+.freq input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* ---------- saved check (signature) ---------- */
+.saved { display: none; align-items: center; gap: 8px; color: var(--success-text); font-weight: 500; }
+.saved.on { display: inline-flex; }
+.saved svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.saved .ring { stroke-dasharray: 51; stroke-dashoffset: 51; }
+.saved .tick { stroke-dasharray: 14; stroke-dashoffset: 14; }
+.saved.on .ring { animation: draw .35s var(--ease-out) forwards; }
+.saved.on .tick { animation: draw .25s .25s var(--ease-out) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.status { color: var(--text-muted); font-size: 12px; line-height: 16px; }
+.status.dirty { color: var(--text); font-weight: 500; }
+
+.summary { display: none; margin-bottom: 16px; padding: 12px 16px; border-radius: var(--radius); background: var(--danger-soft); color: var(--danger-text); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--danger) 35%, transparent); }
+.summary.on { display: block; }
+.summary b { font-weight: 600; display: block; margin-bottom: 4px; }
+.summary ul { margin: 0; padding-left: 20px; }
+.summary a { color: inherit; font-weight: 500; }
+
+/* ---------- toast ---------- */
+.toasts { position: fixed; right: 24px; bottom: 24px; display: grid; gap: 8px; z-index: 10; pointer-events: none; }
+.toast { display: flex; align-items: center; gap: 12px; max-width: 360px; padding: 12px 16px; background: #1E1A14; color: #F6F3EF; border-radius: var(--radius); box-shadow: var(--shadow-overlay); pointer-events: auto; animation: tin .2s var(--ease-out); }
+.toast.out { opacity: 0; transform: translateY(4px); transition: opacity .15s, transform .15s; }
+.toast svg { color: #7DC08F; }
+.toast button { margin-left: 4px; border: 0; background: none; color: #9CC4F8; font-weight: 500; cursor: pointer; padding: 4px 8px; border-radius: 4px; }
+.toast button:hover { background: rgb(255 255 255 / .1); }
+@keyframes tin { from { opacity: 0; transform: translateY(8px); } }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1023px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { display: none; }
+  .mobbar { display: flex; position: sticky; top: 0; z-index: 5; align-items: center; justify-content: space-between; gap: 12px; height: 52px; padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .mobbar .ws { padding: 0; }
+  main { padding: 24px 24px 64px; }
+}
+@media (max-width: 760px) {
+  .cols { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .toc { position: sticky; top: 52px; z-index: 4; display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 8px 16px; background: var(--bg); border-bottom: 1px solid var(--border); scrollbar-width: none; }
+  .toc a { white-space: nowrap; flex: none; }
+  .row2 { grid-template-columns: minmax(0, 1fr); }
+  .rules { grid-template-columns: minmax(0, 1fr); }
+  main { padding: 16px 16px 64px; }
+  .sec-h { padding: 16px 16px 0; flex-direction: column; gap: 8px; }
+  .sec-b { padding: 16px; }
+  .sec-f { padding: 12px 16px; flex-wrap: wrap; }
+  .sec-f .grow { flex: 1 1 100%; order: -1; }
+  .sec-f .btn-quiet, .sec-f .btn-primary { flex: 1 1 auto; }
+  .avatar-row { align-items: flex-start; }
+  .toasts { left: 16px; right: 16px; bottom: 16px; }
+  .toast { max-width: none; }
+  html { scroll-padding-top: 112px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+@media (max-width: 640px), (pointer: coarse) {
+  :root { --control-h: 44px; }
+  .btn, .btn-sm, input[type=text], input[type=email], input[type=password], select, .toc a, .freq span { min-height: 44px; }
+  input[type=text], input[type=email], input[type=password], select { font-size: 16px; }
+  .pw .show { height: 44px; padding: 0 12px; }
+  .pw input { padding-right: 84px; }
+  .toast button { min-height: 44px; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-inbox" viewBox="0 0 16 16"><path d="M2 9.5 4 3h8l2 6.5M2 9.5V13h12V9.5M2 9.5h3.5a2.5 2.5 0 0 0 5 0H14"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="m5.5 8 2 2 3-3.5"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 16 16"><path d="M2 4.5A1.5 1.5 0 0 1 3.5 3H6l1.5 2h5A1.5 1.5 0 0 1 14 6.5v5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5z"/></symbol>
+  <symbol id="i-cycle" viewBox="0 0 16 16"><path d="M13 8a5 5 0 1 1-1.5-3.5M13 2.5v2.5h-2.5"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2"/><path d="M8 1.5v1.8M8 12.7v1.8M1.5 8h1.8M12.7 8h1.8M3.4 3.4l1.3 1.3M11.3 11.3l1.3 1.3M12.6 3.4l-1.3 1.3M4.7 11.3l-1.3 1.3"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3.5M8 10.8v.01"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 16 16"><path d="m3.5 8.5 3 3 6-7"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c2 1.7 2.8 3.7 2.8 6S10 12.3 8 14c-2-1.7-2.8-3.7-2.8-6S6 3.7 8 2z"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="side" aria-label="Workspace">
+    <div class="ws"><span class="logo" aria-hidden="true">T</span> Tideline</div>
+    <nav class="nav" aria-label="Main">
+      <a href="#"><svg class="i"><use href="#i-inbox"/></svg>Inbox</a>
+      <a href="#"><svg class="i"><use href="#i-check"/></svg>My tasks</a>
+      <a href="#"><svg class="i"><use href="#i-folder"/></svg>Projects</a>
+      <a href="#"><svg class="i"><use href="#i-cycle"/></svg>Cycles</a>
+      <a href="#" aria-current="page"><svg class="i"><use href="#i-gear"/></svg>Settings</a>
+    </nav>
+    <div class="me">
+      <span class="av sm js-initials" aria-hidden="true">MO</span>
+      <div><b class="js-name">Maya Okafor</b><span>Northwind Labs</span></div>
+    </div>
+  </aside>
+
+  <div style="min-width:0">
+    <header class="mobbar">
+      <div class="ws"><span class="logo" aria-hidden="true">T</span> Tideline</div>
+      <span class="av sm js-initials" aria-hidden="true">MO</span>
+    </header>
+
+    <main>
+      <div class="wrap">
+        <div class="head">
+          <p class="crumbs"><a href="#">Settings</a> / Account</p>
+          <h1>Account settings</h1>
+          <p>Your profile, sign-in and email preferences. These apply only to you; workspace settings are separate.</p>
+        </div>
+
+        <div class="cols">
+          <nav class="toc" aria-label="On this page">
+            <a href="#profile" class="on">Profile</a>
+            <a href="#password">Password</a>
+            <a href="#notifications">Notifications</a>
+          </nav>
+
+          <div class="sections">
+
+            <!-- PROFILE -->
+            <section class="sec" id="profile" aria-labelledby="h-profile">
+              <form id="profile-form" novalidate>
+                <div class="sec-h">
+                  <div><h2 id="h-profile">Profile</h2><p>Shown to teammates on tasks, comments and mentions.</p></div>
+                </div>
+                <div class="sec-b">
+                  <div class="avatar-row">
+                    <span class="av avatar-big js-initials" id="avatar" role="img" aria-label="Your avatar: initials MO">MO</span>
+                    <div>
+                      <b>Profile photo</b>
+                      <p class="hint">JPG or PNG, at least 256 px, up to 2 MB</p>
+                      <div class="acts">
+                        <button type="button" class="btn btn-quiet btn-sm" id="upload">Upload photo</button>
+                        <button type="button" class="btn btn-text btn-sm" id="remove-photo" hidden>Remove photo</button>
+                        <input type="file" id="file" accept="image/png,image/jpeg" class="sr" tabindex="-1" aria-hidden="true">
+                      </div>
+                      <p class="error" id="photo-error" role="alert" style="margin-top:8px"><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+                    </div>
+                  </div>
+
+                  <div class="summary" id="profile-summary" role="alert" tabindex="-1"></div>
+
+                  <div class="stack">
+                    <div class="row2">
+                      <div class="field" id="f-name">
+                        <label for="name">Full name</label>
+                        <input id="name" name="name" type="text" value="Maya Okafor" autocomplete="name" required aria-describedby="name-error">
+                        <p class="error" id="name-error"><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg><span>Enter your name so teammates can find you</span></p>
+                      </div>
+                      <div class="field" id="f-title">
+                        <label for="title">Job title <span class="opt">(optional)</span></label>
+                        <input id="title" name="title" type="text" value="Product designer" autocomplete="organization-title">
+                      </div>
+                    </div>
+                    <div class="field" id="f-email">
+                      <label for="email">Email</label>
+                      <input id="email" name="email" type="email" value="maya@northwindlabs.com" autocomplete="email" spellcheck="false" required aria-describedby="email-hint email-error">
+                      <p class="hint" id="email-hint">Used to sign in and for notifications. Changing it needs confirmation by email.</p>
+                      <p class="error" id="email-error"><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg><span>Enter an email like name@company.com</span></p>
+                    </div>
+                    <div class="field" id="f-tz">
+                      <label for="tz">Timezone</label>
+                      <select id="tz" name="timezone" aria-describedby="tz-now"></select>
+                      <p class="tz-now" id="tz-now"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg><span>It is <strong class="num" id="tz-time">--:--</strong> there now. Due dates and digests use this.</span></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="sec-f">
+                  <span class="saved" id="profile-saved" role="status"><svg viewBox="0 0 20 20" aria-hidden="true"><circle class="ring" cx="10" cy="10" r="8"/><path class="tick" d="m6.5 10.3 2.4 2.4 4.6-5"/></svg><span id="profile-saved-text">Saved</span></span>
+                  <span class="status grow" id="profile-status">All changes saved</span>
+                  <button type="button" class="btn btn-text" id="profile-discard" hidden>Discard</button>
+                  <button type="submit" class="btn btn-quiet" id="profile-save">Save changes</button>
+                </div>
+              </form>
+            </section>
+
+            <!-- PASSWORD -->
+            <section class="sec" id="password" aria-labelledby="h-password">
+              <form id="pw-form" novalidate autocomplete="on">
+                <div class="sec-h">
+                  <div><h2 id="h-password">Change password</h2><p>Last changed 4 months ago. You will stay signed in on this device and be signed out everywhere else.</p></div>
+                </div>
+                <div class="sec-b">
+                  <input type="text" name="username" value="maya@northwindlabs.com" autocomplete="username" class="sr" tabindex="-1" aria-hidden="true">
+                  <div class="stack" style="max-width:420px">
+                    <div class="field" id="f-cur">
+                      <label for="cur">Current password</label>
+                      <div class="pw">
+                        <input id="cur" type="password" autocomplete="current-password" aria-describedby="cur-error">
+                        <button type="button" class="show" data-for="cur" aria-pressed="false" aria-label="Show current password">Show</button>
+                      </div>
+                      <p class="error" id="cur-error"><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg><span>Enter your current password</span></p>
+                    </div>
+                    <div class="field" id="f-new">
+                      <label for="new">New password</label>
+                      <div class="pw">
+                        <input id="new" type="password" autocomplete="new-password" aria-describedby="rules new-error">
+                        <button type="button" class="show" data-for="new" aria-pressed="false" aria-label="Show new password">Show</button>
+                      </div>
+                      <div class="meter" id="meter" data-s="0" aria-hidden="true"><i></i><i></i><i></i></div>
+                      <p class="strength" id="strength" aria-live="polite"></p>
+                      <ul class="rules" id="rules" aria-label="Password rules">
+                        <li data-r="len"><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-tick"/></svg></span>At least 12 characters</li>
+                        <li data-r="mix"><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-tick"/></svg></span>A letter and a number</li>
+                        <li data-r="case"><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-tick"/></svg></span>Upper and lower case</li>
+                        <li data-r="diff"><span class="dot"><svg class="i" aria-hidden="true"><use href="#i-tick"/></svg></span>Different from current</li>
+                      </ul>
+                      <p class="error" id="new-error"><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg><span>Choose a password that meets every rule above</span></p>
+                    </div>
+                    <div class="field" id="f-conf">
+                      <label for="conf">Confirm new password</label>
+                      <div class="pw">
+                        <input id="conf" type="password" autocomplete="new-password" aria-describedby="conf-error">
+                        <button type="button" class="show" data-for="conf" aria-pressed="false" aria-label="Show confirmation password">Show</button>
+                      </div>
+                      <p class="error" id="conf-error"><svg class="i" aria-hidden="true"><use href="#i-alert"/></svg><span>The two passwords do not match</span></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="sec-f">
+                  <span class="saved" id="pw-saved" role="status"><svg viewBox="0 0 20 20" aria-hidden="true"><circle class="ring" cx="10" cy="10" r="8"/><path class="tick" d="m6.5 10.3 2.4 2.4 4.6-5"/></svg><span>Password updated</span></span>
+                  <span class="status grow" id="pw-status"></span>
+                  <button type="submit" class="btn btn-quiet" id="pw-save">Update password</button>
+                </div>
+              </form>
+            </section>
+
+            <!-- NOTIFICATIONS -->
+            <section class="sec" id="notifications" aria-labelledby="h-notif">
+              <div class="sec-h">
+                <div><h2 id="h-notif">Email notifications</h2><p>Choose what lands in <span class="js-email">maya@northwindlabs.com</span>. In-app notifications are not affected.</p></div>
+                <span class="autosave" id="autosave"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Changes save automatically</span>
+              </div>
+              <div class="sec-b">
+                <div class="group">
+                  <h3>Activity on your work</h3>
+                  <div class="opt-row">
+                    <div class="t"><b id="n1">Assigned to you</b><span>When someone assigns you a task or an issue</span></div>
+                    <div class="ctl"><span class="sw-state" aria-hidden="true"></span><label class="sw"><input type="checkbox" role="switch" data-key="assigned" aria-labelledby="n1" checked><span class="track"></span></label></div>
+                  </div>
+                  <div class="opt-row">
+                    <div class="t"><b id="n2">Mentions and replies</b><span>When you are @mentioned or someone replies to your comment</span></div>
+                    <div class="ctl"><span class="sw-state" aria-hidden="true"></span><label class="sw"><input type="checkbox" role="switch" data-key="mentions" aria-labelledby="n2" checked><span class="track"></span></label></div>
+                  </div>
+                  <div class="opt-row">
+                    <div class="t"><b id="n3">Status changes on tasks you follow</b><span>Moved to a new stage, marked done or reopened</span></div>
+                    <div class="ctl"><span class="sw-state" aria-hidden="true"></span><label class="sw"><input type="checkbox" role="switch" data-key="status" aria-labelledby="n3"><span class="track"></span></label></div>
+                  </div>
+                  <div class="opt-row">
+                    <div class="t"><b id="n4">Due date reminders</b><span>The morning a task is due and when it becomes overdue</span></div>
+                    <div class="ctl"><span class="sw-state" aria-hidden="true"></span><label class="sw"><input type="checkbox" role="switch" data-key="due" aria-labelledby="n4" checked><span class="track"></span></label></div>
+                  </div>
+                </div>
+                <div class="group">
+                  <h3>Summaries and news</h3>
+                  <div class="opt-row">
+                    <div class="t"><b id="n5">Project digest</b><span>Progress across the projects you belong to</span></div>
+                    <div class="ctl"><span class="sw-state" aria-hidden="true"></span><label class="sw"><input type="checkbox" role="switch" data-key="digest" aria-labelledby="n5" checked><span class="track"></span></label></div>
+                  </div>
+                  <fieldset class="freq" id="freq-set">
+                    <legend>Digest frequency</legend>
+                    <label><input type="radio" name="freq" value="Daily"><span>Daily</span></label>
+                    <label><input type="radio" name="freq" value="Weekly" checked><span>Weekly, Monday 09:00</span></label>
+                    <label><input type="radio" name="freq" value="Monthly"><span>Monthly</span></label>
+                  </fieldset>
+                  <div class="opt-row" style="margin-top:12px">
+                    <div class="t"><b id="n6">Product updates</b><span>New features and changes to Tideline, at most twice a month</span></div>
+                    <div class="ctl"><span class="sw-state" aria-hidden="true"></span><label class="sw"><input type="checkbox" role="switch" data-key="news" aria-labelledby="n6"><span class="track"></span></label></div>
+                  </div>
+                </div>
+              </div>
+              <div class="sec-f">
+                <span class="saved" id="notif-saved" role="status"><svg viewBox="0 0 20 20" aria-hidden="true"><circle class="ring" cx="10" cy="10" r="8"/><path class="tick" d="m6.5 10.3 2.4 2.4 4.6-5"/></svg><span id="notif-saved-text">Saved</span></span>
+                <span class="status grow" id="notif-status">Security emails, like password changes, are always sent.</span>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* ---------- toasts ---------- */
+  function toast(msg, undo) {
+    var t = document.createElement('div'); t.className = 'toast';
+    t.innerHTML = '<svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span></span>';
+    t.querySelector('span').textContent = msg;
+    if (undo) { var b = document.createElement('button'); b.type = 'button'; b.textContent = 'Undo'; b.onclick = function () { undo(); dismiss(); }; t.appendChild(b); }
+    $('#toasts').appendChild(t);
+    var timer = setTimeout(dismiss, 5000);
+    function dismiss() { clearTimeout(timer); t.classList.add('out'); setTimeout(function () { t.remove(); }, 160); }
+  }
+  function flashSaved(id, text) {
+    var el = $(id); if (text) el.querySelector('span').textContent = text;
+    el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+    clearTimeout(el._t); el._t = setTimeout(function () { el.classList.remove('on'); }, 4000);
+  }
+  function now() { return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); }
+
+  /* ---------- timezone ---------- */
+  var zones = [
+    ['Pacific/Honolulu', '(UTC-10:00) Honolulu'], ['America/Anchorage', '(UTC-09:00) Anchorage'],
+    ['America/Los_Angeles', '(UTC-08:00) Pacific Time, Los Angeles'], ['America/Denver', '(UTC-07:00) Mountain Time, Denver'],
+    ['America/Chicago', '(UTC-06:00) Central Time, Chicago'], ['America/New_York', '(UTC-05:00) Eastern Time, New York'],
+    ['America/Sao_Paulo', '(UTC-03:00) Sao Paulo'], ['Atlantic/Reykjavik', '(UTC+00:00) Reykjavik'],
+    ['Europe/London', '(UTC+00:00) London'], ['Europe/Berlin', '(UTC+01:00) Berlin, Paris, Madrid'],
+    ['Africa/Lagos', '(UTC+01:00) Lagos'], ['Africa/Johannesburg', '(UTC+02:00) Johannesburg'],
+    ['Europe/Athens', '(UTC+02:00) Athens, Helsinki'], ['Europe/Istanbul', '(UTC+03:00) Istanbul'],
+    ['Asia/Dubai', '(UTC+04:00) Dubai'], ['Asia/Karachi', '(UTC+05:00) Karachi'],
+    ['Asia/Kolkata', '(UTC+05:30) Mumbai, New Delhi'], ['Asia/Dhaka', '(UTC+06:00) Dhaka'],
+    ['Asia/Bangkok', '(UTC+07:00) Bangkok, Jakarta'], ['Asia/Singapore', '(UTC+08:00) Singapore'],
+    ['Asia/Tokyo', '(UTC+09:00) Tokyo, Seoul'], ['Australia/Sydney', '(UTC+10:00) Sydney'], ['Pacific/Auckland', '(UTC+12:00) Auckland']
+  ];
+  var tz = $('#tz');
+  zones.forEach(function (z) { var o = document.createElement('option'); o.value = z[0]; o.textContent = z[1]; tz.appendChild(o); });
+  tz.value = 'Europe/London';
+  function tzTime() {
+    try { $('#tz-time').textContent = new Date().toLocaleTimeString('en-GB', { timeZone: tz.value, hour: '2-digit', minute: '2-digit' }); } catch (e) {}
+  }
+  tzTime(); setInterval(tzTime, 20000);
+
+  /* ---------- profile ---------- */
+  var form = $('#profile-form'), saveBtn = $('#profile-save'), status = $('#profile-status'), discard = $('#profile-discard');
+  var fields = ['name', 'title', 'email', 'tz'];
+  var saved = {}; function snapshot() { fields.forEach(function (f) { saved[f] = $('#' + f).value; }); saved.photo = photo; }
+  var photo = null;
+  function isDirty() { return fields.some(function (f) { return $('#' + f).value !== saved[f]; }) || photo !== saved.photo; }
+  function updateDirty() {
+    var d = isDirty();
+    saveBtn.className = 'btn ' + (d ? 'btn-primary' : 'btn-quiet');
+    discard.hidden = !d;
+    status.className = 'status grow' + (d ? ' dirty' : '');
+    status.textContent = d ? 'You have unsaved changes' : 'All changes saved';
+  }
+  function initials(n) { var p = n.trim().split(/\s+/).filter(Boolean); if (!p.length) return '?'; return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase(); }
+  function paintIdentity() {
+    var i = initials($('#name').value);
+    $$('.js-initials').forEach(function (e) {
+      if (e.id === 'avatar' && photo) { e.textContent = ''; e.style.backgroundImage = 'url(' + photo + ')'; }
+      else { e.textContent = i; if (e.id === 'avatar') e.style.backgroundImage = ''; }
+    });
+    $('#avatar').setAttribute('aria-label', photo ? 'Your profile photo' : 'Your avatar: initials ' + i);
+    $('#remove-photo').hidden = !photo;
+  }
+  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  function check(id) {
+    var el = $('#' + id), ok = id === 'email' ? emailRe.test(el.value.trim()) : el.value.trim().length > 0;
+    var f = $('#f-' + id); f.classList.toggle('bad', !ok);
+    if (ok) el.removeAttribute('aria-invalid'); else el.setAttribute('aria-invalid', 'true');
+    return ok;
+  }
+  ['name', 'email'].forEach(function (id) {
+    var el = $('#' + id);
+    el.addEventListener('blur', function () { check(id); });
+    el.addEventListener('input', function () { if ($('#f-' + id).classList.contains('bad')) check(id); });
+  });
+  form.addEventListener('input', function () { paintIdentity(); updateDirty(); });
+  tz.addEventListener('change', function () { tzTime(); updateDirty(); });
+  discard.addEventListener('click', function () {
+    fields.forEach(function (f) { $('#' + f).value = saved[f]; });
+    photo = saved.photo; ['name', 'email'].forEach(function (i) { $('#f-' + i).classList.remove('bad'); $('#' + i).removeAttribute('aria-invalid'); });
+    $('#profile-summary').classList.remove('on'); paintIdentity(); tzTime(); updateDirty();
+  });
+
+  $('#upload').addEventListener('click', function () { $('#file').click(); });
+  $('#file').addEventListener('change', function () {
+    var f = this.files[0], err = $('#photo-error'); err.style.display = 'none';
+    if (!f) return;
+    if (!/^image\/(png|jpeg)$/.test(f.type)) { err.querySelector('span').textContent = 'That file is not a JPG or PNG. Choose a photo in one of those formats.'; err.style.display = 'flex'; return; }
+    if (f.size > 2 * 1024 * 1024) { err.querySelector('span').textContent = 'That photo is ' + (f.size / 1048576).toFixed(1) + ' MB. Choose one under 2 MB.'; err.style.display = 'flex'; return; }
+    var r = new FileReader(); r.onload = function () { photo = r.result; paintIdentity(); updateDirty(); }; r.readAsDataURL(f);
+  });
+  $('#remove-photo').addEventListener('click', function () { photo = null; $('#file').value = ''; paintIdentity(); updateDirty(); });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var sum = $('#profile-summary');
+    if (!isDirty()) { status.textContent = 'Nothing to save: you have not changed anything'; return; }
+    var errs = [];
+    if (!check('name')) errs.push(['name', 'Enter your name so teammates can find you']);
+    if (!check('email')) errs.push(['email', 'Enter an email like name@company.com']);
+    if (errs.length) {
+      sum.innerHTML = '<b>Fix ' + errs.length + (errs.length > 1 ? ' things' : ' thing') + ' before saving</b><ul>' + errs.map(function (x) { return '<li><a href="#' + x[0] + '">' + x[1] + '</a></li>'; }).join('') + '</ul>';
+      sum.classList.add('on'); sum.focus();
+      $$('a', sum).forEach(function (a) { a.addEventListener('click', function (ev) { ev.preventDefault(); $(a.getAttribute('href')).focus(); }); });
+      return;
+    }
+    sum.classList.remove('on');
+    saveBtn.setAttribute('aria-busy', 'true'); saveBtn.innerHTML = '<span class="spin"></span>Saving…';
+    setTimeout(function () {
+      var emailChanged = $('#email').value.trim() !== saved.email;
+      snapshot(); saved.email = emailChanged ? saved.email : saved.email;
+      saveBtn.removeAttribute('aria-busy'); saveBtn.textContent = 'Save changes';
+      $$('.js-name').forEach(function (n) { n.textContent = $('#name').value.trim(); });
+      updateDirty();
+      if (emailChanged) {
+        status.textContent = 'Confirmation sent to ' + $('#email').value.trim();
+        flashSaved('#profile-saved', 'Saved at ' + now());
+        toast('Profile saved. Confirm the new email from the message we sent to ' + $('#email').value.trim() + '.');
+      } else { flashSaved('#profile-saved', 'Saved at ' + now()); toast('Profile saved'); }
+    }, 700);
+  });
+  snapshot(); paintIdentity(); updateDirty();
+
+  /* ---------- password ---------- */
+  $$('.show').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var i = $('#' + b.dataset.for), show = i.type === 'password';
+      i.type = show ? 'text' : 'password'; b.setAttribute('aria-pressed', show); b.textContent = show ? 'Hide' : 'Show';
+    });
+  });
+  var cur = $('#cur'), nw = $('#new'), conf = $('#conf');
+  function rules() {
+    var v = nw.value, r = {
+      len: v.length >= 12, mix: /[A-Za-z]/.test(v) && /\d/.test(v), case: /[a-z]/.test(v) && /[A-Z]/.test(v), diff: v.length > 0 && v !== cur.value
+    };
+    var n = 0; $$('#rules li').forEach(function (li) { var ok = r[li.dataset.r]; li.classList.toggle('ok', ok); if (ok) n++; });
+    var s = v.length === 0 ? 0 : n <= 1 ? 1 : n <= 3 ? 2 : 3;
+    $('#meter').dataset.s = s;
+    $('#strength').textContent = ['', 'Weak', 'Getting there', 'Strong'][s];
+    return n === 4;
+  }
+  function bad(id, on, msg) {
+    var f = $('#f-' + id); f.classList.toggle('bad', on);
+    if (msg) f.querySelector('.error span').textContent = msg;
+    var i = f.querySelector('input'); if (on) i.setAttribute('aria-invalid', 'true'); else i.removeAttribute('aria-invalid');
+  }
+  nw.addEventListener('input', function () { rules(); if ($('#f-new').classList.contains('bad') && rules()) bad('new', false); if ($('#f-conf').classList.contains('bad')) bad('conf', conf.value !== nw.value); });
+  cur.addEventListener('input', function () { rules(); if (cur.value) bad('cur', false); });
+  conf.addEventListener('blur', function () { if (conf.value) bad('conf', conf.value !== nw.value); });
+  conf.addEventListener('input', function () { if ($('#f-conf').classList.contains('bad')) bad('conf', conf.value !== nw.value); });
+  $('#pw-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var first = null;
+    bad('cur', !cur.value); if (!cur.value) first = first || cur;
+    var okRules = rules(); bad('new', !okRules); if (!okRules) first = first || nw;
+    bad('conf', conf.value !== nw.value, conf.value ? 'The two passwords do not match' : 'Type the new password again to confirm'); if (conf.value !== nw.value || !conf.value) { bad('conf', true); first = first || conf; }
+    if (first) { first.focus(); $('#pw-status').textContent = 'Fix the highlighted fields to continue'; return; }
+    var b = $('#pw-save'); b.setAttribute('aria-busy', 'true'); b.innerHTML = '<span class="spin"></span>Updating…';
+    setTimeout(function () {
+      if (cur.value === 'wrongpass') { b.removeAttribute('aria-busy'); b.textContent = 'Update password'; bad('cur', true, 'That is not your current password. Check it and try again.'); cur.focus(); return; }
+      b.removeAttribute('aria-busy'); b.textContent = 'Update password';
+      cur.value = nw.value = conf.value = ''; rules(); $('#pw-status').textContent = 'Password changed ' + now() + '. Other devices were signed out.';
+      flashSaved('#pw-saved'); toast('Password updated. Other devices were signed out.');
+    }, 800);
+  });
+
+  /* ---------- notifications: instant ---------- */
+  function setState(input) { var s = input.closest('.ctl').querySelector('.sw-state'); s.textContent = input.checked ? 'On' : 'Off'; }
+  $$('.sw input').forEach(function (i) {
+    setState(i);
+    i.addEventListener('change', function () {
+      var el = i, label = document.getElementById(i.getAttribute('aria-labelledby')).textContent, on = i.checked;
+      setState(i);
+      flashSaved('#notif-saved', 'Saved at ' + now());
+      toast(label + ': ' + (on ? 'on' : 'off'), function () { el.checked = !on; setState(el); if (el.dataset.key === 'digest') digestUi(); flashSaved('#notif-saved', 'Reverted at ' + now()); });
+      if (i.dataset.key === 'digest') digestUi();
+    });
+  });
+  function digestUi() {
+    var on = $('[data-key=digest]').checked;
+    $$('#freq-set input').forEach(function (r) { r.disabled = !on; });
+    $('#freq-set').style.opacity = on ? 1 : .55;
+  }
+  digestUi();
+  $$('#freq-set input').forEach(function (r) { r.addEventListener('change', function () { flashSaved('#notif-saved', 'Saved at ' + now()); toast('Digest frequency: ' + r.value.toLowerCase()); }); });
+  $('.js-email').textContent = $('#email').value;
+
+  /* ---------- in-page nav highlight ---------- */
+  var links = $$('.toc a'), secs = links.map(function (a) { return $(a.getAttribute('href')); });
+  function spy() {
+    var y = window.scrollY + 140, idx = 0;
+    secs.forEach(function (s, i) { if (s.offsetTop <= y) idx = i; });
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) idx = secs.length - 1;
+    links.forEach(function (a, i) { a.classList.toggle('on', i === idx); });
+  }
+  window.addEventListener('scroll', spy, { passive: true }); spy();
+
+  window.addEventListener('beforeunload', function (e) { if (isDirty()) { e.preventDefault(); e.returnValue = ''; } });
+})();
+</script>
+</body>
+</html>

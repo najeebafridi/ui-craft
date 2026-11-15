@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember &amp; Wick – Shop dashboard</title>
+<!--
+Design brief
+Product: small-shop dashboard for a handmade candle store (~300 orders/month), checked daily by the owner
+Tone: warm, calm, trustworthy     Density: compact (14px body)
+Accent: deep terracotta #9A3412   Neutrals: warm grey
+Font: system stack                Radius: 6px
+Primary task: spot candles running low and reorder them
+Sample data: all figures are made-up sample data.
+-->
+<style>
+:root{
+  color-scheme: light;
+  --bg:#FAF8F5; --surface:#FFFFFF; --surface-2:#F5F2ED; --surface-3:#EAE5DD;
+  --border:#E7E2DA; --border-strong:#8A8176;
+  --text:#1F1B16; --text-muted:#575046; --text-subtle:#6B6358;
+  --accent:#9A3412; --accent-hover:#7C2A0E; --accent-fg:#FFFFFF; --accent-soft:#FBEDE6; --accent-text:#9A3412;
+  --success-text:#166534; --warning:#B45309; --warning-soft:#FFF7E6; --warning-text:#92400E;
+  --danger:#B91C1C; --danger-soft:#FEF2F2; --danger-text:#B91C1C;
+  --series-prev:#A8A095;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px; --space-7:48px;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius:6px;
+  --shadow-raised:0 1px 2px rgb(31 27 22/.06), 0 1px 3px rgb(31 27 22/.1);
+  --sidebar-w:224px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 14px/20px var(--font-sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.25}
+h1{font-size:20px}
+h2{font-size:16px}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+svg{display:block}
+
+/* shell */
+.app{display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;padding:var(--space-4);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;gap:var(--space-5)}
+.brand{display:flex;align-items:center;gap:var(--space-2);font-weight:600;font-size:16px;padding:var(--space-1) var(--space-2)}
+.brand-mark{width:24px;height:24px;color:var(--accent)}
+.nav{display:flex;flex-direction:column;gap:var(--space-1)}
+.nav a{display:flex;align-items:center;gap:var(--space-3);min-height:36px;padding:0 var(--space-3);border-radius:var(--radius);color:var(--text-muted);text-decoration:none;font-weight:500;transition:background-color 120ms ease-out,color 120ms ease-out}
+.nav a:hover{background:var(--surface-2);color:var(--text)}
+.nav a:active{background:var(--surface-3)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent-text)}
+.nav svg,.ico{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.side-foot{margin-top:auto;color:var(--text-subtle);font-size:12px;line-height:16px;padding:0 var(--space-2)}
+
+.main{padding:var(--space-5) var(--space-6) var(--space-7);max-width:1360px;width:100%;min-width:0}
+.page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--space-4);margin-bottom:var(--space-5)}
+.page-head p{color:var(--text-muted);margin-top:var(--space-1)}
+.head-actions{display:flex;align-items:center;gap:var(--space-2)}
+
+/* controls */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);height:36px;padding:0 var(--space-4);border-radius:var(--radius);border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:500 14px/20px var(--font-sans);cursor:pointer;transition:background-color 120ms ease-out,border-color 120ms ease-out}
+.btn:hover{background:var(--surface-2)}
+.btn:active{background:var(--surface-3)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn-primary:active{background:#651F09}
+.btn-sm{height:32px;padding:0 var(--space-3)}
+.field{height:36px;padding:0 var(--space-3);border:1px solid var(--border-strong);border-radius:var(--radius);background:var(--surface);color:var(--text);font:400 14px/20px var(--font-sans)}
+
+/* sections */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+.panel-head{padding:var(--space-4) var(--space-4) 0;display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-4)}
+.panel-head p{color:var(--text-muted);margin-top:var(--space-1);font-size:12px;line-height:16px}
+.panel-body{padding:var(--space-4)}
+.link{display:inline-flex;align-items:center;min-height:32px;color:var(--accent-text);font-weight:500;text-decoration:none}
+.link:hover{text-decoration:underline}
+
+/* kpis (one strip, divided by lines, not four separate cards) */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:var(--space-5)}
+.kpi{padding:var(--space-4) var(--space-5);border-left:1px solid var(--border);min-width:0}
+.kpi:first-child{border-left:0}
+.kpi-label{color:var(--text-muted);font-size:12px;line-height:16px}
+.kpi-value{font-size:24px;line-height:32px;font-weight:600;margin-top:var(--space-1)}
+.kpi-meta{display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-1);font-size:12px;line-height:16px;color:var(--text-muted);flex-wrap:wrap}
+.delta{display:inline-flex;align-items:center;gap:var(--space-1);font-weight:600}
+.delta.good{color:var(--success-text)}
+.delta.bad{color:var(--danger-text)}
+.delta svg{width:12px;height:12px;fill:currentColor}
+.spark{margin-top:var(--space-2);width:100%;height:24px}
+
+/* grid */
+.grid-2{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:var(--space-5);margin-bottom:var(--space-5)}
+.grid-2b{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,4fr);gap:var(--space-5)}
+.legend{display:flex;gap:var(--space-4);font-size:12px;line-height:16px;color:var(--text-muted);margin-bottom:var(--space-2)}
+.legend span{display:inline-flex;align-items:center;gap:var(--space-2)}
+.sw{width:16px;height:0;border-top:2px solid var(--accent)}
+.sw.prev{border-top:2px dashed var(--series-prev)}
+.chart{width:100%;height:auto;overflow:visible}
+.chart text{font:400 12px var(--font-sans);fill:var(--text-muted)}
+.tip{position:absolute;pointer-events:none;background:var(--text);color:#fff;border-radius:var(--radius);padding:var(--space-2) var(--space-3);font-size:12px;line-height:16px;box-shadow:0 4px 6px rgb(31 27 22/.08),0 12px 32px rgb(31 27 22/.18);white-space:nowrap;opacity:0;transition:opacity 120ms ease-out;z-index:2}
+.tip b{font-weight:600}
+.chart-wrap{position:relative}
+
+/* best sellers */
+.rank{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--space-3)}
+.rank li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-1) var(--space-3);align-items:baseline}
+.rank .name{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank .val{color:var(--text-muted);text-align:right}
+.rank .val b{color:var(--text);font-weight:600}
+.bar{grid-column:1/-1;height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--series-prev);border-radius:4px}
+.rank li:first-child .bar i{background:var(--accent)}
+
+/* tables */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:0 var(--space-3);height:44px;text-align:left;border-top:1px solid var(--border);white-space:nowrap}
+th{height:36px;font-weight:500;font-size:12px;line-height:16px;color:var(--text-muted);background:var(--surface-2)}
+thead th{border-top:0}
+td.r,th.r{text-align:right}
+th:first-child,td:first-child{padding-left:var(--space-4)}th:last-child,td:last-child{padding-right:var(--space-4)}
+tbody tr:hover{background:var(--surface-2)}
+.status{display:inline-flex;align-items:center;gap:var(--space-1);height:24px;padding:0 var(--space-2);border-radius:4px;font-size:12px;font-weight:600}
+.status svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.status.out{background:var(--danger-soft);color:var(--danger-text)}
+.status.low{background:var(--warning-soft);color:var(--warning-text)}
+.status.ok{background:#F0FDF4;color:var(--success-text)}
+.status.ship{background:var(--surface-2);color:var(--text-muted)}
+.stock{display:flex;align-items:center;gap:var(--space-3)}
+.stock .meter{width:64px;height:6px;border-radius:3px;background:var(--surface-3);overflow:hidden;flex:none}
+.stock .meter i{display:block;height:100%;background:var(--warning)}
+.stock .meter i.out{background:var(--danger)}
+.cards-m{display:none}
+
+.foot-note{margin-top:var(--space-5);color:var(--text-subtle);font-size:12px;line-height:16px}
+.tabbar{display:none}
+
+@media (max-width:1024px){
+  .grid-2,.grid-2b{grid-template-columns:minmax(0,1fr)}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi:nth-child(3){border-left:0}
+  .kpi:nth-child(n+3){border-top:1px solid var(--border)}
+}
+@media (max-width:860px){
+  .app{display:block}
+  .sidebar{display:none}
+  .main{padding:var(--space-4) var(--space-4) calc(72px + 16px + env(safe-area-inset-bottom))}
+  .tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+  .tabbar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;color:var(--text-muted);text-decoration:none;font-size:12px;line-height:16px;font-weight:500}
+  .tabbar a[aria-current="page"]{color:var(--accent-text)}
+  .tabbar .ico{width:24px;height:24px}
+}
+@media (max-width:640px),(pointer:coarse){
+  .btn,.field{min-height:44px}
+  .field{font-size:16px}
+  .btn-sm,.link{min-height:44px}
+}
+@media (max-width:640px){
+  .page-head{align-items:stretch}
+  .head-actions{flex-direction:column;align-items:stretch;width:100%}
+  .head-actions .field{width:100%}
+  .kpi{padding:var(--space-4)}
+  .kpi-value{font-size:20px;line-height:28px}
+  .table-full{display:none}
+  .cards-m{display:flex;flex-direction:column}
+  .m-item{padding:var(--space-4);border-top:1px solid var(--border);display:grid;gap:var(--space-2)}
+  .m-row{display:flex;justify-content:space-between;align-items:center;gap:var(--space-3)}
+  .m-row .name{font-weight:500}
+  .m-row .sub{color:var(--text-muted);font-size:12px;line-height:16px}
+  .m-item .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4M12 11v10"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.7a3.5 3.5 0 010 6.6M18 14.3c2.2.7 3.5 2.6 3.5 5.7"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 01-10 0c0-2 1-3.5 2-4.5.2 1.5 1 2.2 1.8 2.5C10.5 8 11 5.5 12 3z"/></symbol>
+  <symbol id="i-up" viewBox="0 0 12 12"><path d="M6 1l5 9H1z"/></symbol>
+  <symbol id="i-down" viewBox="0 0 12 12"><path d="M6 11L1 2h10z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 8v5M12 17h.01"/><circle cx="12" cy="12" r="9"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="sidebar" aria-label="Sidebar">
+    <div class="brand">
+      <svg class="brand-mark ico" aria-hidden="true"><use href="#i-flame"/></svg>
+      Ember &amp; Wick
+    </div>
+    <nav class="nav" aria-label="Main">
+      <a href="#" aria-current="page"><svg class="ico" aria-hidden="true"><use href="#i-home"/></svg>Overview</a>
+      <a href="#orders"><svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>Orders</a>
+      <a href="#stock"><svg class="ico" aria-hidden="true"><use href="#i-box"/></svg>Inventory</a>
+      <a href="#"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg>Customers</a>
+    </nav>
+    <p class="side-foot">Sample data for illustration.<br>Updated today, 09:40</p>
+  </aside>
+
+  <main class="main" id="main">
+    <header class="page-head">
+      <div>
+        <h1>Overview</h1>
+        <p>Your shop in the last 30 days, 17 Oct – 15 Nov 2026</p>
+      </div>
+      <div class="head-actions">
+        <label class="sr-only" for="range">Date range</label>
+        <select class="field" id="range">
+          <option>Last 30 days</option>
+          <option>Last 7 days</option>
+          <option>This month</option>
+          <option>Last 90 days</option>
+        </select>
+        <button class="btn btn-primary" type="button" id="po-top">Reorder low stock</button>
+      </div>
+    </header>
+
+    <section class="panel kpis" aria-label="Key numbers">
+      <div class="kpi">
+        <div class="kpi-label" id="k1l">Sales</div>
+        <div class="kpi-value num" id="k-sales">$0</div>
+        <div class="kpi-meta"><span class="delta good" id="d-sales"></span><span>vs previous 30 days</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Orders</div>
+        <div class="kpi-value num" id="k-orders">0</div>
+        <div class="kpi-meta"><span class="delta good" id="d-orders"></span><span>vs previous 30 days</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Average order value</div>
+        <div class="kpi-value num" id="k-aov">$0</div>
+        <div class="kpi-meta"><span class="delta good" id="d-aov"></span><span>vs previous 30 days</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Candles low or out of stock</div>
+        <div class="kpi-value num">5 <span style="font-size:14px;font-weight:500;color:var(--text-muted)">of 18</span></div>
+        <div class="kpi-meta"><span class="delta bad"><svg aria-hidden="true"><use href="#i-up"/></svg>2 more</span><span>than last week</span></div>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <section class="panel" aria-labelledby="sales-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="sales-h">Sales are up 16% on the previous 30 days</h2>
+            <p>Daily sales, 17 Oct – 15 Nov 2026</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="legend"><span><i class="sw"></i>This period</span><span><i class="sw prev"></i>Previous 30 days</span></div>
+          <figure class="chart-wrap" id="chart-wrap" style="margin:0">
+            <svg class="chart" id="sales-chart" viewBox="0 0 640 260" role="img" aria-labelledby="sales-t sales-d">
+              <title id="sales-t">Daily sales, last 30 days versus previous 30 days</title>
+              <desc id="sales-d">Sales were $14,559 over 30 days compared with $12,499 in the previous 30 days. Friday to Sunday are the strongest days, and 11 and 12 November peaked after the autumn restock email.</desc>
+            </svg>
+            <div class="tip" id="tip" role="presentation"></div>
+            <figcaption class="sr-only">Sales were $14,559 in the last 30 days versus $12,499 in the 30 days before.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="best-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="best-h">Cedar &amp; Smoke is your best seller</h2>
+            <p>Top 6 candles by units sold, last 30 days</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <ol class="rank" id="rank"></ol>
+        </div>
+      </section>
+    </div>
+
+    <div class="grid-2b">
+      <section class="panel" id="stock" aria-labelledby="stock-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="stock-h">5 candles need restocking</h2>
+            <p>Based on stock left and average daily sales</p>
+          </div>
+          <button class="btn btn-sm" type="button">Export list</button>
+        </div>
+        <div class="panel-body" style="padding:var(--space-4) 0 0">
+          <div class="table-wrap table-full">
+            <table>
+              <thead><tr><th scope="col">Candle</th><th scope="col" class="r">In stock</th><th scope="col">Days left</th><th scope="col"><span class="sr-only">Action</span></th></tr></thead>
+              <tbody id="stock-body"></tbody>
+            </table>
+          </div>
+          <div class="cards-m" id="stock-cards"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="orders" aria-labelledby="ord-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="ord-h">Recent orders</h2>
+            <p>Latest 6 of 312 this period</p>
+          </div>
+          <a class="link" href="#">View all orders</a>
+        </div>
+        <div class="panel-body" style="padding:var(--space-4) 0 0">
+          <div class="table-wrap table-full">
+            <table>
+              <thead><tr><th scope="col">Order</th><th scope="col">Customer</th><th scope="col">Status</th><th scope="col" class="r">Total</th></tr></thead>
+              <tbody id="ord-body"></tbody>
+            </table>
+          </div>
+          <div class="cards-m" id="ord-cards"></div>
+        </div>
+      </section>
+    </div>
+
+    <p class="foot-note">All figures are sample data for illustration. Updated today, 09:40.</p>
+  </main>
+</div>
+
+<nav class="tabbar" aria-label="Main">
+  <a href="#" aria-current="page"><svg class="ico" aria-hidden="true"><use href="#i-home"/></svg>Overview</a>
+  <a href="#orders"><svg class="ico" aria-hidden="true"><use href="#i-bag"/></svg>Orders</a>
+  <a href="#stock"><svg class="ico" aria-hidden="true"><use href="#i-box"/></svg>Inventory</a>
+  <a href="#"><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg>Customers</a>
+</nav>
+
+<script>
+(function(){
+  // ---- sample data ----
+  var cur  = [330,360,395,520,610,455,300,345,372,410,545,655,480,330,360,390,415,560,690,520,340,385,425,455,880,1020,640,420,455,497];
+  var prev = [300,320,355,470,560,430,285,310,340,380,505,600,445,300,335,360,385,520,640,480,315,350,390,420,500,585,470,360,385,404];
+  var sum = function(a){return a.reduce(function(x,y){return x+y},0)};
+  var salesNow = sum(cur), salesPrev = sum(prev);
+  var ordersNow = 312, ordersPrev = 291;
+  var aovNow = salesNow/ordersNow, aovPrev = salesPrev/ordersPrev;
+  var money = function(n){return '$'+Math.round(n).toLocaleString('en-US')};
+  var pct = function(a,b){return ((a-b)/b*100)};
+  function delta(el,p){
+    var up = p>=0;
+    el.innerHTML = '<svg aria-hidden="true"><use href="#'+(up?'i-up':'i-down')+'"/></svg>'+(up?'+':'−')+Math.abs(p).toFixed(1)+'%';
+  }
+  document.getElementById('k-sales').textContent = money(salesNow);
+  document.getElementById('k-orders').textContent = ordersNow;
+  document.getElementById('k-aov').textContent = '$'+aovNow.toFixed(2);
+  delta(document.getElementById('d-sales'), pct(salesNow,salesPrev));
+  delta(document.getElementById('d-orders'), pct(ordersNow,ordersPrev));
+  delta(document.getElementById('d-aov'), pct(aovNow,aovPrev));
+
+  // ---- line chart ----
+  var svg = document.getElementById('sales-chart'), NS='http://www.w3.org/2000/svg';
+  var W=640,H=260,L=44,R=8,T=8,B=28, max=1200;
+  var x = function(i){return L+i*(W-L-R)/(cur.length-1)};
+  var y = function(v){return T+(1-v/max)*(H-T-B)};
+  function el(n,a,txt){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e}
+  [0,300,600,900,1200].forEach(function(t){
+    el('line',{x1:L,x2:W-R,y1:y(t),y2:y(t),stroke:'#E7E2DA','stroke-width':1});
+    el('text',{x:L-8,y:y(t)+4,'text-anchor':'end'},t===0?'$0':'$'+(t/1000).toFixed(1).replace('.0','')+(t>=1000?'k':'')).textContent = t===0?'$0':'$'+t.toLocaleString('en-US');
+  });
+  var labels=[[0,'17 Oct'],[7,'24 Oct'],[14,'31 Oct'],[21,'7 Nov'],[29,'15 Nov']];
+  labels.forEach(function(l){el('text',{x:x(l[0]),y:H-6,'text-anchor':l[0]===0?'start':(l[0]===29?'end':'middle')},l[1])});
+  var path=function(a){return a.map(function(v,i){return (i?'L':'M')+x(i).toFixed(1)+' '+y(v).toFixed(1)}).join(' ')};
+  el('path',{d:path(prev),fill:'none',stroke:'#A8A095','stroke-width':2,'stroke-dasharray':'4 4','stroke-linejoin':'round'});
+  el('path',{d:path(cur),fill:'none',stroke:'#9A3412','stroke-width':2.5,'stroke-linejoin':'round','stroke-linecap':'round'});
+  // annotate peak
+  var pk = cur.indexOf(Math.max.apply(null,cur));
+  el('circle',{cx:x(pk),cy:y(cur[pk]),r:4,fill:'#9A3412',stroke:'#fff','stroke-width':2});
+  el('text',{x:x(pk)-10,y:y(cur[pk])-4,'text-anchor':'end'},'Autumn restock email, 11 Nov');
+  var guide=el('line',{y1:T,y2:H-B,stroke:'#8A8176','stroke-width':1,opacity:0});
+  var dot=el('circle',{r:4,fill:'#9A3412',stroke:'#fff','stroke-width':2,opacity:0});
+  var wrap=document.getElementById('chart-wrap'), tip=document.getElementById('tip');
+  var dates=cur.map(function(_,i){var d=new Date(2026,9,17+i);return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})});
+  function show(i){
+    guide.setAttribute('x1',x(i));guide.setAttribute('x2',x(i));guide.setAttribute('opacity',1);
+    dot.setAttribute('cx',x(i));dot.setAttribute('cy',y(cur[i]));dot.setAttribute('opacity',1);
+    tip.innerHTML='<b>'+dates[i]+'</b><br>This period: '+money(cur[i])+'<br>Previous: '+money(prev[i]);
+    var r=svg.getBoundingClientRect(), px=x(i)/W*r.width;
+    tip.style.left=Math.min(Math.max(px+12,0),r.width-150)+'px';tip.style.top='8px';tip.style.opacity=1;
+  }
+  function hide(){guide.setAttribute('opacity',0);dot.setAttribute('opacity',0);tip.style.opacity=0}
+  function nearest(ev){var r=svg.getBoundingClientRect();var px=(ev.clientX-r.left)/r.width*W;return Math.max(0,Math.min(cur.length-1,Math.round((px-L)/((W-L-R)/(cur.length-1)))))}
+  svg.addEventListener('pointermove',function(e){show(nearest(e))});
+  svg.addEventListener('pointerleave',hide);
+  svg.setAttribute('tabindex','0');
+  var ki=0;
+  svg.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'){ki=Math.min(cur.length-1,ki+1);show(ki);e.preventDefault()}
+    else if(e.key==='ArrowLeft'){ki=Math.max(0,ki-1);show(ki);e.preventDefault()}
+    else if(e.key==='Escape'){hide()}
+  });
+  svg.addEventListener('focus',function(){show(ki)});
+  svg.addEventListener('blur',hide);
+
+  // ---- best sellers ----
+  var best=[['Cedar & Smoke, 8 oz',74,1924],['Fig & Amber, 8 oz',61,1586],['Winter Orange, 8 oz',52,1352],['Lavender Field, 4 oz',47,799],['Sea Salt & Sage, 8 oz',39,1014],['Vanilla Bean, 4 oz',33,561]];
+  var top=best[0][1];
+  document.getElementById('rank').innerHTML=best.map(function(b){
+    return '<li><span class="name">'+b[0].replace('&','&amp;')+'</span><span class="val num"><b>'+b[1]+'</b> sold · '+money(b[2])+'</span><span class="bar" aria-hidden="true"><i style="width:'+(b[1]/top*100).toFixed(0)+'%"></i></span></li>';
+  }).join('');
+
+  // ---- low stock ----
+  var low=[['Cedar & Smoke, 8 oz',0,'out',0,'Out of stock'],['Fig & Amber, 8 oz',6,'low',3,'3 days'],['Winter Orange, 8 oz',9,'low',4,'4 days'],['Lavender Field, 4 oz',12,'low',7,'7 days'],['Wooden wicks (pack of 50)',2,'low',5,'5 days']];
+  var stat=function(k,t){var ic=k==='out'?'i-x':'i-alert';return '<span class="status '+k+'"><svg aria-hidden="true"><use href="#'+ic+'"/></svg>'+t+'</span>'};
+  document.getElementById('stock-body').innerHTML=low.map(function(r){
+    return '<tr><td>'+r[0].replace('&','&amp;')+'</td><td class="r num">'+r[1]+'</td><td>'+stat(r[2],r[4])+'</td><td class="r"><button class="btn btn-sm" type="button" aria-label="Reorder '+r[0].replace('&','and')+'">Reorder</button></td></tr>';
+  }).join('');
+  document.getElementById('stock-cards').innerHTML=low.map(function(r){
+    return '<div class="m-item"><div class="m-row"><span class="name">'+r[0].replace('&','&amp;')+'</span>'+stat(r[2],r[4])+'</div><div class="m-row"><span class="sub num">'+r[1]+' in stock</span></div><button class="btn" type="button" aria-label="Reorder '+r[0].replace('&','and')+'">Reorder</button></div>';
+  }).join('');
+
+  // ---- orders ----
+  var ord=[['#4821','Maya Okafor','ship','Shipped','$54.00'],['#4820','Daniel Reyes','ok','Delivered','$32.00'],['#4819','Hannah Lindqvist','ship','Shipped','$96.50'],['#4818','Priya Nair','ok','Delivered','$27.00'],['#4817','Tom Whitfield','low','Packing','$41.00'],['#4816','Sofia Marchetti','ok','Delivered','$63.00']];
+  var ost=function(k,t){return '<span class="status '+k+'">'+(k==='ok'?'<svg aria-hidden="true"><use href="#i-check"/></svg>':'')+t+'</span>'};
+  document.getElementById('ord-body').innerHTML=ord.map(function(r){
+    return '<tr><td class="num">'+r[0]+'</td><td>'+r[1]+'</td><td>'+ost(r[2],r[3])+'</td><td class="r num">'+r[4]+'</td></tr>';
+  }).join('');
+  document.getElementById('ord-cards').innerHTML=ord.map(function(r){
+    return '<div class="m-item"><div class="m-row"><span class="name">'+r[1]+'</span><span class="num">'+r[4]+'</span></div><div class="m-row"><span class="sub num">'+r[0]+'</span>'+ost(r[2],r[3])+'</div></div>';
+  }).join('');
+})();
+</script>
+</body>
+</html>

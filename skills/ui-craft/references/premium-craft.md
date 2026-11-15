@@ -118,7 +118,7 @@ Each product gets **one** thing a user could name: tactile buttons, a perfectly 
 7. **Depth.** One technique; layered tinted shadows or rings; concentric radii.
 8. **States.** Hover, focus, pressed, disabled, loading, empty, error all exist and look intended.
 9. **Motion.** Press feedback instant; one orchestrated moment at most; reduced motion handled.
-10. **Content.** Nothing placeholder; copy specific; confirmations exact. Photos are real, or quiet tonal blocks with a caption; never crude drawings standing in for photos.
+10. **Content.** Nothing placeholder; copy specific; confirmations exact. The data tells one story: the summary matches what is selected, totals add up, counts match the lists. Photos are real, or quiet tonal blocks with a caption; never crude drawings standing in for photos.
 11. **Signature.** Present, single, and given room.
 12. **Phone.** Run `scripts/ui-audit.mjs` and open both screenshots. Judge the phone view as strictly as the desktop: nothing clipped or covered by a floating element, rows not squeezed, the key content and primary action in the first screen.
 

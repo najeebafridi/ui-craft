@@ -1,0 +1,14 @@
+{
+ "ecommerce-dashboard": {
+  "X": "with_skill",
+  "Y": "old_skill"
+ },
+ "mobile-booking": {
+  "X": "with_skill",
+  "Y": "old_skill"
+ },
+ "settings-form": {
+  "X": "old_skill",
+  "Y": "with_skill"
+ }
+}

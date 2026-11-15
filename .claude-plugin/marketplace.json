@@ -1,15 +1,23 @@
 {
   "name": "ui-craft",
-  "description": "ui-craft: UI/UX design rules for AI coding agents.",
-  "owner": { "name": "najeebafridi" },
+  "description": "ui-craft: premium UI/UX design skill for AI coding agents.",
+  "owner": {
+    "name": "najeebafridi"
+  },
   "plugins": [
     {
       "name": "ui-craft",
       "source": "./",
-      "description": "Design rules, mockup templates and a screen audit script so AI-built screens look professional and are easy to use.",
-      "version": "1.2.0",
+      "description": "Premium UI/UX design skill: 16 visual directions, colour theory and psychology, craft details, platform conventions, an accessible palette generator, a screen audit script, client mockups and product scoring.",
+      "version": "2.0.0",
       "category": "design",
-      "tags": ["design", "ui", "ux", "accessibility", "mockups"]
+      "tags": [
+        "design",
+        "ui",
+        "ux",
+        "accessibility",
+        "mockups"
+      ]
     }
   ]
 }

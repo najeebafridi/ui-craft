@@ -1,0 +1,77 @@
+{
+  "dashboard.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 233,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        14,
+        16,
+        20,
+        30
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "Overview",
+        "Orders",
+        "Products",
+        "Stock5 low",
+        "Last 30 days\n          This mo",
+        "Export CSV",
+        "Start restock list",
+        "View all 299 orders"
+      ],
+      "interactiveCount": 8,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.965,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 68
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 224,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        14,
+        16,
+        20,
+        24
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [],
+      "interactiveCount": 8,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.94,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 68
+    }
+  }
+}

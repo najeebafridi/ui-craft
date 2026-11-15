@@ -1,6 +1,58 @@
 # Test results
 
-**Short version:** with ui-craft, the AI's screens passed 97% of the measurable checks, against 57% without it. A blind judge preferred the ui-craft version on all 5 screens.
+## Version 2 (premium upgrade): is it better than version 1?
+
+**Short version:** yes. On the final builds, two independent blind judges preferred the version 2 screen in **13 of 14 verdicts** (7 screens x 2 judges). Average score 47 out of 60 for version 2 against 40 for version 1.
+
+### How we tested
+
+- **7 requests**, each built by the same AI model (Claude Sonnet) twice: once with ui-craft 1.2 and once with ui-craft 2.0. The five from the first test (shop dashboard, settings form, barbershop booking on a phone, SaaS landing page, CRM design options) plus two new ones aimed at the upgrade: a **luxury hotel room-selection screen** and a **Mac writing app**.
+- **Two blind judges** (two different AI models), each with its own random X/Y labels, scored screenshots on six points out of 10: premium look, hierarchy, craft, fit to the audience with a distinct character, phone quality, and "would a paying client approve it".
+- **Measured checks** as before (contrast, tap targets, overflow and so on), plus a new check for craft problems.
+
+### Results
+
+| | Version 1.2 | Version 2.0 |
+|---|---|---|
+| Judge verdicts won (final builds, 14 in total) | 1 | **13** |
+| Average judge score (out of 60) | 40.1 | **47.1** |
+| Fit to audience, distinct character (out of 10, round 3) | 6.4 | **8.1** |
+| Premium look (out of 10, round 3) | 6.6 | **7.7** |
+| Phone quality (out of 10, final builds) | 6.8 | **7.5** |
+| Measured checks passed (round 3) | 93% | **100%** |
+| Tokens per screen (round 3 average) | 108k | 126k |
+
+Both judges agreed with each other on every screen in round 3.
+
+**What version 2 did differently**, in the judges' words: the candle shop got a warm brand character instead of a generic dashboard; the hotel screen was restrained and honest where version 1 added "Only 2 left" scarcity badges (both judges flagged those as manipulative); the landing page had a distinct identity instead of "a stock teal SaaS template"; the three CRM options were really different directions; the Mac app looked native.
+
+### What round 3 taught us, and what we changed
+
+Version 2 first lost two screens (settings and mobile booking) and scored lower on phones. Causes and fixes:
+
+| Problem | Change to the skill |
+|---|---|
+| The booking screen opened empty: time slots hidden until a barber was picked, a "£0" total | New rule "Show it working": the first view is the screen in use, with sensible defaults selected and the main interaction visible |
+| The Save button appeared only after an edit | A form's main action is visible from the start |
+| Phone views got less care than desktop | The finishing pass now says: judge the phone screenshot as strictly as the desktop one |
+| A stretched card left a dead empty block; a floating pill covered text | Rules: no dead space; nothing floating covers content |
+| Crude drawings stood in for photos on the luxury screen | Use a quiet tonal block with a caption until real photos exist |
+| The audit script hung on pages that open a dialog | Script now dismisses dialogs, times out stuck steps and always exits |
+
+After the fixes we re-ran the two lost screens and the narrowest win. Version 2 won 5 of those 6 verdicts. The one loss was a consistency bug ("Any barber" selected while the summary named a barber), which became one more rule: the screen must tell one story.
+
+### Limits
+
+- One build per screen per version, and AI judges, not human designers. Judges vary; trust the direction more than the exact numbers.
+- All tests are HTML screens. The platform guidance for native iOS, Android, Mac and Windows apps was written from the platforms' public guidelines and was not tested with native code.
+- Version 2 costs about 17% more tokens per screen than version 1.
+
+Data: `evals/iteration-3/` and `evals/iteration-4/` (outputs, `grading.json`, `blind-*_judgement.json`, `review.html`).
+
+---
+
+## Version 1: with the skill against without it
+**Short version (version 1):** with ui-craft, the AI's screens passed 97% of the measurable checks, against 57% without it. A blind judge preferred the ui-craft version on all 5 screens.
 
 ## How we tested
 

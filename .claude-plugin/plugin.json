@@ -1,9 +1,23 @@
 {
   "name": "ui-craft",
-  "version": "1.2.0",
-  "description": "UI/UX design rules for AI coding agents: professional, modern, easy-to-use screens for web apps, dashboards, desktop, mobile and marketing sites, plus fast clickable HTML mockups for client approval.",
-  "author": { "name": "najeebafridi" },
+  "version": "2.0.0",
+  "description": "Premium UI/UX design skill for AI coding agents: art direction (16 visual directions), colour theory and psychology, human psychology and emotion, craft details, platform conventions (web, desktop, mobile, tablet), an accessible palette generator, a screen audit script, fast client mockups and scoring of existing products.",
+  "author": {
+    "name": "najeebafridi"
+  },
   "license": "MIT",
   "repository": "https://github.com/najeebafridi/ui-craft",
-  "keywords": ["design", "ui", "ux", "accessibility", "dashboard", "mockup", "frontend"]
+  "keywords": [
+    "design",
+    "ui",
+    "ux",
+    "premium",
+    "color",
+    "psychology",
+    "accessibility",
+    "dashboard",
+    "mobile",
+    "desktop",
+    "mockup"
+  ]
 }

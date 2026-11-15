@@ -32,6 +32,10 @@ header p{margin:4px 0 0;color:var(--muted)}
 .btn{height:36px;padding:0 16px;border-radius:8px;border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font:500 14px var(--font);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
 .btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 footer{padding:0 24px 32px}
+h1,h2{text-wrap:balance}
+.btn,.seg button{transition:transform .12s cubic-bezier(.22,1,.36,1),background-color .12s}
+.btn:active,.seg button:active{transform:scale(.97)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:640px),(pointer:coarse){.btn,.seg button{height:44px} header{padding:16px}}
 </style>
 </head>

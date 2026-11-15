@@ -1,0 +1,70 @@
+{
+  "expectations": [
+    {
+      "text": "Visible text meets WCAG AA contrast (at most 2 failing text elements per screen)",
+      "passed": true,
+      "evidence": "booking.html: desktop: 0 fails []; phone: 0 fails []"
+    },
+    {
+      "text": "Keyboard focus styles are defined (:focus or :focus-visible)",
+      "passed": true,
+      "evidence": "booking.html: hasFocusStyle=True"
+    },
+    {
+      "text": "Smallest visible text is at least 12px",
+      "passed": true,
+      "evidence": "booking.html: min=12px"
+    },
+    {
+      "text": "No sideways scrolling at 390px phone width",
+      "passed": true,
+      "evidence": "booking.html: overflow=False"
+    },
+    {
+      "text": "Uses at most 7 distinct font sizes on the desktop screen",
+      "passed": true,
+      "evidence": "booking.html: sizes=[12, 14, 16, 18, 20]"
+    },
+    {
+      "text": "Every form control has an accessible label",
+      "passed": true,
+      "evidence": "booking.html: unlabelled=[]"
+    },
+    {
+      "text": "At least 80% of spacing values sit on the 4px grid",
+      "passed": true,
+      "evidence": "booking.html: on-grid=0.966"
+    },
+    {
+      "text": "Respects prefers-reduced-motion (or has no motion at all)",
+      "passed": true,
+      "evidence": "booking.html: reducedMotion=True motion=True"
+    },
+    {
+      "text": "No emoji icons, lorem ipsum or placeholder-image services",
+      "passed": true,
+      "evidence": "booking.html: emoji=0 lorem=False placeholderImgs=0"
+    },
+    {
+      "text": "Touch targets at phone width are at least 44px (at most 2 exceptions)",
+      "passed": true,
+      "evidence": "booking.html: 0 small: []"
+    },
+    {
+      "text": "Primary action is pinned to the bottom of the phone screen (fixed or sticky)",
+      "passed": true,
+      "evidence": "regex on CSS"
+    },
+    {
+      "text": "Looks finished: at most 2 craft problems per page (radii, shadows, heading tracking, hues, fonts, press states)",
+      "passed": true,
+      "evidence": "booking.html: 1 (No text-wrap)"
+    }
+  ],
+  "summary": {
+    "passed": 12,
+    "failed": 0,
+    "total": 12,
+    "pass_rate": 1.0
+  }
+}

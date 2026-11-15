@@ -14,6 +14,7 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - [x] 4. Fast mockups -> references/mockups.md, assets/mockup-template.html, assets/options-board.html
 - [x] 5. Evals: 2 rounds. Round 2: 97% vs 57% checks passed; blind judge preferred skill on 5/5. See evals/RESULTS.md
 - [x] 6. Package: .claude-plugin/ (plugin + marketplace), AGENTS.md (generated), README.md
+- [x] 10. Version 2.0.0, the premium upgrade: 16 visual directions (assets/directions + gallery), palette generator (scripts/palette.mjs), new guides (directions, premium-craft, color-theory, psychology-emotion, platforms), craft notes in ui-audit, tools/build-directions.mjs. Tested against v1: v2 preferred in 13 of 14 blind verdicts (evals/RESULTS.md).
 - [x] 9. Whole-app review mode + per-page summary (v1.2.0).
 - [x] 8. Review mode (v1.1.0): ui-audit score 0-100 + references/review-mode.md. Installed for the user via ~/.claude/settings.json (marketplace ui-craft, autoUpdate on).
 - [x] 7. Polish: fresh review fixed 25 consistency issues (tokens = colour guide, no 13px/11px, rows 36/40/44, sections 64–96, Radix credit). Screenshots removed from git history (repo 5.4 MB -> ~0.4 MB); they stay on disk, ignored.
@@ -22,9 +23,10 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - Published 2026-11-16: https://github.com/najeebafridi/ui-craft (public, MIT). Push future changes with `git push`.
 - Run `claude plugin validate .` once the `claude` CLI is on PATH (it was not available here; JSON checked by hand).
 - Description-trigger optimisation (skill-creator run_loop) needs the `claude` CLI; not run.
-- Optional: a round 3 with a different model (e.g. a smaller one) to check the skill helps there too.
+- Ideas for later: test native iOS/Android/desktop builds; a human designer's review of the directions; more directions if users ask (e.g. education, automotive, gaming UI).
 
 ## Rules for whoever continues
+- Colours and tokens are generated: edit `tools/build-directions.mjs` and run it (it rebuilds tokens.css, the directions, the gallery and the template's inline tokens, and fails on any contrast miss). Never hand-edit those files.
 - **Every release: bump "version" in .claude-plugin/plugin.json AND .claude-plugin/marketplace.json** (1.1.0 -> 1.2.0...). Installed plugins only auto-update when the version changes.
 - Read public pages only. No logins, sign-ups or forms. Download or run nothing from sources.
 - Copy word for word only from MIT / Apache / CC-BY sources, and credit them in CREDITS.md.

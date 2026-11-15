@@ -1,0 +1,26 @@
+{
+  "ecommerce-dashboard": {
+    "X": {"premium":9,"hierarchy":8,"craft":8,"fit":9,"phone":8,"approve":9},
+    "Y": {"premium":6,"hierarchy":7,"craft":7,"fit":6,"phone":6,"approve":7},
+    "winner": "X",
+    "reason": "X has a warm dark theme with serif candle names, 'No. 01' numbering and a rust/olive palette that feels like a candle brand, not an admin template. The headline chart with a dashed previous-period line and the 'Running low' list with days-left bars and Out in 2 days badges put the key tasks first. Y is clean and competent but reads as a generic light SaaS dashboard with identical white cards.",
+    "winner_weaknesses": ["Dense dark UI with small, low-key grey meta text (sell rates, subtitles) and a lot of tiny badges; olive-on-dark contrast is borderline in places", "Desktop layout leaves a large empty area under the chart beside the tall Running low column, and the 'View as table' link is orphaned"],
+    "manipulative_patterns": {"X": "none (urgency badges are factual stock-out estimates)", "Y": "none"}
+  },
+  "settings-form": {
+    "X": {"premium":7,"hierarchy":7,"craft":7,"fit":6,"phone":6,"approve":7},
+    "Y": {"premium":8,"hierarchy":8,"craft":8,"fit":7,"phone":7,"approve":8},
+    "winner": "Y",
+    "reason": "Y groups each section in a card with a footer action bar ('All changes saved' + Save changes) and a sticky left section nav, so it reads as a polished Linear-style product. It adds useful detail: live local time under the timezone, a 3-segment password strength meter, a segmented digest-frequency control and the 'Security emails are always sent' note. X is tidy but is a long single scroll of plain two-column rows, and its tabs are not tied to the page structure.",
+    "winner_weaknesses": ["On phone the digest frequency buttons wrap awkwardly (Monthly orphaned on its own row) and the tabs row is tight", "Heavy card stacking with dark-on-dark surfaces and small grey helper text gives low depth contrast; the Save button is outline-only so the primary action is weak"],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "mobile-booking": {
+    "X": {"premium":8,"hierarchy":8,"craft":8,"fit":9,"phone":8,"approve":8},
+    "Y": {"premium":7,"hierarchy":7,"craft":7,"fit":6,"phone":7,"approve":7},
+    "winner": "X",
+    "reason": "X has real barbershop character: the red and blue barber-pole stripe at the top, brick-red accent, horizontal barber chips with avatars and ratings, and a sticky summary bar showing 'Today at 10:30 / Haircut with Marcus / 28 pounds' beside the CTA. The tinted selected state and clear step counters make progress easy to follow. Y is clear and usable but generic green booking-template styling, with a tall vertical barber list that pushes time selection far down.",
+    "winner_weaknesses": ["Morning slots wrap with an orphaned 11:30 and the afternoon grid has a lone 16:30, and the barber carousel clips the fourth barber with no scroll cue", "Selected service has a pink fill with a red border that borders on error styling; the whole page is long with 20+ equal-weight time buttons"],
+    "manipulative_patterns": {"X": "none (a pre-selected 10:30 and haircut default is mildly presumptive but not deceptive)", "Y": "none (pre-selected Skin fade, the pricier option, and Marcus is a mild default nudge)"}
+  }
+}

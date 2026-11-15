@@ -1,0 +1,81 @@
+{
+  "dashboard.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 111,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        14,
+        16,
+        20,
+        24
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "Overview",
+        "Orders",
+        "Inventory",
+        "Customers",
+        "Last 30 days\n          Last 7 ",
+        "Reorder low stock",
+        "Export list",
+        "Reorder",
+        "Reorder",
+        "Reorder",
+        "Reorder",
+        "Reorder",
+        "View all orders"
+      ],
+      "interactiveCount": 13,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 1,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 33
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 101,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        14,
+        16,
+        20
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [],
+      "interactiveCount": 13,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.974,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 33
+    }
+  }
+}

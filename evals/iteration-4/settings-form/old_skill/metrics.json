@@ -1,0 +1,98 @@
+{
+  "settings.html": {
+    "desktop": {
+      "width": 1440,
+      "horizontalOverflow": false,
+      "textChecked": 76,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        14,
+        16,
+        20,
+        24
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [
+        "Use my device's time zone"
+      ],
+      "targetsUnder44": [
+        "Inbox",
+        "My tasks",
+        "Projects",
+        "Team",
+        "Settings",
+        "Settings",
+        "Profile",
+        "Password",
+        "Notifications",
+        "Delete account",
+        "Upload photo",
+        "INPUT",
+        "INPUT",
+        "(UTC-08:00) Pacific Time, Los ",
+        "Use my device's time zone",
+        "Save changes",
+        "Cancel",
+        "INPUT",
+        "Show current password",
+        "INPUT",
+        "Show new password",
+        "INPUT",
+        "Show confirmation",
+        "Update password",
+        "Immediately\n                Ba",
+        "Delete account"
+      ],
+      "interactiveCount": 27,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.962,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 44
+    },
+    "phone": {
+      "width": 390,
+      "horizontalOverflow": false,
+      "textChecked": 66,
+      "contrastFails": 0,
+      "contrastFailSamples": [],
+      "fontSizes": [
+        12,
+        14,
+        16,
+        20
+      ],
+      "minFontSize": 12,
+      "hasFocusStyle": true,
+      "hasReducedMotion": true,
+      "hasTransitionOrAnimation": true,
+      "transitionAll": false,
+      "targetsUnder24": [],
+      "targetsUnder44": [
+        "Settings"
+      ],
+      "interactiveCount": 22,
+      "unlabelledControls": [],
+      "spacingOn4pxGrid": 0.959,
+      "gradientElements": 0,
+      "gradientText": false,
+      "emojiCount": 0,
+      "lorem": false,
+      "placeholderImages": 0,
+      "h1Count": 1,
+      "skippedHeadingLevels": 0,
+      "cssCustomProperties": 44
+    }
+  }
+}

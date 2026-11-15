@@ -1,0 +1,35 @@
+{
+  "ecommerce-dashboard": {
+    "X": {"premium": 8, "hierarchy": 8, "craft": 8, "fit": 9, "phone": 8, "approve": 8},
+    "Y": {"premium": 7, "hierarchy": 8, "craft": 7, "fit": 6, "phone": 6, "approve": 7},
+    "winner": "X",
+    "reason": "X has a distinct boutique character (dark warm canvas, serif product names, numbered 'No. 01' rows, olive accent) that suits a handmade candle brand, and every KPI carries a 'vs before' comparison. The 'Running low' panel with sell-rate, 'Out in 2 days' badges and lead-time note next to 'Start restock list' turns stock into an action, and on phone it is moved above the chart with a bottom tab bar. Y is clean and usable but reads as a standard SaaS template with cards around every section, and its phone version stacks five full-width 'Reorder' buttons that bloat the page.",
+    "winner_weaknesses": [
+      "Small all-caps KPI labels and many low-contrast muted meta lines (e.g. '8 oz soy jar · sells ~2.1 a day') on the near-black background reduce legibility; chart axis text becomes tiny on phone.",
+      "Best sellers and Running low repeat the same products in the same numbered-row style, so the two lists look alike and compete; the restock CTA sits far below the low-stock rows at desktop."
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "settings-form": {
+    "X": {"premium": 6, "hierarchy": 7, "craft": 6, "fit": 6, "phone": 6, "approve": 6},
+    "Y": {"premium": 8, "hierarchy": 8, "craft": 8, "fit": 7, "phone": 7, "approve": 8},
+    "winner": "Y",
+    "reason": "Y groups each area in a panel with its own footer bar ('All changes saved' + Save changes, Update password), adds a password strength meter with a two-column checklist, a live 'It is 22:21 there now' timezone hint, and a clear 'Changes save automatically' note for the toggles. X is correct but plainer: the label-left/form-right layout leaves a big empty left column, and on phone the tab bar is clipped ('Delete accou').",
+    "winner_weaknesses": [
+      "Save changes and Update password are outlined secondary buttons, so no section has a clear primary action; the in-page nav (Profile/Password/Notifications) leaves a large empty column beside long panels on desktop.",
+      "On phone the digest frequency chips wrap awkwardly ('Monthly' alone on a second line), there is a noticeable empty gap above 'Summaries and news', and there is no delete-account or sign-out area at all."
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  },
+  "mobile-booking": {
+    "X": {"premium": 7, "hierarchy": 7, "craft": 6, "fit": 8, "phone": 7, "approve": 6},
+    "Y": {"premium": 7, "hierarchy": 8, "craft": 8, "fit": 7, "phone": 8, "approve": 8},
+    "winner": "Y",
+    "reason": "Y's selections all agree and are summarised in a full-width sticky CTA ('Review booking, Fri 13 Mar at 10:30') with service, barber and price above it, and barbers are full rows with rating, specialty and experience so the choice is informed. Booked slots are greyed and struck through, with a '15 times free' explanation. X has more barbershop character (pole-stripe top border, brick red), but its summary says 'Haircut with Marcus' while 'Any barber' is the selected card, a visible state bug a client would catch.",
+    "winner_weaknesses": [
+      "Generic look: plain green-on-cream with no barbershop identity beyond the copy; it could be any booking app.",
+      "Barber meta text wraps awkwardly ('6 / years', '4 / years') and the vertical barber list pushes the date and time picker well below the fold."
+    ],
+    "manipulative_patterns": {"X": "none", "Y": "none"}
+  }
+}

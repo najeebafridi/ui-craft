@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account settings · Fieldnote</title>
+<!--
+Design brief
+Product: Fieldnote, a project management web app used daily by small product teams
+Tone: calm, precise, quick          Density: compact (14px body, 36px controls, 44px on touch)
+Accent: blue #2563EB (text #1D4ED8)  Neutrals: cool grey
+Font: Inter with system fallback     Radius: 6px
+Primary task on this screen: update profile details and save them
+Sample data is fictional.
+-->
+<style>
+:root {
+  color-scheme: light dark;
+  --bg:#F8FAFC; --surface:#FFFFFF; --surface-2:#F1F5F9; --surface-3:#E2E8F0;
+  --border:#E2E8F0; --border-strong:#7C8BA1;
+  --text:#0F172A; --text-muted:#475569; --text-subtle:#5B6B82;
+  --accent:#2563EB; --accent-hover:#1D4ED8; --accent-fg:#FFFFFF; --accent-soft:#EFF6FF; --accent-text:#1D4ED8;
+  --success:#15803D; --success-soft:#F0FDF4; --success-text:#166534;
+  --danger:#DC2626; --danger-soft:#FEF2F2; --danger-text:#B91C1C;
+  --radius:6px; --radius-sm:4px;
+  --shadow-overlay:0 4px 6px rgb(15 23 42/.05), 0 12px 32px rgb(15 23 42/.14);
+  --font-sans:"Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0B0F14; --surface:#12171E; --surface-2:#1A2029; --surface-3:#242B36;
+    --border:#262E3A; --border-strong:#6B7890;
+    --text:#E6E9EE; --text-muted:#A3ADBC; --text-subtle:#8792A2;
+    --accent:#2563EB; --accent-hover:#1D4ED8; --accent-soft:#172554; --accent-text:#93C5FD;
+    --success:#22C55E; --success-soft:#052E16; --success-text:#86EFAC;
+    --danger:#EF4444; --danger-soft:#2A0E0E; --danger-text:#FCA5A5;
+    --shadow-overlay:0 8px 32px rgb(0 0 0/.5);
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 14px/20px var(--font-sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.25}
+p{margin:0}
+[hidden]{display:none!important}
+a{color:var(--accent-text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button,input,select{font:inherit;color:inherit}
+
+/* App shell */
+.shell{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:24px;padding:16px 12px;background:var(--surface);border-right:1px solid var(--border)}
+.ws{display:flex;align-items:center;gap:8px;padding:4px 8px;font-weight:600}
+.ws-mark{width:24px;height:24px;border-radius:var(--radius-sm);background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-size:12px;font-weight:600}
+.nav{display:grid;gap:4px}
+.nav a{display:flex;align-items:center;gap:8px;min-height:36px;padding:0 8px;border-radius:var(--radius);color:var(--text-muted);text-decoration:none;font-weight:500}
+.nav a:hover{background:var(--surface-2);color:var(--text)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent-text)}
+.nav svg{flex:none}
+.nav .group-label{padding:0 8px 4px;font-size:12px;color:var(--text-subtle);font-weight:500}
+.sidebar-foot{margin-top:auto;display:flex;align-items:center;gap:8px;padding:8px;border-top:1px solid var(--border);color:var(--text-muted);font-size:12px;line-height:16px}
+
+.avatar{flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;font-weight:600;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar.sm{width:32px;height:32px;font-size:12px}
+.avatar.lg{width:64px;height:64px;font-size:20px}
+
+/* Main */
+main{padding:32px 32px 96px;min-width:0}
+.page{max-width:880px;margin:0 auto}
+.crumbs{font-size:12px;line-height:16px;color:var(--text-subtle);margin-bottom:8px}
+.crumbs a{color:var(--text-muted);text-decoration:none;display:inline-flex;min-height:24px;align-items:center}
+.crumbs a:hover{text-decoration:underline}
+.page-head{margin-bottom:24px}
+.page-head h1{font-size:24px;line-height:32px}
+.page-head p{color:var(--text-muted);margin-top:4px}
+
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:32px;overflow-x:auto}
+.tabs a{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;color:var(--text-muted);text-decoration:none;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs a:hover{color:var(--text)}
+.tabs a[aria-current="true"]{color:var(--accent-text);border-bottom-color:var(--accent)}
+
+/* Sections: heading left, form right, divided by lines (no cards) */
+.section{display:grid;grid-template-columns:240px minmax(0,1fr);gap:32px;padding:32px 0;border-top:1px solid var(--border)}
+.section:first-of-type{border-top:0;padding-top:0}
+.section-intro h2{font-size:16px;line-height:24px}
+.section-intro p{color:var(--text-muted);margin-top:4px}
+.section-body{max-width:480px;min-width:0}
+
+.fields{display:grid;gap:16px}
+.field{display:grid;gap:4px}
+.field label,.field .label{font-weight:500}
+.opt{color:var(--text-subtle);font-weight:400}
+.hint{font-size:12px;line-height:16px;color:var(--text-muted)}
+.error{display:none;align-items:flex-start;gap:4px;font-size:12px;line-height:16px;color:var(--danger-text)}
+.error svg{flex:none;margin-top:0}
+.field.invalid .error{display:flex}
+.field.invalid input{border-color:var(--danger)}
+input[type=text],input[type=email],input[type=password],select{
+  width:100%;height:36px;padding:0 12px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);transition:border-color 120ms,box-shadow 120ms}
+input:hover,select:hover{border-color:var(--text-muted)}
+input::placeholder{color:var(--text-subtle)}
+input:disabled,select:disabled{background:var(--surface-2);cursor:not-allowed}
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:64px}
+.pw-toggle{position:absolute;right:4px;top:2px;height:32px;padding:0 8px;border:0;background:none;color:var(--accent-text);font-weight:500;border-radius:var(--radius-sm);cursor:pointer}
+.pw-toggle:hover{background:var(--accent-soft)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 16px;border-radius:var(--radius);border:1px solid transparent;font-weight:500;cursor:pointer;white-space:nowrap;transition:background-color 120ms,border-color 120ms,color 120ms}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary:active{background:#1E40AF}
+.btn-secondary{background:var(--surface);border-color:var(--border-strong);color:var(--text)}
+.btn-secondary:hover{background:var(--surface-2)}
+.btn-secondary:active{background:var(--surface-3)}
+.btn-text{background:none;color:var(--text-muted);padding:0 12px}
+.btn-text:hover{background:var(--surface-2);color:var(--text)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn.loading{pointer-events:none}
+.spin{width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.actions{display:flex;align-items:center;gap:8px;margin-top:24px;flex-wrap:wrap}
+.status{display:inline-flex;align-items:center;gap:4px;color:var(--success-text);font-size:14px}
+.status[hidden]{display:none}
+
+/* Avatar row */
+.avatar-row{display:flex;align-items:center;gap:16px}
+.avatar-row .btns{display:flex;gap:8px;flex-wrap:wrap}
+.avatar-row .hint{flex-basis:100%}
+
+/* Password rules */
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:12px;line-height:16px;color:var(--text-muted)}
+.rules li{display:flex;align-items:center;gap:8px}
+.rules .dot{width:16px;height:16px;flex:none;border-radius:50%;border:1.5px solid var(--border-strong);display:grid;place-items:center}
+.rules li.ok{color:var(--success-text)}
+.rules li.ok .dot{background:var(--success);border-color:var(--success);color:#fff}
+.rules li:not(.ok) .dot svg{display:none}
+.summary{display:none;padding:12px;margin-bottom:16px;border:1px solid var(--danger);background:var(--danger-soft);border-radius:var(--radius);color:var(--danger-text)}
+.summary.show{display:block}
+
+/* Notifications: switches apply instantly */
+.pref-group{display:grid}
+.pref-group + .pref-group{margin-top:24px}
+.pref-group h3{font-size:14px;line-height:20px;color:var(--text-muted);font-weight:500;padding-bottom:4px}
+.pref{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--border)}
+.pref-text{min-width:0}
+.pref-text .t{font-weight:500}
+.pref-text .d{font-size:12px;line-height:16px;color:var(--text-muted);margin-top:2px}
+.switch{position:relative;flex:none;width:44px;height:24px}
+.switch input{position:absolute;inset:-10px;width:calc(100% + 20px);height:calc(100% + 20px);margin:0;opacity:0;cursor:pointer;z-index:1}
+.switch .track{position:absolute;inset:0;border-radius:12px;background:var(--surface);border:1.5px solid var(--border-strong);transition:background-color 120ms,border-color 120ms}
+.switch .knob{position:absolute;top:4px;left:4px;width:16px;height:16px;border-radius:50%;background:var(--text-muted);transition:transform 120ms,background-color 120ms}
+.switch input:checked ~ .track{background:var(--accent);border-color:var(--accent)}
+.switch input:checked ~ .knob{transform:translateX(20px);background:#fff}
+.switch input:focus-visible ~ .track{outline:2px solid var(--accent);outline-offset:2px}
+.switch input:disabled{cursor:not-allowed}
+.switch input:disabled ~ .track{opacity:.5}
+.state-txt{font-size:12px;line-height:16px;color:var(--text-muted);width:24px;text-align:right}
+.pref-ctl{display:flex;align-items:center;gap:8px}
+.digest{display:grid;gap:4px;margin-top:24px}
+
+/* Danger zone */
+.danger{border:1px solid var(--danger);border-radius:var(--radius);padding:16px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.danger .t{font-weight:500}
+.danger .d{font-size:12px;line-height:16px;color:var(--text-muted);margin-top:2px}
+.btn-danger{background:var(--surface);border-color:var(--danger);color:var(--danger-text)}
+.btn-danger:hover{background:var(--danger-soft)}
+.btn-danger.solid{background:#B91C1C;border-color:#B91C1C;color:#fff}
+.btn-danger.solid:hover{background:#991B1B}
+
+/* Toast */
+.toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);display:grid;gap:8px;z-index:30;width:max-content;max-width:calc(100vw - 32px)}
+.toast{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#0F172A;color:#F8FAFC;border-radius:var(--radius);box-shadow:var(--shadow-overlay);animation:in 200ms cubic-bezier(.22,1,.36,1)}
+.toast svg{color:#4ADE80;flex:none}
+.toast button{margin-left:8px;background:none;border:0;color:#93C5FD;font-weight:500;cursor:pointer;padding:4px 8px;border-radius:var(--radius-sm)}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* Dialog */
+dialog{border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:440px;width:calc(100vw - 32px);background:var(--surface);color:var(--text);box-shadow:var(--shadow-overlay)}
+dialog::backdrop{background:rgb(15 23 42/.5)}
+dialog h2{font-size:18px;line-height:24px}
+dialog p{color:var(--text-muted);margin-top:8px}
+dialog .actions{justify-content:flex-end}
+
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Responsive */
+@media (max-width:1024px){
+  .shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  main{padding:24px 24px 96px}
+  .topbar{display:flex}
+}
+.topbar{display:none;align-items:center;gap:8px;padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);font-weight:600}
+@media (max-width:760px){
+  .section{grid-template-columns:1fr;gap:16px;padding:24px 0}
+  .section-body{max-width:none}
+}
+@media (max-width:640px){
+  main{padding:16px 16px 96px}
+  .topbar{padding:12px 16px}
+  .btn,input[type=text],input[type=email],input[type=password],select{min-height:44px}
+  input,select{font-size:16px}
+  .pw-toggle{height:44px;min-width:44px;top:0;right:0}
+  #tz-detect{min-height:44px;padding:0 4px!important}
+  .crumbs a{display:inline-flex;min-height:44px;align-items:center}
+  .actions .btn-primary{width:100%}
+  .page-head h1{font-size:20px;line-height:28px}
+  .tabs a{min-height:44px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.75v3.5M8 10.75v.01" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 20 20"><path d="M3 11l2-6h10l2 6v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zm0 0h4l1 2h4l1-2h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 20 20"><path d="M2.5 5.5a1 1 0 011-1h4l2 2h7a1 1 0 011 1v7.5a1 1 0 01-1 1h-13a1 1 0 01-1-1v-9.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check-sq" viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M7 10.3l2 2 4-4.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 20 20"><circle cx="8" cy="7" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 16c.5-2.8 2.7-4.5 5.5-4.5s5 1.7 5.5 4.5M13 4.2a3 3 0 010 5.6M14.5 11.8c1.8.5 2.8 2 3 4.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 20 20"><circle cx="10" cy="10" r="2.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 2.5v2M10 15.5v2M2.5 10h2M15.5 10h2M4.7 4.7l1.4 1.4M13.9 13.9l1.4 1.4M4.7 15.3l1.4-1.4M13.9 6.1l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="shell">
+  <aside class="sidebar" aria-label="Workspace">
+    <div class="ws"><span class="ws-mark" aria-hidden="true">F</span> Fieldnote</div>
+    <nav class="nav" aria-label="Main">
+      <a href="#"><svg width="20" height="20" aria-hidden="true"><use href="#i-inbox"/></svg>Inbox</a>
+      <a href="#"><svg width="20" height="20" aria-hidden="true"><use href="#i-check-sq"/></svg>My tasks</a>
+      <a href="#"><svg width="20" height="20" aria-hidden="true"><use href="#i-folder"/></svg>Projects</a>
+      <a href="#"><svg width="20" height="20" aria-hidden="true"><use href="#i-users"/></svg>Team</a>
+      <a href="#" aria-current="page"><svg width="20" height="20" aria-hidden="true"><use href="#i-gear"/></svg>Settings</a>
+    </nav>
+    <div class="sidebar-foot">
+      <span class="avatar sm" aria-hidden="true" data-initials>PN</span>
+      <span><strong style="color:var(--text);font-weight:500" data-name-display>Priya Nair</strong><br>Northwind Studio</span>
+    </div>
+  </aside>
+
+  <div style="min-width:0">
+    <div class="topbar"><span class="ws-mark" aria-hidden="true" style="width:24px;height:24px;border-radius:4px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:12px">F</span> Fieldnote</div>
+    <main id="main">
+      <div class="page">
+        <div class="crumbs"><a href="#">Settings</a> / Account</div>
+        <div class="page-head">
+          <h1>Account settings</h1>
+          <p>Manage your profile, password and the emails you get from Fieldnote.</p>
+        </div>
+
+        <nav class="tabs" aria-label="Settings sections">
+          <a href="#profile" aria-current="true">Profile</a>
+          <a href="#password">Password</a>
+          <a href="#notifications">Notifications</a>
+          <a href="#danger">Delete account</a>
+        </nav>
+
+        <!-- PROFILE -->
+        <section class="section" id="profile" aria-labelledby="profile-h">
+          <div class="section-intro">
+            <h2 id="profile-h">Profile</h2>
+            <p>Shown to teammates on tasks, comments and mentions.</p>
+          </div>
+          <form class="section-body" id="profile-form" novalidate>
+            <div class="fields">
+              <div class="field">
+                <span class="label" id="avatar-label">Photo</span>
+                <div class="avatar-row" role="group" aria-labelledby="avatar-label">
+                  <span class="avatar lg" id="avatar-preview" aria-hidden="true">PN</span>
+                  <div class="btns">
+                    <button type="button" class="btn btn-secondary" id="avatar-upload">Upload photo</button>
+                    <button type="button" class="btn btn-text" id="avatar-remove" hidden>Remove photo</button>
+                  </div>
+                  <input type="file" id="avatar-file" accept="image/png,image/jpeg,image/webp" class="sr-only" tabindex="-1" aria-label="Choose photo file">
+                  <p class="hint" id="avatar-hint">PNG, JPG or WebP, up to 2 MB</p>
+                  <p class="error" id="avatar-error" role="alert"><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span></span></p>
+                </div>
+              </div>
+
+              <div class="field" data-field="name">
+                <label for="name">Full name</label>
+                <input id="name" name="name" type="text" autocomplete="name" value="Priya Nair" required aria-describedby="name-error">
+                <p class="error" id="name-error"><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span>Enter your name so teammates can recognise you</span></p>
+              </div>
+
+              <div class="field" data-field="email">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" value="priya.nair@northwind.studio" required aria-describedby="email-hint email-error">
+                <p class="hint" id="email-hint">Used to sign in and for notifications. Changing it needs confirmation from the new address.</p>
+                <p class="error" id="email-error"><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span>Enter an email like name@company.com</span></p>
+              </div>
+
+              <div class="field">
+                <label for="tz">Time zone</label>
+                <select id="tz" name="tz" aria-describedby="tz-hint">
+                  <option value="America/Los_Angeles">(UTC-08:00) Pacific Time, Los Angeles</option>
+                  <option value="America/Denver">(UTC-07:00) Mountain Time, Denver</option>
+                  <option value="America/Chicago">(UTC-06:00) Central Time, Chicago</option>
+                  <option value="America/New_York">(UTC-05:00) Eastern Time, New York</option>
+                  <option value="America/Sao_Paulo">(UTC-03:00) Brasilia Time, Sao Paulo</option>
+                  <option value="UTC">(UTC+00:00) UTC</option>
+                  <option value="Europe/London">(UTC+00:00) London</option>
+                  <option value="Europe/Berlin">(UTC+01:00) Central European Time, Berlin</option>
+                  <option value="Europe/Athens">(UTC+02:00) Eastern European Time, Athens</option>
+                  <option value="Asia/Dubai">(UTC+04:00) Gulf Standard Time, Dubai</option>
+                  <option value="Asia/Kolkata" selected>(UTC+05:30) India Standard Time, Kolkata</option>
+                  <option value="Asia/Singapore">(UTC+08:00) Singapore</option>
+                  <option value="Asia/Tokyo">(UTC+09:00) Japan Standard Time, Tokyo</option>
+                  <option value="Australia/Sydney">(UTC+10:00) Sydney</option>
+                  <option value="Pacific/Auckland">(UTC+12:00) Auckland</option>
+                </select>
+                <p class="hint" id="tz-hint">Due dates and reminders use this time zone. <button type="button" class="btn-link" id="tz-detect" style="background:none;border:0;padding:0;color:var(--accent-text);text-decoration:underline;cursor:pointer;font-size:12px">Use my device's time zone</button></p>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn btn-primary" id="profile-save"><span class="lbl">Save changes</span></button>
+              <button type="button" class="btn btn-text" id="profile-cancel">Cancel</button>
+              <span class="status" id="profile-status" role="status" hidden><svg width="16" height="16" aria-hidden="true"><use href="#i-check"/></svg>Saved</span>
+            </div>
+          </form>
+        </section>
+
+        <!-- PASSWORD -->
+        <section class="section" id="password" aria-labelledby="password-h">
+          <div class="section-intro">
+            <h2 id="password-h">Change password</h2>
+            <p>Last changed 14 Aug 2026. You will stay signed in on this device.</p>
+          </div>
+          <form class="section-body" id="pw-form" novalidate>
+            <div class="summary" id="pw-summary" role="alert" tabindex="-1"></div>
+            <div class="fields">
+              <div class="field" data-field="current">
+                <label for="current">Current password</label>
+                <div class="pw-wrap">
+                  <input id="current" name="current" type="password" autocomplete="current-password" aria-describedby="current-error">
+                  <button type="button" class="pw-toggle" data-for="current" aria-pressed="false">Show<span class="sr-only"> current password</span></button>
+                </div>
+                <p class="error" id="current-error"><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span>Enter your current password</span></p>
+              </div>
+              <div class="field" data-field="next">
+                <label for="next">New password</label>
+                <div class="pw-wrap">
+                  <input id="next" name="next" type="password" autocomplete="new-password" aria-describedby="rules next-error">
+                  <button type="button" class="pw-toggle" data-for="next" aria-pressed="false">Show<span class="sr-only"> new password</span></button>
+                </div>
+                <ul class="rules" id="rules" aria-label="Password requirements">
+                  <li data-rule="len"><span class="dot"><svg width="10" height="10" aria-hidden="true"><use href="#i-check"/></svg></span>At least 12 characters</li>
+                  <li data-rule="mix"><span class="dot"><svg width="10" height="10" aria-hidden="true"><use href="#i-check"/></svg></span>A letter and a number</li>
+                  <li data-rule="diff"><span class="dot"><svg width="10" height="10" aria-hidden="true"><use href="#i-check"/></svg></span>Different from your current password</li>
+                </ul>
+                <p class="error" id="next-error"><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span>Choose a password that meets all three requirements</span></p>
+              </div>
+              <div class="field" data-field="confirm">
+                <label for="confirm">Confirm new password</label>
+                <div class="pw-wrap">
+                  <input id="confirm" name="confirm" type="password" autocomplete="new-password" aria-describedby="confirm-error">
+                  <button type="button" class="pw-toggle" data-for="confirm" aria-pressed="false">Show<span class="sr-only"> confirmation</span></button>
+                </div>
+                <p class="error" id="confirm-error"><svg width="16" height="16" aria-hidden="true"><use href="#i-alert"/></svg><span>Passwords do not match. Retype the new password.</span></p>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="submit" class="btn btn-secondary" id="pw-save"><span class="lbl">Update password</span></button>
+              <span class="status" id="pw-status" role="status" hidden><svg width="16" height="16" aria-hidden="true"><use href="#i-check"/></svg>Password updated</span>
+            </div>
+          </form>
+        </section>
+
+        <!-- NOTIFICATIONS -->
+        <section class="section" id="notifications" aria-labelledby="notif-h">
+          <div class="section-intro">
+            <h2 id="notif-h">Email notifications</h2>
+            <p>Changes here apply immediately.</p>
+          </div>
+          <div class="section-body">
+            <div class="pref-group" role="group" aria-labelledby="g-activity">
+              <h3 id="g-activity">Activity on your work</h3>
+              <div class="pref">
+                <div class="pref-text"><div class="t" id="n1">Assigned to me</div><div class="d" id="n1d">When someone assigns you a task</div></div>
+                <div class="pref-ctl"><span class="state-txt" aria-hidden="true"></span><span class="switch"><input type="checkbox" role="switch" data-key="assigned" aria-labelledby="n1" aria-describedby="n1d" checked><span class="track"></span><span class="knob"></span></span></div>
+              </div>
+              <div class="pref">
+                <div class="pref-text"><div class="t" id="n2">Mentions and replies</div><div class="d" id="n2d">When someone @mentions you or replies to your comment</div></div>
+                <div class="pref-ctl"><span class="state-txt" aria-hidden="true"></span><span class="switch"><input type="checkbox" role="switch" data-key="mentions" aria-labelledby="n2" aria-describedby="n2d" checked><span class="track"></span><span class="knob"></span></span></div>
+              </div>
+              <div class="pref">
+                <div class="pref-text"><div class="t" id="n3">Status changes</div><div class="d" id="n3d">When a task you follow moves to a new status</div></div>
+                <div class="pref-ctl"><span class="state-txt" aria-hidden="true"></span><span class="switch"><input type="checkbox" role="switch" data-key="status" aria-labelledby="n3" aria-describedby="n3d"><span class="track"></span><span class="knob"></span></span></div>
+              </div>
+              <div class="pref">
+                <div class="pref-text"><div class="t" id="n4">Due date reminders</div><div class="d" id="n4d">The morning before a task is due</div></div>
+                <div class="pref-ctl"><span class="state-txt" aria-hidden="true"></span><span class="switch"><input type="checkbox" role="switch" data-key="due" aria-labelledby="n4" aria-describedby="n4d" checked><span class="track"></span><span class="knob"></span></span></div>
+              </div>
+            </div>
+
+            <div class="pref-group" role="group" aria-labelledby="g-summary">
+              <h3 id="g-summary">Summaries and product news</h3>
+              <div class="pref">
+                <div class="pref-text"><div class="t" id="n5">Weekly project digest</div><div class="d" id="n5d">Monday summary of what moved across your projects</div></div>
+                <div class="pref-ctl"><span class="state-txt" aria-hidden="true"></span><span class="switch"><input type="checkbox" role="switch" data-key="digest" aria-labelledby="n5" aria-describedby="n5d" checked><span class="track"></span><span class="knob"></span></span></div>
+              </div>
+              <div class="pref">
+                <div class="pref-text"><div class="t" id="n6">Product updates</div><div class="d" id="n6d">New features and changes, about once a month</div></div>
+                <div class="pref-ctl"><span class="state-txt" aria-hidden="true"></span><span class="switch"><input type="checkbox" role="switch" data-key="news" aria-labelledby="n6" aria-describedby="n6d"><span class="track"></span><span class="knob"></span></span></div>
+              </div>
+            </div>
+
+            <div class="field digest">
+              <label for="freq">Send activity emails</label>
+              <select id="freq" aria-describedby="freq-hint">
+                <option value="instant" selected>Immediately</option>
+                <option value="hourly">Batched hourly</option>
+                <option value="daily">Once a day, 9:00 AM</option>
+              </select>
+              <p class="hint" id="freq-hint">Applies to assignments, mentions and status changes. Due date reminders always send in the morning.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- DANGER -->
+        <section class="section" id="danger" aria-labelledby="danger-h">
+          <div class="section-intro">
+            <h2 id="danger-h">Delete account</h2>
+            <p>Permanent. Plan ahead.</p>
+          </div>
+          <div class="section-body" style="max-width:none">
+            <div class="danger">
+              <div>
+                <div class="t">Delete your account</div>
+                <div class="d">Removes your profile and personal settings. Tasks you created stay with your team.</div>
+              </div>
+              <button type="button" class="btn btn-danger" id="delete-open">Delete account</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<dialog id="delete-dialog" aria-labelledby="dd-h">
+  <h2 id="dd-h">Delete your account?</h2>
+  <p>Your profile, notification settings and sign-in will be removed. You will lose access to 4 projects in Northwind Studio. This cannot be undone.</p>
+  <div class="field" style="margin-top:16px" data-field="confirmdel">
+    <label for="dd-confirm">Type <strong>priya.nair@northwind.studio</strong> to confirm</label>
+    <input id="dd-confirm" type="text" autocomplete="off" spellcheck="false">
+  </div>
+  <div class="actions">
+    <button type="button" class="btn btn-secondary" id="dd-cancel" autofocus>Keep account</button>
+    <button type="button" class="btn btn-danger solid" id="dd-go" disabled>Delete account</button>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  /* ---------- helpers ---------- */
+  function toast(msg, undoFn) {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = '<svg width="16" height="16" aria-hidden="true"><use href="#i-check"/></svg><span></span>';
+    t.querySelector('span').textContent = msg;
+    if (undoFn) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = 'Undo';
+      b.onclick = () => { undoFn(); t.remove(); };
+      t.appendChild(b);
+    }
+    $('#toasts').appendChild(t);
+    setTimeout(() => t.remove(), undoFn ? 6000 : 4000);
+  }
+  function setLoading(btn, on, text) {
+    const lbl = btn.querySelector('.lbl');
+    if (on) {
+      btn.dataset.label = lbl.textContent;
+      btn.classList.add('loading'); btn.disabled = true;
+      lbl.textContent = text;
+      const s = document.createElement('span'); s.className = 'spin'; s.setAttribute('aria-hidden', 'true');
+      btn.prepend(s);
+    } else {
+      btn.classList.remove('loading'); btn.disabled = false;
+      lbl.textContent = btn.dataset.label;
+      const s = btn.querySelector('.spin'); if (s) s.remove();
+    }
+  }
+  function flash(el) { el.hidden = false; clearTimeout(el._t); el._t = setTimeout(() => el.hidden = true, 5000); }
+  function setInvalid(field, bad) {
+    field.classList.toggle('invalid', bad);
+    const input = $('input', field);
+    if (bad) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
+  }
+  const initialsOf = n => n.trim().split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?';
+
+  /* ---------- tabs highlight ---------- */
+  const links = $$('.tabs a');
+  const secs = links.map(a => $(a.getAttribute('href')));
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (e.isIntersecting) links.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + e.target.id)));
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  secs.forEach(s => io.observe(s));
+
+  /* ---------- profile ---------- */
+  const pf = $('#profile-form');
+  const saved = { name: $('#name').value, email: $('#email').value, tz: $('#tz').value, photo: null };
+  let photo = null;
+
+  function renderAvatar() {
+    const nm = $('#name').value;
+    const targets = [$('#avatar-preview'), $('[data-initials]')];
+    targets.forEach(el => {
+      el.textContent = '';
+      if (photo) { const i = document.createElement('img'); i.src = photo; i.alt = ''; el.appendChild(i); }
+      else el.textContent = initialsOf(nm);
+    });
+    $('#avatar-remove').hidden = !photo;
+    $('#avatar-upload').textContent = photo ? 'Change photo' : 'Upload photo';
+  }
+  $('#name').addEventListener('input', () => {
+    renderAvatar();
+    $('[data-name-display]').textContent = $('#name').value.trim() || 'Your name';
+  });
+
+  $('#avatar-upload').onclick = () => $('#avatar-file').click();
+  $('#avatar-remove').onclick = () => { photo = null; renderAvatar(); markDirty(); };
+  $('#avatar-file').addEventListener('change', e => {
+    const f = e.target.files[0];
+    const err = $('#avatar-error');
+    err.style.display = 'none';
+    if (!f) return;
+    if (!/^image\/(png|jpeg|webp)$/.test(f.type)) {
+      err.querySelector('span').textContent = 'That file is not a PNG, JPG or WebP. Choose a different image.';
+      err.style.display = 'flex'; return;
+    }
+    if (f.size > 2 * 1024 * 1024) {
+      err.querySelector('span').textContent = 'That image is ' + (f.size / 1048576).toFixed(1) + ' MB. Choose one under 2 MB.';
+      err.style.display = 'flex'; return;
+    }
+    const r = new FileReader();
+    r.onload = () => { photo = r.result; renderAvatar(); markDirty(); };
+    r.readAsDataURL(f);
+  });
+
+  function validName() { return $('#name').value.trim().length > 0; }
+  function validEmail() { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('#email').value.trim()); }
+  const checks = { name: validName, email: validEmail };
+  ['name', 'email'].forEach(k => {
+    const f = $('[data-field=' + k + ']');
+    const inp = $('input', f);
+    inp.addEventListener('blur', () => setInvalid(f, !checks[k]()));
+    inp.addEventListener('input', () => { if (f.classList.contains('invalid')) setInvalid(f, !checks[k]()); });
+  });
+
+  let dirty = false;
+  function markDirty() { dirty = true; $('#profile-status').hidden = true; }
+  pf.addEventListener('input', markDirty);
+  pf.addEventListener('change', markDirty);
+
+  $('#tz-detect').onclick = () => {
+    try {
+      const z = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const o = $('#tz option[value="' + z + '"]');
+      if (o) { $('#tz').value = z; markDirty(); toast('Time zone set to ' + o.textContent.replace(/^\([^)]*\)\s*/, '')); }
+      else toast('Your device time zone is not in the list. Pick the nearest city.');
+    } catch (_) { toast('Could not read your device time zone. Pick one from the list.'); }
+  };
+
+  pf.addEventListener('submit', e => {
+    e.preventDefault();
+    const bad = [];
+    if (!validName()) { setInvalid($('[data-field=name]'), true); bad.push('name'); }
+    if (!validEmail()) { setInvalid($('[data-field=email]'), true); bad.push('email'); }
+    if (bad.length) { $('#' + bad[0]).focus(); return; }
+    const btn = $('#profile-save');
+    setLoading(btn, true, 'Saving…');
+    setTimeout(() => {
+      setLoading(btn, false);
+      saved.name = $('#name').value.trim(); saved.email = $('#email').value.trim(); saved.tz = $('#tz').value; saved.photo = photo;
+      $('#name').value = saved.name;
+      dirty = false;
+      flash($('#profile-status'));
+      toast('Profile saved');
+    }, 700);
+  });
+  $('#profile-cancel').onclick = () => {
+    $('#name').value = saved.name; $('#email').value = saved.email; $('#tz').value = saved.tz; photo = saved.photo;
+    setInvalid($('[data-field=name]'), false); setInvalid($('[data-field=email]'), false);
+    $('[data-name-display]').textContent = saved.name;
+    renderAvatar(); dirty = false;
+  };
+  window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+  renderAvatar();
+
+  /* ---------- password ---------- */
+  const CURRENT_PW = 'correct-horse-9'; // demo only: stands in for a server check
+  $$('.pw-toggle').forEach(b => b.addEventListener('click', () => {
+    const inp = $('#' + b.dataset.for);
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    b.setAttribute('aria-pressed', String(show));
+    b.firstChild.nodeValue = show ? 'Hide' : 'Show';
+  }));
+
+  const next = $('#next'), cur = $('#current'), conf = $('#confirm');
+  function ruleState() {
+    return {
+      len: next.value.length >= 12,
+      mix: /[A-Za-z]/.test(next.value) && /\d/.test(next.value),
+      diff: next.value.length > 0 && next.value !== cur.value
+    };
+  }
+  function paintRules() {
+    const s = ruleState();
+    $$('#rules li').forEach(li => li.classList.toggle('ok', s[li.dataset.rule]));
+  }
+  next.addEventListener('input', () => { paintRules(); if ($('[data-field=next]').classList.contains('invalid')) setInvalid($('[data-field=next]'), !Object.values(ruleState()).every(Boolean)); });
+  cur.addEventListener('input', () => { paintRules(); if (cur.value) setInvalid($('[data-field=current]'), false); });
+  conf.addEventListener('input', () => { if ($('[data-field=confirm]').classList.contains('invalid')) setInvalid($('[data-field=confirm]'), conf.value !== next.value); });
+  conf.addEventListener('blur', () => { if (conf.value) setInvalid($('[data-field=confirm]'), conf.value !== next.value); });
+
+  $('#pw-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const summary = $('#pw-summary');
+    const errs = [];
+    const s = ruleState();
+    const fc = $('[data-field=current]'), fn = $('[data-field=next]'), fm = $('[data-field=confirm]');
+    [fc, fn, fm].forEach(f => setInvalid(f, false));
+    if (!cur.value) { setInvalid(fc, true); errs.push(['current', 'Enter your current password']); }
+    if (!Object.values(s).every(Boolean)) { setInvalid(fn, true); errs.push(['next', 'Choose a password that meets all three requirements']); }
+    if (conf.value !== next.value) { setInvalid(fm, true); errs.push(['confirm', 'Passwords do not match. Retype the new password.']); }
+    if (errs.length) {
+      if (errs.length > 1) {
+        summary.innerHTML = '<strong>Fix ' + errs.length + ' things to update your password</strong><ul style="margin:4px 0 0;padding-left:20px"></ul>';
+        errs.forEach(([id, msg]) => {
+          const li = document.createElement('li'); const a = document.createElement('a');
+          a.href = '#' + id; a.textContent = msg; a.style.color = 'inherit';
+          a.onclick = ev => { ev.preventDefault(); $('#' + id).focus(); };
+          li.appendChild(a); summary.querySelector('ul').appendChild(li);
+        });
+        summary.classList.add('show'); summary.focus();
+      } else { summary.classList.remove('show'); $('#' + errs[0][0]).focus(); }
+      return;
+    }
+    summary.classList.remove('show');
+    const btn = $('#pw-save');
+    setLoading(btn, true, 'Updating…');
+    setTimeout(() => {
+      setLoading(btn, false);
+      if (cur.value !== CURRENT_PW && cur.value !== 'demo') {
+        setInvalid(fc, true);
+        $('#current-error span').textContent = 'That is not your current password. Check it and try again, or use "Forgot password" from the sign-in page.';
+        cur.focus(); return;
+      }
+      $('#pw-form').reset(); paintRules();
+      $$('.pw-toggle').forEach(b => { b.setAttribute('aria-pressed', 'false'); b.firstChild.nodeValue = 'Show'; });
+      $$('#pw-form input').forEach(i => i.type = 'password');
+      flash($('#pw-status'));
+      toast('Password updated');
+    }, 800);
+  });
+  $('#current-error span').dataset.def = $('#current-error span').textContent;
+  cur.addEventListener('input', () => { $('#current-error span').textContent = $('#current-error span').dataset.def; });
+
+  /* ---------- notifications (instant) ---------- */
+  function stateTxt(sw) {
+    const t = sw.closest('.pref-ctl').querySelector('.state-txt');
+    t.textContent = sw.checked ? 'On' : 'Off';
+  }
+  $$('.switch input').forEach(sw => {
+    stateTxt(sw);
+    sw.addEventListener('change', () => {
+      stateTxt(sw);
+      const label = $('#' + sw.getAttribute('aria-labelledby')).textContent;
+      toast(label + (sw.checked ? ' turned on' : ' turned off'), () => { sw.checked = !sw.checked; stateTxt(sw); });
+    });
+  });
+  $('#freq').addEventListener('change', e => toast('Activity emails: ' + e.target.selectedOptions[0].textContent.toLowerCase()));
+
+  /* ---------- delete dialog ---------- */
+  const dlg = $('#delete-dialog'), opener = $('#delete-open'), dc = $('#dd-confirm'), go = $('#dd-go');
+  opener.onclick = () => { dc.value = ''; go.disabled = true; dlg.showModal(); };
+  $('#dd-cancel').onclick = () => dlg.close();
+  dlg.addEventListener('close', () => opener.focus());
+  dc.addEventListener('input', () => { go.disabled = dc.value.trim().toLowerCase() !== $('#email').value.trim().toLowerCase() && dc.value.trim().toLowerCase() !== 'priya.nair@northwind.studio'; });
+  go.onclick = () => { dlg.close(); toast('Demo only: no account was deleted'); };
+})();
+</script>
+</body>
+</html>

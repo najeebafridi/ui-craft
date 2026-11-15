@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Book a cut - Mockup v1</title>
+<!--
+Design brief
+Product: Mobile app for a barbershop chain, customers book in under a minute
+Tone: confident, warm, no-fuss        Density: touch (16px body, 44px+ targets)
+Accent: deep green #166B4F            Neutrals: warm grey
+Font: Inter / system                  Radius: 12px (soft-medium)
+Primary task: pick service, barber, time, then confirm
+Sample data: names, prices and times are sample data.
+-->
+<style>
+:root{
+  color-scheme: light;
+  --bg:#FAF8F5; --surface:#FFFFFF; --surface-2:#F3F0EB; --surface-3:#E8E3DB;
+  --border:#E8E3DB; --border-strong:#8A8378;
+  --text:#1C1917; --text-muted:#57534E; --text-subtle:#6B655E;
+  --accent:#166B4F; --accent-hover:#0F5740; --accent-fg:#FFFFFF; --accent-soft:#E7F3EE; --accent-text:#0F5740;
+  --danger-text:#B91C1C; --danger-soft:#FEF2F2;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px;
+  --radius-sm:8px; --radius:12px; --radius-full:9999px;
+  --shadow-raised:0 1px 2px rgb(28 25 23/.06),0 1px 3px rgb(28 25 23/.1);
+  --shadow-overlay:0 4px 6px rgb(28 25 23/.05),0 12px 32px rgb(28 25 23/.18);
+  --font-sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--surface-3);color:var(--text);font:400 16px/24px var(--font-sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;touch-action:manipulation;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+.app{max-width:430px;min-height:100dvh;margin:0 auto;background:var(--bg);position:relative;display:flex;flex-direction:column}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4) var(--space-2) var(--space-2);padding-top:calc(var(--space-2) + env(safe-area-inset-top))}
+.icon-btn{width:44px;height:44px;border:0;background:transparent;border-radius:var(--radius-full);display:grid;place-items:center}
+.icon-btn:active{background:var(--surface-3)}
+.top h1{font-size:18px;line-height:24px;font-weight:600;margin:0}
+.top .shop{font-size:14px;line-height:20px;color:var(--text-muted)}
+.top .titles{min-width:0}
+.top .shop{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+main{flex:1;padding:var(--space-5) var(--space-4) calc(120px + env(safe-area-inset-bottom))}
+section+section{margin-top:var(--space-6)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-3)}
+h2{font-size:18px;line-height:24px;font-weight:600;margin:0}
+.step{font-size:14px;line-height:20px;color:var(--text-muted)}
+
+/* options (service, barber) */
+.list{display:grid;gap:var(--space-2);margin:0;padding:0;border:0}
+.opt{position:relative;display:flex;align-items:center;gap:var(--space-3);width:100%;min-height:64px;padding:var(--space-3) var(--space-4);background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius);text-align:left;transition:background-color .12s,border-color .12s}
+.opt:active{background:var(--surface-2)}
+.opt[aria-checked="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt .main{flex:1;min-width:0}
+.opt .name{font-weight:600;display:block}
+.opt .meta{font-size:14px;line-height:20px;color:var(--text-muted);display:block}
+.opt .price{font-weight:600;white-space:nowrap}
+.tick{width:24px;height:24px;border-radius:var(--radius-full);border:2px solid var(--border-strong);flex:none;display:grid;place-items:center;color:transparent}
+.opt[aria-checked="true"] .tick{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.avatar{width:44px;height:44px;border-radius:var(--radius-full);flex:none;display:grid;place-items:center;font-weight:600;font-size:16px;background:var(--surface-3);color:var(--text)}
+.opt[aria-checked="true"] .avatar{background:var(--accent);color:var(--accent-fg)}
+.rating{display:inline-flex;align-items:center;gap:4px}
+
+/* date strip */
+.dates{display:flex;gap:var(--space-2);overflow-x:auto;margin:0 calc(-1*var(--space-4));padding:2px var(--space-4) var(--space-2);scrollbar-width:none;scroll-snap-type:x proximity;scroll-padding:0 var(--space-4)}
+.dates::-webkit-scrollbar{display:none}
+.date{flex:none;width:56px;min-height:72px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius)}
+.date .dow{font-size:12px;line-height:16px;color:var(--text-muted)}
+.date .dom{font-size:20px;line-height:28px;font-weight:600}
+.date[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.date[aria-checked="true"] .dow{color:var(--accent-fg)}
+
+/* slots */
+.group-label{font-size:14px;line-height:20px;color:var(--text-muted);margin:var(--space-4) 0 var(--space-2)}
+.group-label:first-of-type{margin-top:var(--space-3)}
+.slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-2)}
+.slot{min-height:48px;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-sm);font-weight:500;transition:background-color .12s,border-color .12s}
+.slot:active{background:var(--surface-2)}
+.slot[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
+.slot:disabled{background:var(--surface-2);border-color:var(--border);color:var(--text-subtle);text-decoration:line-through;cursor:not-allowed}
+.hint{font-size:14px;line-height:20px;color:var(--text-muted);margin:var(--space-3) 0 0}
+.empty{background:var(--surface);border:1px dashed var(--border-strong);border-radius:var(--radius);padding:var(--space-5) var(--space-4);text-align:center;color:var(--text-muted)}
+.empty strong{display:block;color:var(--text);margin-bottom:4px}
+
+/* skeleton */
+.skel{background:linear-gradient(90deg,var(--surface-2),var(--surface-3),var(--surface-2));background-size:200% 100%;animation:sh 1.2s linear infinite;border-radius:var(--radius-sm);min-height:48px}
+@keyframes sh{to{background-position:-200% 0}}
+
+/* sticky bar */
+.bar{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:430px;z-index:6;background:var(--surface);border-top:1px solid var(--border);padding:var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom))}
+.summary{display:flex;justify-content:space-between;gap:var(--space-3);font-size:14px;line-height:20px;color:var(--text-muted);margin-bottom:var(--space-2)}
+.summary b{color:var(--text);font-weight:600}
+.summary span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn{width:100%;min-height:52px;border-radius:var(--radius);border:1px solid transparent;font-weight:600;transition:background-color .12s}
+.btn-primary{background:var(--accent);color:var(--accent-fg)}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary:active{background:var(--accent-hover)}
+.btn-primary:disabled{background:var(--surface-3);color:var(--text-subtle);cursor:not-allowed}
+.btn-text{background:transparent;color:var(--accent-text);margin-top:var(--space-2);min-height:48px}
+.btn-text:active{background:var(--surface-2)}
+
+/* confirmation sheet */
+.scrim{position:fixed;inset:0;background:rgb(28 25 23/.5);opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;width:100%;max-width:430px;z-index:11;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--shadow-overlay);padding:var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));transform:translate(-50%,100%);transition:transform .25s cubic-bezier(.22,1,.36,1);visibility:hidden;max-height:90dvh;overflow:auto}
+.sheet.on{transform:translate(-50%,0);visibility:visible}
+.handle{width:40px;height:4px;border-radius:2px;background:var(--border-strong);margin:0 auto var(--space-4)}
+.sheet h2{font-size:20px;line-height:28px}
+.rows{margin:var(--space-4) 0;padding:0;display:grid}
+.rows div{display:flex;justify-content:space-between;gap:var(--space-4);padding:var(--space-3) 0;border-bottom:1px solid var(--border)}
+.rows dt{color:var(--text-muted);font-size:14px;line-height:20px}
+.rows dd{margin:0;font-weight:500;text-align:right}
+.total dd,.total dt{font-weight:600}
+.total dt{color:var(--text);font-size:16px}
+.note{font-size:14px;line-height:20px;color:var(--text-muted);margin:0 0 var(--space-4)}
+.done{text-align:center;padding:var(--space-4) 0 var(--space-2)}
+.done .check{width:56px;height:56px;border-radius:var(--radius-full);background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;margin:0 auto var(--space-4)}
+.done p{color:var(--text-muted);margin:var(--space-2) 0 var(--space-5)}
+
+@media (hover:hover){.opt:hover,.slot:not(:disabled):not([aria-checked="true"]):hover,.date:not([aria-checked="true"]):hover{background:var(--surface-2)}.opt[aria-checked="true"]:hover{background:var(--accent-soft)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <button class="icon-btn" aria-label="Back" type="button">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="titles">
+      <h1>Book an appointment</h1>
+      <div class="shop">Northside Barbers, 214 King Street</div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section aria-labelledby="h-service">
+      <div class="sec-head"><h2 id="h-service">Service</h2><span class="step">Step 1 of 3</span></div>
+      <div class="list" role="radiogroup" aria-labelledby="h-service" id="services"></div>
+    </section>
+
+    <section aria-labelledby="h-barber">
+      <div class="sec-head"><h2 id="h-barber">Barber</h2><span class="step">Step 2 of 3</span></div>
+      <div class="list" role="radiogroup" aria-labelledby="h-barber" id="barbers"></div>
+    </section>
+
+    <section aria-labelledby="h-time">
+      <div class="sec-head"><h2 id="h-time">Date and time</h2><span class="step">Step 3 of 3</span></div>
+      <div class="dates" role="radiogroup" aria-label="Date" id="dates"></div>
+      <div id="slots" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <div class="bar">
+    <div class="summary" id="summary" aria-live="polite"></div>
+    <button class="btn btn-primary" id="review" type="button" disabled>Choose a time to continue</button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1"></div>
+
+<script>
+/* All data below is sample data for the mockup. */
+const SERVICES=[
+  {id:'cut',name:'Haircut',meta:'Wash, cut and style',min:30,price:28},
+  {id:'fade',name:'Skin fade',meta:'Fade, line-up and style',min:45,price:34},
+  {id:'beard',name:'Beard trim',meta:'Shape, trim and hot towel',min:20,price:18},
+  {id:'combo',name:'Haircut and beard',meta:'Full cut plus beard trim',min:60,price:44}
+];
+const BARBERS=[
+  {id:'any',name:'First available',meta:'Soonest slot with any barber',ini:'AN',rating:null},
+  {id:'marcus',name:'Marcus Reid',meta:'Fades and tapers, 9 years',ini:'MR',rating:'4.9'},
+  {id:'dana',name:'Dana Okafor',meta:'Classic cuts and beards, 6 years',ini:'DO',rating:'4.8'},
+  {id:'luis',name:'Luis Ferreira',meta:'Kids and clippers-only, 4 years',ini:'LF',rating:'4.7'}
+];
+const SLOTS=['09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'];
+const state={service:'fade',barber:'marcus',date:null,time:'10:30'};
+const $=s=>document.querySelector(s);
+const money=n=>'$'+n.toFixed(2);
+const check='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>';
+const star='<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3 7 7 .6-5.3 4.8 1.6 7.2L12 17.8 5.7 21.6l1.6-7.2L2 9.6 9 9z"/></svg>';
+
+/* dates: next 14 days starting from a fixed sample day */
+const base=new Date(2026,2,12);
+const DATES=Array.from({length:14},(_,i)=>{const d=new Date(base);d.setDate(base.getDate()+i);return d});
+state.date=1;
+const dow=d=>d.toLocaleDateString('en-GB',{weekday:'short'});
+const longDate=d=>d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+
+/* deterministic "booked" slots per barber + date */
+function booked(i,time){
+  const seed=(i*7+time.replace(':','')*1+(state.barber.length*3))%11;
+  return seed%4===0;
+}
+const isSunday=d=>d.getDay()===0;
+
+function renderServices(){
+  $('#services').innerHTML=SERVICES.map(s=>`
+    <button type="button" class="opt" role="radio" aria-checked="${state.service===s.id}" data-id="${s.id}">
+      <span class="main"><span class="name">${s.name}</span><span class="meta">${s.meta} · ${s.min} min</span></span>
+      <span class="price num">${money(s.price)}</span>
+      <span class="tick" aria-hidden="true">${check}</span>
+    </button>`).join('');
+}
+function renderBarbers(){
+  $('#barbers').innerHTML=BARBERS.map(b=>`
+    <button type="button" class="opt" role="radio" aria-checked="${state.barber===b.id}" data-id="${b.id}">
+      <span class="avatar" aria-hidden="true">${b.ini}</span>
+      <span class="main"><span class="name">${b.name}</span>
+        <span class="meta">${b.rating?`<span class="rating">${star}${b.rating}</span> · `:''}${b.meta}</span></span>
+      <span class="tick" aria-hidden="true">${check}</span>
+    </button>`).join('');
+}
+function renderDates(){
+  $('#dates').innerHTML=DATES.map((d,i)=>`
+    <button type="button" class="date" role="radio" aria-checked="${state.date===i}" data-i="${i}" aria-label="${longDate(d)}">
+      <span class="dow">${dow(d)}</span><span class="dom num">${d.getDate()}</span>
+    </button>`).join('');
+}
+function renderSlots(){
+  const d=DATES[state.date];
+  const el=$('#slots');
+  if(isSunday(d)){
+    el.innerHTML=`<div class="empty" style="margin-top:12px"><strong>Closed on Sundays</strong>Pick another day to see free times.</div>`;
+    state.time=null;return;
+  }
+  const groups=[['Morning',SLOTS.filter(t=>t<'12:00')],['Afternoon',SLOTS.filter(t=>t>='12:00'&&t<'17:00')],['Evening',SLOTS.filter(t=>t>='17:00')]];
+  let free=0;
+  const html=groups.map(([label,list])=>`
+    <p class="group-label">${label}</p>
+    <div class="slots" role="radiogroup" aria-label="${label} times">
+      ${list.map(t=>{const idx=SLOTS.indexOf(t);const off=booked(idx+state.date,t);if(!off)free++;
+        return `<button type="button" class="slot num" role="radio" aria-checked="${state.time===t}" data-t="${t}" ${off?'disabled aria-label="'+t+', booked"':''}>${t}</button>`}).join('')}
+    </div>`).join('');
+  el.innerHTML=html+`<p class="hint">${free} times free. Crossed-out times are booked.</p>`;
+  if(state.time&&booked(SLOTS.indexOf(state.time)+state.date,state.time)){state.time=null;}
+  el.querySelectorAll('.slot').forEach(b=>b.setAttribute('aria-checked',String(state.time===b.dataset.t)));
+}
+function renderBar(){
+  const s=SERVICES.find(x=>x.id===state.service),b=BARBERS.find(x=>x.id===state.barber),d=DATES[state.date];
+  const btn=$('#review');
+  if(state.time){
+    $('#summary').innerHTML=`<span><b>${s.name}</b> with ${b.id==='any'?'any barber':b.name.split(' ')[0]}</span><span class="num"><b>${money(s.price)}</b></span>`;
+    btn.disabled=false;btn.textContent=`Review booking, ${longDate(d)} at ${state.time}`;
+  }else{
+    $('#summary').innerHTML=`<span><b>${s.name}</b> with ${b.id==='any'?'any barber':b.name.split(' ')[0]}</span><span class="num"><b>${money(s.price)}</b></span>`;
+    btn.disabled=true;btn.textContent='Choose a time to continue';
+  }
+}
+function renderAll(){renderServices();renderBarbers();renderDates();renderSlots();renderBar()}
+
+function pick(e,sel,fn){const t=e.target.closest(sel);if(t&&!t.disabled)fn(t)}
+$('#services').addEventListener('click',e=>pick(e,'.opt',t=>{state.service=t.dataset.id;renderServices();renderBar()}));
+$('#barbers').addEventListener('click',e=>pick(e,'.opt',t=>{state.barber=t.dataset.id;renderBarbers();renderSlots();renderBar()}));
+$('#dates').addEventListener('click',e=>pick(e,'.date',t=>{state.date=+t.dataset.i;renderDates();renderSlots();renderBar()}));
+$('#slots').addEventListener('click',e=>pick(e,'.slot',t=>{state.time=t.dataset.t;renderSlots();renderBar()}));
+
+/* confirm sheet */
+let lastFocus=null;
+function openSheet(html){
+  lastFocus=document.activeElement;
+  $('#sheet').innerHTML=html;$('#sheet').classList.add('on');$('#scrim').classList.add('on');
+  $('#sheet').focus();
+}
+function closeSheet(){
+  $('#sheet').classList.remove('on');$('#scrim').classList.remove('on');
+  if(lastFocus)lastFocus.focus();
+}
+function review(){
+  const s=SERVICES.find(x=>x.id===state.service),b=BARBERS.find(x=>x.id===state.barber),d=DATES[state.date];
+  openSheet(`
+    <div class="handle" aria-hidden="true"></div>
+    <h2 id="sheet-title">Confirm your booking</h2>
+    <dl class="rows">
+      <div><dt>Service</dt><dd>${s.name} · ${s.min} min</dd></div>
+      <div><dt>Barber</dt><dd>${b.id==='any'?'First available':b.name}</dd></div>
+      <div><dt>When</dt><dd class="num">${longDate(d)} at ${state.time}</dd></div>
+      <div><dt>Where</dt><dd>Northside Barbers, 214 King Street</dd></div>
+      <div class="total"><dt>Pay in shop</dt><dd class="num">${money(s.price)}</dd></div>
+    </dl>
+    <p class="note">Free to cancel or change up to 2 hours before your appointment.</p>
+    <button class="btn btn-primary" id="confirm" type="button">Confirm booking</button>
+    <button class="btn btn-text" id="edit" type="button">Change details</button>`);
+  $('#confirm').onclick=confirmBooking;$('#edit').onclick=closeSheet;
+}
+function confirmBooking(){
+  const s=SERVICES.find(x=>x.id===state.service),b=BARBERS.find(x=>x.id===state.barber),d=DATES[state.date];
+  const btn=$('#confirm');btn.disabled=true;btn.textContent='Booking...';
+  setTimeout(()=>{
+    $('#sheet').innerHTML=`
+      <div class="done">
+        <div class="check" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div>
+        <h2 id="sheet-title">You're booked</h2>
+        <p class="num">${s.name} with ${b.id==='any'?'the first available barber':b.name}<br>${longDate(d)} at ${state.time}</p>
+      </div>
+      <button class="btn btn-primary" id="close" type="button">Done</button>
+      <button class="btn btn-text" type="button">Add to calendar</button>`;
+    $('#sheet').focus();$('#close').onclick=closeSheet;
+  },700);
+}
+$('#review').addEventListener('click',review);
+$('#scrim').addEventListener('click',closeSheet);
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&$('#sheet').classList.contains('on'))closeSheet();
+  if(e.key==='Tab'&&$('#sheet').classList.contains('on')){
+    const f=[...$('#sheet').querySelectorAll('button:not(:disabled)')];if(!f.length)return;
+    const first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&(document.activeElement===first||document.activeElement===$('#sheet'))){e.preventDefault();last.focus()}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+  }
+});
+renderAll();
+</script>
+</body>
+</html>

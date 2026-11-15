@@ -11,6 +11,7 @@ Load this before you say a screen is done. Answer each line yes or no. Fix every
 - [ ] The first view shows the screen in use: real data, sensible defaults selected, the main interaction and main action visible.
 - [ ] No dead space: no card stretched to match a neighbour, no mostly-empty panel, no dead "$0" totals.
 - [ ] Nothing floating covers content at any width.
+- [ ] The data tells one story: summary matches selection, totals add up, counts match lists.
 
 ## Purpose & hierarchy
 - [ ] The one primary task of this screen is clear within 3 seconds.
