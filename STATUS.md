@@ -14,6 +14,7 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - [x] 4. Fast mockups -> references/mockups.md, assets/mockup-template.html, assets/options-board.html
 - [x] 5. Evals: 2 rounds. Round 2: 97% vs 57% checks passed; blind judge preferred skill on 5/5. See evals/RESULTS.md
 - [x] 6. Package: .claude-plugin/ (plugin + marketplace), AGENTS.md (generated), README.md
+- [x] 9. Whole-app review mode + per-page summary (v1.2.0).
 - [x] 8. Review mode (v1.1.0): ui-audit score 0-100 + references/review-mode.md. Installed for the user via ~/.claude/settings.json (marketplace ui-craft, autoUpdate on).
 - [x] 7. Polish: fresh review fixed 25 consistency issues (tokens = colour guide, no 13px/11px, rows 36/40/44, sections 64–96, Radix credit). Screenshots removed from git history (repo 5.4 MB -> ~0.4 MB); they stay on disk, ignored.
 

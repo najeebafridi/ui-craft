@@ -6,7 +6,8 @@ The goal is a clear score the user can track over time, plus a short list of fix
 
 ## 1. Collect the screens
 
-- Ask for (or find) **3–5 key screens**. If none are named, pick: the main screen (dashboard, home or main list), the core task screen, one form, and the phone view of the main screen.
+- **Quick review:** 3–5 key screens. If none are named, pick: the main screen (dashboard, home or main list), the core task screen, one form, and the phone view of the main screen.
+- **Whole-app review:** every screen. Follow section 8, so usage stays low.
 - Accepted inputs: live URLs (`https://…`), a local dev server (`http://localhost:3000/…`), HTML files, or screenshots.
 - Pages behind a login: ask the user for a URL that works without login (a staging or demo account they open themselves), exported HTML, or screenshots. Never ask for their password.
 
@@ -108,6 +109,30 @@ Estimate "expected result" from the points each fix recovers: measured points fr
 2. Re-run `ui-audit.mjs` on the same pages, and re-score the design areas you touched.
 3. Show before → after for each score: "Overall 71 → 86 (C → B). Contrast 14 → 20, Hierarchy 5 → 8."
 4. Save the JSON from each run (e.g. `ui-review/measured-2026-11-16.json`), so progress can be tracked over time.
+
+## 8. Whole-app review (all screens, without wasting usage)
+
+Use this when the user wants every screen checked, not just the key ones. The trick: let the script do the measuring, never score the same layout twice, and give the repetitive looking to a cheaper model.
+
+1. **List every screen.** Find the routes in the code (router config, `pages/` or `app/` folders, navigation menus), a sitemap, or by following the app's links. Include the important states: an empty list, a form with errors, a modal or dialog, the phone view. Show the list to the user first, with a count.
+2. **Measure all of them in one run.** The script costs no AI usage per page:
+   ```bash
+   node <skill-dir>/scripts/ui-audit.mjs <url-1> <url-2> ... <url-n> --out ui-review --json ui-review/measured.json
+   ```
+   It ends with a one-line-per-page summary, worst first, and an average. Pages that need sample data: use the app's seed or demo data.
+3. **Group screens by layout.** Pages built from the same template (every "detail" page, every "settings" tab) share their design problems. Put them in groups such as "list pages (6)", "detail pages (14)", "forms (5)".
+4. **Design-score one representative per group**, plus any page whose measured score is much worse than its group. Look at the others only quickly: do they break the group's pattern?
+5. **Use the right model for each job,** if your tool can run helper agents or subagents (Claude Code can):
+   - Per-group design scoring from screenshots: a mid-size, cheaper model (for example Sonnet) at normal effort. Give it this file's rubric and the group's screenshots. Ask for scores, evidence and fixes only.
+   - Listing routes and running the script: the cheapest model (for example Haiku) or the main session itself. It is simple work.
+   - The final report, overall score and fix ranking: the main model, at normal or high effort. This is where judgement matters.
+   - Without helper agents, do it all in one session, but still score one screen per group, not every page.
+6. **Report for the whole app.** Same template as section 6, plus:
+   - **App score** = the average overall score of the groups, weighted by how many screens each group has.
+   - A table of every group (or every screen, if there are few): measured, design and overall score, and the top issue. Worst first.
+   - Fixes that apply across the app come first ("the focus ring is missing everywhere: fix once in the shared CSS"), because one change raises many pages.
+
+Rough cost guide: 30 screens in 6 groups means 30 script runs (almost free), 6 cheaper-model scoring passes, and one main-model report. That is far cheaper than 30 full reviews, and the report is easier to act on.
 
 ## Common mistakes
 

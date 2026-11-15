@@ -182,7 +182,16 @@ try {
   const results = [];
   for (const t of args) results.push(report(t, await run(t)));
   const ok = results.filter((x) => x.total != null);
-  if (ok.length > 1) console.log(`\nAverage measured score: ${Math.round(ok.reduce((a, x) => a + x.total, 0) / ok.length)}/100 over ${ok.length} pages`);
+  if (ok.length > 1) {
+    console.log(`\nSummary, worst first (${ok.length} pages):`);
+    [...ok].sort((x, y) => x.total - y.total).forEach((x) =>
+      console.log(`  ${String(x.total).padStart(3)} ${x.grade}  ${x.target}${x.fixes[0] ? `  - top issue: ${x.fixes[0].area}` : ""}`));
+    console.log(`Average measured score: ${Math.round(ok.reduce((a, x) => a + x.total, 0) / ok.length)}/100 over ${ok.length} pages`);
+    const common = {};
+    ok.forEach((x) => x.fixes.forEach((f) => { common[f.area] = (common[f.area] || 0) + 1; }));
+    const shared = Object.entries(common).filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1]);
+    if (shared.length) console.log("Problems on several pages (fix once in shared code): " + shared.map(([k, n]) => `${k} (${n} pages)`).join(", "));
+  }
   if (jsonPath) { writeFileSync(jsonPath, JSON.stringify({ measuredAt: new Date().toISOString(), pages: results }, null, 2)); console.log(`\nJSON saved: ${jsonPath}`); }
   console.log("\nThis score covers measurable checks only (contrast, sizes, layout, labels...). It cannot judge taste:\nopen the screenshots and score design quality with references/review-mode.md.");
 } finally { chrome.kill(); }

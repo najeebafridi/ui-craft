@@ -112,6 +112,8 @@ It will:
 3. **Report** an overall score with a grade, plus the top fixes, biggest win first. Each fix comes with the exact change. Example: *"Overall 71/100 (C). Fix 1: three solid buttons compete on /invoices. Keep 'New invoice' solid, make 'Export' an outline button."*
 4. **Fix and re-score** if you ask, so you see the progress (for example 71 → 86).
 
+**Whole app?** Ask it to "review every screen". It measures all pages with the script (almost no AI usage), groups pages that share a layout, design-scores one page per group with a cheaper model, and writes one app-wide report with fixes that apply everywhere listed first.
+
 Just the measured part, from a terminal:
 
 ```bash

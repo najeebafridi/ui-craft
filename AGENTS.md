@@ -31,7 +31,7 @@ Works for any stack. Numbers are in CSS px; for native apps read px as pt (iOS) 
 
 When asked for **quick mockups for a client**, follow `.agents/skills/ui-craft/references/mockups.md` (one HTML file per screen, no build step, options side by side).
 
-When asked to **review, score or improve an existing product or screen**, follow `.agents/skills/ui-craft/references/review-mode.md`: measure with the audit script, score the design with a 10-area rubric, then give an overall score out of 100 and the top fixes, biggest win first.
+When asked to **review, score or improve an existing product or screen**, follow `.agents/skills/ui-craft/references/review-mode.md`: measure with the audit script, score the design with a 10-area rubric, then give an overall score out of 100 and the top fixes, biggest win first. For a whole app, measure every screen with the script and design-score one screen per layout group (section 8 of that file).
 
 ## 2. Pick the product profile
 

@@ -7,7 +7,7 @@
       "name": "ui-craft",
       "source": "./",
       "description": "Design rules, mockup templates and a screen audit script so AI-built screens look professional and are easy to use.",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "category": "design",
       "tags": ["design", "ui", "ux", "accessibility", "mockups"]
     }
