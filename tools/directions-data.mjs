@@ -48,6 +48,14 @@ export const MOTION = {
   bouncy: { fast: 120, base: 220, slow: 360, press: 0.95, ease: "cubic-bezier(0.34, 1.56, 0.64, 1)" },
 };
 
+// How much 3D, shader and scroll effect a product carries. Each direction sets a default; the Studio and the immersive-web skill use the same ladder.
+export const IMMERSIVE = [
+  { name: "Still", short: "no 3D or scroll effects", rule: "No 3D, shaders or scroll effects. Ordinary interface motion only." },
+  { name: "Accent", short: "one quiet living detail", rule: "One quiet living detail (a material, a slow shader texture, a view transition) that rests after a few seconds. No scroll-driven scenes." },
+  { name: "Signature", short: "one hero moment", rule: "One hero moment (a 3D object or shader that reacts to the pointer or the first scroll), then a normal page." },
+  { name: "Story", short: "a scroll-driven sequence", rule: "A scroll-driven sequence of 3 to 5 beats with one persistent scene. Marketing, launch and portfolio pages only." },
+];
+
 // accent / secondary are [L, C, H] in OKLCH so the hue choice is explicit; fonts are all SIL OFL (Google Fonts).
 export const DIRECTIONS = [
   {
@@ -64,6 +72,7 @@ export const DIRECTIONS = [
     voice: "Plain and warm. Verb + object buttons. Specific confirmations.",
     signature: "One satisfying completion moment (a check that draws itself, a row that settles) and beautifully calm lists.",
     watch: "Easy to make generic. It needs exact spacing, real content and one signature detail to rise above a template.",
+    immersive: 1, scene: "Matte, paper-like forms under soft overhead light. Motion only confirms: one object settles, then rests.",
   },
   {
     slug: "quiet-instrument", name: "Quiet instrument", theme: "dark",
@@ -79,6 +88,7 @@ export const DIRECTIONS = [
     voice: "Terse. Verbs. No exclamation marks.",
     signature: "Keyboard-first: visible shortcut hints (kbd chips), a command palette, instant response with no decorative motion.",
     watch: "Dark near-black plus one blue-violet accent is the most copied look in software. Earn it with real density, alignment and speed, or change the accent hue.",
+    immersive: 1, scene: "Thin line geometry and points on near-black, no gloss. The data is the scene. Moves are instant; nothing drifts.",
   },
   {
     slug: "paper-and-ink", name: "Paper and ink", theme: "light",
@@ -94,6 +104,7 @@ export const DIRECTIONS = [
     voice: "Plain, exact, slightly dry. Full sentences.",
     signature: "Typographic care you can feel: true italics, hanging punctuation, old-style or tabular figures used on purpose, a perfect reading measure.",
     watch: "Warm cream plus a rust accent is a known cliche. Keep the accent ink-like and small, and let the type do the work.",
+    immersive: 1, scene: "Flat sheets with hard print-like shadows, ink colour only. Changes are cuts or short fades, like turning a page.",
   },
   {
     slug: "studio-gloss", name: "Studio gloss", theme: "light",
@@ -109,6 +120,7 @@ export const DIRECTIONS = [
     voice: "Short declarative lines. One idea per screen.",
     signature: "The product is the hero: one huge image and one sentence per screen, with a scroll reveal that explains a feature.",
     watch: "Fails without real product imagery. Never fill the hero with a gradient blob where the product should be.",
+    immersive: 3, scene: "A studio product shot: one large soft light from above, a glossy object, a floor that fades to the page. Slow orbit, clean dissolves.",
   },
   {
     slug: "maison", name: "Maison", theme: "light",
@@ -124,6 +136,7 @@ export const DIRECTIONS = [
     voice: "Sparse and assured. Third person. No exclamation marks, no discounts shouted.",
     signature: "Space as the luxury: one object, one line of text, and a lot of nothing around them. Slow page-level fades.",
     watch: "Do not add urgency, pop-ups or dense grids. Slow motion is for page-level transitions only; controls still respond instantly.",
+    immersive: 2, scene: "A still life: stone, linen, brushed brass, one warm window light from the side. Slow dissolves, long holds, no bounce.",
     altAccents: "oxblood oklch(0.36 0.11 20), ink navy oklch(0.3 0.07 260), or no accent at all (text-colour buttons)",
   },
   {
@@ -140,6 +153,7 @@ export const DIRECTIONS = [
     voice: "Specific and literary: what it is, what it is made of, how to use it.",
     signature: "The label: precise ingredient-style lists and numbered details set like packaging typography.",
     watch: "Without real photography this collapses into the cream-and-earth-tone template. Use real product images or pick another direction.",
+    immersive: 2, scene: "Ceramic and glass on a paper backdrop in side daylight. One object turns slowly; labels stay as real text.",
   },
   {
     slug: "soft-wellness", name: "Soft wellness", theme: "light",
@@ -155,6 +169,7 @@ export const DIRECTIONS = [
     voice: "Kind, second person, no pressure. Never guilt, never streak-shaming.",
     signature: "One slow breathing element (a shape that expands and settles over 4-6s, pausable) and extremely gentle confirmations.",
     watch: "Low saturation must not become low contrast: text still passes 4.5:1. No confetti or alarms for anxious users.",
+    immersive: 1, scene: "Soft rounded forms in diffuse light with no hard shadows. Slow breathing motion that rests; nothing sudden.",
     altAccents: "sage oklch(0.56 0.07 150), dusk blue oklch(0.52 0.09 255), peach as a secondary only",
   },
   {
@@ -171,6 +186,7 @@ export const DIRECTIONS = [
     voice: "Cheeky, encouraging, very short.",
     signature: "Tactile buttons: a 4px solid lip that the button sinks into on press, plus one springy reward moment on success.",
     watch: "Bounce only on rewards and presses, never on navigation. Keep text contrast high; bright does not mean pale.",
+    immersive: 2, scene: "Chunky toy shapes with a solid drop edge, flat bright colour, no realism. Squash, stretch and one bounce on reward.",
   },
   {
     slug: "trusted-ledger", name: "Trusted ledger", theme: "light",
@@ -186,6 +202,7 @@ export const DIRECTIONS = [
     voice: "Plain, exact, transparent about fees and dates.",
     signature: "Numbers set like a ledger: right-aligned, tabular, decimals lined up, currency symbols quieter than the digits, and confirmations that state the exact amount and time.",
     watch: "Blue is expected here but owned by everyone. Differentiate with a distinctive deep hue (teal, forest, plum) at the same seriousness, not with brightness.",
+    immersive: 0, scene: "No decorative 3D. At most a precise chart that draws itself once. Trust comes from stillness and exact numbers.",
     altAccents: "deep teal oklch(0.45 0.09 200), forest oklch(0.42 0.1 155), plum oklch(0.4 0.12 330)",
   },
   {
@@ -202,6 +219,7 @@ export const DIRECTIONS = [
     voice: "Casual, direct, human. Short.",
     signature: "Giant numerals: the balance or key figure at 56-72px, tabular, with one vivid signature colour on black.",
     watch: "One vivid colour only. Dark text on the vivid colour (never white on lime). Money is still serious: confirmations stay calm and exact.",
+    immersive: 2, scene: "Bold card objects on dark with a strong rim light in the accent. Confident, crisp moves; one hero card.",
     altAccents: "coral oklch(0.72 0.19 28), electric blue oklch(0.62 0.22 258), violet oklch(0.62 0.22 300)",
   },
   {
@@ -218,6 +236,7 @@ export const DIRECTIONS = [
     voice: "Plain language at a reading age of 9-12. One question per page. Say what happens next.",
     signature: "An unmissable focus state (3px ring plus offset) and one question per page with a summary before submit.",
     watch: "Do not prettify at the cost of clarity. Every colour passes AA at minimum; aim for AAA on body text.",
+    immersive: 0, scene: "No decorative 3D or scroll effects. A map or diagram only when it explains something, with a text version beside it.",
   },
   {
     slug: "marketplace", name: "Open-air marketplace", theme: "light",
@@ -233,6 +252,7 @@ export const DIRECTIONS = [
     voice: "Warm and welcoming. Clear total prices.",
     signature: "Search as the hero: one prominent search bar, then photo cards with honest totals and ratings.",
     watch: "The accent is close to error red: errors use a separate crimson plus icon and text. Total price visible before the last step.",
+    immersive: 1, scene: "The photos are the scene. A shared-element move from card to detail; no parallax on text, no 3D for its own sake.",
   },
   {
     slug: "stage-dark", name: "Stage dark", theme: "dark",
@@ -248,6 +268,7 @@ export const DIRECTIONS = [
     voice: "Short, low on hype.",
     signature: "Colour from the content: a faint ambient tint behind the current artwork (blurred, very low opacity) and large condensed titles.",
     watch: "Near-black, never pure black next to bright art. Dark text on the bright accent. Keep motion cinematic but short; no parallax on text.",
+    immersive: 3, scene: "A dark stage, one spotlight, a little haze, colour taken from the artwork. Cinematic cuts and slow push-ins, kept short.",
     altAccents: "magenta oklch(0.68 0.22 350), acid green oklch(0.84 0.2 135), electric cyan oklch(0.8 0.13 210)",
   },
   {
@@ -264,6 +285,7 @@ export const DIRECTIONS = [
     voice: "Imperative. Two to four words.",
     signature: "Monumental type over imagery: one giant uppercase word or line that fills the width.",
     watch: "Uppercase display only for short lines (under 5 words). Body text stays sentence case and readable.",
+    immersive: 3, scene: "A monumental product on a plinth under hard directional light. Fast cuts, big type that moves with the scroll, strong pauses.",
   },
   {
     slug: "graph-paper", name: "Graph-paper technical", theme: "dark",
@@ -279,6 +301,7 @@ export const DIRECTIONS = [
     voice: "Exact. No marketing adjectives. Numbers with units.",
     signature: "A visible grid: a faint dotted or lined background and hairline frames that make the layout look measured.",
     watch: "Mono type is for data and labels, not paragraphs. Dark text on the bright accent. The grid stays under 6% contrast.",
+    immersive: 2, scene: "Wireframes, grids and isometric diagrams: points and lines, not surfaces. The system's data flow is the scene.",
     altAccents: "amber oklch(0.8 0.15 80), signal blue oklch(0.62 0.19 255)",
   },
   {
@@ -295,6 +318,7 @@ export const DIRECTIONS = [
     voice: "Witty and human, never corporate.",
     signature: "Bold colour blocking: two or three solid colour fields with an oversized, slightly odd headline crossing them.",
     watch: "Inside the actual tool, switch to neutral chrome (Calm productivity); the loud colour is for marketing and moments.",
+    immersive: 2, scene: "Cut-paper colour blocks in flat light. Snappy, playful moves; shapes assemble into the product.",
   },
 ];
 
@@ -320,6 +344,7 @@ export function nonColour(d) {
     `  /* density and motion (${d.motion}) */`,
     `  --control-h: ${d.density.control}px;  --row-h: ${d.density.row}px;  --space-section: ${d.density.section}px;`,
     `  --dur-fast: ${m.fast}ms;  --dur-base: ${m.base}ms;  --dur-slow: ${m.slow}ms;  --ease-out: ${m.ease};  --press-scale: ${m.press};`,
+    `  --immersive: ${d.immersive};   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */`,
     ``,
   ].join("\n");
 }

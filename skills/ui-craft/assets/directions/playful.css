@@ -7,6 +7,7 @@
    Imagery:    A mascot or bold flat illustration with 2-3 saturated colours and dark outlines.
    Voice:      Cheeky, encouraging, very short.
    Watch out:  Bounce only on rewards and presses, never on navigation. Keep text contrast high; bright does not mean pale.
+   Immersive:  level 2 of 3 (signature: one hero moment). Chunky toy shapes with a solid drop edge, flat bright colour, no realism. Squash, stretch and one bounce on reward.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;600;700;800&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -69,6 +70,7 @@
   /* density and motion (bouncy) */
   --control-h: 48px;  --row-h: 56px;  --space-section: 48px;
   --dur-fast: 120ms;  --dur-base: 220ms;  --dur-slow: 360ms;  --ease-out: cubic-bezier(0.34, 1.56, 0.64, 1);  --press-scale: 0.95;
+  --immersive: 2;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

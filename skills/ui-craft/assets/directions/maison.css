@@ -7,6 +7,7 @@
    Imagery:    Few, large, carefully cropped photographs with one colour grade. Objects are given room.
    Voice:      Sparse and assured. Third person. No exclamation marks, no discounts shouted.
    Watch out:  Do not add urgency, pop-ups or dense grids. Slow motion is for page-level transitions only; controls still respond instantly.
+   Immersive:  level 2 of 3 (signature: one hero moment). A still life: stone, linen, brushed brass, one warm window light from the side. Slow dissolves, long holds, no bounce.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Hanken+Grotesk:wght@300;400;500&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -65,6 +66,7 @@
   /* density and motion (slow) */
   --control-h: 48px;  --row-h: 56px;  --space-section: 128px;
   --dur-fast: 180ms;  --dur-base: 320ms;  --dur-slow: 560ms;  --ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);  --press-scale: 0.99;
+  --immersive: 2;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

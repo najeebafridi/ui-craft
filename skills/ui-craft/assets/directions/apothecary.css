@@ -7,6 +7,7 @@
    Imagery:    Products on neutral ground in natural light; hands, materials, ingredients. Consistent crop and grade.
    Voice:      Specific and literary: what it is, what it is made of, how to use it.
    Watch out:  Without real photography this collapses into the cream-and-earth-tone template. Use real product images or pick another direction.
+   Immersive:  level 2 of 3 (signature: one hero moment). Ceramic and glass on a paper backdrop in side daylight. One object turns slowly; labels stay as real text.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -64,6 +65,7 @@
   /* density and motion (gentle) */
   --control-h: 44px;  --row-h: 52px;  --space-section: 96px;
   --dur-fast: 160ms;  --dur-base: 260ms;  --dur-slow: 400ms;  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);  --press-scale: 0.98;
+  --immersive: 2;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

@@ -7,6 +7,7 @@
    Imagery:    Real places, food and people, large and consistent in aspect ratio. Photos carry the colour.
    Voice:      Warm and welcoming. Clear total prices.
    Watch out:  The accent is close to error red: errors use a separate crimson plus icon and text. Total price visible before the last step.
+   Immersive:  level 1 of 3 (accent: one quiet living detail). The photos are the scene. A shared-element move from card to detail; no parallax on text, no 3D for its own sake.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -64,6 +65,7 @@
   /* density and motion (crisp) */
   --control-h: 44px;  --row-h: 52px;  --space-section: 56px;
   --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+  --immersive: 1;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

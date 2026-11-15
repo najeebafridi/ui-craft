@@ -7,6 +7,7 @@
    Imagery:    Collage: screenshots, shapes and illustrated people overlapping on colour blocks.
    Voice:      Witty and human, never corporate.
    Watch out:  Inside the actual tool, switch to neutral chrome (Calm productivity); the loud colour is for marketing and moments.
+   Immersive:  level 2 of 3 (signature: one hero moment). Cut-paper colour blocks in flat light. Snappy, playful moves; shapes assemble into the product.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -69,6 +70,7 @@
   /* density and motion (crisp) */
   --control-h: 44px;  --row-h: 52px;  --space-section: 80px;
   --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+  --immersive: 2;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

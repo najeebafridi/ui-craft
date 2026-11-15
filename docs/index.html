@@ -85,6 +85,10 @@ output{font:500 12px var(--mono);color:var(--c-muted);min-width:40px;text-align:
 .frame-wrap[data-view="phone"] iframe{position:static;transform:none;width:390px;max-width:calc(100% - 24px);height:100%;border-radius:32px;box-shadow:0 0 0 8px #1F1F23,0 0 0 9px var(--c-line-strong),var(--c-overlay)}
 .about{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px;font-size:12px;color:var(--c-muted)}
 .about b{display:block;color:var(--c-text);font-weight:600;margin-bottom:4px}
+.fx{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--c-muted)}
+.fx select{width:auto;height:32px}
+.stage-bar .seg{max-width:100%;overflow-x:auto;scrollbar-width:none}
+.stage-bar .seg button{flex:none}
 .notes{margin-top:12px;font-size:12px;color:var(--c-muted);display:grid;gap:4px}
 .notes:empty{display:none}
 
@@ -181,6 +185,7 @@ dialog::backdrop{background:rgb(0 0 0/.45)}
       <h2>5. Feel</h2>
       <div class="field"><label for="density">Density</label><select id="density"></select></div>
       <div class="field"><label for="motion">Motion</label><select id="motion"></select></div>
+      <div class="field"><label for="immersive">3D and scroll effects</label><select id="immersive" aria-describedby="immersive-hint"></select><span class="hint" id="immersive-hint">See it on the Immersive screen. Every level keeps a still fallback.</span></div>
       <button type="button" class="link" id="reset">Reset to this direction's defaults</button>
     </section>
   </aside>
@@ -188,8 +193,9 @@ dialog::backdrop{background:rgb(0 0 0/.45)}
   <main class="stage">
     <div class="stage-bar">
       <div class="seg" role="group" aria-label="Preview screen">
-        <button type="button" data-screen="app">Dashboard</button><button type="button" data-screen="landing">Landing page</button><button type="button" data-screen="mobile">Mobile app</button><button type="button" data-screen="kit">Components</button>
+        <button type="button" data-screen="app">Dashboard</button><button type="button" data-screen="landing">Landing page</button><button type="button" data-screen="mobile">Mobile app</button><button type="button" data-screen="kit">Components</button><button type="button" data-screen="imm">Immersive</button>
       </div>
+      <label class="fx" id="fx-wrap" hidden>Preview as <select id="fx"><option value="full">Full effect</option><option value="reduced">Reduced motion</option><option value="nogl">No WebGL (fallback)</option></select></label>
       <span class="health" id="health" role="status"></span>
     </div>
     <div class="frame-wrap" id="wrap" data-view="desktop"><iframe id="frame" title="Live preview of the theme"></iframe></div>
@@ -212,7 +218,7 @@ dialog::backdrop{background:rgb(0 0 0/.45)}
 body{min-height:100vh}
 a{color:var(--accent-text);text-underline-offset:2px}
 body > section{display:none}
-body[data-screen="app"] > .s-app,body[data-screen="landing"] > .s-landing,body[data-screen="mobile"] > .s-mobile,body[data-screen="kit"] > .s-kit{display:block}
+body[data-screen="app"] > .s-app,body[data-screen="landing"] > .s-landing,body[data-screen="mobile"] > .s-mobile,body[data-screen="kit"] > .s-kit,body[data-screen="imm"] > .s-imm{display:block}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 16px;border-radius:var(--radius);border:var(--border-w) solid transparent;font:500 14px var(--font-sans);cursor:pointer;text-decoration:none;white-space:nowrap;transition:background-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out)}
 .btn:active{transform:scale(var(--press-scale))}
 .btn-primary{background:var(--accent);color:var(--accent-fg);box-shadow:var(--shadow-button)}
@@ -365,6 +371,54 @@ kbd{font:500 12px var(--font-mono);color:var(--text-subtle)}
 .sws div{font-size:12px;color:var(--text-muted)}
 .sws i{display:block;height:40px;border-radius:var(--radius-sm);box-shadow:inset 0 0 0 1px var(--ring);margin-bottom:4px}
 @media (max-width:640px){.kit{padding:16px}.type h3{font-size:36px}.s-kit .btn,.fld input,.fld select{min-height:44px}.opt{min-height:44px}}
+
+/* ---------- immersive: one scene, driven by the theme; the page works without it ---------- */
+.s-imm{font-size:var(--text-body)}
+.imm{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);column-gap:48px}
+.imm-hero{grid-column:1;grid-row:1;align-self:center;padding:var(--space-section) 0}
+.imm-hero h1{font-size:clamp(36px,5vw,60px);line-height:1.05;letter-spacing:var(--tracking-display)}
+.imm-hero > p{font-size:18px;color:var(--text-muted);margin-top:16px;max-width:46ch}
+.imm-hero .acts{margin-top:24px;flex-wrap:wrap}
+.imm-hero .proof{font-size:14px;color:var(--text-subtle);margin-top:16px}
+.imm-stage{grid-column:2;grid-row:1;align-self:center;position:relative;height:min(560px,76vh);min-height:360px}
+.imm-stage canvas,.imm-fallback{position:absolute;inset:0;width:100%;height:100%}
+.imm-stage canvas{opacity:0;transition:opacity var(--dur-slow) var(--ease-out)}
+.imm-stage[data-scene="live"] canvas,.imm-stage[data-scene="still"] canvas{opacity:1}
+.imm-stage[data-scene="live"] .imm-fallback,.imm-stage[data-scene="still"] .imm-fallback{visibility:hidden}
+.imm-fallback{display:grid;place-items:center}
+.fb{grid-area:1/1;width:min(44%,220px);aspect-ratio:3/4;background:var(--surface);border:var(--border-w) solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-overlay);padding:9%;display:grid;align-content:start;gap:7%}
+.fb i{width:20%;aspect-ratio:1;border-radius:var(--radius-sm);background:var(--accent)}
+.fb b{height:8px;border-radius:4px;background:var(--surface-3)}
+.fb b:nth-of-type(1){width:64%;background:var(--text-muted)}.fb b:nth-of-type(3){width:82%}.fb b:nth-of-type(4){width:56%}
+.fb u{justify-self:start;width:52%;height:24px;border-radius:var(--radius-sm);background:var(--surface-2);margin-top:8%}
+.fb-1{transform:translate(-34%,-5%) rotate(-7deg)}.fb-2{transform:translate(2%,3%) rotate(2deg)}.fb-3{transform:translate(38%,9%) rotate(9deg)}
+.fb-3 u{background:var(--accent)}
+.imm-steps{grid-column:1/-1;grid-row:2;list-style:none;margin:0;padding:var(--space-section) 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;border-top:1px solid var(--border)}
+.imm-steps h2{font-size:24px;letter-spacing:var(--tracking-heading)}
+.imm-steps p{color:var(--text-muted);margin-top:8px;font-size:16px;max-width:40ch}
+.imm-steps .n{font:500 12px var(--font-mono);color:var(--accent-text);display:block;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.imm .only-story{display:none}
+.imm[data-story] .only-story{display:inline-flex}.imm[data-story] .not-story{display:none}
+.imm[data-story] .imm-steps li > div{padding-left:24px;border-left:2px solid var(--border);transition:border-color var(--dur-base) var(--ease-out)}
+.imm[data-story] .imm-steps li.is-active > div{border-left-color:var(--accent)}
+@media (min-width:861px){
+  .imm[data-story]{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+  .imm[data-story] .imm-hero{min-height:calc(100vh - 64px);padding:0 0 64px;display:flex;flex-direction:column;justify-content:center;align-self:start}
+  .imm[data-story] .imm-stage{grid-row:1/3;position:sticky;top:32px;height:calc(100vh - 64px);align-self:start}
+  .imm[data-story] .imm-steps{grid-column:1;display:block;border-top:0;padding:0 0 16vh}
+  .imm[data-story] .imm-steps li{min-height:76vh;display:flex;flex-direction:column;justify-content:center}
+}
+@media (max-width:860px){
+  .imm{display:block}
+  .imm-hero{padding:32px 0 16px}.imm-hero h1{font-size:36px}
+  .imm-stage{height:300px;min-height:0}
+  .imm-steps{grid-template-columns:minmax(0,1fr);padding:32px 0 48px}
+  .imm[data-story] .imm-stage{position:sticky;top:0;z-index:2;height:40vh;min-height:240px;margin:0 -16px;background:var(--bg);box-shadow:0 1px 0 var(--border)}
+  .imm[data-story] .imm-steps{display:block;border-top:0;padding:0 0 32px}
+  .imm[data-story] .imm-steps li{min-height:52vh;padding:32px 0 0}
+  .imm[data-story] .imm-steps li > div{padding-left:16px}
+  .s-imm .btn{min-height:44px}
+}
 </script>
 
 <template id="pv-html">
@@ -492,7 +546,450 @@ kbd{font:500 12px var(--font-mono);color:var(--text-subtle)}
     <div class="card box"><h2>Colours</h2><div class="sws" id="sws"></div></div>
   </div>
 </section>
+
+<section class="s-imm">
+  <div class="wrap">
+    <div class="lnav"><div class="logo"><i></i><span>Northwind</span></div><a class="l" href="#">Product</a><a class="l" href="#">Pricing</a><a class="l" href="#">Customers</a><a class="btn btn-secondary" href="#">Sign in</a></div>
+    <div class="imm" data-level="2">
+      <div class="imm-hero" data-beat="0">
+        <h1>Follow every invoice from sent to paid.</h1>
+        <p>Northwind sends the invoice, the reminder and the receipt. You watch one clear line move, and get on with your Friday.</p>
+        <div class="acts"><a class="btn btn-primary" href="#">Start free for 14 days</a><a class="btn btn-ghost not-story" href="#">See how it works</a><a class="btn btn-ghost only-story" href="#imm-end">Skip the story</a></div>
+        <p class="proof">No card needed · Cancel in two clicks</p>
+      </div>
+      <div class="imm-stage" id="imm-stage" aria-hidden="true">
+        <div class="imm-fallback"><div class="fb fb-3"><i></i><b></b><b></b><b></b><b></b><u></u></div><div class="fb fb-2"><i></i><b></b><b></b><b></b><b></b><u></u></div><div class="fb fb-1"><i></i><b></b><b></b><b></b><b></b><u></u></div></div>
+      </div>
+      <ol class="imm-steps">
+        <li data-beat="1"><div><span class="n">01 · Tuesday, 09:00</span><h2>Sent</h2><p>Invoice INV-2038 goes to Maple Health Clinic with a pay link. $4,430.00, due in 14 days.</p></div></li>
+        <li data-beat="2"><div><span class="n">02 · Day 15</span><h2>Reminded</h2><p>One polite nudge, in words you approved once. No awkward phone call.</p></div></li>
+        <li data-beat="3"><div><span class="n">03 · Day 16, 11:42</span><h2>Paid</h2><p>$4,430.00 arrives. The receipt goes out and your books are already up to date.</p></div></li>
+      </ol>
+    </div>
+    <div class="band" id="imm-end"><h2>Send your first invoice in five minutes.</h2><a class="btn" href="#">Start free</a></div>
+  </div>
+</section>
 </template>
+
+<!-- the preview's own script: theme bridge + scene shell (the immersive-web skill's assets) + the Immersive scene. Runs inside the iframe; draws nothing until that screen is open. -->
+<script type="text/plain" id="pv-js">
+
+const TOKEN_NAMES = {
+  bg: "--bg", surface: "--surface", surface2: "--surface-2", surface3: "--surface-3",
+  border: "--border", borderStrong: "--border-strong",
+  text: "--text", textMuted: "--text-muted", textSubtle: "--text-subtle",
+  accent: "--accent", accentHover: "--accent-hover", accentFg: "--accent-fg", accentSoft: "--accent-soft", accentText: "--accent-text",
+  secondary: "--secondary", success: "--success", warning: "--warning", danger: "--danger", info: "--info",
+  chart1: "--chart-1", chart2: "--chart-2", chart3: "--chart-3",
+};
+const srgbToLinear = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+const linearToSrgb = (v) => (v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055);
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const toHex = (rgb) => "#" + rgb.map((v) => Math.round(clamp01(v) * 255).toString(16).padStart(2, "0")).join("");
+let ctx2d;
+function parseColor(css) {
+  const m = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)$/.exec(css.trim());
+  if (m) return [m[1] / 255, m[2] / 255, m[3] / 255, m[4] === undefined ? 1 : m[4].endsWith("%") ? parseFloat(m[4]) / 100 : +m[4]];
+  if (!ctx2d) { const c = document.createElement("canvas"); c.width = c.height = 1; ctx2d = c.getContext("2d", { willReadFrequently: true }); }
+  ctx2d.clearRect(0, 0, 1, 1); ctx2d.fillStyle = "#000"; ctx2d.fillStyle = css; ctx2d.fillRect(0, 0, 1, 1);
+  const d = ctx2d.getImageData(0, 0, 1, 1).data;
+  return [d[0] / 255, d[1] / 255, d[2] / 255, d[3] / 255];
+}
+function readColor(name, scope = document.documentElement) {
+  if (!getComputedStyle(scope).getPropertyValue(name).trim()) return null;
+  const probe = document.createElement("span");
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;color:var(${name})`;
+  scope.append(probe);
+  const css = getComputedStyle(probe).color;
+  probe.remove();
+  const [r, g, b, a] = parseColor(css);
+  return { css, srgb: [r, g, b], linear: [srgbToLinear(r), srgbToLinear(g), srgbToLinear(b)], hex: toHex([r, g, b]), alpha: a };
+}
+const ms = (v, fallback) => { const n = parseFloat(v); return Number.isFinite(n) ? (/\ds\s*$/.test(v) && !/ms\s*$/.test(v) ? n * 1000 : n) : fallback; };
+const px = (v, fallback) => { const n = parseFloat(v); return Number.isFinite(n) ? n : fallback; };
+function readTheme(scope = document.documentElement, names = {}) {
+  const map = { ...TOKEN_NAMES, ...names }, cs = getComputedStyle(scope), get = (n) => cs.getPropertyValue(n).trim();
+  const color = {};
+  for (const [key, name] of Object.entries(map)) { const c = readColor(name, scope); if (c) color[key] = c; }
+  const fallback = (key, css) => { if (!color[key]) { const [r, g, b] = parseColor(css); color[key] = { css, srgb: [r, g, b], linear: [r, g, b].map(srgbToLinear), hex: toHex([r, g, b]), alpha: 1 }; } };
+  fallback("bg", cs.backgroundColor && !/rgba?\(0, 0, 0, 0\)|transparent/.test(cs.backgroundColor) ? cs.backgroundColor : "#ffffff");
+  fallback("text", cs.color || "#1a1a1a"); fallback("surface", color.bg.css); fallback("accent", color.text.css); fallback("border", color.text.css);
+  const lum = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const easeNums = (get("--ease-out").match(/cubic-bezier\(([^)]+)\)/) || [, "0.22, 1, 0.36, 1"])[1].split(",").map(Number);
+  const shadowRgb = (get("--shadow-color").match(/[\d.]+/g) || [0, 0, 0]).slice(0, 3).map((v) => srgbToLinear(v / 255));
+  const base = ms(get("--dur-base"), 200);
+  return {
+    dark: lum(color.bg.linear) < 0.18,
+    color,
+    motion: {
+      fast: ms(get("--dur-fast"), 120), base, slow: ms(get("--dur-slow"), 300),
+      ease: easeNums.length === 4 && easeNums.every(Number.isFinite) ? easeNums : [0.22, 1, 0.36, 1],
+      press: px(get("--press-scale"), 0.97),
+      bouncy: easeNums[1] > 1 || easeNums[3] > 1,   // the curve overshoots: playful directions
+      tempo: base / 200,                            // 1 = crisp; under 1 = faster (tools); over 1 = slower (care, luxury)
+    },
+    shape: { radiusSm: px(get("--radius-sm"), 6), radius: px(get("--radius"), 8), radiusLg: px(get("--radius-lg"), 12), borderW: px(get("--border-w"), 1) },
+    shadow: { color: shadowRgb, strength: px(get("--shadow-strength"), 1) },
+    font: { display: get("--font-display") || cs.fontFamily, sans: get("--font-sans") || cs.fontFamily, mono: get("--font-mono") || "monospace" },
+    immersive: Number.isFinite(parseInt(get("--immersive"))) ? Math.min(3, Math.max(0, parseInt(get("--immersive")))) : 1,
+    reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+  };
+}
+function watchTheme(callback, scope = document.documentElement, names = {}) {
+  let queued = false;
+  const fire = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; callback(readTheme(scope, names)); }); };
+  const mo = new MutationObserver(fire); mo.observe(scope, { attributes: true, attributeFilter: ["data-theme", "class", "style"] });
+  const queries = ["(prefers-color-scheme: dark)", "(prefers-reduced-motion: reduce)", "(prefers-contrast: more)"].map((q) => matchMedia(q));
+  queries.forEach((q) => q.addEventListener("change", fire));
+  return () => { mo.disconnect(); queries.forEach((q) => q.removeEventListener("change", fire)); };
+}
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const X = (t) => ((ax * t + bx) * t + cx) * t, Y = (t) => ((ay * t + by) * t + cy) * t, dX = (t) => (3 * ax * t + 2 * bx) * t + cx;
+  return (x) => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 6; i++) { const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= (X(t) - x) / d; }
+    return Y(Math.min(1, Math.max(0, t)));
+  };
+}
+function mixOklab(a, b, t) {
+  const toLab = ([r, g, bl]) => { const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * bl), m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * bl), s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * bl); return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s]; };
+  const A = toLab(a), B = toLab(b), [L, p, q] = A.map((v, i) => v + (B[i] - v) * t);
+  const l = (L + 0.3963377774 * p + 0.2158037573 * q) ** 3, m = (L - 0.1055613458 * p - 0.0638541728 * q) ** 3, s = (L - 0.0894841775 * p - 1.291485548 * q) ** 3;
+  return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+}
+
+
+function supports(kind = "webgl") {
+  if (kind === "webgpu") return "gpu" in navigator;
+  if (kind === "2d") return true;
+  try {
+    const c = document.createElement("canvas"), gl = c.getContext(kind === "webgl2" ? "webgl2" : "webgl", { failIfMajorPerformanceCaveat: false });
+    if (!gl) return false;
+    gl.getExtension("WEBGL_lose_context")?.loseContext();   // hand the test context straight back
+    return true;
+  } catch { return false; }
+}
+function deviceTier() {
+  const nav = navigator, coarse = matchMedia("(pointer: coarse)").matches;
+  if (nav.connection?.saveData || matchMedia("(prefers-reduced-data: reduce)").matches) return "low";
+  if ((nav.deviceMemory && nav.deviceMemory <= 4) || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4)) return "low";
+  return coarse ? "mid" : "high";
+}
+function mountScene(host, hooks, options = {}) {
+  const opt = { need: "webgl", maxPixelRatio: 2, touchMaxPixelRatio: 1.5, minScale: 0.5, lazy: true, rootMargin: "200px", slowFrameMs: 24, ...options };
+  const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  const state = { mode: "fallback", reduced: opt.reduced ?? reducedQuery.matches, visible: false, width: 0, height: 0, pixelRatio: 1, scale: 1, tier: deviceTier() };
+  let canvas = host.querySelector("canvas"), ready = false, starting = false, dead = false, raf = 0, last = 0, wanted = false, slow = 0, quick = 0;
+  const setMode = (m) => { state.mode = m; host.dataset.scene = m; };
+  setMode("fallback");
+  const cap = () => Math.min(devicePixelRatio || 1, matchMedia("(pointer: coarse)").matches ? opt.touchMaxPixelRatio : opt.maxPixelRatio) * (state.tier === "low" ? 0.75 : 1);
+  function measure() {
+    const r = host.getBoundingClientRect(), w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height)), pr = Math.max(0.5, cap() * state.scale);
+    if (w === state.width && h === state.height && pr === state.pixelRatio) return;
+    state.width = w; state.height = h; state.pixelRatio = pr;
+    if (ready) { hooks.resize?.(w, h, pr); invalidate(); }
+  }
+  function tick(now) {
+    raf = 0;
+    if (!ready || dead || !state.visible || document.hidden) return;
+    const delta = last ? Math.min(100, now - last) : 16.7; last = now; wanted = false;
+    let more = false;
+    try { more = hooks.frame(now, delta, state) === true; } catch (err) { fail(err); return; }
+    if (state.mode === "fallback") setMode(state.reduced ? "still" : "live");
+    if (state.reduced) { last = 0; return; }                  // still frames only: never loop
+    if (more) {                                               // adapt resolution only while the loop is really running
+      if (delta > opt.slowFrameMs) { quick = 0; if (++slow > 20 && state.scale > opt.minScale) { state.scale = Math.max(opt.minScale, state.scale * 0.85); slow = 0; measure(); } }
+      else if (delta < 13) { slow = 0; if (++quick > 240 && state.scale < 1) { state.scale = Math.min(1, state.scale / 0.85); quick = 0; measure(); } }
+    } else last = 0;
+    if (more || wanted) raf = requestAnimationFrame(tick);
+  }
+  function invalidate() { wanted = true; if (!raf && ready && !dead && state.visible && !document.hidden) raf = requestAnimationFrame(tick); }
+  function fail(err) {
+    if (err) console.warn("Scene stopped, showing the fallback:", err);
+    ready = false; cancelAnimationFrame(raf); raf = 0; setMode("fallback");
+  }
+  async function start() {
+    if (ready || starting || dead || opt.disabled) return;
+    if (!supports(opt.need)) return;                          // fallback stays
+    starting = true;
+    try {
+      if (!canvas) { canvas = document.createElement("canvas"); canvas.setAttribute("aria-hidden", "true"); host.append(canvas); }
+      canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); fail(); });
+      canvas.addEventListener("webglcontextrestored", () => { ready = false; starting = false; start(); });
+      const ok = await hooks.init(canvas, state);
+      if (ok === false || dead) { starting = false; return; }
+      ready = true; state.width = 0; measure(); hooks.resize?.(state.width, state.height, state.pixelRatio); invalidate();
+    } catch (err) { fail(err); }
+    starting = false;
+  }
+  const io = new IntersectionObserver(([entry]) => {
+    state.visible = entry.isIntersecting;
+    if (state.visible) { if (!ready) start(); else { last = 0; invalidate(); } }
+  }, { rootMargin: opt.lazy ? opt.rootMargin : "100000px" });
+  io.observe(host);
+  const ro = new ResizeObserver(measure); ro.observe(host);
+  const onVisibility = () => { if (!document.hidden) { last = 0; invalidate(); } };
+  const onMotion = () => { if (opt.reduced === undefined) { state.reduced = reducedQuery.matches; last = 0; invalidate(); } };
+  document.addEventListener("visibilitychange", onVisibility);
+  reducedQuery.addEventListener("change", onMotion);
+  return {
+    state, invalidate,
+    setReduced(v) { state.reduced = !!v; opt.reduced = !!v; last = 0; if (ready) setMode(v ? "still" : "live"); invalidate(); },
+    destroy() {
+      dead = true; cancelAnimationFrame(raf); io.disconnect(); ro.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility); reducedQuery.removeEventListener("change", onMotion);
+      if (ready) { try { hooks.dispose?.(); } catch {} }
+      ready = false; setMode("fallback");
+    },
+  };
+}
+
+
+const stage = document.getElementById("imm-stage"), imm = stage.closest(".imm"), beats = [...imm.querySelectorAll("[data-beat]")];
+const DEG = Math.PI / 180, HALF = [0.75, 1.0];
+let theme = readTheme(), opts = { level: 2, fx: "full", depth: "soft" }, scene = null, G = null;
+const mul = (a, b) => { const o = new Float32Array(16); for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) o[c * 4 + r] = a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1] + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3]; return o; };
+const persp = (fov, asp, n, f) => { const t = 1 / Math.tan(fov / 2), o = new Float32Array(16); o[0] = t / asp; o[5] = t; o[10] = (f + n) / (n - f); o[11] = -1; o[14] = (2 * f * n) / (n - f); return o; };
+const look = (e, c) => {
+  let zx = e[0] - c[0], zy = e[1] - c[1], zz = e[2] - c[2], l = Math.hypot(zx, zy, zz); zx /= l; zy /= l; zz /= l;
+  let xx = zz, xz = -zx; l = Math.hypot(xx, xz); xx /= l; xz /= l;
+  const yx = zy * xz, yy = zz * xx - zx * xz, yz = -zy * xx;
+  return new Float32Array([xx, yx, zx, 0, 0, yy, zy, 0, xz, yz, zz, 0, -(xx * e[0] + xz * e[2]), -(yx * e[0] + yy * e[1] + yz * e[2]), -(zx * e[0] + zy * e[1] + zz * e[2]), 1]);
+};
+const model = ([x, y, z, rx, ry, rz]) => {
+  const cx = Math.cos(rx), sx = Math.sin(rx), cy = Math.cos(ry), sy = Math.sin(ry), cz = Math.cos(rz), sz = Math.sin(rz);
+  return new Float32Array([cy * cz + sy * sx * sz, cx * sz, -sy * cz + cy * sx * sz, 0, -cy * sz + sy * sx * cz, cx * cz, sy * sz + cy * sx * cz, 0, sy * cx, -sx, cy * cx, 0, x, y, z, 1]);
+};
+const P = (x, y, z, rx, ry, rz) => [x, y, z, rx * DEG, ry * DEG, rz * DEG];
+const POSES = [
+  [P(-0.74, 0.92, 0.8, -46, 12, -6), P(0.06, 1.0, 0.0, -48, 2, 2), P(0.88, 1.08, -0.8, -50, -10, 8)],      // 0 the set
+  [P(0.0, 1.22, 0.75, -24, 0, 0), P(-0.98, 0.62, -0.75, -64, 20, -10), P(0.98, 0.58, -0.9, -64, -20, 10)],  // 1 sent
+  [P(-1.02, 0.6, -0.8, -64, 20, -8), P(0.0, 1.22, 0.75, -24, 0, 0), P(1.0, 0.58, -0.9, -64, -20, 10)],     // 2 reminded
+  [P(-0.42, 0.72, -0.55, -52, 9, -6), P(0.36, 0.84, -0.25, -50, -6, 6), P(0.0, 1.2, 0.55, -30, 0, 0)],          // 3 paid
+];
+const START = [P(-1.3, 0.2, 0.2, -78, 30, -22), P(0.2, 0.1, -0.6, -80, -6, 10), P(1.4, 0.15, -0.9, -78, -30, 24)];
+const cur = START.map((p) => p.slice()), vel = cur.map(() => [0, 0, 0, 0, 0, 0]);
+let progress = 0, paid = 0, paidNow = 0, lastInput = 0, tilt = [0, 0], tiltNow = [0, 0], centres = [], entered = false;
+function slab(hw, hh, t, r, seg = 8) {
+  r = Math.max(0.004, Math.min(r, hw, hh));
+  const pts = [], v = [], z = t / 2;
+  for (const [cx, cy, a0] of [[hw - r, hh - r, 0], [-hw + r, hh - r, 90], [-hw + r, -hh + r, 180], [hw - r, -hh + r, 270]])
+    for (let i = 0; i <= seg; i++) { const a = (a0 + (90 * i) / seg) * DEG; pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a), Math.cos(a), Math.sin(a)]); }
+  const put = (x, y, zz, nx, ny, nz) => v.push(x, y, zz, nx, ny, nz);
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    put(0, 0, z, 0, 0, 1); put(a[0], a[1], z, 0, 0, 1); put(b[0], b[1], z, 0, 0, 1);
+    put(0, 0, -z, 0, 0, -1); put(b[0], b[1], -z, 0, 0, -1); put(a[0], a[1], -z, 0, 0, -1);
+    put(a[0], a[1], z, a[2], a[3], 0); put(a[0], a[1], -z, a[2], a[3], 0); put(b[0], b[1], -z, b[2], b[3], 0);
+    put(a[0], a[1], z, a[2], a[3], 0); put(b[0], b[1], -z, b[2], b[3], 0); put(b[0], b[1], z, b[2], b[3], 0);
+  }
+  return new Float32Array(v);
+}
+const VS = `attribute vec3 aPos; attribute vec3 aNor; uniform mat4 uVP, uM; varying vec3 vN, vW; varying vec2 vL; varying float vTop;
+void main(){ vec4 w = uM * vec4(aPos, 1.); vW = w.xyz; vN = (uM * vec4(aNor, 0.)).xyz; vL = aPos.xy; vTop = aNor.z; gl_Position = uVP * w; }`;
+const FS = `#ifdef GL_OES_standard_derivatives
+#extension GL_OES_standard_derivatives : enable
+#endif
+precision highp float;
+varying vec3 vN, vW; varying vec2 vL; varying float vTop;
+uniform vec3 uSurf, uSurf2, uSurf3, uBorder, uText, uMuted, uAccent, uSoft, uFg, uSide, uEye, uLight;
+uniform vec2 uHalf; uniform float uR, uRs, uGloss, uKind, uPaid, uRing, uRim;
+float rb(vec2 p, vec2 c, vec2 h, float r){ r = min(r, min(h.x, h.y)); vec2 q = abs(p - c) - h + r; return length(max(q, 0.)) + min(max(q.x, q.y), 0.) - r; }
+float aa(float d){
+#ifdef GL_OES_standard_derivatives
+  float w = fwidth(d);
+#else
+  float w = .004;
+#endif
+  return 1. - smoothstep(-w, w, d); }
+float seg(vec2 p, vec2 a, vec2 b){ vec2 pa = p - a, ba = b - a; return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0., 1.)); }
+vec3 enc(vec3 c){ c = clamp(c, 0., 1.); return mix(c * 12.92, 1.055 * pow(c, vec3(1. / 2.4)) - .055, step(.0031308, c)); }
+void main(){
+  vec3 N = normalize(vN), V = normalize(uEye - vW), L = normalize(-uLight), alb = uSide; float lip = 0.;
+  if (vTop > .5) {
+    vec2 p = vL; alb = uSurf; float d = rb(p, vec2(0.), uHalf, uR);
+    if (uKind < .5) {                                                        // invoice
+      alb = mix(alb, uAccent, aa(rb(p, vec2(-.53, .78), vec2(.09), uRs)));
+      alb = mix(alb, uText, aa(rb(p, vec2(-.16, .78), vec2(.2, .034), .034)) * .92);
+      alb = mix(alb, uMuted, aa(rb(p, vec2(.47, .78), vec2(.14, .026), .026)) * .7);
+      alb = mix(alb, uBorder, aa(rb(p, vec2(0., .58), vec2(.62, .005), 0.)));
+      for (int i = 0; i < 4; i++) { float f = float(i), y = .41 - .165 * f, w = .3 - .07 * mod(f, 2.);
+        alb = mix(alb, uSurf3, aa(rb(p, vec2(-.62 + w, y), vec2(w, .028), .028)));
+        alb = mix(alb, uMuted, aa(rb(p, vec2(.5, y), vec2(.12, .028), .028)) * .7); }
+      alb = mix(alb, uBorder, aa(rb(p, vec2(0., -.25), vec2(.62, .005), 0.)));
+      alb = mix(alb, uMuted, aa(rb(p, vec2(-.44, -.42), vec2(.18, .028), .028)) * .7);
+      alb = mix(alb, uText, aa(rb(p, vec2(.36, -.42), vec2(.26, .055), .02)) * .95);
+      alb = mix(alb, uSurf2, aa(rb(p, vec2(-.36, -.77), vec2(.26, .085), uRs * 1.4)));
+      alb = mix(alb, uMuted, aa(length(p - vec2(-.52, -.77)) - .032));
+      alb = mix(alb, uMuted, aa(rb(p, vec2(-.31, -.77), vec2(.12, .022), .022)) * .8);
+    } else if (uKind < 1.5) {                                                // reminder
+      alb = mix(alb, uAccent, aa(rb(p, vec2(-.53, .78), vec2(.09), uRs)));
+      alb = mix(alb, uText, aa(rb(p, vec2(-.22, .5), vec2(.4, .04), .04)) * .92);
+      for (int i = 0; i < 4; i++) { float f = float(i), w = .62 - .11 * mod(f * 2., 3.);
+        alb = mix(alb, uSurf3, aa(rb(p, vec2(-.62 + w, .3 - .14 * f), vec2(w, .028), .028))); }
+      alb = mix(alb, uSoft, aa(rb(p, vec2(0., -.42), vec2(.62, .17), uR * .6)));
+      alb = mix(alb, uAccent, aa(rb(p, vec2(-.3, -.42), vec2(.2, .034), .034)) * .9);
+      alb = mix(alb, uAccent, aa(rb(p, vec2(.4, -.42), vec2(.12, .05), .02)));
+      alb = mix(alb, uAccent, aa(rb(p, vec2(-.3, -.79), vec2(.32, .085), uRs * 1.4)));
+      alb = mix(alb, uFg, aa(rb(p, vec2(-.3, -.79), vec2(.17, .022), .022)) * .95);
+    } else {                                                                 // receipt
+      alb = mix(alb, mix(uSurf3, uAccent, uPaid), aa(length(p - vec2(0., .5)) - .23));
+      float ck = min(seg(p, vec2(-.1, .5), vec2(-.03, .43)), seg(p, vec2(-.03, .43), vec2(.11, .59))) - .026;
+      alb = mix(alb, mix(uMuted, uFg, uPaid), aa(ck));
+      alb = mix(alb, uText, aa(rb(p, vec2(0., .08), vec2(.32, .06), .02)) * .95);
+      alb = mix(alb, uMuted, aa(rb(p, vec2(0., -.07), vec2(.2, .026), .026)) * .7);
+      alb = mix(alb, uBorder, aa(rb(p, vec2(0., -.25), vec2(.62, .005), 0.)));
+      for (int i = 0; i < 2; i++) { float y = -.41 - .165 * float(i);
+        alb = mix(alb, uSurf3, aa(rb(p, vec2(-.36, y), vec2(.26, .028), .028)));
+        alb = mix(alb, uMuted, aa(rb(p, vec2(.5, y), vec2(.12, .028), .028)) * .7); }
+      alb = mix(alb, uSurf3, aa(rb(p, vec2(0., -.8), vec2(.3, .022), .022)));
+    }
+    alb = mix(alb, uBorder, aa(abs(d + uRing * .5) - uRing * .5));           // the theme's border, as a ring
+    lip = smoothstep(-.035, 0., d);
+  } else if (vTop < -.5) alb = uSurf2;
+  float dif = max(dot(N, L), 0.), sky = N.y * .5 + .5;
+  vec3 col = alb * (mix(.34, .46, sky) + dif * .62);
+  vec3 H = normalize(L + V);
+  col += pow(max(dot(N, H), 0.), mix(12., 90., uGloss)) * uGloss * .55;
+  col += lip * .05 * dif + pow(1. - max(dot(N, V), 0.), 3.) * uRim * uAccent;
+  gl_FragColor = vec4(enc(col), 1.);
+}`;
+const SVS = `attribute vec2 aQ; uniform mat4 uVP, uM, uS; uniform vec2 uHalf; uniform float uGrow; varying vec2 vL;
+void main(){ vL = aQ * (uHalf + uGrow); gl_Position = uVP * uS * uM * vec4(vL, 0., 1.); }`;
+const SFS = `precision highp float; varying vec2 vL; uniform vec2 uHalf; uniform vec3 uCol; uniform float uR, uBlur, uAlpha;
+float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+void main(){ vec2 q = abs(vL) - uHalf + uR; float d = length(max(q, 0.)) + min(max(q.x, q.y), 0.) - uR;
+  float a = (1. - smoothstep(-uBlur, uBlur, d)) * uAlpha; a = max(0., a + (h(gl_FragCoord.xy) - .5) / 255.);
+  gl_FragColor = vec4(uCol * a, a); }`;
+const DEPTH3D = { soft: [0.14, 1, 0.3, 0.05], hairline: [0.04, 0.6, 0.12, 0.03], crisp: [0.42, 0.7, 0.42, 0.055], diffuse: [0.2, 1.7, 0.22, 0.05], none: [0, 1, 0, 0.02], lip: [0, 0.04, 1, 0.14] };
+function program(gl, vs, fs, attribs) {
+  const p = gl.createProgram(); attribs.forEach((name, i) => gl.bindAttribLocation(p, i, name));
+  for (const [type, src] of [[gl.VERTEX_SHADER, vs], [gl.FRAGMENT_SHADER, fs]]) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); gl.attachShader(p, s); }
+  gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  const u = {}; for (let i = 0, n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS); i < n; i++) { const name = gl.getActiveUniform(p, i).name; u[name] = gl.getUniformLocation(p, name); }
+  return { p, u };
+}
+function buildGeometry() {
+  const gl = G.gl, [, , , thick] = DEPTH3D[opts.depth] || DEPTH3D.soft;
+  G.r = Math.min(0.3, theme.shape.radiusLg * 0.0085); G.rs = Math.min(0.09, theme.shape.radiusSm * 0.0085);
+  const data = slab(HALF[0], HALF[1], thick, G.r);
+  gl.bindBuffer(gl.ARRAY_BUFFER, G.slab); gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW); G.count = data.length / 6;
+}
+const hooks = {
+  init(canvas, st) {
+    const gl = canvas.getContext("webgl", { alpha: true, antialias: true, premultipliedAlpha: true, powerPreference: "low-power" });
+    if (!gl) return false;
+    gl.getExtension("OES_standard_derivatives");
+    G = { gl, plate: program(gl, VS, FS, ["aPos", "aNor"]), shadow: program(gl, SVS, SFS, ["aQ"]), slab: gl.createBuffer(), quad: gl.createBuffer() };
+    gl.bindBuffer(gl.ARRAY_BUFFER, G.quad); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, -1, 1, 1, -1, 1]), gl.STATIC_DRAW);
+    buildGeometry();
+    gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.clearColor(0, 0, 0, 0);
+    if (opts.level < 2 || st.reduced) { POSES[0].forEach((p, i) => cur[i] = p.slice()); entered = true; }
+    lastInput = performance.now(); measureBeats();
+  },
+  resize(w, h, pr) { const c = G.gl.canvas; c.width = Math.round(w * pr); c.height = Math.round(h * pr); G.gl.viewport(0, 0, c.width, c.height); },
+  frame(now, delta, st) {
+    const gl = G.gl, c = theme.color, m = theme.motion, [gloss, soft, strength] = DEPTH3D[opts.depth] || DEPTH3D.soft;
+    let p = st.reduced ? Math.round(progress) : progress;
+    const i0 = Math.min(POSES.length - 2, Math.floor(p)), f = p - i0, e = f * f * (3 - 2 * f);
+    paid = opts.level === 3 ? Math.min(1, Math.max(0, p - 2)) : opts.level === 2 ? Math.min(1, p / 3) : 0;
+    const A = opts.level === 2 ? POSES[0] : POSES[i0], B = opts.level === 2 ? POSES[3] : POSES[i0 + 1], k = opts.level === 2 ? Math.min(1, p / 3) : e;
+    const w = (6 / ((m.slow / 1000) * 2.2)) * (m.tempo < 0.8 ? 2 : 1), zeta = m.bouncy ? 0.5 : 1, dt = Math.min(0.033, delta / 1000) / 2;
+    let moving = false;
+    for (let s = 0; s < 2; s++) for (let i = 0; i < 3; i++) for (let j = 0; j < 6; j++) {
+      const target = A[i][j] + (B[i][j] - A[i][j]) * k;
+      if (st.reduced) { cur[i][j] = target; vel[i][j] = 0; continue; }
+      vel[i][j] += (-w * w * (cur[i][j] - target) - 2 * zeta * w * vel[i][j]) * dt; cur[i][j] += vel[i][j] * dt;
+      if (Math.abs(cur[i][j] - target) > 0.0015 || Math.abs(vel[i][j]) > 0.004) moving = true;
+    }
+    paidNow = st.reduced ? paid : paidNow + (paid - paidNow) * Math.min(1, delta * 0.006 / m.tempo); if (Math.abs(paid - paidNow) > 0.004) moving = true;
+    for (let j = 0; j < 2; j++) { tiltNow[j] = st.reduced ? 0 : tiltNow[j] + (tilt[j] - tiltNow[j]) * Math.min(1, delta * 0.005); if (Math.abs(tilt[j] - tiltNow[j]) > 0.004) moving = true; }
+    const since = now - lastInput, env = st.reduced || opts.level < 1 ? 0 : Math.min(1, Math.max(0, (5000 - since) / 1500)), amp = Math.max(0, m.tempo - 0.6) * 0.03 * env;
+    if (amp > 0.0002) moving = true;
+    const asp = st.width / st.height, fov = 26 * DEG, dist = Math.max(1.55, 2.3 / asp) / Math.tan(fov / 2);
+    const at = [0, 0.82, 0], eye = [at[0] + tiltNow[0] * 0.5, at[1] + dist * 0.42 - tiltNow[1] * 0.3, at[2] + dist * 0.91];
+    const VP = mul(persp(fov, asp, 0.5, 60), look(eye, at));
+    const S = new Float32Array([1, 0, 0, 0, 0.14, 0, -0.1, 0, 0, 0, 1, 0, 0, 0.001, 0, 1]);
+    const mats = cur.map((q, i) => model([q[0], q[1] + amp * Math.sin(now * 0.0011 + i * 2.1), q[2], q[3], q[4], q[5] + amp * 0.6 * Math.sin(now * 0.0009 + i * 1.3)]));
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    if (strength > 0) {
+      const { p: prog, u } = G.shadow, lipStyle = opts.depth === "lip";
+      gl.useProgram(prog); gl.disable(gl.DEPTH_TEST); gl.depthMask(false);
+      gl.bindBuffer(gl.ARRAY_BUFFER, G.quad); gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); gl.disableVertexAttribArray(1);
+      gl.uniformMatrix4fv(u.uVP, false, VP); gl.uniformMatrix4fv(u.uS, false, S); gl.uniform2fv(u.uHalf, HALF); gl.uniform1f(u.uR, Math.max(0.004, G.r));
+      gl.uniform3fv(u.uCol, lipStyle ? c.border.srgb : theme.shadow.color.map((v) => Math.sqrt(v)));
+      for (let i = 0; i < 3; i++) {
+        const height = Math.max(0.1, cur[i][1]), blur = lipStyle ? 0.01 : (0.1 + height * 0.42) * soft;
+        gl.uniformMatrix4fv(u.uM, false, mats[i]); gl.uniform1f(u.uGrow, blur * 1.2); gl.uniform1f(u.uBlur, blur);
+        gl.uniform1f(u.uAlpha, lipStyle ? 1 : Math.min(0.5, (strength * theme.shadow.strength * (theme.dark ? 1.5 : 1)) / (0.7 + height * 0.9)));
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
+    }
+    const { p: prog, u } = G.plate;
+    gl.useProgram(prog); gl.enable(gl.DEPTH_TEST); gl.depthMask(true);
+    gl.bindBuffer(gl.ARRAY_BUFFER, G.slab); gl.enableVertexAttribArray(0); gl.enableVertexAttribArray(1);
+    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 24, 0); gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 24, 12);
+    gl.uniformMatrix4fv(u.uVP, false, VP); gl.uniform3fv(u.uEye, eye); gl.uniform3f(u.uLight, -0.25, -0.75, -0.6); gl.uniform2fv(u.uHalf, HALF);
+    const set = (name, col) => gl.uniform3fv(u[name], col.linear);
+    set("uSurf", c.surface); set("uSurf2", c.surface2 || c.surface); set("uSurf3", c.surface3 || c.border); set("uBorder", c.border); set("uText", c.text); set("uMuted", c.textMuted || c.text);
+    set("uAccent", c.accent); set("uSoft", c.accentSoft || c.surface); set("uFg", c.accentFg || c.surface); set("uSide", opts.depth === "lip" ? c.border : c.surface3 || c.border);
+    gl.uniform1f(u.uR, G.r); gl.uniform1f(u.uRs, G.rs); gl.uniform1f(u.uGloss, gloss); gl.uniform1f(u.uPaid, paidNow);
+    gl.uniform1f(u.uRing, 0.008 * theme.shape.borderW); gl.uniform1f(u.uRim, theme.dark ? 0.22 : 0.05);
+    for (let i = 0; i < 3; i++) { gl.uniformMatrix4fv(u.uM, false, mats[i]); gl.uniform1f(u.uKind, i); gl.drawArrays(gl.TRIANGLES, 0, G.count); }
+    return moving;
+  },
+  dispose() { G?.gl.getExtension("WEBGL_lose_context")?.loseContext(); G = null; },
+};
+const story = () => opts.level === 3 && scene && scene.state.mode !== "fallback";
+function measureBeats() {
+  const y = scrollY; centres = beats.map((b) => { const r = b.getBoundingClientRect(); return r.top + y + r.height / 2; });
+}
+function onScroll() {
+  lastInput = performance.now();
+  if (opts.level === 3 && story()) {
+    const stuck = getComputedStyle(stage).position === "sticky" && stage.offsetHeight < innerHeight * 0.7;      // phone: the scene is pinned on top
+    const line = scrollY + (stuck ? stage.offsetHeight + (innerHeight - stage.offsetHeight) / 2 : innerHeight / 2);
+    let p = 0;
+    for (let i = 0; i < centres.length - 1; i++) if (line > centres[i]) p = i + Math.min(1, (line - centres[i]) / (centres[i + 1] - centres[i]));
+    progress = Math.min(centres.length - 1, p);
+  } else if (opts.level === 2) progress = Math.min(3, Math.max(0, (scrollY / Math.max(1, stage.offsetHeight * 0.8)) * 3));
+  else progress = 0;
+  const active = Math.round(progress);
+  beats.forEach((b, i) => b.classList.toggle("is-active", story() && i === active));
+  scene?.invalidate();
+}
+addEventListener("scroll", onScroll, { passive: true });
+new ResizeObserver(() => { measureBeats(); onScroll(); }).observe(imm);
+stage.addEventListener("pointermove", (e) => {
+  if (opts.level < 2 || !matchMedia("(hover: hover)").matches) return;
+  const r = stage.getBoundingClientRect(); tilt = [((e.clientX - r.left) / r.width - 0.5) * 2, ((e.clientY - r.top) / r.height - 0.5) * 2]; lastInput = performance.now(); scene?.invalidate();
+});
+stage.addEventListener("pointerleave", () => { tilt = [0, 0]; scene?.invalidate(); });
+function mount() {
+  scene?.destroy(); scene = null; stage.querySelector("canvas")?.remove();
+  imm.dataset.level = opts.level; delete imm.dataset.story;
+  if (opts.level === 0 || opts.fx === "nogl") { stage.dataset.scene = "fallback"; onScroll(); return; }
+  cur.forEach((p, i) => { START[i].forEach((v, j) => { p[j] = v; vel[i][j] = 0; }); });
+  scene = mountScene(stage, hooks, { reduced: opts.fx === "reduced" ? true : undefined, lazy: false });
+  new MutationObserver(() => {                                   // the story layout exists only while the scene really runs
+    const on = story(); if (on !== ("story" in imm.dataset)) { on ? (imm.dataset.story = "") : delete imm.dataset.story; requestAnimationFrame(() => { measureBeats(); onScroll(); }); }
+  }).observe(stage, { attributes: true, attributeFilter: ["data-scene"] });
+}
+window.__imm = {
+  update(next = {}) {
+    const remount = !scene && stage.dataset.scene === undefined || ["level", "fx"].some((k) => k in next && next[k] !== opts[k]);
+    Object.assign(opts, next);
+    requestAnimationFrame(() => {                               // after the new theme styles have applied
+      theme = readTheme();
+      if (remount) mount(); else if (G) { buildGeometry(); lastInput = performance.now(); scene.invalidate(); }
+    });
+  },
+  get state() { return { ...opts, mode: stage.dataset.scene, progress, story: story() }; },
+};
+
+</script>
 
 <script type="module">
 // ui-craft palette core: the colour maths and the theme generator, with no Node imports,
@@ -719,6 +1216,14 @@ const MOTION = {
   bouncy: { fast: 120, base: 220, slow: 360, press: 0.95, ease: "cubic-bezier(0.34, 1.56, 0.64, 1)" },
 };
 
+// How much 3D, shader and scroll effect a product carries. Each direction sets a default; the Studio and the immersive-web skill use the same ladder.
+const IMMERSIVE = [
+  { name: "Still", short: "no 3D or scroll effects", rule: "No 3D, shaders or scroll effects. Ordinary interface motion only." },
+  { name: "Accent", short: "one quiet living detail", rule: "One quiet living detail (a material, a slow shader texture, a view transition) that rests after a few seconds. No scroll-driven scenes." },
+  { name: "Signature", short: "one hero moment", rule: "One hero moment (a 3D object or shader that reacts to the pointer or the first scroll), then a normal page." },
+  { name: "Story", short: "a scroll-driven sequence", rule: "A scroll-driven sequence of 3 to 5 beats with one persistent scene. Marketing, launch and portfolio pages only." },
+];
+
 // accent / secondary are [L, C, H] in OKLCH so the hue choice is explicit; fonts are all SIL OFL (Google Fonts).
 const DIRECTIONS = [
   {
@@ -735,6 +1240,7 @@ const DIRECTIONS = [
     voice: "Plain and warm. Verb + object buttons. Specific confirmations.",
     signature: "One satisfying completion moment (a check that draws itself, a row that settles) and beautifully calm lists.",
     watch: "Easy to make generic. It needs exact spacing, real content and one signature detail to rise above a template.",
+    immersive: 1, scene: "Matte, paper-like forms under soft overhead light. Motion only confirms: one object settles, then rests.",
   },
   {
     slug: "quiet-instrument", name: "Quiet instrument", theme: "dark",
@@ -750,6 +1256,7 @@ const DIRECTIONS = [
     voice: "Terse. Verbs. No exclamation marks.",
     signature: "Keyboard-first: visible shortcut hints (kbd chips), a command palette, instant response with no decorative motion.",
     watch: "Dark near-black plus one blue-violet accent is the most copied look in software. Earn it with real density, alignment and speed, or change the accent hue.",
+    immersive: 1, scene: "Thin line geometry and points on near-black, no gloss. The data is the scene. Moves are instant; nothing drifts.",
   },
   {
     slug: "paper-and-ink", name: "Paper and ink", theme: "light",
@@ -765,6 +1272,7 @@ const DIRECTIONS = [
     voice: "Plain, exact, slightly dry. Full sentences.",
     signature: "Typographic care you can feel: true italics, hanging punctuation, old-style or tabular figures used on purpose, a perfect reading measure.",
     watch: "Warm cream plus a rust accent is a known cliche. Keep the accent ink-like and small, and let the type do the work.",
+    immersive: 1, scene: "Flat sheets with hard print-like shadows, ink colour only. Changes are cuts or short fades, like turning a page.",
   },
   {
     slug: "studio-gloss", name: "Studio gloss", theme: "light",
@@ -780,6 +1288,7 @@ const DIRECTIONS = [
     voice: "Short declarative lines. One idea per screen.",
     signature: "The product is the hero: one huge image and one sentence per screen, with a scroll reveal that explains a feature.",
     watch: "Fails without real product imagery. Never fill the hero with a gradient blob where the product should be.",
+    immersive: 3, scene: "A studio product shot: one large soft light from above, a glossy object, a floor that fades to the page. Slow orbit, clean dissolves.",
   },
   {
     slug: "maison", name: "Maison", theme: "light",
@@ -795,6 +1304,7 @@ const DIRECTIONS = [
     voice: "Sparse and assured. Third person. No exclamation marks, no discounts shouted.",
     signature: "Space as the luxury: one object, one line of text, and a lot of nothing around them. Slow page-level fades.",
     watch: "Do not add urgency, pop-ups or dense grids. Slow motion is for page-level transitions only; controls still respond instantly.",
+    immersive: 2, scene: "A still life: stone, linen, brushed brass, one warm window light from the side. Slow dissolves, long holds, no bounce.",
     altAccents: "oxblood oklch(0.36 0.11 20), ink navy oklch(0.3 0.07 260), or no accent at all (text-colour buttons)",
   },
   {
@@ -811,6 +1321,7 @@ const DIRECTIONS = [
     voice: "Specific and literary: what it is, what it is made of, how to use it.",
     signature: "The label: precise ingredient-style lists and numbered details set like packaging typography.",
     watch: "Without real photography this collapses into the cream-and-earth-tone template. Use real product images or pick another direction.",
+    immersive: 2, scene: "Ceramic and glass on a paper backdrop in side daylight. One object turns slowly; labels stay as real text.",
   },
   {
     slug: "soft-wellness", name: "Soft wellness", theme: "light",
@@ -826,6 +1337,7 @@ const DIRECTIONS = [
     voice: "Kind, second person, no pressure. Never guilt, never streak-shaming.",
     signature: "One slow breathing element (a shape that expands and settles over 4-6s, pausable) and extremely gentle confirmations.",
     watch: "Low saturation must not become low contrast: text still passes 4.5:1. No confetti or alarms for anxious users.",
+    immersive: 1, scene: "Soft rounded forms in diffuse light with no hard shadows. Slow breathing motion that rests; nothing sudden.",
     altAccents: "sage oklch(0.56 0.07 150), dusk blue oklch(0.52 0.09 255), peach as a secondary only",
   },
   {
@@ -842,6 +1354,7 @@ const DIRECTIONS = [
     voice: "Cheeky, encouraging, very short.",
     signature: "Tactile buttons: a 4px solid lip that the button sinks into on press, plus one springy reward moment on success.",
     watch: "Bounce only on rewards and presses, never on navigation. Keep text contrast high; bright does not mean pale.",
+    immersive: 2, scene: "Chunky toy shapes with a solid drop edge, flat bright colour, no realism. Squash, stretch and one bounce on reward.",
   },
   {
     slug: "trusted-ledger", name: "Trusted ledger", theme: "light",
@@ -857,6 +1370,7 @@ const DIRECTIONS = [
     voice: "Plain, exact, transparent about fees and dates.",
     signature: "Numbers set like a ledger: right-aligned, tabular, decimals lined up, currency symbols quieter than the digits, and confirmations that state the exact amount and time.",
     watch: "Blue is expected here but owned by everyone. Differentiate with a distinctive deep hue (teal, forest, plum) at the same seriousness, not with brightness.",
+    immersive: 0, scene: "No decorative 3D. At most a precise chart that draws itself once. Trust comes from stillness and exact numbers.",
     altAccents: "deep teal oklch(0.45 0.09 200), forest oklch(0.42 0.1 155), plum oklch(0.4 0.12 330)",
   },
   {
@@ -873,6 +1387,7 @@ const DIRECTIONS = [
     voice: "Casual, direct, human. Short.",
     signature: "Giant numerals: the balance or key figure at 56-72px, tabular, with one vivid signature colour on black.",
     watch: "One vivid colour only. Dark text on the vivid colour (never white on lime). Money is still serious: confirmations stay calm and exact.",
+    immersive: 2, scene: "Bold card objects on dark with a strong rim light in the accent. Confident, crisp moves; one hero card.",
     altAccents: "coral oklch(0.72 0.19 28), electric blue oklch(0.62 0.22 258), violet oklch(0.62 0.22 300)",
   },
   {
@@ -889,6 +1404,7 @@ const DIRECTIONS = [
     voice: "Plain language at a reading age of 9-12. One question per page. Say what happens next.",
     signature: "An unmissable focus state (3px ring plus offset) and one question per page with a summary before submit.",
     watch: "Do not prettify at the cost of clarity. Every colour passes AA at minimum; aim for AAA on body text.",
+    immersive: 0, scene: "No decorative 3D or scroll effects. A map or diagram only when it explains something, with a text version beside it.",
   },
   {
     slug: "marketplace", name: "Open-air marketplace", theme: "light",
@@ -904,6 +1420,7 @@ const DIRECTIONS = [
     voice: "Warm and welcoming. Clear total prices.",
     signature: "Search as the hero: one prominent search bar, then photo cards with honest totals and ratings.",
     watch: "The accent is close to error red: errors use a separate crimson plus icon and text. Total price visible before the last step.",
+    immersive: 1, scene: "The photos are the scene. A shared-element move from card to detail; no parallax on text, no 3D for its own sake.",
   },
   {
     slug: "stage-dark", name: "Stage dark", theme: "dark",
@@ -919,6 +1436,7 @@ const DIRECTIONS = [
     voice: "Short, low on hype.",
     signature: "Colour from the content: a faint ambient tint behind the current artwork (blurred, very low opacity) and large condensed titles.",
     watch: "Near-black, never pure black next to bright art. Dark text on the bright accent. Keep motion cinematic but short; no parallax on text.",
+    immersive: 3, scene: "A dark stage, one spotlight, a little haze, colour taken from the artwork. Cinematic cuts and slow push-ins, kept short.",
     altAccents: "magenta oklch(0.68 0.22 350), acid green oklch(0.84 0.2 135), electric cyan oklch(0.8 0.13 210)",
   },
   {
@@ -935,6 +1453,7 @@ const DIRECTIONS = [
     voice: "Imperative. Two to four words.",
     signature: "Monumental type over imagery: one giant uppercase word or line that fills the width.",
     watch: "Uppercase display only for short lines (under 5 words). Body text stays sentence case and readable.",
+    immersive: 3, scene: "A monumental product on a plinth under hard directional light. Fast cuts, big type that moves with the scroll, strong pauses.",
   },
   {
     slug: "graph-paper", name: "Graph-paper technical", theme: "dark",
@@ -950,6 +1469,7 @@ const DIRECTIONS = [
     voice: "Exact. No marketing adjectives. Numbers with units.",
     signature: "A visible grid: a faint dotted or lined background and hairline frames that make the layout look measured.",
     watch: "Mono type is for data and labels, not paragraphs. Dark text on the bright accent. The grid stays under 6% contrast.",
+    immersive: 2, scene: "Wireframes, grids and isometric diagrams: points and lines, not surfaces. The system's data flow is the scene.",
     altAccents: "amber oklch(0.8 0.15 80), signal blue oklch(0.62 0.19 255)",
   },
   {
@@ -966,6 +1486,7 @@ const DIRECTIONS = [
     voice: "Witty and human, never corporate.",
     signature: "Bold colour blocking: two or three solid colour fields with an oversized, slightly odd headline crossing them.",
     watch: "Inside the actual tool, switch to neutral chrome (Calm productivity); the loud colour is for marketing and moments.",
+    immersive: 2, scene: "Cut-paper colour blocks in flat light. Snappy, playful moves; shapes assemble into the product.",
   },
 ];
 
@@ -991,6 +1512,7 @@ function nonColour(d) {
     `  /* density and motion (${d.motion}) */`,
     `  --control-h: ${d.density.control}px;  --row-h: ${d.density.row}px;  --space-section: ${d.density.section}px;`,
     `  --dur-fast: ${m.fast}ms;  --dur-base: ${m.base}ms;  --dur-slow: ${m.slow}ms;  --ease-out: ${m.ease};  --press-scale: ${m.press};`,
+    `  --immersive: ${d.immersive};   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */`,
     ``,
   ].join("\n");
 }
@@ -1027,7 +1549,7 @@ const FONTS = [
   { name: "IBM Plex Mono", kind: "mono", gf: "wght@400;500", tracking: "0em", weight: 500 },
 ];
 
-const BASE_EXTRA = "  /* ---- Type ---- */\n  --font-sans: \"Inter\", ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n  --font-display: var(--font-sans);\n  --font-mono: ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, monospace;\n  --text-xs: 12px;  --text-sm: 14px;  --text-md: 16px;  --text-lg: 18px;  --text-xl: 20px;\n  --text-2xl: 24px; --text-3xl: 30px; --text-4xl: 36px; --text-5xl: 48px; --text-6xl: 60px;\n  --text-body: 16px;                    /* 14px in dense desktop tools */\n  --leading-tight: 1.15;  --leading-snug: 1.3;  --leading-normal: 1.5;\n  --tracking-display: -0.025em;         /* 36px and up */\n  --tracking-heading: -0.015em;         /* 20-30px */\n  --tracking-caps: 0.06em;              /* small all-caps labels */\n  --weight-regular: 400;  --weight-medium: 500;  --weight-semibold: 600;  --weight-display: 600;\n\n  /* ---- Spacing (4px base) ---- */\n  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;\n  --space-5: 24px;  --space-6: 32px;  --space-7: 48px;  --space-8: 64px;  --space-9: 96px;\n  --space-section: 48px;\n\n  /* ---- Shape: one family. Nested radius = outer radius minus the padding between. ---- */\n  --radius-sm: 6px;  --radius: 8px;  --radius-lg: 12px;  --radius-full: 9999px;  --border-w: 1px;\n\n  /* ---- Depth: one light source from above; shadows are layered and tinted, never one grey blur. ---- */\n  --shadow-raised: 0 0 0 1px var(--ring), 0 1px 2px rgb(var(--shadow-color) / calc(0.06 * var(--shadow-strength))), 0 2px 4px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength)));\n  --shadow-overlay: 0 0 0 1px var(--ring), 0 4px 8px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength))), 0 12px 24px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength))), 0 24px 48px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength)));\n  --shadow-button: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(var(--shadow-color) / calc(0.14 * var(--shadow-strength)));\n\n  /* ---- Motion ---- */\n  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);      /* entering, and most UI */\n  --ease-in: cubic-bezier(0.64, 0, 0.78, 0);       /* leaving */\n  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* moving on screen */\n  --ease-spring: linear(0, 0.074, 0.234, 0.415, 0.584, 0.723, 0.83, 0.906, 0.956, 0.988, 1.005, 1.013, 1.015, 1.014, 1.012, 1.009, 1.007, 1.004, 1); /* slight overshoot; use with 550ms on transform only */\n  --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --press-scale: 0.97;\n\n  /* ---- Sizes ---- */\n  --control-h: 40px;       /* buttons, inputs (32-36 compact, 44+ touch) */\n  --row-h: 40px;           /* table rows (36 compact, 44+ touch) */\n  --sidebar-w: 248px;  --content-max: 1280px;  --reading-max: 68ch;\n";
+const BASE_EXTRA = "  /* ---- Type ---- */\n  --font-sans: \"Inter\", ui-sans-serif, system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif;\n  --font-display: var(--font-sans);\n  --font-mono: ui-monospace, \"SF Mono\", \"Cascadia Code\", Menlo, Consolas, monospace;\n  --text-xs: 12px;  --text-sm: 14px;  --text-md: 16px;  --text-lg: 18px;  --text-xl: 20px;\n  --text-2xl: 24px; --text-3xl: 30px; --text-4xl: 36px; --text-5xl: 48px; --text-6xl: 60px;\n  --text-body: 16px;                    /* 14px in dense desktop tools */\n  --leading-tight: 1.15;  --leading-snug: 1.3;  --leading-normal: 1.5;\n  --tracking-display: -0.025em;         /* 36px and up */\n  --tracking-heading: -0.015em;         /* 20-30px */\n  --tracking-caps: 0.06em;              /* small all-caps labels */\n  --weight-regular: 400;  --weight-medium: 500;  --weight-semibold: 600;  --weight-display: 600;\n\n  /* ---- Spacing (4px base) ---- */\n  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;\n  --space-5: 24px;  --space-6: 32px;  --space-7: 48px;  --space-8: 64px;  --space-9: 96px;\n  --space-section: 48px;\n\n  /* ---- Shape: one family. Nested radius = outer radius minus the padding between. ---- */\n  --radius-sm: 6px;  --radius: 8px;  --radius-lg: 12px;  --radius-full: 9999px;  --border-w: 1px;\n\n  /* ---- Depth: one light source from above; shadows are layered and tinted, never one grey blur. ---- */\n  --shadow-raised: 0 0 0 1px var(--ring), 0 1px 2px rgb(var(--shadow-color) / calc(0.06 * var(--shadow-strength))), 0 2px 4px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength)));\n  --shadow-overlay: 0 0 0 1px var(--ring), 0 4px 8px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength))), 0 12px 24px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength))), 0 24px 48px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength)));\n  --shadow-button: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(var(--shadow-color) / calc(0.14 * var(--shadow-strength)));\n\n  /* ---- Motion ---- */\n  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);      /* entering, and most UI */\n  --ease-in: cubic-bezier(0.64, 0, 0.78, 0);       /* leaving */\n  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* moving on screen */\n  --ease-spring: linear(0, 0.074, 0.234, 0.415, 0.584, 0.723, 0.83, 0.906, 0.956, 0.988, 1.005, 1.013, 1.015, 1.014, 1.012, 1.009, 1.007, 1.004, 1); /* slight overshoot; use with 550ms on transform only */\n  --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --press-scale: 0.97;\n  --immersive: 1;         /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */\n\n  /* ---- Sizes ---- */\n  --control-h: 40px;       /* buttons, inputs (32-36 compact, 44+ touch) */\n  --row-h: 40px;           /* table rows (36 compact, 44+ touch) */\n  --sidebar-w: 248px;  --content-max: 1280px;  --reading-max: 68ch;\n";
 const BASE_RULES = "/* ---- Base: small details that make everything feel finished ---- */\n*, *::before, *::after { box-sizing: border-box; }\nhtml { -webkit-text-size-adjust: 100%; }\nbody {\n  margin: 0;\n  background: var(--bg);\n  color: var(--text);\n  font: var(--weight-regular) var(--text-body)/var(--leading-normal) var(--font-sans);\n  -webkit-font-smoothing: antialiased;\n  text-rendering: optimizeLegibility;\n  font-optical-sizing: auto;\n}\nh1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-heading); text-wrap: balance; }\nh1 { letter-spacing: var(--tracking-display); }\np { margin: 0; text-wrap: pretty; }\nimg, video { max-width: 100%; height: auto; }\n::selection { background: color-mix(in oklab, var(--accent) 24%, transparent); }\n:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }   /* outline survives Windows high-contrast mode */\ninput, textarea, select { caret-color: var(--accent); font: inherit; }\nbutton { font: inherit; }\n.num { font-variant-numeric: tabular-nums; }\n@media (prefers-reduced-motion: reduce) {\n  *, *::before, *::after {\n    animation-duration: 0.01ms !important;\n    animation-iteration-count: 1 !important;\n    transition-duration: 0.01ms !important;\n    scroll-behavior: auto !important;\n  }\n}\n";
 const SITE = "https://najeebafridi.github.io/ui-craft/";
 
@@ -1040,9 +1562,10 @@ const DENSITY = { compact: { control: 32, row: 36, body: 14, section: 32 }, stan
 const DEPTH_LABEL = { hairline: "Hairline (1px ring only)", soft: "Soft (ring + small shadow)", crisp: "Crisp (clear lift)", diffuse: "Diffuse (wide, faint)", none: "Flat (no shadows)", lip: "Lip (solid bottom edge)" };
 const MOTION_LABEL = { instant: "Instant (tools)", crisp: "Crisp (most products)", gentle: "Gentle (care, reading)", slow: "Slow (luxury)", bouncy: "Bouncy (play)" };
 const NEUTRAL_LABEL = { brand: "Tinted toward the brand colour", cool: "Cool (technical, clean)", warm: "Warm (human, editorial)", pure: "Pure grey (stark)" };
-const KEYS = { dir: "d", accent: "a", neutral: "n", tint: "t", secondary: "s", display: "fd", sans: "ft", radius: "r", depth: "dp", borderW: "bw", density: "dn", motion: "m", theme: "th", view: "v", screen: "sc" };
+const KEYS = { dir: "d", accent: "a", neutral: "n", tint: "t", secondary: "s", display: "fd", sans: "ft", radius: "r", depth: "dp", borderW: "bw", density: "dn", motion: "m", immersive: "im", theme: "th", view: "v", screen: "sc" };
 
-const defaultsFor = (slug) => { const d = DIR[slug]; return { dir: slug, accent: oklch(...d.accent), neutral: String(d.neutral), tint: d.tint, secondary: d.secondary ? oklch(...d.secondary) : "", display: d.fonts.display, sans: d.fonts.sans, radius: "", depth: d.depth, borderW: d.borderW, density: "", motion: d.motion, theme: d.theme }; };
+const defaultsFor = (slug) => { const d = DIR[slug]; return { dir: slug, accent: oklch(...d.accent), neutral: String(d.neutral), tint: d.tint, secondary: d.secondary ? oklch(...d.secondary) : "", display: d.fonts.display, sans: d.fonts.sans, radius: "", depth: d.depth, borderW: d.borderW, density: "", motion: d.motion, immersive: String(d.immersive), theme: d.theme }; };
+let fx = "full";   // Immersive preview mode (full effect, reduced motion, no WebGL); a viewing aid, not part of the theme
 let state = { ...defaultsFor("calm-productivity"), view: "desktop", screen: "app" };
 let current = null;
 
@@ -1059,11 +1582,12 @@ function readHash() {
   if (!FONT[next.sans]) next.sans = DIR[next.dir].fonts.sans;
   if (!DEPTH[next.depth]) next.depth = DIR[next.dir].depth;
   if (!MOTION[next.motion]) next.motion = DIR[next.dir].motion;
+  if (!/^[0-3]$/.test(next.immersive)) next.immersive = String(DIR[next.dir].immersive);
   if (next.density && !DENSITY[next.density]) next.density = "";
   if (next.radius !== "" && !(+next.radius >= 0 && +next.radius <= 24)) next.radius = "";
   if (!["light", "dark"].includes(next.theme)) next.theme = "light";
   if (!["desktop", "phone"].includes(next.view)) next.view = "desktop";
-  if (!["app", "landing", "mobile", "kit"].includes(next.screen)) next.screen = "app";
+  if (!["app", "landing", "mobile", "kit", "imm"].includes(next.screen)) next.screen = "app";
   state = next;
 }
 let hashTimer;
@@ -1082,7 +1606,7 @@ function effective() {
   const d = DIR[state.dir], f = FONT[state.display];
   const own = state.display === d.fonts.display;
   return { ...d, fonts: { display: state.display, sans: state.sans, mono: d.fonts.mono }, tracking: own ? d.tracking : f.tracking, weight: own ? d.weight : f.weight,
-    radius: state.radius === "" ? d.radius : deriveRadius(+state.radius), depth: state.depth, borderW: +state.borderW, density: state.density ? DENSITY[state.density] : d.density, motion: state.motion };
+    radius: state.radius === "" ? d.radius : deriveRadius(+state.radius), depth: state.depth, borderW: +state.borderW, density: state.density ? DENSITY[state.density] : d.density, motion: state.motion, immersive: +state.immersive };
 }
 const fontSpecs = (dm) => [...new Set([dm.fonts.display, dm.fonts.sans, dm.fonts.mono])].map((n) => [n, FONT[n].gf]);
 const customised = () => { const def = defaultsFor(state.dir); return Object.keys(def).some((k) => k !== "theme" && String(def[k]).toLowerCase() !== String(state[k]).toLowerCase()); };
@@ -1097,7 +1621,7 @@ function build() {
 // ---------- preview ----------
 const frame = $("#frame"), wrap = $("#wrap");
 function mountPreview() {
-  frame.srcdoc = `<!doctype html><html lang="en" data-theme="${state.theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Preview</title><link id="gf" rel="stylesheet"><style id="theme"></style><style>${BASE_RULES}\n${$("#pv-css").textContent}</style></head><body data-screen="${state.screen}">${$("#pv-html").innerHTML}</body></html>`;
+  frame.srcdoc = `<!doctype html><html lang="en" data-theme="${state.theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Preview</title><link id="gf" rel="stylesheet"><style id="theme"></style><style>${BASE_RULES}\n${$("#pv-css").textContent}</style></head><body data-screen="${state.screen}">${$("#pv-html").innerHTML}<script type="module">${$("#pv-js").textContent}<\/script></body></html>`;
   frame.addEventListener("load", () => { const doc = frame.contentDocument; if (!doc || !doc.getElementById("theme") || doc.__wired) return; doc.__wired = true; doc.addEventListener("click", (e) => { if (e.target.closest("a")) e.preventDefault(); const sw = e.target.closest(".sw"); if (sw) sw.setAttribute("aria-checked", sw.getAttribute("aria-checked") !== "true"); }); paint(); });
 }
 const SWATCHES = ["bg", "surface", "surface-2", "surface-3", "border", "border-strong", "text", "text-muted", "text-subtle", "accent", "accent-hover", "accent-soft", "accent-text", "success", "warning", "danger", "info", "chart-1", "chart-2", "chart-3", "chart-4", "chart-5", "chart-6"];
@@ -1109,6 +1633,7 @@ function paint() {
     if (doc.getElementById("gf").getAttribute("href") !== current.fonts) doc.getElementById("gf").setAttribute("href", current.fonts);
     doc.documentElement.dataset.theme = state.theme;
     doc.body.dataset.screen = state.screen;
+    frame.contentWindow.__imm?.update({ level: +state.immersive, fx, depth: state.depth });
     const sws = doc.getElementById("sws");
     if (sws) sws.innerHTML = SWATCHES.map((k) => `<div><i style="background:var(--${k})"></i>${k}</div>`).join("");
   }
@@ -1144,11 +1669,13 @@ function syncControls() {
   $("#borderw").value = state.borderW;
   fill($("#density"), `<option value="">As the direction (${d.density.control}px controls)</option><option value="compact">Compact (32px controls)</option><option value="standard">Standard (40px controls)</option><option value="spacious">Spacious (48px controls)</option>`, state.density);
   fill($("#motion"), Object.entries(MOTION_LABEL).map(([v, l]) => `<option value="${v}">${l}</option>`).join(""), state.motion);
+  fill($("#immersive"), IMMERSIVE.map((l, i) => `<option value="${i}">${l.name} (${l.short})</option>`).join(""), state.immersive);
+  $("#fx-wrap").hidden = state.screen !== "imm"; $("#fx").value = fx;
   const bad = gen.report.filter((r) => !r.ok);
   $("#health").dataset.ok = String(!bad.length);
   $("#health").textContent = bad.length ? `${bad.length} contrast problems` : `All ${gen.report.length} contrast checks pass, light and dark`;
   $("#notes").innerHTML = gen.notes.map((n) => `<span>Note: ${n}</span>`).join("");
-  $("#about").innerHTML = `<div><b>${d.name}${customised() ? " (customised)" : ""}</b>${d.for}</div><div><b>Feeling</b>${d.feeling}</div><div><b>Signature to build</b>${d.signature}</div><div><b>Watch out</b>${d.watch}</div>`;
+  $("#about").innerHTML = `<div><b>${d.name}${customised() ? " (customised)" : ""}</b>${d.for}</div><div><b>Feeling</b>${d.feeling}</div><div><b>Signature to build</b>${d.signature}</div><div><b>Watch out</b>${d.watch}</div><div><b>3D and scroll: ${IMMERSIVE[dm.immersive].name.toLowerCase()} (level ${dm.immersive} of 3)</b>${d.scene}</div>`;
 }
 function set(patch) { Object.assign(state, patch); paint(); }
 
@@ -1170,6 +1697,8 @@ $("#depth").addEventListener("change", (e) => set({ depth: e.target.value }));
 $("#borderw").addEventListener("change", (e) => set({ borderW: +e.target.value }));
 $("#density").addEventListener("change", (e) => set({ density: e.target.value }));
 $("#motion").addEventListener("change", (e) => set({ motion: e.target.value }));
+$("#immersive").addEventListener("change", (e) => set({ immersive: e.target.value }));
+$("#fx").addEventListener("change", (e) => { fx = e.target.value; paint(); });
 $("#reset").addEventListener("click", () => { state = { ...defaultsFor(state.dir), theme: state.theme, view: state.view, screen: state.screen }; paint(); });
 const flash = (btn, text) => { const old = btn.textContent; btn.textContent = text; setTimeout(() => (btn.textContent = old), 1400); };
 function copyOld(text) { const t = document.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;top:0;left:0;opacity:0"; (document.querySelector("dialog[open]") || document.body).append(t); t.select(); let ok = false; try { ok = document.execCommand("copy"); } catch {} t.remove(); return ok; }
@@ -1193,7 +1722,7 @@ const FORMATS = {
       return `/* ui-craft theme for Tailwind CSS v4: ${title()}\n   ${shareUrl()}\n   Add to your HTML head: ${fontLink()} */\n@import "tailwindcss";\n@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));\n\n:root {\n  color-scheme: light;\n${vars(c.light)}\n}\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme="light"]) {\n    color-scheme: dark;\n${vars(c.dark).replace(/^/gm, "  ")}\n  }\n}\n:root[data-theme="dark"] {\n  color-scheme: dark;\n${vars(c.dark)}\n}\n\n@theme inline {\n${Object.entries(map).map(([tw, k]) => `  --color-${tw}: var(--${k});`).join("\n")}\n${[1, 2, 3, 4, 5, 6].map((n) => `  --color-chart-${n}: var(--chart-${n});`).join("\n")}\n  --font-sans: "${dm.fonts.sans}", ${SYS};\n  --font-display: "${dm.fonts.display}", ${isSerif(dm.fonts.display) ? SERIF : SYS};\n  --font-mono: "${dm.fonts.mono}", ${MONO};\n  --radius-sm: ${dm.radius[0]}px;\n  --radius-md: ${dm.radius[1]}px;\n  --radius-lg: ${dm.radius[2]}px;\n  --shadow-raised: ${dp.raised};\n  --shadow-overlay: ${dp.overlay};\n  --shadow-button: ${dp.button};\n}\n`; } },
   json: { label: "JSON tokens", file: "tokens.json", help: "Plain design tokens for any tool or build script.",
     make: () => { const dm = current.dm, m = MOTION[dm.motion], dp = DEPTH[dm.depth]; const pick = (t) => Object.fromEntries(hexKeys(t).map((k) => [k, t[k]]));
-      return JSON.stringify({ name: title(), direction: state.dir, source: shareUrl(), color: { light: pick(current.gen.light), dark: pick(current.gen.dark) }, font: { display: dm.fonts.display, sans: dm.fonts.sans, mono: dm.fonts.mono, displayWeight: dm.weight, displayTracking: dm.tracking, googleFonts: current.fonts }, radius: { sm: dm.radius[0], md: dm.radius[1], lg: dm.radius[2] }, borderWidth: dm.borderW, shadow: { style: dm.depth, raised: dp.raised, overlay: dp.overlay, button: dp.button }, density: dm.density, motion: { style: dm.motion, fastMs: m.fast, baseMs: m.base, slowMs: m.slow, easeOut: m.ease, pressScale: m.press } }, null, 2) + "\n"; } },
+      return JSON.stringify({ name: title(), direction: state.dir, source: shareUrl(), color: { light: pick(current.gen.light), dark: pick(current.gen.dark) }, font: { display: dm.fonts.display, sans: dm.fonts.sans, mono: dm.fonts.mono, displayWeight: dm.weight, displayTracking: dm.tracking, googleFonts: current.fonts }, radius: { sm: dm.radius[0], md: dm.radius[1], lg: dm.radius[2] }, borderWidth: dm.borderW, shadow: { style: dm.depth, raised: dp.raised, overlay: dp.overlay, button: dp.button }, density: dm.density, motion: { style: dm.motion, fastMs: m.fast, baseMs: m.base, slowMs: m.slow, easeOut: m.ease, pressScale: m.press }, immersive: { level: dm.immersive, name: IMMERSIVE[dm.immersive].name, rule: IMMERSIVE[dm.immersive].rule, scene: current.d.scene } }, null, 2) + "\n"; } },
   swift: { label: "SwiftUI", file: "Theme.swift", help: "Colours that switch between light and dark automatically. Keep system text styles for body text so Dynamic Type works; use the display font for headings only.",
     make: () => { const L = current.gen.light, D = current.gen.dark, dm = current.dm; const n = (h) => "0x" + h.slice(1);
       return `// ui-craft theme: ${title()}\n// ${shareUrl()}\nimport SwiftUI\n\nextension Color {\n    init(light: UInt32, dark: UInt32) {\n        self.init(UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: dark) : UIColor(hex: light) })\n    }\n\n${hexKeys(L).map((k) => `    static let ${camel(k).replace(/^text$/, "textPrimary")} = Color(light: ${n(L[k])}, dark: ${n(D[k])})`).join("\n")}\n}\n\nprivate extension UIColor {\n    convenience init(hex: UInt32) {\n        self.init(red: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255, blue: CGFloat(hex & 0xFF) / 255, alpha: 1)\n    }\n}\n\nenum Radius {\n    static let sm: CGFloat = ${dm.radius[0]}\n    static let md: CGFloat = ${dm.radius[1]}\n    static let lg: CGFloat = ${dm.radius[2]}\n}\n\nenum Brand {\n    static let displayFont = "${dm.fonts.display}"   // add the font files to the app; use for headings only\n    static let minTarget: CGFloat = 44\n}\n`; } },
@@ -1205,7 +1734,7 @@ const FORMATS = {
       const dm = current.dm; return `// ui-craft theme: ${title()}\n// ${shareUrl()}\nimport 'package:flutter/material.dart';\n\n${scheme("lightScheme", current.gen.light, "#FFFFFF")}\n\n${scheme("darkScheme", current.gen.dark, current.gen.dark.bg)}\n\nconst pageBackgroundLight = ${c(current.gen.light.bg)};\nconst pageBackgroundDark = ${c(current.gen.dark.bg)};\nconst radiusSm = ${dm.radius[0]}.0, radiusMd = ${dm.radius[1]}.0, radiusLg = ${dm.radius[2]}.0;\n// Heading font: ${dm.fonts.display} (google_fonts package). Minimum touch target: 48.\n`; } },
   brief: { label: "Design brief for AI", file: "DESIGN.md", help: "Save this as DESIGN.md in your project, or paste it into your AI coding tool. It tells the AI exactly which look to build.",
     make: () => { const d = current.d, dm = current.dm, L = current.gen.light, m = MOTION[dm.motion];
-      return `# Design brief: ${title()}\n\nUse the ui-craft skill and follow this brief for every screen. Live preview: ${shareUrl()}\n\n- **Direction:** ${d.name}. ${d.feeling}\n- **Made for:** ${d.for}\n- **Signature to build:** ${d.signature}\n- **Colour:** brand ${L.accent} on ${state.neutral === "pure" ? "pure grey" : state.neutral + "-tinted"} neutrals${state.secondary ? `, second colour ${hex(state.secondary).toUpperCase()}` : ""}. Default theme: ${state.theme}; ship both.\n- **Type:** headings in ${dm.fonts.display} (weight ${dm.weight}, letter-spacing ${dm.tracking}), text in ${dm.fonts.sans}, code and IDs in ${dm.fonts.mono}. Body ${dm.density.body}px.\n- **Shape and depth:** radius ${dm.radius.join("/")}px, ${dm.depth} depth, ${dm.borderW}px borders.\n- **Density:** controls ${dm.density.control}px, rows ${dm.density.row}px, sections ${dm.density.section}px apart. Controls grow to 44px on touch screens.\n- **Motion:** ${dm.motion} (${m.fast}/${m.base}/${m.slow}ms, press scale ${m.press}).\n- **Imagery:** ${d.imagery}\n- **Voice:** ${d.voice}\n- **Watch out:** ${d.watch}\n\n## Rules\n\n1. Use only the tokens in theme.css (\`var(--surface)\`, \`var(--accent)\`, \`var(--radius)\`, \`var(--shadow-raised)\`…). Never hard-code a colour, radius or shadow.\n2. One primary action per screen. Show the screen in use, with real content.\n3. Check every screen at 390px and 1440px, in light and dark.\n\n## Fonts\n\n\`\`\`html\n${fontLink()}\n\`\`\`\n\n## Tokens\n\nExport **CSS** from the Studio link above and save it as theme.css.\n`; } },
+      return `# Design brief: ${title()}\n\nUse the ui-craft skill and follow this brief for every screen. Live preview: ${shareUrl()}\n\n- **Direction:** ${d.name}. ${d.feeling}\n- **Made for:** ${d.for}\n- **Signature to build:** ${d.signature}\n- **Colour:** brand ${L.accent} on ${state.neutral === "pure" ? "pure grey" : state.neutral + "-tinted"} neutrals${state.secondary ? `, second colour ${hex(state.secondary).toUpperCase()}` : ""}. Default theme: ${state.theme}; ship both.\n- **Type:** headings in ${dm.fonts.display} (weight ${dm.weight}, letter-spacing ${dm.tracking}), text in ${dm.fonts.sans}, code and IDs in ${dm.fonts.mono}. Body ${dm.density.body}px.\n- **Shape and depth:** radius ${dm.radius.join("/")}px, ${dm.depth} depth, ${dm.borderW}px borders.\n- **Density:** controls ${dm.density.control}px, rows ${dm.density.row}px, sections ${dm.density.section}px apart. Controls grow to 44px on touch screens.\n- **Motion:** ${dm.motion} (${m.fast}/${m.base}/${m.slow}ms, press scale ${m.press}).\n- **Imagery:** ${d.imagery}\n- **Voice:** ${d.voice}\n- **Watch out:** ${d.watch}\n\n## Immersive and motion\n\n- **Intensity:** level ${dm.immersive} of 3, ${IMMERSIVE[dm.immersive].name}. ${IMMERSIVE[dm.immersive].rule}\n- **The direction's advice for 3D and scroll:** ${d.scene}\n- **Tempo:** ${dm.motion}. Interface motion ${m.fast}/${m.base}/${m.slow}ms. Scene, camera and scroll moves settle in about ${Math.round(m.slow * 2.2 / 50) * 50}ms with the same character (${m.ease}). ${dm.motion === "bouncy" ? "One overshoot is allowed on reward moments." : "No bounce."}\n- **Always:** the page reads and works with every effect switched off. Each effect has a reduced-motion version and a no-WebGL fallback. Text stays real HTML. The 3D engine loads after the first paint.\n- **How:** for any 3D, shader or scroll-driven work use the immersive-web skill (same plugin as ui-craft). It reads these tokens (\`--accent\`, \`--bg\`, \`--surface\`, \`--font-display\`, \`--dur-*\`, \`--ease-out\`, \`--immersive\`), so the scene follows this theme.\n\n## Rules\n\n1. Use only the tokens in theme.css (\`var(--surface)\`, \`var(--accent)\`, \`var(--radius)\`, \`var(--shadow-raised)\`…). Never hard-code a colour, radius or shadow.\n2. One primary action per screen. Show the screen in use, with real content.\n3. Check every screen at 390px and 1440px, in light and dark.\n\n## Fonts\n\n\`\`\`html\n${fontLink()}\n\`\`\`\n\n## Tokens\n\nExport **CSS** from the Studio link above and save it as theme.css.\n`; } },
 };
 let fmt = "css";
 const dlg = $("#export");

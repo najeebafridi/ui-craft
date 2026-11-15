@@ -7,6 +7,7 @@
    Imagery:    Studio product photography or precise renders on plain grounds. Alternate full-width white and near-black panels.
    Voice:      Short declarative lines. One idea per screen.
    Watch out:  Fails without real product imagery. Never fill the hero with a gradient blob where the product should be.
+   Immersive:  level 3 of 3 (story: a scroll-driven sequence). A studio product shot: one large soft light from above, a glossy object, a floor that fades to the page. Slow orbit, clean dissolves.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -64,6 +65,7 @@
   /* density and motion (gentle) */
   --control-h: 44px;  --row-h: 48px;  --space-section: 96px;
   --dur-fast: 160ms;  --dur-base: 260ms;  --dur-slow: 400ms;  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);  --press-scale: 0.98;
+  --immersive: 3;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

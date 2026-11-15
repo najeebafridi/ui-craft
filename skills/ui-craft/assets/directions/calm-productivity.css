@@ -7,6 +7,7 @@
    Imagery:    Real product UI, simple line icons, avatars. A small custom empty-state illustration at most.
    Voice:      Plain and warm. Verb + object buttons. Specific confirmations.
    Watch out:  Easy to make generic. It needs exact spacing, real content and one signature detail to rise above a template.
+   Immersive:  level 1 of 3 (accent: one quiet living detail). Matte, paper-like forms under soft overhead light. Motion only confirms: one object settles, then rests.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -64,6 +65,7 @@
   /* density and motion (crisp) */
   --control-h: 36px;  --row-h: 40px;  --space-section: 48px;
   --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+  --immersive: 1;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

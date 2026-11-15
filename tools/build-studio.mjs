@@ -12,6 +12,12 @@ const stripExports = (src) => src.replace(/^export\s+(?=(const|function|let|clas
 const core = stripExports(read("skills/ui-craft/scripts/palette-core.mjs"));
 const data = stripExports(read("tools/directions-data.mjs"));
 const tokens = read("skills/ui-craft/assets/tokens.css");
+// The Immersive preview runs the immersive-web skill's own assets, so the Studio shows exactly what the skill ships.
+const lean = (src) => stripExports(src).replace(/^\s*\/\/.*$/gm, "").replace(/\n{2,}/g, "\n");
+const bridge = lean(read("skills/immersive-web/assets/theme-bridge.js"));
+const shell = lean(read("skills/immersive-web/assets/scene-shell.js"));
+const scene = lean(read("tools/studio/immersive-scene.js"));
+for (const [name, src] of [["bridge", bridge], ["shell", shell], ["scene", scene]]) if (/<\/script|<!--/i.test(src)) throw new Error(name + " contains text that would break the inline script");
 const version = JSON.parse(read(".claude-plugin/plugin.json")).version;
 
 // tokens.css = [comment] :root { colours ... /* ---- Type ---- */ extras } dark blocks /* ---- Base: rules
@@ -26,6 +32,9 @@ let html = read("tools/studio/template.html");
 const put = (marker, value) => { if (!html.includes(marker)) throw new Error("marker missing: " + marker); html = html.split(marker).join(value); };
 put("//__CORE__", core);          // split/join inserts text literally (no "$" replacement patterns)
 put("//__DATA__", data);
+put("//__BRIDGE__", bridge);
+put("//__SHELL__", shell);
+put("//__SCENE__", scene);
 put('"__BASE_EXTRA__"', JSON.stringify(BASE_EXTRA));
 put('"__BASE_RULES__"', JSON.stringify(BASE_RULES));
 put("__VERSION__", "v" + version);

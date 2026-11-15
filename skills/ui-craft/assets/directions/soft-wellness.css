@@ -7,6 +7,7 @@
    Imagery:    Soft flat illustration or calm nature photography; gentle tinted backgrounds.
    Voice:      Kind, second person, no pressure. Never guilt, never streak-shaming.
    Watch out:  Low saturation must not become low contrast: text still passes 4.5:1. No confetti or alarms for anxious users.
+   Immersive:  level 1 of 3 (accent: one quiet living detail). Soft rounded forms in diffuse light with no hard shadows. Slow breathing motion that rests; nothing sudden.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -65,6 +66,7 @@
   /* density and motion (gentle) */
   --control-h: 48px;  --row-h: 56px;  --space-section: 64px;
   --dur-fast: 160ms;  --dur-base: 260ms;  --dur-slow: 400ms;  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);  --press-scale: 0.98;
+  --immersive: 1;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

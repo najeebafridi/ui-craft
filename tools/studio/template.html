@@ -85,6 +85,10 @@ output{font:500 12px var(--mono);color:var(--c-muted);min-width:40px;text-align:
 .frame-wrap[data-view="phone"] iframe{position:static;transform:none;width:390px;max-width:calc(100% - 24px);height:100%;border-radius:32px;box-shadow:0 0 0 8px #1F1F23,0 0 0 9px var(--c-line-strong),var(--c-overlay)}
 .about{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px;font-size:12px;color:var(--c-muted)}
 .about b{display:block;color:var(--c-text);font-weight:600;margin-bottom:4px}
+.fx{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--c-muted)}
+.fx select{width:auto;height:32px}
+.stage-bar .seg{max-width:100%;overflow-x:auto;scrollbar-width:none}
+.stage-bar .seg button{flex:none}
 .notes{margin-top:12px;font-size:12px;color:var(--c-muted);display:grid;gap:4px}
 .notes:empty{display:none}
 
@@ -181,6 +185,7 @@ dialog::backdrop{background:rgb(0 0 0/.45)}
       <h2>5. Feel</h2>
       <div class="field"><label for="density">Density</label><select id="density"></select></div>
       <div class="field"><label for="motion">Motion</label><select id="motion"></select></div>
+      <div class="field"><label for="immersive">3D and scroll effects</label><select id="immersive" aria-describedby="immersive-hint"></select><span class="hint" id="immersive-hint">See it on the Immersive screen. Every level keeps a still fallback.</span></div>
       <button type="button" class="link" id="reset">Reset to this direction's defaults</button>
     </section>
   </aside>
@@ -188,8 +193,9 @@ dialog::backdrop{background:rgb(0 0 0/.45)}
   <main class="stage">
     <div class="stage-bar">
       <div class="seg" role="group" aria-label="Preview screen">
-        <button type="button" data-screen="app">Dashboard</button><button type="button" data-screen="landing">Landing page</button><button type="button" data-screen="mobile">Mobile app</button><button type="button" data-screen="kit">Components</button>
+        <button type="button" data-screen="app">Dashboard</button><button type="button" data-screen="landing">Landing page</button><button type="button" data-screen="mobile">Mobile app</button><button type="button" data-screen="kit">Components</button><button type="button" data-screen="imm">Immersive</button>
       </div>
+      <label class="fx" id="fx-wrap" hidden>Preview as <select id="fx"><option value="full">Full effect</option><option value="reduced">Reduced motion</option><option value="nogl">No WebGL (fallback)</option></select></label>
       <span class="health" id="health" role="status"></span>
     </div>
     <div class="frame-wrap" id="wrap" data-view="desktop"><iframe id="frame" title="Live preview of the theme"></iframe></div>
@@ -212,7 +218,7 @@ dialog::backdrop{background:rgb(0 0 0/.45)}
 body{min-height:100vh}
 a{color:var(--accent-text);text-underline-offset:2px}
 body > section{display:none}
-body[data-screen="app"] > .s-app,body[data-screen="landing"] > .s-landing,body[data-screen="mobile"] > .s-mobile,body[data-screen="kit"] > .s-kit{display:block}
+body[data-screen="app"] > .s-app,body[data-screen="landing"] > .s-landing,body[data-screen="mobile"] > .s-mobile,body[data-screen="kit"] > .s-kit,body[data-screen="imm"] > .s-imm{display:block}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-h);padding:0 16px;border-radius:var(--radius);border:var(--border-w) solid transparent;font:500 14px var(--font-sans);cursor:pointer;text-decoration:none;white-space:nowrap;transition:background-color var(--dur-fast) var(--ease-out),transform var(--dur-fast) var(--ease-out)}
 .btn:active{transform:scale(var(--press-scale))}
 .btn-primary{background:var(--accent);color:var(--accent-fg);box-shadow:var(--shadow-button)}
@@ -365,6 +371,54 @@ kbd{font:500 12px var(--font-mono);color:var(--text-subtle)}
 .sws div{font-size:12px;color:var(--text-muted)}
 .sws i{display:block;height:40px;border-radius:var(--radius-sm);box-shadow:inset 0 0 0 1px var(--ring);margin-bottom:4px}
 @media (max-width:640px){.kit{padding:16px}.type h3{font-size:36px}.s-kit .btn,.fld input,.fld select{min-height:44px}.opt{min-height:44px}}
+
+/* ---------- immersive: one scene, driven by the theme; the page works without it ---------- */
+.s-imm{font-size:var(--text-body)}
+.imm{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);column-gap:48px}
+.imm-hero{grid-column:1;grid-row:1;align-self:center;padding:var(--space-section) 0}
+.imm-hero h1{font-size:clamp(36px,5vw,60px);line-height:1.05;letter-spacing:var(--tracking-display)}
+.imm-hero > p{font-size:18px;color:var(--text-muted);margin-top:16px;max-width:46ch}
+.imm-hero .acts{margin-top:24px;flex-wrap:wrap}
+.imm-hero .proof{font-size:14px;color:var(--text-subtle);margin-top:16px}
+.imm-stage{grid-column:2;grid-row:1;align-self:center;position:relative;height:min(560px,76vh);min-height:360px}
+.imm-stage canvas,.imm-fallback{position:absolute;inset:0;width:100%;height:100%}
+.imm-stage canvas{opacity:0;transition:opacity var(--dur-slow) var(--ease-out)}
+.imm-stage[data-scene="live"] canvas,.imm-stage[data-scene="still"] canvas{opacity:1}
+.imm-stage[data-scene="live"] .imm-fallback,.imm-stage[data-scene="still"] .imm-fallback{visibility:hidden}
+.imm-fallback{display:grid;place-items:center}
+.fb{grid-area:1/1;width:min(44%,220px);aspect-ratio:3/4;background:var(--surface);border:var(--border-w) solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-overlay);padding:9%;display:grid;align-content:start;gap:7%}
+.fb i{width:20%;aspect-ratio:1;border-radius:var(--radius-sm);background:var(--accent)}
+.fb b{height:8px;border-radius:4px;background:var(--surface-3)}
+.fb b:nth-of-type(1){width:64%;background:var(--text-muted)}.fb b:nth-of-type(3){width:82%}.fb b:nth-of-type(4){width:56%}
+.fb u{justify-self:start;width:52%;height:24px;border-radius:var(--radius-sm);background:var(--surface-2);margin-top:8%}
+.fb-1{transform:translate(-34%,-5%) rotate(-7deg)}.fb-2{transform:translate(2%,3%) rotate(2deg)}.fb-3{transform:translate(38%,9%) rotate(9deg)}
+.fb-3 u{background:var(--accent)}
+.imm-steps{grid-column:1/-1;grid-row:2;list-style:none;margin:0;padding:var(--space-section) 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;border-top:1px solid var(--border)}
+.imm-steps h2{font-size:24px;letter-spacing:var(--tracking-heading)}
+.imm-steps p{color:var(--text-muted);margin-top:8px;font-size:16px;max-width:40ch}
+.imm-steps .n{font:500 12px var(--font-mono);color:var(--accent-text);display:block;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.imm .only-story{display:none}
+.imm[data-story] .only-story{display:inline-flex}.imm[data-story] .not-story{display:none}
+.imm[data-story] .imm-steps li > div{padding-left:24px;border-left:2px solid var(--border);transition:border-color var(--dur-base) var(--ease-out)}
+.imm[data-story] .imm-steps li.is-active > div{border-left-color:var(--accent)}
+@media (min-width:861px){
+  .imm[data-story]{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}
+  .imm[data-story] .imm-hero{min-height:calc(100vh - 64px);padding:0 0 64px;display:flex;flex-direction:column;justify-content:center;align-self:start}
+  .imm[data-story] .imm-stage{grid-row:1/3;position:sticky;top:32px;height:calc(100vh - 64px);align-self:start}
+  .imm[data-story] .imm-steps{grid-column:1;display:block;border-top:0;padding:0 0 16vh}
+  .imm[data-story] .imm-steps li{min-height:76vh;display:flex;flex-direction:column;justify-content:center}
+}
+@media (max-width:860px){
+  .imm{display:block}
+  .imm-hero{padding:32px 0 16px}.imm-hero h1{font-size:36px}
+  .imm-stage{height:300px;min-height:0}
+  .imm-steps{grid-template-columns:minmax(0,1fr);padding:32px 0 48px}
+  .imm[data-story] .imm-stage{position:sticky;top:0;z-index:2;height:40vh;min-height:240px;margin:0 -16px;background:var(--bg);box-shadow:0 1px 0 var(--border)}
+  .imm[data-story] .imm-steps{display:block;border-top:0;padding:0 0 32px}
+  .imm[data-story] .imm-steps li{min-height:52vh;padding:32px 0 0}
+  .imm[data-story] .imm-steps li > div{padding-left:16px}
+  .s-imm .btn{min-height:44px}
+}
 </script>
 
 <template id="pv-html">
@@ -492,7 +546,37 @@ kbd{font:500 12px var(--font-mono);color:var(--text-subtle)}
     <div class="card box"><h2>Colours</h2><div class="sws" id="sws"></div></div>
   </div>
 </section>
+
+<section class="s-imm">
+  <div class="wrap">
+    <div class="lnav"><div class="logo"><i></i><span>Northwind</span></div><a class="l" href="#">Product</a><a class="l" href="#">Pricing</a><a class="l" href="#">Customers</a><a class="btn btn-secondary" href="#">Sign in</a></div>
+    <div class="imm" data-level="2">
+      <div class="imm-hero" data-beat="0">
+        <h1>Follow every invoice from sent to paid.</h1>
+        <p>Northwind sends the invoice, the reminder and the receipt. You watch one clear line move, and get on with your Friday.</p>
+        <div class="acts"><a class="btn btn-primary" href="#">Start free for 14 days</a><a class="btn btn-ghost not-story" href="#">See how it works</a><a class="btn btn-ghost only-story" href="#imm-end">Skip the story</a></div>
+        <p class="proof">No card needed · Cancel in two clicks</p>
+      </div>
+      <div class="imm-stage" id="imm-stage" aria-hidden="true">
+        <div class="imm-fallback"><div class="fb fb-3"><i></i><b></b><b></b><b></b><b></b><u></u></div><div class="fb fb-2"><i></i><b></b><b></b><b></b><b></b><u></u></div><div class="fb fb-1"><i></i><b></b><b></b><b></b><b></b><u></u></div></div>
+      </div>
+      <ol class="imm-steps">
+        <li data-beat="1"><div><span class="n">01 · Tuesday, 09:00</span><h2>Sent</h2><p>Invoice INV-2038 goes to Maple Health Clinic with a pay link. $4,430.00, due in 14 days.</p></div></li>
+        <li data-beat="2"><div><span class="n">02 · Day 15</span><h2>Reminded</h2><p>One polite nudge, in words you approved once. No awkward phone call.</p></div></li>
+        <li data-beat="3"><div><span class="n">03 · Day 16, 11:42</span><h2>Paid</h2><p>$4,430.00 arrives. The receipt goes out and your books are already up to date.</p></div></li>
+      </ol>
+    </div>
+    <div class="band" id="imm-end"><h2>Send your first invoice in five minutes.</h2><a class="btn" href="#">Start free</a></div>
+  </div>
+</section>
 </template>
+
+<!-- the preview's own script: theme bridge + scene shell (the immersive-web skill's assets) + the Immersive scene. Runs inside the iframe; draws nothing until that screen is open. -->
+<script type="text/plain" id="pv-js">
+//__BRIDGE__
+//__SHELL__
+//__SCENE__
+</script>
 
 <script type="module">
 //__CORE__
@@ -510,9 +594,10 @@ const DENSITY = { compact: { control: 32, row: 36, body: 14, section: 32 }, stan
 const DEPTH_LABEL = { hairline: "Hairline (1px ring only)", soft: "Soft (ring + small shadow)", crisp: "Crisp (clear lift)", diffuse: "Diffuse (wide, faint)", none: "Flat (no shadows)", lip: "Lip (solid bottom edge)" };
 const MOTION_LABEL = { instant: "Instant (tools)", crisp: "Crisp (most products)", gentle: "Gentle (care, reading)", slow: "Slow (luxury)", bouncy: "Bouncy (play)" };
 const NEUTRAL_LABEL = { brand: "Tinted toward the brand colour", cool: "Cool (technical, clean)", warm: "Warm (human, editorial)", pure: "Pure grey (stark)" };
-const KEYS = { dir: "d", accent: "a", neutral: "n", tint: "t", secondary: "s", display: "fd", sans: "ft", radius: "r", depth: "dp", borderW: "bw", density: "dn", motion: "m", theme: "th", view: "v", screen: "sc" };
+const KEYS = { dir: "d", accent: "a", neutral: "n", tint: "t", secondary: "s", display: "fd", sans: "ft", radius: "r", depth: "dp", borderW: "bw", density: "dn", motion: "m", immersive: "im", theme: "th", view: "v", screen: "sc" };
 
-const defaultsFor = (slug) => { const d = DIR[slug]; return { dir: slug, accent: oklch(...d.accent), neutral: String(d.neutral), tint: d.tint, secondary: d.secondary ? oklch(...d.secondary) : "", display: d.fonts.display, sans: d.fonts.sans, radius: "", depth: d.depth, borderW: d.borderW, density: "", motion: d.motion, theme: d.theme }; };
+const defaultsFor = (slug) => { const d = DIR[slug]; return { dir: slug, accent: oklch(...d.accent), neutral: String(d.neutral), tint: d.tint, secondary: d.secondary ? oklch(...d.secondary) : "", display: d.fonts.display, sans: d.fonts.sans, radius: "", depth: d.depth, borderW: d.borderW, density: "", motion: d.motion, immersive: String(d.immersive), theme: d.theme }; };
+let fx = "full";   // Immersive preview mode (full effect, reduced motion, no WebGL); a viewing aid, not part of the theme
 let state = { ...defaultsFor("calm-productivity"), view: "desktop", screen: "app" };
 let current = null;
 
@@ -529,11 +614,12 @@ function readHash() {
   if (!FONT[next.sans]) next.sans = DIR[next.dir].fonts.sans;
   if (!DEPTH[next.depth]) next.depth = DIR[next.dir].depth;
   if (!MOTION[next.motion]) next.motion = DIR[next.dir].motion;
+  if (!/^[0-3]$/.test(next.immersive)) next.immersive = String(DIR[next.dir].immersive);
   if (next.density && !DENSITY[next.density]) next.density = "";
   if (next.radius !== "" && !(+next.radius >= 0 && +next.radius <= 24)) next.radius = "";
   if (!["light", "dark"].includes(next.theme)) next.theme = "light";
   if (!["desktop", "phone"].includes(next.view)) next.view = "desktop";
-  if (!["app", "landing", "mobile", "kit"].includes(next.screen)) next.screen = "app";
+  if (!["app", "landing", "mobile", "kit", "imm"].includes(next.screen)) next.screen = "app";
   state = next;
 }
 let hashTimer;
@@ -552,7 +638,7 @@ function effective() {
   const d = DIR[state.dir], f = FONT[state.display];
   const own = state.display === d.fonts.display;
   return { ...d, fonts: { display: state.display, sans: state.sans, mono: d.fonts.mono }, tracking: own ? d.tracking : f.tracking, weight: own ? d.weight : f.weight,
-    radius: state.radius === "" ? d.radius : deriveRadius(+state.radius), depth: state.depth, borderW: +state.borderW, density: state.density ? DENSITY[state.density] : d.density, motion: state.motion };
+    radius: state.radius === "" ? d.radius : deriveRadius(+state.radius), depth: state.depth, borderW: +state.borderW, density: state.density ? DENSITY[state.density] : d.density, motion: state.motion, immersive: +state.immersive };
 }
 const fontSpecs = (dm) => [...new Set([dm.fonts.display, dm.fonts.sans, dm.fonts.mono])].map((n) => [n, FONT[n].gf]);
 const customised = () => { const def = defaultsFor(state.dir); return Object.keys(def).some((k) => k !== "theme" && String(def[k]).toLowerCase() !== String(state[k]).toLowerCase()); };
@@ -567,7 +653,7 @@ function build() {
 // ---------- preview ----------
 const frame = $("#frame"), wrap = $("#wrap");
 function mountPreview() {
-  frame.srcdoc = `<!doctype html><html lang="en" data-theme="${state.theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Preview</title><link id="gf" rel="stylesheet"><style id="theme"></style><style>${BASE_RULES}\n${$("#pv-css").textContent}</style></head><body data-screen="${state.screen}">${$("#pv-html").innerHTML}</body></html>`;
+  frame.srcdoc = `<!doctype html><html lang="en" data-theme="${state.theme}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Preview</title><link id="gf" rel="stylesheet"><style id="theme"></style><style>${BASE_RULES}\n${$("#pv-css").textContent}</style></head><body data-screen="${state.screen}">${$("#pv-html").innerHTML}<script type="module">${$("#pv-js").textContent}<\/script></body></html>`;
   frame.addEventListener("load", () => { const doc = frame.contentDocument; if (!doc || !doc.getElementById("theme") || doc.__wired) return; doc.__wired = true; doc.addEventListener("click", (e) => { if (e.target.closest("a")) e.preventDefault(); const sw = e.target.closest(".sw"); if (sw) sw.setAttribute("aria-checked", sw.getAttribute("aria-checked") !== "true"); }); paint(); });
 }
 const SWATCHES = ["bg", "surface", "surface-2", "surface-3", "border", "border-strong", "text", "text-muted", "text-subtle", "accent", "accent-hover", "accent-soft", "accent-text", "success", "warning", "danger", "info", "chart-1", "chart-2", "chart-3", "chart-4", "chart-5", "chart-6"];
@@ -579,6 +665,7 @@ function paint() {
     if (doc.getElementById("gf").getAttribute("href") !== current.fonts) doc.getElementById("gf").setAttribute("href", current.fonts);
     doc.documentElement.dataset.theme = state.theme;
     doc.body.dataset.screen = state.screen;
+    frame.contentWindow.__imm?.update({ level: +state.immersive, fx, depth: state.depth });
     const sws = doc.getElementById("sws");
     if (sws) sws.innerHTML = SWATCHES.map((k) => `<div><i style="background:var(--${k})"></i>${k}</div>`).join("");
   }
@@ -614,11 +701,13 @@ function syncControls() {
   $("#borderw").value = state.borderW;
   fill($("#density"), `<option value="">As the direction (${d.density.control}px controls)</option><option value="compact">Compact (32px controls)</option><option value="standard">Standard (40px controls)</option><option value="spacious">Spacious (48px controls)</option>`, state.density);
   fill($("#motion"), Object.entries(MOTION_LABEL).map(([v, l]) => `<option value="${v}">${l}</option>`).join(""), state.motion);
+  fill($("#immersive"), IMMERSIVE.map((l, i) => `<option value="${i}">${l.name} (${l.short})</option>`).join(""), state.immersive);
+  $("#fx-wrap").hidden = state.screen !== "imm"; $("#fx").value = fx;
   const bad = gen.report.filter((r) => !r.ok);
   $("#health").dataset.ok = String(!bad.length);
   $("#health").textContent = bad.length ? `${bad.length} contrast problems` : `All ${gen.report.length} contrast checks pass, light and dark`;
   $("#notes").innerHTML = gen.notes.map((n) => `<span>Note: ${n}</span>`).join("");
-  $("#about").innerHTML = `<div><b>${d.name}${customised() ? " (customised)" : ""}</b>${d.for}</div><div><b>Feeling</b>${d.feeling}</div><div><b>Signature to build</b>${d.signature}</div><div><b>Watch out</b>${d.watch}</div>`;
+  $("#about").innerHTML = `<div><b>${d.name}${customised() ? " (customised)" : ""}</b>${d.for}</div><div><b>Feeling</b>${d.feeling}</div><div><b>Signature to build</b>${d.signature}</div><div><b>Watch out</b>${d.watch}</div><div><b>3D and scroll: ${IMMERSIVE[dm.immersive].name.toLowerCase()} (level ${dm.immersive} of 3)</b>${d.scene}</div>`;
 }
 function set(patch) { Object.assign(state, patch); paint(); }
 
@@ -640,6 +729,8 @@ $("#depth").addEventListener("change", (e) => set({ depth: e.target.value }));
 $("#borderw").addEventListener("change", (e) => set({ borderW: +e.target.value }));
 $("#density").addEventListener("change", (e) => set({ density: e.target.value }));
 $("#motion").addEventListener("change", (e) => set({ motion: e.target.value }));
+$("#immersive").addEventListener("change", (e) => set({ immersive: e.target.value }));
+$("#fx").addEventListener("change", (e) => { fx = e.target.value; paint(); });
 $("#reset").addEventListener("click", () => { state = { ...defaultsFor(state.dir), theme: state.theme, view: state.view, screen: state.screen }; paint(); });
 const flash = (btn, text) => { const old = btn.textContent; btn.textContent = text; setTimeout(() => (btn.textContent = old), 1400); };
 function copyOld(text) { const t = document.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.cssText = "position:fixed;top:0;left:0;opacity:0"; (document.querySelector("dialog[open]") || document.body).append(t); t.select(); let ok = false; try { ok = document.execCommand("copy"); } catch {} t.remove(); return ok; }
@@ -663,7 +754,7 @@ const FORMATS = {
       return `/* ui-craft theme for Tailwind CSS v4: ${title()}\n   ${shareUrl()}\n   Add to your HTML head: ${fontLink()} */\n@import "tailwindcss";\n@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));\n\n:root {\n  color-scheme: light;\n${vars(c.light)}\n}\n@media (prefers-color-scheme: dark) {\n  :root:not([data-theme="light"]) {\n    color-scheme: dark;\n${vars(c.dark).replace(/^/gm, "  ")}\n  }\n}\n:root[data-theme="dark"] {\n  color-scheme: dark;\n${vars(c.dark)}\n}\n\n@theme inline {\n${Object.entries(map).map(([tw, k]) => `  --color-${tw}: var(--${k});`).join("\n")}\n${[1, 2, 3, 4, 5, 6].map((n) => `  --color-chart-${n}: var(--chart-${n});`).join("\n")}\n  --font-sans: "${dm.fonts.sans}", ${SYS};\n  --font-display: "${dm.fonts.display}", ${isSerif(dm.fonts.display) ? SERIF : SYS};\n  --font-mono: "${dm.fonts.mono}", ${MONO};\n  --radius-sm: ${dm.radius[0]}px;\n  --radius-md: ${dm.radius[1]}px;\n  --radius-lg: ${dm.radius[2]}px;\n  --shadow-raised: ${dp.raised};\n  --shadow-overlay: ${dp.overlay};\n  --shadow-button: ${dp.button};\n}\n`; } },
   json: { label: "JSON tokens", file: "tokens.json", help: "Plain design tokens for any tool or build script.",
     make: () => { const dm = current.dm, m = MOTION[dm.motion], dp = DEPTH[dm.depth]; const pick = (t) => Object.fromEntries(hexKeys(t).map((k) => [k, t[k]]));
-      return JSON.stringify({ name: title(), direction: state.dir, source: shareUrl(), color: { light: pick(current.gen.light), dark: pick(current.gen.dark) }, font: { display: dm.fonts.display, sans: dm.fonts.sans, mono: dm.fonts.mono, displayWeight: dm.weight, displayTracking: dm.tracking, googleFonts: current.fonts }, radius: { sm: dm.radius[0], md: dm.radius[1], lg: dm.radius[2] }, borderWidth: dm.borderW, shadow: { style: dm.depth, raised: dp.raised, overlay: dp.overlay, button: dp.button }, density: dm.density, motion: { style: dm.motion, fastMs: m.fast, baseMs: m.base, slowMs: m.slow, easeOut: m.ease, pressScale: m.press } }, null, 2) + "\n"; } },
+      return JSON.stringify({ name: title(), direction: state.dir, source: shareUrl(), color: { light: pick(current.gen.light), dark: pick(current.gen.dark) }, font: { display: dm.fonts.display, sans: dm.fonts.sans, mono: dm.fonts.mono, displayWeight: dm.weight, displayTracking: dm.tracking, googleFonts: current.fonts }, radius: { sm: dm.radius[0], md: dm.radius[1], lg: dm.radius[2] }, borderWidth: dm.borderW, shadow: { style: dm.depth, raised: dp.raised, overlay: dp.overlay, button: dp.button }, density: dm.density, motion: { style: dm.motion, fastMs: m.fast, baseMs: m.base, slowMs: m.slow, easeOut: m.ease, pressScale: m.press }, immersive: { level: dm.immersive, name: IMMERSIVE[dm.immersive].name, rule: IMMERSIVE[dm.immersive].rule, scene: current.d.scene } }, null, 2) + "\n"; } },
   swift: { label: "SwiftUI", file: "Theme.swift", help: "Colours that switch between light and dark automatically. Keep system text styles for body text so Dynamic Type works; use the display font for headings only.",
     make: () => { const L = current.gen.light, D = current.gen.dark, dm = current.dm; const n = (h) => "0x" + h.slice(1);
       return `// ui-craft theme: ${title()}\n// ${shareUrl()}\nimport SwiftUI\n\nextension Color {\n    init(light: UInt32, dark: UInt32) {\n        self.init(UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: dark) : UIColor(hex: light) })\n    }\n\n${hexKeys(L).map((k) => `    static let ${camel(k).replace(/^text$/, "textPrimary")} = Color(light: ${n(L[k])}, dark: ${n(D[k])})`).join("\n")}\n}\n\nprivate extension UIColor {\n    convenience init(hex: UInt32) {\n        self.init(red: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255, blue: CGFloat(hex & 0xFF) / 255, alpha: 1)\n    }\n}\n\nenum Radius {\n    static let sm: CGFloat = ${dm.radius[0]}\n    static let md: CGFloat = ${dm.radius[1]}\n    static let lg: CGFloat = ${dm.radius[2]}\n}\n\nenum Brand {\n    static let displayFont = "${dm.fonts.display}"   // add the font files to the app; use for headings only\n    static let minTarget: CGFloat = 44\n}\n`; } },
@@ -675,7 +766,7 @@ const FORMATS = {
       const dm = current.dm; return `// ui-craft theme: ${title()}\n// ${shareUrl()}\nimport 'package:flutter/material.dart';\n\n${scheme("lightScheme", current.gen.light, "#FFFFFF")}\n\n${scheme("darkScheme", current.gen.dark, current.gen.dark.bg)}\n\nconst pageBackgroundLight = ${c(current.gen.light.bg)};\nconst pageBackgroundDark = ${c(current.gen.dark.bg)};\nconst radiusSm = ${dm.radius[0]}.0, radiusMd = ${dm.radius[1]}.0, radiusLg = ${dm.radius[2]}.0;\n// Heading font: ${dm.fonts.display} (google_fonts package). Minimum touch target: 48.\n`; } },
   brief: { label: "Design brief for AI", file: "DESIGN.md", help: "Save this as DESIGN.md in your project, or paste it into your AI coding tool. It tells the AI exactly which look to build.",
     make: () => { const d = current.d, dm = current.dm, L = current.gen.light, m = MOTION[dm.motion];
-      return `# Design brief: ${title()}\n\nUse the ui-craft skill and follow this brief for every screen. Live preview: ${shareUrl()}\n\n- **Direction:** ${d.name}. ${d.feeling}\n- **Made for:** ${d.for}\n- **Signature to build:** ${d.signature}\n- **Colour:** brand ${L.accent} on ${state.neutral === "pure" ? "pure grey" : state.neutral + "-tinted"} neutrals${state.secondary ? `, second colour ${hex(state.secondary).toUpperCase()}` : ""}. Default theme: ${state.theme}; ship both.\n- **Type:** headings in ${dm.fonts.display} (weight ${dm.weight}, letter-spacing ${dm.tracking}), text in ${dm.fonts.sans}, code and IDs in ${dm.fonts.mono}. Body ${dm.density.body}px.\n- **Shape and depth:** radius ${dm.radius.join("/")}px, ${dm.depth} depth, ${dm.borderW}px borders.\n- **Density:** controls ${dm.density.control}px, rows ${dm.density.row}px, sections ${dm.density.section}px apart. Controls grow to 44px on touch screens.\n- **Motion:** ${dm.motion} (${m.fast}/${m.base}/${m.slow}ms, press scale ${m.press}).\n- **Imagery:** ${d.imagery}\n- **Voice:** ${d.voice}\n- **Watch out:** ${d.watch}\n\n## Rules\n\n1. Use only the tokens in theme.css (\`var(--surface)\`, \`var(--accent)\`, \`var(--radius)\`, \`var(--shadow-raised)\`…). Never hard-code a colour, radius or shadow.\n2. One primary action per screen. Show the screen in use, with real content.\n3. Check every screen at 390px and 1440px, in light and dark.\n\n## Fonts\n\n\`\`\`html\n${fontLink()}\n\`\`\`\n\n## Tokens\n\nExport **CSS** from the Studio link above and save it as theme.css.\n`; } },
+      return `# Design brief: ${title()}\n\nUse the ui-craft skill and follow this brief for every screen. Live preview: ${shareUrl()}\n\n- **Direction:** ${d.name}. ${d.feeling}\n- **Made for:** ${d.for}\n- **Signature to build:** ${d.signature}\n- **Colour:** brand ${L.accent} on ${state.neutral === "pure" ? "pure grey" : state.neutral + "-tinted"} neutrals${state.secondary ? `, second colour ${hex(state.secondary).toUpperCase()}` : ""}. Default theme: ${state.theme}; ship both.\n- **Type:** headings in ${dm.fonts.display} (weight ${dm.weight}, letter-spacing ${dm.tracking}), text in ${dm.fonts.sans}, code and IDs in ${dm.fonts.mono}. Body ${dm.density.body}px.\n- **Shape and depth:** radius ${dm.radius.join("/")}px, ${dm.depth} depth, ${dm.borderW}px borders.\n- **Density:** controls ${dm.density.control}px, rows ${dm.density.row}px, sections ${dm.density.section}px apart. Controls grow to 44px on touch screens.\n- **Motion:** ${dm.motion} (${m.fast}/${m.base}/${m.slow}ms, press scale ${m.press}).\n- **Imagery:** ${d.imagery}\n- **Voice:** ${d.voice}\n- **Watch out:** ${d.watch}\n\n## Immersive and motion\n\n- **Intensity:** level ${dm.immersive} of 3, ${IMMERSIVE[dm.immersive].name}. ${IMMERSIVE[dm.immersive].rule}\n- **The direction's advice for 3D and scroll:** ${d.scene}\n- **Tempo:** ${dm.motion}. Interface motion ${m.fast}/${m.base}/${m.slow}ms. Scene, camera and scroll moves settle in about ${Math.round(m.slow * 2.2 / 50) * 50}ms with the same character (${m.ease}). ${dm.motion === "bouncy" ? "One overshoot is allowed on reward moments." : "No bounce."}\n- **Always:** the page reads and works with every effect switched off. Each effect has a reduced-motion version and a no-WebGL fallback. Text stays real HTML. The 3D engine loads after the first paint.\n- **How:** for any 3D, shader or scroll-driven work use the immersive-web skill (same plugin as ui-craft). It reads these tokens (\`--accent\`, \`--bg\`, \`--surface\`, \`--font-display\`, \`--dur-*\`, \`--ease-out\`, \`--immersive\`), so the scene follows this theme.\n\n## Rules\n\n1. Use only the tokens in theme.css (\`var(--surface)\`, \`var(--accent)\`, \`var(--radius)\`, \`var(--shadow-raised)\`…). Never hard-code a colour, radius or shadow.\n2. One primary action per screen. Show the screen in use, with real content.\n3. Check every screen at 390px and 1440px, in light and dark.\n\n## Fonts\n\n\`\`\`html\n${fontLink()}\n\`\`\`\n\n## Tokens\n\nExport **CSS** from the Studio link above and save it as theme.css.\n`; } },
 };
 let fmt = "css";
 const dlg = $("#export");

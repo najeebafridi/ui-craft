@@ -7,6 +7,7 @@
    Imagery:    Code, terminal output, diagrams that draw themselves, real metrics.
    Voice:      Exact. No marketing adjectives. Numbers with units.
    Watch out:  Mono type is for data and labels, not paragraphs. Dark text on the bright accent. The grid stays under 6% contrast.
+   Immersive:  level 2 of 3 (signature: one hero moment). Wireframes, grids and isometric diagrams: points and lines, not surfaces. The system's data flow is the scene.
    Default:    dark theme (set <html data-theme="dark">; the light theme below also works)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -65,6 +66,7 @@
   /* density and motion (instant) */
   --control-h: 32px;  --row-h: 36px;  --space-section: 40px;
   --dur-fast: 90ms;  --dur-base: 140ms;  --dur-slow: 200ms;  --ease-out: cubic-bezier(0.2, 0, 0, 1);  --press-scale: 0.98;
+  --immersive: 2;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

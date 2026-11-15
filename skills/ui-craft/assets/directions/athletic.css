@@ -7,6 +7,7 @@
    Imagery:    Full-bleed action photography; tight crops; high contrast.
    Voice:      Imperative. Two to four words.
    Watch out:  Uppercase display only for short lines (under 5 words). Body text stays sentence case and readable.
+   Immersive:  level 3 of 3 (story: a scroll-driven sequence). A monumental product on a plinth under hard directional light. Fast cuts, big type that moves with the scroll, strong pauses.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -64,6 +65,7 @@
   /* density and motion (crisp) */
   --control-h: 52px;  --row-h: 56px;  --space-section: 96px;
   --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+  --immersive: 3;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {

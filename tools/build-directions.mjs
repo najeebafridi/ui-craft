@@ -10,7 +10,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "skills/ui-craft/assets");
 mkdirSync(join(OUT, "directions"), { recursive: true });
 
-import { SYS, MONO, DEPTH, DIRECTIONS, fontsUrl, nonColour } from "./directions-data.mjs";
+import { SYS, MONO, DEPTH, DIRECTIONS, IMMERSIVE, fontsUrl, nonColour } from "./directions-data.mjs";
 
 const index = [];
 for (const d of DIRECTIONS) {
@@ -28,6 +28,7 @@ for (const d of DIRECTIONS) {
    Imagery:    ${d.imagery}
    Voice:      ${d.voice}
    Watch out:  ${d.watch}
+   Immersive:  level ${d.immersive} of 3 (${IMMERSIVE[d.immersive].name.toLowerCase()}: ${IMMERSIVE[d.immersive].short}). ${d.scene}
    Default:    ${d.theme} theme${d.theme === "dark" ? ' (set <html data-theme="dark">; the light theme below also works)' : " (a dark theme is included)"}
    Fonts:      <link rel="stylesheet" href="${fontsUrl(d.gf)}">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -75,6 +76,7 @@ const baseExtra = `
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* moving on screen */
   --ease-spring: linear(0, 0.074, 0.234, 0.415, 0.584, 0.723, 0.83, 0.906, 0.956, 0.988, 1.005, 1.013, 1.015, 1.014, 1.012, 1.009, 1.007, 1.004, 1); /* slight overshoot; use with 550ms on transform only */
   --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --press-scale: 0.97;
+  --immersive: 1;         /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 
   /* ---- Sizes ---- */
   --control-h: 40px;       /* buttons, inputs (32-36 compact, 44+ touch) */

@@ -7,6 +7,7 @@
    Imagery:    Product screens and simple honest charts. No stock handshakes.
    Voice:      Plain, exact, transparent about fees and dates.
    Watch out:  Blue is expected here but owned by everyone. Differentiate with a distinctive deep hue (teal, forest, plum) at the same seriousness, not with brightness.
+   Immersive:  level 0 of 3 (still: no 3D or scroll effects). No decorative 3D. At most a precise chart that draws itself once. Trust comes from stillness and exact numbers.
    Default:    light theme (a dark theme is included)
    Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">   (all SIL Open Font License)
    Own brand colour? Keep this direction and swap the colour:
@@ -65,6 +66,7 @@
   /* density and motion (crisp) */
   --control-h: 36px;  --row-h: 40px;  --space-section: 40px;
   --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+  --immersive: 0;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
