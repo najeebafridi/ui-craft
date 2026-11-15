@@ -8,3 +8,4 @@ evals/.audit-test/
 evals/*/blind/
 evals/*/*/*/screens/
 evals/*/*/*/audit/
+evals/review-test/*.png

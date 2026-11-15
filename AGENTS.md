@@ -31,6 +31,8 @@ Works for any stack. Numbers are in CSS px; for native apps read px as pt (iOS) 
 
 When asked for **quick mockups for a client**, follow `.agents/skills/ui-craft/references/mockups.md` (one HTML file per screen, no build step, options side by side).
 
+When asked to **review, score or improve an existing product or screen**, follow `.agents/skills/ui-craft/references/review-mode.md`: measure with the audit script, score the design with a 10-area rubric, then give an overall score out of 100 and the top fixes, biggest win first.
+
 ## 2. Pick the product profile
 
 | Profile | Body text | Density | Radius | Navigation | Feel |
@@ -206,5 +208,6 @@ These patterns make a screen look generic and cheap. Do not use them unless the 
 | `.agents/skills/ui-craft/references/mobile-touch.md` | phone/tablet screens, native apps, gestures |
 | `.agents/skills/ui-craft/references/review-checklist.md` | before you say a screen is done |
 | `.agents/skills/ui-craft/references/mockups.md` | fast clickable HTML mockups for client approval |
+| `.agents/skills/ui-craft/references/review-mode.md` | review, score and improve an existing product or screen |
 
 Assets: `.agents/skills/ui-craft/assets/tokens.css` (starter design tokens, light + dark), `.agents/skills/ui-craft/assets/mockup-template.html` (one-file screen mockup), `.agents/skills/ui-craft/assets/options-board.html` (show 2–3 options side by side).

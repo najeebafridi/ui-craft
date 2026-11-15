@@ -1,6 +1,6 @@
 ---
 name: ui-craft
-description: Practical UI/UX design rules for building screens that look professional, modern and easy to use — web apps, dashboards, admin tools, desktop apps, mobile apps and marketing sites. Use whenever you design, build, restyle or review any user interface, page, component, form, table, chart, dashboard or screen mockup, or when the user asks for a UI to "look better", "look professional", "look modern", or wants quick clickable HTML mockups for a client to approve.
+description: Practical UI/UX design rules for building screens that look professional, modern and easy to use — web apps, dashboards, admin tools, desktop apps, mobile apps and marketing sites. Use whenever you design, build, restyle or review any user interface, page, component, form, table, chart, dashboard or screen mockup, or when the user asks for a UI to "look better", "look professional", "look modern", wants quick clickable HTML mockups for a client to approve, or wants an existing product, website or screen reviewed, audited, scored or improved.
 ---
 
 # ui-craft
@@ -27,6 +27,8 @@ Works for any stack. Numbers are in CSS px; for native apps read px as pt (iOS) 
 5. **Review before you say "done".** Run `references/review-checklist.md`. Then **look at the result**: if Node and Chrome are available, run `node <skill-dir>/scripts/ui-audit.mjs page.html` — it measures contrast, text sizes, tap targets and sideways scroll at 1440px and 390px and saves screenshots you can open. Otherwise use any browser or screenshot tool you have. Fix what you find, then remove anything that does not help the primary task.
 
 When asked for **quick mockups for a client**, follow `references/mockups.md` (one HTML file per screen, no build step, options side by side).
+
+When asked to **review, score or improve an existing product or screen**, follow `references/review-mode.md`: measure with the audit script, score the design with a 10-area rubric, then give an overall score out of 100 and the top fixes, biggest win first.
 
 ## 2. Pick the product profile
 
@@ -203,5 +205,6 @@ These patterns make a screen look generic and cheap. Do not use them unless the 
 | `references/mobile-touch.md` | phone/tablet screens, native apps, gestures |
 | `references/review-checklist.md` | before you say a screen is done |
 | `references/mockups.md` | fast clickable HTML mockups for client approval |
+| `references/review-mode.md` | review, score and improve an existing product or screen |
 
 Assets: `assets/tokens.css` (starter design tokens, light + dark), `assets/mockup-template.html` (one-file screen mockup), `assets/options-board.html` (show 2–3 options side by side).

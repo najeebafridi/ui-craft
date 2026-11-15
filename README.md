@@ -13,6 +13,7 @@ When your AI builds a screen, ui-craft makes it:
 3. **Follow clear rules with real numbers**: a spacing scale, a type scale, contrast that passes WCAG, 44px tap targets on phones, and loading, empty and error states.
 4. **Avoid the "AI-generated look"**: no purple gradients, no cards inside cards, no KPI numbers without context, no emoji icons.
 5. **Check the result**: a checklist plus an optional script that measures contrast, text sizes, tap targets and sideways scrolling, and takes screenshots.
+6. **Score your existing product**: point it at your live site or app and get a score out of 100, plus a ranked list of fixes.
 
 It also helps you **win client approval fast**: one clickable HTML file per screen, two or three design options side by side, and a built-in "click to comment" feedback tool. No build step needed.
 
@@ -72,17 +73,18 @@ skills/ui-craft/
     tables-lists.md     dashboards-charts.md navigation.md     feedback-states.md
     accessibility.md    motion.md            mobile-touch.md   review-checklist.md
     mockups.md          (fast client mockups: which screens first, options, feedback)
+    review-mode.md      (score an existing product and rank fixes)
   assets/
     tokens.css              starter colours, spacing, type (light + dark, contrast-checked)
     mockup-template.html    one-file screen mockup with a feedback tool
     options-board.html      show 2–3 design options side by side
   scripts/
-    ui-audit.mjs            measure a finished page (needs Node 22+ and Chrome)
+    ui-audit.mjs            measure and score a page or live URL (needs Node 22+ and Chrome)
   evals/                    test cases used to check the skill
 AGENTS.md                   the same rules for Codex, Cursor, Gemini, Copilot…
 ```
 
-### The audit script
+### The audit script (also used by review mode)
 
 ```bash
 node .agents/skills/ui-craft/scripts/ui-audit.mjs page.html
@@ -96,6 +98,38 @@ It opens the page in headless Chrome at desktop (1440px) and phone (390px) width
 ```
 
 It also saves screenshots. It needs no npm packages. It cannot judge taste, so still look at the screenshots.
+
+## Score your existing product
+
+Ask your AI something like:
+
+> "Review our app at https://app.example.com: score it and tell me what to fix first."
+
+It will:
+
+1. **Measure** each page automatically: contrast, tap targets, phone layout, focus, text sizes, labels and more. This gives a **measured score** out of 100.
+2. **Look** at desktop and phone screenshots and score 10 design areas: first impression, hierarchy, layout, type, colour, components, copy, feedback states, mobile, and the "AI look". This gives a **design score** out of 100.
+3. **Report** an overall score with a grade, plus the top fixes, biggest win first. Each fix comes with the exact change. Example: *"Overall 71/100 (C). Fix 1: three solid buttons compete on /invoices. Keep 'New invoice' solid, make 'Export' an outline button."*
+4. **Fix and re-score** if you ask, so you see the progress (for example 71 → 86).
+
+Just the measured part, from a terminal:
+
+```bash
+node .agents/skills/ui-craft/scripts/ui-audit.mjs https://your-site.com https://your-site.com/pricing --json scores.json
+```
+
+```
+https://your-site.com
+  Measured score: 68/100 (C)
+  Fixes, biggest gain first:
+   1. [+10 pts] Keyboard focus: No visible focus style
+   2. [+8 pts] Text contrast: 4 text elements below WCAG AA, e.g. "30 days" 4.44:1
+   ...
+```
+
+It checks the light theme by default; add `--dark` to check dark mode. See a real example report: [evals/review-test/ui-review.md](evals/review-test/ui-review.md).
+
+It works on live websites, `localhost` and HTML files. For pages behind a login, use a demo or staging URL you can open without signing in, or give the AI screenshots.
 
 ## Fast mockups for clients
 
