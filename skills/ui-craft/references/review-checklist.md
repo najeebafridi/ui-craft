@@ -1,6 +1,12 @@
 # Review checklist
 
 Load this before you say a screen is done. Answer each line yes or no. Fix every "no" or drop the item on purpose.
+## Fit
+- [ ] The brief names the user, their state of mind and the feeling; the screen matches it.
+- [ ] One visual direction is followed throughout: colour, type, shape, depth, imagery and voice.
+- [ ] There is one signature detail, built with care, and nothing competes with it.
+- [ ] Platform conventions are respected (navigation, back, system font and controls on native).
+
 ## Purpose & hierarchy
 - [ ] The one primary task of this screen is clear within 3 seconds.
 - [ ] There is exactly one solid primary button per screen or section.
@@ -33,6 +39,18 @@ Load this before you say a screen is done. Answer each line yes or no. Fix every
 - [ ] Inputs have visible labels above, helper text, and clear error styling.
 - [ ] Icons come from one set, one stroke width; no emoji as icons.
 - [ ] Destructive actions are red, named, and confirmed or undoable.
+
+## Craft
+- [ ] One light source; shadows are layered and tinted; cards use a 1px ring; one depth technique only.
+- [ ] One radius family; nested corners are concentric.
+- [ ] Large headings are tracked tighter; headings are balanced; numbers are tabular.
+- [ ] Buttons respond to press within 100ms; hover, focus and pressed states look intended.
+- [ ] Neutrals are tinted; no pure black or white on large areas; accent only on high-value spots.
+
+## Trust
+- [ ] Full price, what happens next and how to undo or cancel are clear before commitment.
+- [ ] No dark patterns: no fake urgency, pre-ticked extras, hidden costs or shaming copy.
+- [ ] Confirmations are specific (what, who, when, how much).
 
 ## Content & copy
 - [ ] Real, believable content; no lorem ipsum, "John Doe", or placeholder image services.

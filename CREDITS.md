@@ -42,4 +42,16 @@ These were read for understanding only. Facts like "44pt minimum target" are not
 - Stephen Few, [Perceptual Edge](https://www.perceptualedge.com/)
 - [web.dev](https://web.dev/) (Google)
 
+## Version 2 sources (premium craft, colour, psychology, platforms)
+
+Ideas only; no text copied. Short CSS values such as shadow layers or easing curves are facts, not prose.
+
+- **Craft:** Rauno Freiberg (Invisible Details of Interaction Design; Web Interface Guidelines), Emil Kowalski (animation articles), Jakub Krehel (Details that make interfaces feel better), Josh W. Comeau (shadows, gradients), Tobias Ahlin (layered shadows), Anthony Hobday (safe visual rules), Erik Kennedy (Learn UI Design), the Linear redesign post, Stripe's accessible colour systems post, Vercel Geist, Benji Taylor (Family Values).
+- **Colour:** Björn Ottosson (Oklab; conversion maths, public domain / MIT), Evil Martians (OKLCH in CSS), MDN, Tailwind CSS, Radix Colors (MIT), Material 3, Adobe Leonardo, Okabe and Ito (colour universal design), Nielsen Norman Group (dark mode); research by Valdez & Mehrabian (1994), Labrecque & Milne (2012), Jonauskaite et al. (2020), Palmer & Schloss (2010), Elliot & Maier (2012), Bottomley & Doyle (2006).
+- **Psychology:** Don Norman (emotional design), Aarron Walter, Noriaki Kano, Lindgaard et al. (2006), Tuch et al. (2012), B.J. Fogg and the Stanford Web Credibility Project, Nielsen Norman Group, Kahneman, Johnson & Goldstein (2003), Kivetz et al. (2006), Nunes & Drèze (2006), Buell & Norton (2011), Norton et al. (2012), David Maister, Amber Case (calm technology), Harry Brignull (deceptive.design), the US FTC dark patterns report (2022), EU Digital Services Act Art. 25.
+- **Platforms:** Apple Human Interface Guidelines, Material Design 3, Android Developers, Microsoft Learn (Windows app design), GNOME HIG, Electron and Flutter docs.
+- **Type and motion:** Matthew Butterick (Practical Typography), Rasmus Andersson (Inter), Utopia, web.dev, Motion docs.
+- **Fonts named in the directions** are all under the SIL Open Font License: Inter, Geist, Geist Mono, JetBrains Mono, IBM Plex, Newsreader, Cormorant Garamond, Hanken Grotesk, Libre Caslon Text, Nunito, Nunito Sans, Baloo 2, Space Grotesk, Manrope, Public Sans, Figtree, Barlow Condensed, Outfit, Anton, Bricolage Grotesque, DM Sans. The skill links to them on Google Fonts; it does not bundle font files.
+- **Other AI design skills checked for approach:** Anthropic frontend-design (Apache-2.0), Impeccable by Paul Bakaus (Apache-2.0), Taste Skill by Leonxlnx (MIT), ui-ux-pro-max (MIT).
+
 Full notes on each source, with licences and where they were checked: [research/sources.md](research/sources.md).

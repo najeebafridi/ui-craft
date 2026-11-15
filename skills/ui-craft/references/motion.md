@@ -9,6 +9,8 @@ Load this when you add transitions, animations, loading effects or micro-interac
 - Never `transition: all`. List the properties.
 - Everyday UI never goes over 400ms. Most should be 100–300ms.
 - Motion must be interruptible. If the user clicks again mid-animation, it reverses or jumps; it never blocks input.
+- **The more often something happens, the less it moves.** Menus, tabs, command palettes and keyboard-triggered actions get little or no animation. Rare moments (first run, a success) may get more.
+- Durations, easing and press depth come from the tokens (`--dur-fast`, `--dur-base`, `--dur-slow`, `--ease-out`, `--press-scale`), so a direction can change the product's motion character in one place: instant for tools, gentle for care, slow for luxury page transitions, bouncy for play.
 
 ## 2. Durations
 
@@ -37,7 +39,9 @@ Load this when you add transitions, animations, loading effects or micro-interac
 ```
 
 - **Entering: ease-out. Leaving: ease-in. Moving or resizing: ease-in-out.** Never `linear` for movement (only for spinners and progress).
-- Do not use springs or bounce overshoot in business UI. A small overshoot is allowed only in playful consumer apps.
+- **Springs for things that move; fades for things that change.** Position, size and dragged elements may use a spring (it keeps the gesture's speed and can be interrupted). Opacity and colour never overshoot.
+- In business UI use springs with no bounce. A visible overshoot is for playful consumer apps and reward moments only. `--ease-spring` (a slight overshoot, use with about 550ms on `transform`) is in `tokens.css`.
+- Native equivalents: SwiftUI `.smooth` (no bounce), `.snappy` (slight), `.bouncy` (playful); Material's spatial springs for movement and effects springs for fades.
 - Pick from these three. Do not invent a new curve per component.
 
 ## 4. What to animate
@@ -70,7 +74,11 @@ Set `transform-origin` where the thing comes from (a popover grows from its trig
 
 ## 6. Micro-interactions
 
-- **Button press:** on `:active`, `transform: scale(.98)` over 80–120ms, and a darker fill. Release returns in 150ms.
+- **Button press:** on `:active`, `transform: scale(var(--press-scale))` (about 0.97; never below 0.9) over 80–120ms, and a darker fill. Release returns in 150ms.
+- **Popovers, menus and tooltips grow from their trigger:** set `transform-origin` to the anchor side. Start from scale 0.96–0.98 with a fade; never from 0.
+- **Tooltips:** a short delay before the first one, about 125ms to fade in; while one is open, moving to a neighbour shows the next instantly.
+- **Hover styles** go inside `@media (hover: hover)` so touch screens do not get stuck hover states.
+- **Numbers that change** cross-fade or tick over 300–500ms with tabular figures.
 - **Toggle / switch:** the knob slides 150–200ms (ease-in-out) and the track colour changes together. Keep the label still.
 - **Checkbox:** tick draws in 150ms. No bounce.
 - **Hover on rows and cards:** change background tint. Do not lift every card; use hover lift only for clickable cards, and at most 2px.
@@ -103,6 +111,19 @@ A static grey skeleton is enough. If you add shimmer, make it slow and calm, and
 ```
 
 When to show a skeleton at all is in `feedback-states.md`.
+
+## Haptics (native apps)
+
+A haptic confirms a meaningful change. It always comes with a visual cue and never fires on every tap.
+
+| Event | iOS | Android |
+|---|---|---|
+| Picker tick, toggle, stepper | selection | tick |
+| Something snaps or lands (sheet settles, drag drops) | light or medium impact | click |
+| Success after waiting | success notification | confirm |
+| Error | error notification | reject |
+| Long press recognised | medium impact | long press |
+| Scrolling, typing, hovering | none | none |
 
 ## 9. Reduced motion
 

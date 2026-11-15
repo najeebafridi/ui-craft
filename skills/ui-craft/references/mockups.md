@@ -7,7 +7,7 @@ The goal: the client approves the look in a day, not a month. Mockups are throwa
 ## The rules
 
 1. **One HTML file per screen.** No build step, no framework, no npm. Plain HTML + CSS in a `<style>` tag + a few lines of JS if needed. It opens with a double-click.
-2. **Start from `assets/mockup-template.html`.** It has tokens, an app shell, a light/dark toggle and a feedback tool. Copy it for each screen.
+2. **Start from `assets/mockup-template.html`.** It has tokens, an app shell, a light/dark toggle and a feedback tool. Copy it for each screen. Swap its token block for the chosen direction (`directions.md`): paste the direction's CSS after the tokens and add its fonts link.
 3. **Same tokens in every file.** Copy the `:root` block unchanged into every screen so they match. If you change a colour, change it in all files.
 4. **Real content.** Real-sounding names, numbers, dates and text from the client's world. Never lorem ipsum. Clients cannot judge a layout full of fake Latin.
 5. **Clickable where it matters.** Link screens with plain `<a href="02-list.html">`. Make the main path work: list → detail → edit → back. Other links can be `href="#"`.
@@ -53,6 +53,7 @@ Three to five screens is usually enough for approval. Don't mock every screen; t
 When the direction is not decided, make **2–3 options of the same screen** (normally screen 1):
 
 - **Same content and data in every option.** Only the design changes, so the client compares looks, not data.
+- **Use different directions.** Pick two or three from `directions.md` that all suit the audience but differ on a real axis (for a finance tool: Trusted ledger, Calm productivity, Quiet instrument). Each option then differs in colour, type, shape and density together, the way real brands differ.
 - **Make them clearly different**, not three shades of the same idea. Vary one or two big things:
   - density (calm and spacious vs compact and data-rich)
   - colour mood (neutral + one accent vs warmer brand colour vs dark theme)

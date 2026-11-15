@@ -19,7 +19,7 @@ If Node 22+ and Chrome are available, run:
 node <skill-dir>/scripts/ui-audit.mjs https://app.example.com/dashboard https://app.example.com/settings --out ui-review --json ui-review/measured.json
 ```
 
-This gives each page a **measured score** out of 100 over 11 areas: contrast, tap targets, responsive layout, keyboard focus, text size, type consistency, form labels, spacing system, page structure, motion and content. Each problem comes with a ready fix, ordered by points gained. It also saves desktop and phone screenshots. It checks the light theme by default; if the product has a dark mode, run it again with `--dark` and review both.
+This gives each page a **measured score** out of 100 over 11 areas: contrast, tap targets, responsive layout, keyboard focus, text size, type consistency, form labels, spacing system, page structure, motion and content. Each problem comes with a ready fix, ordered by points gained. It also lists unscored **craft notes** (too many radii or shadows, heavy single shadows, loose large headings, pure black text, too many hues or fonts); use them as evidence for design areas 3, 4, 5 and 10. It also saves desktop and phone screenshots. It checks the light theme by default; if the product has a dark mode, run it again with `--dark` and review both.
 
 With only screenshots (no running page), skip this step and say so in the report. The overall score then uses the design score alone.
 
@@ -34,7 +34,7 @@ Open every screenshot, desktop and phone. Score each of the 10 areas below from 
 
 | # | Area | What a 9–10 looks like | What pulls the score down |
 |---|---|---|---|
-| 1 | First impression & trust | Looks deliberate and current; one consistent style | Dated look, mixed styles, default framework look, broken images |
+| 1 | First impression & trust | Looks deliberate and current; one consistent direction that fits the audience and their state of mind | Dated look, mixed styles, default framework look, a tone that does not fit the user (playful for anxious tasks, cold for care) |
 | 2 | Hierarchy & focus | The main task and one primary button are obvious within 3 seconds | Everything the same weight; several solid buttons fighting; no clear title |
 | 3 | Layout & spacing | Shared edges, steady rhythm, generous but not empty space | Ragged alignment, cramped padding, random gaps, cards inside cards |
 | 4 | Typography | Few sizes, clear scale, comfortable line length | Many sizes, tiny grey text, long lines, ALL CAPS everywhere |
@@ -43,7 +43,7 @@ Open every screenshot, desktop and phone. Score each of the 10 areas below from 
 | 7 | Content & copy | Plain specific labels, real data formats, same name for the same thing | "Submit", jargon, lorem ipsum, mixed names, unformatted numbers |
 | 8 | Feedback states | Loading, empty, error and success all designed and helpful | Blank panels, "Error 500", spinners everywhere, no empty state |
 | 9 | Responsive & touch | Phone layout rethought; 44px targets; primary action reachable | Desktop squeezed onto a phone, tiny targets, sideways scroll, missing navigation |
-| 10 | Distinct, not generic | Has one memorable element; no AI-template look | Purple gradients, identical card grids, KPI tiles without context, emoji icons |
+| 10 | Distinct and crafted | One signature a user could name; finished details (layered depth, tuned type, press feedback) | Default font, colour and shadows; identical card grids; KPI tiles without context; emoji icons; effects instead of content |
 
 **Design score** = the sum of the 10 areas (out of 100).
 
@@ -59,7 +59,7 @@ Always show all three numbers (measured, design, overall), so the user sees why 
 
 ## 5. Choose the fixes
 
-Collect problems from both parts. For each one, note:
+Collect problems from both parts. When the product looks generic, the first fix is often a direction, not a detail: name the direction from `directions.md` that fits the audience and list the three changes that move the product toward it (type, colour, depth). For each problem, note:
 
 - **Impact:** High (blocks or confuses users, fails accessibility, looks broken), Medium (looks unprofessional, slows people down) or Low (polish).
 - **Effort:** S (under 30 minutes, CSS or copy only), M (a few hours, one component), L (a redesign of a screen or flow).

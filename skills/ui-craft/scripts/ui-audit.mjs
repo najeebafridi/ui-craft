@@ -5,7 +5,7 @@
 //        [--dark]           check the dark theme (default: light; run both if the product has dark mode)
 // Needs Node 22+ and Google Chrome (or Chromium / Edge). No npm packages.
 // Checks desktop (1440px) and phone (390px), gives a 0-100 score per page, lists fixes ranked by points,
-// and saves screenshots. The score covers MEASURABLE things only; see references/review-mode.md for the full review.
+// adds unscored craft notes (radii, shadows, tracking, hues...), and saves screenshots. The score covers MEASURABLE things only; see references/review-mode.md for the full review.
 import { spawn } from "node:child_process";
 import { writeFileSync, mkdirSync, existsSync, mkdtempSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -70,6 +70,48 @@ const METRICS = String.raw`(() => {
   const unlabelled = controls.filter((e) => e.getAttribute("aria-hidden") !== "true" && !(e.getBoundingClientRect().width <= 2 && e.getBoundingClientRect().height <= 2) && !(e.labels?.length || e.getAttribute("aria-label") || e.getAttribute("aria-labelledby") || e.title)).map((e) => e.name || e.id || e.type);
   const spacing = []; for (const e of all) { const cs = getComputedStyle(e); for (const p of ["paddingTop","paddingRight","paddingBottom","paddingLeft","marginTop","marginBottom","rowGap","columnGap"]) { const v = parseFloat(cs[p]); if (v > 0) spacing.push(v); } }
   const on4 = spacing.filter((v) => Math.abs(v / 4 - Math.round(v / 4)) < 0.01).length;
+  // ---- craft signals (advisory, not scored) ----
+  const craft = [];
+  const px = (v) => parseFloat(v) || 0;
+  const radii = new Set(), shadows = new Set(), families = new Set(), hues = new Set();
+  let heavyShadow = 0, pureBlack = 0, looseBig = 0, longLines = 0, defaultLink = 0;
+  const hueOf = (c) => { const [r, g, b] = rgba(c); const mx = Math.max(r, g, b), mn = Math.min(r, g, b); if (mx - mn < 40) return null; let h = mx === r ? ((g - b) / (mx - mn)) % 6 : mx === g ? (b - r) / (mx - mn) + 2 : (r - g) / (mx - mn) + 4; return Math.round(((h * 60 + 360) % 360) / 30) % 12; };
+  for (const e of all) {
+    const cs = getComputedStyle(e), r = e.getBoundingClientRect();
+    const rad = px(cs.borderTopLeftRadius);
+    if (rad > 0 && rad < Math.min(r.width, r.height) / 2 - 1 && rad < 100) radii.add(Math.round(rad));
+    if (cs.boxShadow && cs.boxShadow !== "none") {
+      shadows.add(cs.boxShadow);
+      const layers = cs.boxShadow.split(/,(?![^(]*\))/).filter((l) => !/inset/.test(l));
+      const nums = (layers[0] || "").replace(/rgba?\([^)]*\)|oklch\([^)]*\)|color\([^)]*\)/g, "").match(/-?[\d.]+px/g) || [];
+      if (layers.length === 1 && px(nums[2]) >= 10 && alphaOf(cs.boxShadow) >= 0.15) heavyShadow++;
+    }
+    if (alphaOf(cs.backgroundColor) > 0.5 && r.width > 40 && r.height > 20) { const h = hueOf(cs.backgroundColor); if (h !== null) hues.add(h); }
+  }
+  for (const e of textEls) {
+    const cs = getComputedStyle(e), fs = px(cs.fontSize);
+    const fam = cs.fontFamily.split(",")[0].replace(/["']/g, "").trim();
+    if (!/mono|consol|menlo|courier/i.test(fam)) families.add(fam);
+    const c = rgba(cs.color); if (c[0] === 0 && c[1] === 0 && c[2] === 0 && alphaOf(cs.color) === 1) pureBlack++;
+    if (fs >= 32 && !(px(cs.letterSpacing) < 0) && cs.textTransform !== "uppercase" && e.textContent.trim().length > 8) looseBig++;
+    if (e.tagName === "P" && e.textContent.trim().length > 200 && e.getBoundingClientRect().width / (fs * 0.5) > 92) longLines++;
+    if (e.tagName === "A" && /^rgb\(0, 0, 238\)$/.test(cs.color)) defaultLink++;
+    const h = hueOf(cs.color); if (h !== null && fs >= 14) hues.add(h);
+  }
+  const bodyFam = getComputedStyle(document.body).fontFamily.split(",")[0].replace(/["']/g, "").trim();
+  if (radii.size > 4) craft.push((radii.size) + " different corner radii (" + ([...radii].sort((a, b) => a - b).join(", ")) + "px): use one family of 3");
+  if (shadows.size > 5) craft.push((shadows.size) + " different shadows: use three levels (flat, raised, overlay)");
+  if (heavyShadow) craft.push((heavyShadow) + " element(s) with one heavy single-layer shadow: layer 2-4 thin, tinted shadows instead");
+  if (pureBlack > 3) craft.push((pureBlack) + " text elements in pure #000: use a near-black tinted toward the neutral hue");
+  if (looseBig) craft.push((looseBig) + " large heading(s) (32px+) with default letter-spacing: tighten to about -0.02 to -0.04em");
+  if (longLines) craft.push((longLines) + " paragraph(s) wider than ~90 characters: cap reading width at 65-75 characters");
+  if (families.size > 2) craft.push((families.size) + " font families (" + ([...families].slice(0, 4).join(", ")) + "): keep to one, or a display + text pair");
+  if (/^(Times|Times New Roman|serif)$/i.test(bodyFam)) craft.push("Body text uses the browser default serif: choose a font on purpose");
+  if (defaultLink) craft.push((defaultLink) + " link(s) in the browser's default blue: style links with the accent");
+  if (hues.size > 6) craft.push((hues.size) + " different hue families on screen: most of a UI is neutral plus one accent and status colours");
+  if (!/font-variant-numeric:\s*tabular-nums|tnum/.test(rules) && /\d{2,}[.,]\d/.test(document.body.innerText)) craft.push("Numbers are not tabular: add font-variant-numeric: tabular-nums to tables, prices and stats");
+  if (!/text-wrap:\s*(balance|pretty)/.test(rules)) craft.push("No text-wrap: balance on headings (avoids orphaned words)");
+  if (!/:active/.test(rules) && interactive.length > 3) craft.push("No :active (pressed) styles: add press feedback, e.g. transform: scale(0.97)");
   const text = document.body.innerText;
   const heads = [...document.querySelectorAll("h1,h2,h3,h4,h5,h6")].map((h) => +h.tagName[1]);
   let skipped = 0; heads.forEach((h, i) => { if (i && h > heads[i - 1] + 1) skipped++; });
@@ -87,6 +129,7 @@ const METRICS = String.raw`(() => {
     lorem: /lorem ipsum/i.test(text), placeholderImages: [...document.images].filter((i) => /placehold|picsum|placeholder\.com|dummyimage|source\.unsplash/.test(i.src)).length,
     h1Count: heads.filter((h) => h === 1).length, skippedHeadingLevels: skipped,
     cssCustomProperties: (rules.match(/--[\w-]+\s*:/g) || []).length,
+    craft,
   };
 })()`;
 
@@ -173,8 +216,10 @@ function report(target, r) {
     console.log("  Fixes, biggest gain first:");
     s.fixes.forEach((f, i) => console.log(`   ${i + 1}. [+${+(f.max - f.got).toFixed(1)} pts] ${f.area}: ${f.problem}\n      Fix: ${f.fix}  (see ${f.ref})`));
   } else console.log("  No measurable problems found.");
+  const craft = r.desktop.craft || [];
+  if (craft.length) { console.log("  Craft notes (not scored; these make a screen look less finished):"); craft.forEach((c) => console.log("   - " + c)); }
   console.log(`  Font sizes: ${r.desktop.fontSizes.join(", ")}px\n  Screenshots: ${r.desktop.screenshot} , ${r.phone.screenshot}`);
-  return { target, ...s, fontSizes: r.desktop.fontSizes, screenshots: [r.desktop.screenshot, r.phone.screenshot] };
+  return { target, ...s, craft, fontSizes: r.desktop.fontSizes, screenshots: [r.desktop.screenshot, r.phone.screenshot] };
 }
 
 try {

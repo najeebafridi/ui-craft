@@ -1,7 +1,7 @@
 // Build the ui-craft direction library and the default tokens.css.
 // Each direction = colours from scripts/palette.mjs (contrast-solved) + type, shape, depth, density and motion tokens.
 // Run after changing a direction:   node tools/build-directions.mjs
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { generate, toCss, oklch } from "../skills/ui-craft/scripts/palette.mjs";
@@ -509,3 +509,13 @@ ${scoped}
 </body></html>
 `);
 console.log("Built directions/gallery.html");
+
+// ---- keep the mockup template's inline tokens identical to tokens.css ----
+const tplPath = join(OUT, "mockup-template.html");
+const tpl = readFileSync(tplPath, "utf8");
+const startMark = tpl.indexOf("/* tokens:start"), endMark = tpl.indexOf("/* tokens:end */");
+if (startMark < 0 || endMark < 0) throw new Error("token markers missing in mockup-template.html");
+const afterStart = tpl.indexOf("\n", startMark) + 1;
+const tokensOnly = baseCss.slice(baseCss.indexOf("*/\n") + 3);
+writeFileSync(tplPath, tpl.slice(0, afterStart) + tokensOnly + tpl.slice(endMark));
+console.log("Synced tokens into mockup-template.html");

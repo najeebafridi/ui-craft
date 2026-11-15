@@ -134,3 +134,7 @@ A tile needs **value + label + context**.
 - Legend far from the data, with 9 near-identical blues.
 - Green up / red down as the only signal, and "down" shown as good for costs.
 - No empty, loading or error state for any chart.
+
+## Chart colour tokens
+
+Use `--chart-1` to `--chart-6` from `assets/tokens.css` (or the active direction) for categorical series. They are spread around the colour wheel, alternate in lightness so colour-blind viewers can still tell them apart, pass 3:1 on the surface, and have a dark-theme set. Use `--text-subtle` and `--border` for axes and gridlines, and the accent for the one series you want noticed.

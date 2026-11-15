@@ -49,6 +49,27 @@ Use the project's font if it has one. If not, choose on purpose. One family for 
 
 Pairing: serif display for headings + neutral sans for body and UI. Never two display faces. Mono (Geist Mono, JetBrains Mono, IBM Plex Mono) only for code and IDs.
 
+**Pairings by character** (all free under the SIL Open Font License; each visual direction in `directions.md` already names its pair):
+
+| Heading / text | Character | Suits |
+|---|---|---|
+| Inter / Inter | neutral, precise | SaaS, tools |
+| Geist / Geist + Geist Mono | modern, technical | developer platforms |
+| IBM Plex Sans / IBM Plex Sans + Plex Mono | sober, engineered | finance, enterprise |
+| Newsreader / Inter | literary, calm | writing, publishing |
+| Cormorant Garamond / Hanken Grotesk | refined, airy | luxury, hospitality |
+| Libre Caslon Text / Hanken Grotesk | bookish, hand-made | craft retail |
+| Nunito / Nunito Sans | soft, kind | wellness, care |
+| Baloo 2 / Nunito | chunky, playful | learning, kids |
+| Space Grotesk / Manrope | wide, confident | consumer fintech |
+| Public Sans / Public Sans | plain, legible | public services |
+| Figtree / Figtree | friendly, clean | marketplaces |
+| Barlow Condensed / Outfit | cinematic | media, events |
+| Anton / Inter | monumental | sport, campaigns |
+| Bricolage Grotesque / DM Sans | quirky, energetic | creative tools, launches |
+
+**What a typeface category says:** a neutral grotesque is businesslike; a geometric sans is modern and friendly; a humanist sans is warm and readable; an old-style serif is bookish and trusted; a high-contrast serif is fashion and luxury (large sizes only); a mono is technical and honest; a rounded face is soft and playful; a condensed display face is loud. Choose the category for the feeling, then the face.
+
 **System stack** (fast, zero loading, fine for tools and native-feeling apps):
 
 ```css
@@ -66,10 +87,23 @@ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* code *
 
 ## 5. Letter-spacing and case
 
-- Large headings (36px+): `letter-spacing: -0.01em` to `-0.03em`. Reason: big type looks loose at default spacing.
-- Body: leave at 0. Never tighten small text.
-- Small labels in ALL CAPS (12px): `+0.05em` to `+0.08em`, weight 500–600. Use rarely.
-- Sentence case for headings, buttons and labels. Do not use all caps for anything longer than one or two words.
+Type is drawn for one size. Used larger it looks loose; used smaller it looks tight. Correct it:
+
+| Size | Letter-spacing | Line height |
+|---|---|---|
+| 12px | +0.01em | 16px |
+| 14–16px | 0 | 20–24px |
+| 20–24px | -0.01 to -0.015em | 1.3 |
+| 30–36px | -0.02 to -0.025em | 1.2 |
+| 48–60px | -0.03 to -0.035em | 1.05–1.15 |
+| 72px and up | -0.04em | 1.0–1.05 |
+
+- Tokens: `--tracking-heading` (20–30px), `--tracking-display` (36px and up), `--tracking-caps`.
+- Fonts with an optical-size axis (Inter 4, Newsreader, Bricolage Grotesque, DM Sans) adjust themselves: set `font-optical-sizing: auto` and tighten less. Serifs and condensed faces need less tightening than grotesques.
+- Never tighten body or small text.
+- Small labels in ALL CAPS (12px): `+0.05em` to `+0.08em`, weight 500–600. Use rarely, and only for one or two words.
+- Sentence case for headings, buttons and labels.
+- Useful OpenType features: `tnum` (tabular figures), `zero` (slashed zero for codes and IDs), `case` (punctuation aligned to capitals). In Inter, `cv11` gives a simpler "a" and `ss01` open digits.
 
 ## 6. Numbers
 
