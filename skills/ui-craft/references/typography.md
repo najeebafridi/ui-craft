@@ -13,10 +13,10 @@ Sizes (px): **12, 14, 16, 18, 20, 24, 30, 36, 48, 60.** Use 4–6 per screen.
 | Body (default) | 16 / 24 | 400 | 1.5 |
 | Lead / large body | 18 / 28 | 400 | intros, marketing |
 | H4 / card title | 18–20 / 28 | 600 | |
-| H3 / section | 24 / 32 | 600 | |
+| H3 / section | 20–24 / 28–32 | 600 | |
 | H2 / page title (apps) | 24–30 / 36 | 600 | |
-| H1 (marketing) | 36–48 / 1.1–1.15 | 600–700 | |
-| Display (hero) | 60 / 1.05–1.1 | 600–700 | marketing only |
+| H1 (marketing) | 36–48 / 1.15–1.2 | 600–700 | |
+| Display (hero) | 60 / 1.1 | 600–700 | marketing only |
 
 - Line height: **1.5 body, 1.2–1.3 headings, 1.1 for very large display.** Reason: big text needs less relative leading, small text needs more.
 - Serif body needs a bit more leading (1.55–1.65) than sans.
@@ -68,7 +68,7 @@ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* code *
 
 - Large headings (36px+): `letter-spacing: -0.01em` to `-0.03em`. Reason: big type looks loose at default spacing.
 - Body: leave at 0. Never tighten small text.
-- Small labels in ALL CAPS (11–12px): `+0.05em` to `+0.08em`, weight 500–600. Use rarely.
+- Small labels in ALL CAPS (12px): `+0.05em` to `+0.08em`, weight 500–600. Use rarely.
 - Sentence case for headings, buttons and labels. Do not use all caps for anything longer than one or two words.
 
 ## 6. Numbers
@@ -76,7 +76,7 @@ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; /* code *
 - `font-variant-numeric: tabular-nums` for tables, prices, timers, stats. Columns then line up.
 - Right-align numeric columns. Keep the same decimals in a column.
 - Use a non-breaking space between number and unit: `5&nbsp;GB`. Use real minus and curly quotes where it is cheap.
-- Big stat value: 24–36px, 600. Its label: 12–13px, neutral 600.
+- Big stat value: 24–36px, 600. Its label: 12–14px, neutral 600.
 
 ## 7. Wrapping, truncation, clamping
 
@@ -115,7 +115,7 @@ body { font-family: "Inter", "Inter Fallback", system-ui, sans-serif; }
 
 ## 9. Native mapping
 
-- iOS: use text styles (Body 17pt, Headline, Caption) so Dynamic Type works. Layouts must reflow at the largest sizes; never truncate to fit. System font is SF Pro. Avoid text under 11pt.
+- iOS: use text styles (Body 17pt, Headline, Caption) so Dynamic Type works. Layouts must reflow at the largest sizes; never truncate to fit. System font is SF Pro. Avoid text under 12pt.
 - Android: size in `sp` (Body 16sp, Label 14sp), spacing in `dp`. Use Material type roles (display, headline, title, body, label). System font is Roboto.
 - Web: `rem` units, so browser font settings apply. Test at 200% zoom.
 - Mobile inputs: 16px or more, so iOS Safari does not zoom in.

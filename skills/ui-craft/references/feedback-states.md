@@ -35,7 +35,7 @@ Use for fast, likely-to-succeed actions: like, star, check off, rename, reorder.
 
 Do not use for payments, deletes of shared data, or anything the server may reject often. Show a real pending state there.
 
-**Undo beats confirm** for quick, frequent actions. Do the delete, show "Task deleted. [Undo]" for 6s, and only then really remove it. Use a confirm dialog only for rare, heavy loss, and name what is lost: "Delete project Apollo and its 42 files?"
+**Undo beats confirm** for quick, frequent actions. Do the delete, show "Task deleted. [Undo]" for 6–10s, and only then really remove it. Use a confirm dialog only for rare, heavy loss, and name what is lost: "Delete project Apollo and its 42 files?"
 
 ## 4. Empty states
 
@@ -78,14 +78,14 @@ Pick the smallest scope that fits.
 ### Toast rules
 
 - Place at bottom-left or bottom-centre on desktop, top or bottom on mobile (not over the primary action or a bottom tab bar). Pick one place for the whole product.
-- Success toast lasts 4–6s. Errors that need action stay until dismissed.
+- Normal toasts last 4–6s; undo toasts 6–10s. Errors that need action stay until dismissed.
 - Pause the timer on hover and on keyboard focus. Always include a close button.
 - Stack at most 3. Newer ones push older ones.
 - Announce with a polite live region. The region must exist in the DOM before you add text.
 
 ```html
 <!-- Put once in the page layout, empty on load -->
-<div id="toasts" role="status" aria-live="polite" aria-atomic="true"></div>
+<div id="toasts" role="status" aria-live="polite"></div>
 
 <script>
   function toast(msg) {

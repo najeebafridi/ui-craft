@@ -116,8 +116,8 @@ button, a, [role="button"] { touch-action: manipulation; } /* no double-tap zoom
 
 ## 12. Tablet
 
-- Width ≥ **840px**: switch to two panes (list on the left 320–400px, detail on the right). Selecting a row fills the detail pane; no page change.
-- 600–839px: single pane plus a navigation rail (72–80px wide), or a collapsed sidebar.
+- Width ≥ **1024px**: switch to two panes (list on the left 320–400px, detail on the right). Selecting a row fills the detail pane; no page change.
+- 640–1023px: single pane plus a navigation rail (72–80px wide), or a collapsed sidebar.
 - Side padding 24px. Keep line length 65–75 characters; do not stretch text across the screen.
 - Support split-screen and window resizing; layout follows the current width.
 

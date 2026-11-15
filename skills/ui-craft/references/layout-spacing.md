@@ -14,7 +14,7 @@ Use only: **4, 8, 12, 16, 24, 32, 48, 64, 96.** Tokens: `--space-1` = 4 up to `-
 | Between fields in a form | 16–24 |
 | Between components | 16–24 |
 | Between page sections (apps) | 32–48 |
-| Between sections (marketing) | 64–128 (96 is the default) |
+| Between sections (marketing) | 64–96 (96 is the default) |
 
 - Gap between groups is at least 2x the gap inside a group. This is the cheapest way to show structure.
 - Use `gap` on flex/grid. Do not put margins on children. Reason: gaps stay correct when items are added, removed or wrapped.
@@ -49,7 +49,7 @@ Use only: **4, 8, 12, 16, 24, 32, 48, 64, 96.** Tokens: `--space-1` = 4 up to `-
 
 ## 4. Breakpoints
 
-Use **640, 1024, 1440**. Write CSS mobile-first with `min-width`. Add a breakpoint only where the content breaks, not per device. Always check 375, 768 and 1440 widths.
+Use **640, 1024, 1440**. Write CSS mobile-first with `min-width`. Add a breakpoint only where the content breaks, not per device. Always check 375 and 1440; also 640 and 1024 around the breakpoints.
 
 ## 5. Responsive strategies
 
@@ -60,7 +60,7 @@ Pick one per component. Name the strategy in your head before you write media qu
 3. **Show / hide.** Hide secondary things behind a tab, sheet or "More" menu. Never hide the primary task. Do not drop content only because the screen is small; move it.
 4. **Re-architect.** Change the pattern. Sidebar becomes a bottom tab bar. Table becomes a card list. List-detail becomes two separate screens with a back button.
 
-Also use `clamp()` for fluid headings and padding: `font-size: clamp(2rem, 1.2rem + 3vw, 3.75rem)`.
+Also use `clamp()` for fluid headings and padding: `font-size: clamp(2.25rem, 1.5rem + 3vw, 3.75rem)`.
 
 ## 6. App shell layouts
 

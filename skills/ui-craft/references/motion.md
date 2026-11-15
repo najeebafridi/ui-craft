@@ -92,12 +92,14 @@ Set `transform-origin` where the thing comes from (a popover grows from its trig
 A static grey skeleton is enough. If you add shimmer, make it slow and calm, and turn it off for reduced motion.
 
 ```css
-.skeleton { background: var(--surface-2); border-radius: 6px; }
+.skeleton { background: var(--surface-2); border-radius: var(--radius-sm); }
 @media (prefers-reduced-motion: no-preference) {
-  .skeleton { background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%);
-    background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+  .skeleton { position: relative; overflow: hidden; }
+  .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    animation: shimmer 1.6s linear infinite; }   /* moves with transform, not background-position */
 }
-@keyframes shimmer { to { background-position: -200% 0; } }
+@keyframes shimmer { to { transform: translateX(100%); } }
 ```
 
 When to show a skeleton at all is in `feedback-states.md`.
@@ -111,7 +113,7 @@ When to show a skeleton at all is in `feedback-states.md`.
 }
 ```
 
-- Keep colour and opacity changes (they are not vestibular triggers). Remove slides, zooms, parallax and auto-scrolling. Swap them for a fade.
+- Colour and opacity changes are safe (they are not vestibular triggers), but the block above makes them instant too; to keep short fades, limit the override to `transform` animations. Remove slides, zooms, parallax and auto-scrolling. Swap them for a fade.
 - Anything that moves by itself for more than 5 seconds needs a pause control. Nothing flashes more than 3 times a second.
 - Native: honour "Reduce Motion" (iOS) and "Remove animations" (Android).
 

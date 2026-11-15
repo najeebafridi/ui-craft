@@ -6,3 +6,5 @@ node_modules/
 evals/.chrome-profile/
 evals/.audit-test/
 evals/*/blind/
+evals/*/*/*/screens/
+evals/*/*/*/audit/

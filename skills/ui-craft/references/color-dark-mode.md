@@ -14,44 +14,44 @@ Define each step once, by hand. Do not make shades on the fly with `lighten()` o
 
 ## 2. What each step is for (12-step model)
 
-A scale works when every step has a job. This model has 12 steps per hue. Map it onto the 50–950 numbers (1 = lightest in light mode).
+Give every step of a colour scale one job, and the scale stays easy to use. This 12-step model is adapted from the Radix Colors scale (MIT). Map it onto the 50–950 numbers (1 = lightest in light mode).
 
 | Step | Job | Example use |
 |---|---|---|
-| 1 | App background | page behind everything |
-| 2 | Subtle background | sidebar, striped rows, code blocks |
-| 3 | Element background | resting input, badge, ghost button |
-| 4 | Element hover | hovered row or button |
-| 5 | Element active / selected | pressed button, selected row |
-| 6 | Subtle border | dividers, card edges |
-| 7 | Normal border | input border, separators that must be seen |
-| 8 | Strong border | focus ring, hovered input border |
-| 9 | Solid | primary button, badge fill, chart mark |
-| 10 | Solid hover | hovered primary button |
-| 11 | Low-contrast text | secondary text, links on light bg |
-| 12 | High-contrast text | headings, body text |
+| 1 | Page background | the base layer behind everything |
+| 2 | Quiet background | sidebar, striped rows, code blocks |
+| 3 | Control background | an input or badge at rest, a ghost button |
+| 4 | Hover fill | a row or button under the pointer |
+| 5 | Pressed / selected fill | a pressed button, the selected row |
+| 6 | Faint line | dividers, card edges |
+| 7 | Visible line | separators that must be seen (input borders need step 8–9 or `--border-strong`) |
+| 8 | Strong line | focus ring, hovered input border |
+| 9 | Solid colour | primary button, badge fill, chart mark |
+| 10 | Solid hover | the primary button under the pointer |
+| 11 | Soft text | secondary text, links on a light background |
+| 12 | Strong text | headings and body text |
 
-Rules from the model: steps 1–5 are backgrounds, 6–8 are lines, 9–10 are loud fills, 11–12 are text. Use step 9 text colour (white or near-black) on a solid fill; check it with a contrast tool. The same step numbers work in dark mode with a separate dark scale.
+Rules from the model: steps 1–5 are backgrounds, 6–8 are lines, 9–10 are loud fills, 11–12 are text. Text on a step 9 solid fill is white or near-black; check it with a contrast tool. The same step numbers work in dark mode with a separate dark scale.
 
 ## 3. Semantic tokens
 
 Components use roles, never raw hex. Each surface has a foreground partner.
 
 ```css
-:root {
-  --bg: #F8FAFC;           --fg: #0F172A;
-  --surface: #FFFFFF;      --surface-fg: #0F172A;
-  --surface-2: #F1F5F9;    --fg-muted: #475569;
+:root {                       /* same names and values as assets/tokens.css */
+  --bg: #F8FAFC;           --text: #0F172A;
+  --surface: #FFFFFF;      --text-muted: #475569;
+  --surface-2: #F1F5F9;    --text-subtle: #5B6B82;
   --border: #E2E8F0;       --border-strong: #7C8BA1; /* inputs, 3:1 */
   --accent: #2563EB;       --accent-fg: #FFFFFF;
-  --accent-hover: #1D4ED8; --accent-subtle: #EFF6FF;
-  --ring: #2563EB;
-  --success: #15803D; --warning: #B45309; --danger: #B91C1C; --info: #1D4ED8;
-  --success-bg: #DCFCE7; --warning-bg: #FEF3C7; --danger-bg: #FEE2E2; --info-bg: #DBEAFE;
+  --accent-hover: #1D4ED8; --accent-soft: #EFF6FF;  --accent-text: #1D4ED8;
+  --success: #15803D; --warning: #B45309; --danger: #DC2626; --info: #2563EB;
+  --success-soft: #F0FDF4; --warning-soft: #FFFBEB; --danger-soft: #FEF2F2; --info-soft: #EFF6FF;
+  --success-text: #166534; --warning-text: #92400E; --danger-text: #B91C1C; --info-text: #1D4ED8;
 }
 ```
 
-Pair rule: `bg-accent` always goes with `text-accent-fg`. Never put `--fg` on `--accent`. A component that sets one half of a pair sets the other.
+Pair rule: `bg-accent` always goes with `text-accent-fg`. Never put `--text` on `--accent`. A component that sets one half of a pair sets the other.
 
 ## 4. Worked example palette (hex)
 
@@ -79,7 +79,7 @@ Contrast on white: neutral 600 = 7.6:1, neutral 500 = 4.8:1 (OK for muted text),
 - Neutral does the rest. If you squint and see colour everywhere, remove some.
 - Status colours appear only when there is a status. Do not use green for decoration.
 - One accent per product. A second brand colour is for illustrations or charts, not UI chrome.
-- Tinted backgrounds (accent-subtle) mark selected rows and info banners. Keep them light.
+- Tinted backgrounds (`--accent-soft`) mark selected rows and info banners. Keep them light.
 
 ## 6. Contrast numbers and fixes
 
@@ -97,23 +97,23 @@ Contrast on white: neutral 600 = 7.6:1, neutral 500 = 4.8:1 (OK for muted text),
 Do not invert. Build it on purpose.
 
 ```css
-:root[data-theme="dark"] {
-  --bg: #0F1419;          --fg: #E6E8EB;
-  --surface: #161B22;     --surface-2: #1D232B;   /* higher = lighter */
-  --fg-muted: #9AA4B2;
-  --border: #2A323C;      --border-strong: #5B6675;
+:root[data-theme="dark"] {     /* same values as assets/tokens.css */
+  color-scheme: dark;
+  --bg: #0B0F14;          --text: #E6E9EE;
+  --surface: #12171E;     --surface-2: #1A2029;   /* higher = lighter */
+  --text-muted: #A3ADBC;  --text-subtle: #8792A2;
+  --border: #262E3A;      --border-strong: #6B7890;
   --accent: #2563EB;      --accent-fg: #FFFFFF;
-  --accent-text: #60A5FA; /* links and accent text on dark */
-  --ring: #60A5FA;
-  --danger: #F87171;      --success: #4ADE80;      --warning: #FBBF24;
+  --accent-text: #93C5FD; /* links and accent text on dark */
+  --danger: #EF4444;      --success: #22C55E;      --warning: #F59E0B;
 }
 ```
 
 - Background: near-black with a hint of hue (#0B0F14–#111318). Not #000. Reason: pure black next to bright text causes glare and smearing.
-- Text: #E6E8EB for body, #9AA4B2 for muted. Not #FFF. Check muted text is 4.5:1 or more (this one is 7:1).
+- Text: #E6E9EE for body, #A3ADBC for muted. Not #FFF. Check muted text is 4.5:1 or more (this one is about 8:1 on the surface).
 - **Elevation = lighter surface.** bg, then surface, then surface-2, then overlay. Shadows barely show on dark, so use a 1px border plus the lighter fill.
-- Desaturate the accent. Large saturated areas vibrate on dark. Keep the solid button fill at step 600 with white text, and use a lighter step (400) for accent text and links.
-- Status colours move lighter (400 steps) and their subtle backgrounds become low-alpha tints (`rgb(248 113 113 / .12)`).
+- Desaturate the accent. Large saturated areas vibrate on dark. Keep the solid button fill at step 600 with white text, and use a much lighter step (300, #93C5FD) for accent text and links.
+- Status colours move lighter (500 steps, see `assets/tokens.css`) and their subtle backgrounds become low-alpha tints (`rgb(248 113 113 / .12)`).
 - Re-check every contrast pair in dark mode. Do not assume.
 - Images: dim slightly (`filter: brightness(.9)`) or give logos a dark variant. Charts need their own dark palette.
 

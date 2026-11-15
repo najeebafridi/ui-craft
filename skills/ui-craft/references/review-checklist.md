@@ -15,7 +15,7 @@ Load this before you say a screen is done. Answer each line yes or no. Fix every
 - [ ] No cards inside cards; borders and boxes only where they group something.
 
 ## Type
-- [ ] 4–6 font sizes and at most 3 weights, all from the scale.
+- [ ] 4–6 font sizes (up to 7 on marketing pages) and at most 3 weights, all from the scale.
 - [ ] Body is 16px (14px only in dense tools); nothing under 12px.
 - [ ] Numbers in tables and stats use tabular figures and align right.
 - [ ] Headings are sentence case; no stray ALL CAPS.
@@ -70,7 +70,7 @@ Load this before you say a screen is done. Answer each line yes or no. Fix every
 - [ ] Every image has width/height or aspect-ratio; nothing jumps on load (CLS under 0.1).
 - [ ] Images are sized for their display size and lazy-loaded below the fold.
 - [ ] Only `transform` and `opacity` are animated; no `transition: all`.
-- [ ] Fonts have a close fallback; no more than 2 families and 3 weights.
+- [ ] Fonts have a close fallback; one family (two on marketing pages) and at most 3 weights.
 
 ## How to review
 1. Take screenshots at **375px** and **1440px** wide. Look at both.

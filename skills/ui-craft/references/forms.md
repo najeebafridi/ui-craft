@@ -100,7 +100,7 @@ Pick the right `type`, `autocomplete` and `inputmode`. It gives the right phone 
 
 ## Sign-in and sign-up
 - Allow paste in every field. Support password managers (`autocomplete="username"` / `current-password` / `new-password`).
-- Offer a show/hide password button (a real `<button>` with `aria-pressed` and a label).
+- Offer a show/hide password button (a real `<button>` with a constant label "Show password" and `aria-pressed`; or, without `aria-pressed`, swap the label between "Show password" and "Hide password").
 - Offer passkeys or a magic link first when the product supports it. Do not force memory tests or puzzles.
 - Sign-up: email and password only. Ask the rest after.
 - Show password rules before the user types them, and check them live (positive feedback).
@@ -132,9 +132,9 @@ Pick the right `type`, `autocomplete` and `inputmode`. It gives the right phone 
 ```
 ```css
 .field { display: grid; gap: 4px; max-width: 400px; }
-.hint, .error { font-size: 13px; margin: 0; }
+.hint, .error { font-size: 14px; margin: 0; }
 .hint { color: var(--text-muted); }
-.error { color: var(--danger); display: flex; gap: 6px; align-items: center; }
+.error { color: var(--danger-text); display: flex; gap: 8px; align-items: center; }
 input { height: 40px; padding: 0 12px; font-size: 16px;
         border: 1px solid var(--border-strong); border-radius: var(--radius); }
 input[aria-invalid="true"] { border-color: var(--danger); }

@@ -32,12 +32,12 @@ When asked for **quick mockups for a client**, follow `references/mockups.md` (o
 
 | Profile | Body text | Density | Radius | Navigation | Feel |
 |---|---|---|---|---|---|
-| Data tool / admin / dev tool / finance | 14px | compact: rows 36–40px, controls 32–36px | 4–6px | left sidebar 220–280px | quiet, precise, lots of neutral |
+| Data tool / admin / dev tool / finance | 14px | compact: rows 36px, controls 32–36px | 4–6px | left sidebar 220–280px | quiet, precise, lots of neutral |
 | SaaS web app (general) | 14–16px | standard: controls 36–40px | 6–8px | sidebar or top bar | clean, one accent |
 | Dashboard / analytics | 14px | compact | 6–8px | sidebar + filters bar | numbers first, colour only for data |
-| Marketing / landing site | 16–18px | spacious: sections 80–128px apart | by brand | top bar, 4–6 links + 1 CTA | bold type, one strong visual |
+| Marketing / landing site | 16–18px | spacious: sections 64–96px apart | by brand | top bar, 4–6 links + 1 CTA | bold type, one strong visual |
 | Mobile app | 16–17px | touch: targets ≥ 44px | 8–12px | bottom tab bar, 3–5 items | big tap areas, one column |
-| Desktop app (Electron, native) | 13–14px | compact | 4–6px | sidebar + toolbar | follow the OS look; keyboard shortcuts |
+| Desktop app (Electron, native) | 14px | compact | 4–6px | sidebar + toolbar | follow the OS look; keyboard shortcuts |
 | Consumer / playful | 16px | standard | 12–16px | depends | warmer colours, softer shapes |
 
 Body text defaults to 16px; drop to 14px only for dense desktop tools (rows above). Never below 12px.
@@ -51,14 +51,14 @@ Tone → radius: sharp (2–4px) feels technical and serious; medium (6–8px) i
 - **One primary action per screen or section.** It is the only solid accent button. Others are secondary (outline or subtle fill) or tertiary (text button). Example: "Send reminder" solid blue; "Export" outline; "Cancel" text.
 - Make hierarchy with **size, weight and colour together**, not size alone. Secondary text is smaller *and* lighter grey, not just smaller.
 - **De-emphasise, don't only emphasise.** To make the title stand out, make labels and meta text quieter instead of making the title huge.
-- Labels are quieter than values. In "Revenue: $48,210", the value is the hero: label 12–13px grey, value 24px semibold.
+- Labels are quieter than values. In "Revenue: $48,210", the value is the hero: label 12–14px grey, value 24px semibold.
 - Group by **spacing first**, then by background tint, then by border, last by shadow. Fewer boxes and lines = cleaner. Related items close, unrelated items far (gap between groups ≥ 2× the gap inside a group).
 - Read order matches importance: top-left (in left-to-right languages) is seen first. Put the primary task there or in the centre.
 
 ## 4. Layout and spacing
 
 - **Spacing scale (4px base): 4, 8, 12, 16, 24, 32, 48, 64, 96.** Use only these. No 13px, no 22px.
-- Inside a component: 4–12. Between components: 16–24. Between sections: 32–64 (apps), 64–128 (marketing).
+- Inside a component: 4–12. Between components: 16–24. Between sections: 32–48 (apps), 64–96 (marketing).
 - Page side padding: 16px mobile, 24px tablet, 32px+ desktop.
 - Content max-width: 1200–1440px for apps, ~1120–1280px for marketing, **65–75 characters** (~640–720px) for reading text.
 - Use CSS grid/flex with `gap`, not margins on children. Align everything to a shared edge; ragged left edges look amateur.
@@ -134,7 +134,7 @@ Details (including keyboard patterns for tabs, menus, dialogs, comboboxes): `ref
 
 ## 10. Motion
 
-- Animate only `transform` and `opacity`. Never `transition: all`.
+- Animate `transform` and `opacity` (plus colour and background-colour for hover and press). Never `transition: all`; never animate layout properties (width, height, top, margin).
 - **100–150ms** for hover/press feedback, **200–300ms** for menus, panels, dialogs. Never over 400ms for everyday UI. Ease-out when entering, ease-in when leaving.
 - Motion explains a change (where a panel came from, what was added). It is never decoration.
 - At most **one signature motion** per page (e.g. a hero reveal). No fade-up on every section, no bounce, no parallax text.

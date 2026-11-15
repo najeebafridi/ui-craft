@@ -23,16 +23,15 @@ It also helps you **win client approval fast**: one clickable HTML file per scre
 
 ## Install
 
-Replace `YOUR-NAME` with the GitHub account that hosts this repo.
 
 ### Claude Code (plugin, recommended)
 
 ```
-/plugin marketplace add YOUR-NAME/ui-craft
+/plugin marketplace add najeebafridi/ui-craft
 /plugin install ui-craft@ui-craft
 ```
 
-Or from a terminal: `claude plugin marketplace add YOUR-NAME/ui-craft`, then `claude plugin install ui-craft@ui-craft`.
+Or from a terminal: `claude plugin marketplace add najeebafridi/ui-craft`, then `claude plugin install ui-craft@ui-craft`.
 
 The skill loads by itself whenever you ask for UI work. You can also call it directly with `/ui-craft:ui-craft`.
 
@@ -43,7 +42,7 @@ The skill loads by itself whenever you ask for UI work. You can also call it dir
 These tools read skills from a shared folder, `.agents/skills/`. Copy the skill there, plus `AGENTS.md`:
 
 ```bash
-git clone https://github.com/YOUR-NAME/ui-craft /tmp/ui-craft
+git clone https://github.com/najeebafridi/ui-craft /tmp/ui-craft
 mkdir -p .agents/skills
 cp -r /tmp/ui-craft/skills/ui-craft .agents/skills/ui-craft
 cp /tmp/ui-craft/AGENTS.md ./AGENTS.md        # or paste its contents into your existing AGENTS.md
@@ -57,7 +56,7 @@ For every project, copy the folder to `~/.agents/skills/ui-craft` instead.
 |---|---|---|
 | **Codex** | `.agents/skills/` and `AGENTS.md` | Restart Codex if the skill does not show up. |
 | **Cursor** | `.agents/skills/` and `AGENTS.md` | Nothing else to do. |
-| **Gemini CLI** | `.agents/skills/` | Or run `gemini skills install https://github.com/YOUR-NAME/ui-craft --path skills/ui-craft`. To also read `AGENTS.md`, add `"context": {"fileName": ["AGENTS.md", "GEMINI.md"]}` to `settings.json`. |
+| **Gemini CLI** | `.agents/skills/` | Or run `gemini skills install https://github.com/najeebafridi/ui-craft --path skills/ui-craft`. To also read `AGENTS.md`, add `"context": {"fileName": ["AGENTS.md", "GEMINI.md"]}` to `settings.json`. |
 | **GitHub Copilot** | `.agents/skills/` (or `.github/skills/`) and `AGENTS.md` | Works in VS Code agent mode, the Copilot CLI and the cloud agent. |
 | **Windsurf / Devin** | `.agents/skills/` and `AGENTS.md` | Nothing else to do. |
 | **Cline** | `.claude/skills/` or `.cline/skills/`, and `AGENTS.md` | Copy the folder to `.cline/skills/ui-craft` instead. |

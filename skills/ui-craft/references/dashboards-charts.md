@@ -22,7 +22,7 @@ Load this when you build a dashboard, KPI tiles, any chart, or an analytics scre
 
 ## KPI tiles
 A tile needs **value + label + context**.
-- Label 12–13px muted; value 24–32px semibold, tabular numbers.
+- Label 12–14px muted; value 24–30px semibold, tabular numbers.
 - Context: change vs last period (`▲ 8.2% vs last month`) or progress to target (`72% of $100k goal`).
 - Optional sparkline (last 7–30 points), no axes, muted line with the last point marked.
 - The delta shows arrow + sign + colour. Good or bad is decided by the metric, not by direction (cost going up is bad).

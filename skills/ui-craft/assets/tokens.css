@@ -1,6 +1,6 @@
 /* ui-craft starter tokens — light + dark.
    Use when the project has no design system. Theme: follows the OS; force with <html data-theme="light|dark">. Change --accent-* to the brand colour first.
-   All text pairs below meet WCAG 2.2 AA (4.5:1); --border-strong meets 3:1 for input edges. */
+   Text colours pass WCAG 2.2 AA (4.5:1) on --bg, --surface and --surface-2; --border-strong passes 3:1 for input edges. */
 
 :root {
   color-scheme: light dark;
@@ -11,10 +11,10 @@
   --surface-2:     #F1F5F9;  /* subtle fills, table header, hover rows */
   --surface-3:     #E2E8F0;  /* pressed, selected neutral */
   --border:        #E2E8F0;  /* dividers, card edges (decorative) */
-  --border-strong: #8B95A5;  /* input borders, checkbox edges (3:1) */
+  --border-strong: #7C8BA1;  /* input borders, checkbox edges (3:1) */
   --text:          #0F172A;  /* primary text */
   --text-muted:    #475569;  /* secondary text, labels */
-  --text-subtle:   #64748B;  /* meta, placeholders, captions */
+  --text-subtle:   #5B6B82;  /* meta, placeholders, captions (not on --surface-3) */
 
   /* Accent (brand). Change these 4 first. */
   --accent:        #2563EB;  /* primary buttons, focus ring. Links: use --accent-text */
@@ -42,7 +42,7 @@
   --leading-tight: 1.25;  --leading-normal: 1.5;
   --weight-regular: 400;  --weight-medium: 500;  --weight-semibold: 600;
 
-  /* Shape — pick one set: sharp 4 / medium 8 / soft 12 */
+  /* Shape — pick one set: sharp 4 / medium 6–8 / soft 12 */
   --radius-sm: 4px;  --radius: 8px;  --radius-lg: 12px;  --radius-full: 9999px;
 
   /* Elevation: flat (border) / raised / overlay */
@@ -50,13 +50,14 @@
   --shadow-overlay: 0 4px 6px rgb(15 23 42 / 0.05), 0 12px 32px rgb(15 23 42 / 0.14);
 
   /* Motion */
-  --ease-out: cubic-bezier(0.2, 0, 0, 1);
-  --ease-in:  cubic-bezier(0.4, 0, 1, 1);
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);   /* entering */
+  --ease-in:     cubic-bezier(0.64, 0, 0.78, 0);   /* leaving */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* moving on screen */
   --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;
 
   /* Sizes */
   --control-h: 40px;       /* buttons, inputs (36 compact, 44+ touch) */
-  --row-h: 44px;           /* table rows (32–36 compact) */
+  --row-h: 40px;           /* table rows (36 compact, 44+ touch) */
   --sidebar-w: 248px;
   --content-max: 1280px;
   --reading-max: 68ch;
@@ -65,12 +66,13 @@
 /* Dark: its own palette, not an inversion. Higher surfaces are lighter. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --bg:            #0B0F14;
     --surface:       #12171E;
     --surface-2:     #1A2029;
     --surface-3:     #242B36;
     --border:        #262E3A;
-    --border-strong: #5E6A7C;
+    --border-strong: #6B7890;
     --text:          #E6E9EE;
     --text-muted:    #A3ADBC;
     --text-subtle:   #8792A2;
@@ -87,13 +89,15 @@
     --shadow-overlay: 0 8px 32px rgb(0 0 0 / 0.5);
   }
 }
+:root[data-theme="light"] { color-scheme: light; }
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --bg:            #0B0F14;
   --surface:       #12171E;
   --surface-2:     #1A2029;
   --surface-3:     #242B36;
   --border:        #262E3A;
-  --border-strong: #5E6A7C;
+  --border-strong: #6B7890;
   --text:          #E6E9EE;
   --text-muted:    #A3ADBC;
   --text-subtle:   #8792A2;

@@ -26,13 +26,14 @@ Load this when you build a data table, a list, a filter bar, bulk actions, or an
 - `font-variant-numeric: tabular-nums` on number columns so digits line up.
 - Same decimals in a column (1,200.00 and 35.50).
 - Show units in the header ("Amount (USD)"), not in each cell.
-- Body 14px in dense tables, 16px otherwise. Header 12–13px, medium weight, muted colour, sentence case.
+- Body 14px in dense tables, 16px otherwise. Header 12–14px, medium weight, muted colour, sentence case.
 
 ## Row height and spacing
 | Density | Row height | Use |
 |---|---|---|
-| Compact | 32px | Power users, long lists |
-| Default | 40–44px | Most tables |
+| Compact | 36px | Power users, long lists |
+| Default | 40px | Most tables |
+| Touch | 44px+ | Phones and tablets |
 | Two-line | 56px+ | Name plus a secondary line (email, ID) |
 
 - Header row is the same height as body rows, or 4px taller.

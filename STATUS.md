@@ -14,9 +14,10 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - [x] 4. Fast mockups -> references/mockups.md, assets/mockup-template.html, assets/options-board.html
 - [x] 5. Evals: 2 rounds. Round 2: 97% vs 57% checks passed; blind judge preferred skill on 5/5. See evals/RESULTS.md
 - [x] 6. Package: .claude-plugin/ (plugin + marketplace), AGENTS.md (generated), README.md
+- [x] 7. Polish: fresh review fixed 25 consistency issues (tokens = colour guide, no 13px/11px, rows 36/40/44, sections 64–96, Radix credit). Screenshots removed from git history (repo 5.4 MB -> ~0.4 MB); they stay on disk, ignored.
 
 ## Not done yet / next ideas
-- Push to GitHub (user will do it later), then replace `YOUR-NAME` in README.md and .claude-plugin/plugin.json.
+- Push to GitHub: repo `najeebafridi/ui-craft` (username already filled in README.md and plugin.json). `gh` CLI is logged in as najeebafridi; publish only when the user says yes.
 - Run `claude plugin validate .` once the `claude` CLI is on PATH (it was not available here; JSON checked by hand).
 - Description-trigger optimisation (skill-creator run_loop) needs the `claude` CLI; not run.
 - Optional: a round 3 with a different model (e.g. a smaller one) to check the skill helps there too.

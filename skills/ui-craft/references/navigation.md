@@ -7,7 +7,7 @@ Load this when you build an app shell, sidebar, top bar, tabs, breadcrumbs, menu
 |---|---|
 | Phone (<640px) | **Bottom tab bar, 3–5 items**, 56–64px tall plus safe area. Top bar with title. |
 | Tablet (640–1024px) | **Navigation rail**, ~72–80px, icons with small labels. |
-| Desktop app (≥1024px) | **Left sidebar 220–280px**, collapsible to an **icon rail ~64px**. |
+| Desktop app (≥1024px) | **Left sidebar 220–280px**, collapsible to an **icon rail 56–72px**. |
 | Marketing site | **Top bar**, 4–6 links + 1 CTA button. |
 
 - Choose by window width, not by device name. Windows resize.

@@ -4,7 +4,7 @@ Load this when you build interactive widgets, forms, dialogs, menus, or when you
 
 ## 1. Perceivable
 
-- **Text contrast**: 4.5:1 for normal text. 3:1 for large text (24px+, or 18.66px+ bold). **No rounding**: 4.47 fails. `#777` on white is 4.47 (fail). `#767676` passes.
+- **Text contrast**: 4.5:1 for normal text. 3:1 for large text (24px+, or 18.66px+ bold). **No rounding**: 4.47 fails. `#777` on white is 4.48 (fail). `#767676` passes.
 - **Non-text contrast**: 3:1 for input borders, icons that carry meaning, focus rings, chart lines and bars, toggle states. Custom-styled controls are not exempt.
 - **Brand colours**: bright blue, green or orange with white text often sit at 3–4:1. Darken the fill. Do not thin the font.
 - **Text on images or gradients**: test the worst spot, or add a solid scrim.
@@ -31,7 +31,7 @@ Load this when you build interactive widgets, forms, dialogs, menus, or when you
 - **Reduced motion**:
   ```css
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   }
   ```
   Better: replace big movement with a fade, keep small state changes.
