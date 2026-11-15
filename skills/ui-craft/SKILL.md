@@ -32,6 +32,8 @@ Numbers are in CSS px; for native apps read px as pt (iOS, macOS), dp (Android) 
 
 Quick mockups for a client: `references/mockups.md`. Reviewing or scoring an existing product: `references/review-mode.md`.
 
+**Layers on the same theme.** For 3D scenes, shaders, scroll storytelling or cinematic motion, use the `immersive-web` skill (same plugin): it reads these same tokens, and the theme's `--immersive` level (0 still to 3 story) says how far to go. To borrow the look of another genre or medium (game, sci-fi, film) read `references/mixing.md`.
+
 ## 2. Density by product type
 
 | Product | Body text | Density | Navigation |
@@ -226,6 +228,7 @@ Banning a pattern is not a design: do not swap one default for the next. **Decid
 | `references/review-checklist.md` | before you call a screen done |
 | `references/mockups.md` | fast clickable mockups and options for client approval |
 | `references/review-mode.md` | scoring and improving an existing product |
+| `references/mixing.md` | a game, sci-fi or film look on a website or app; one theme across web, app, 3D scene and motion |
 
 Assets: `assets/tokens.css` (base tokens), `assets/directions/*.css` (16 directions; `gallery.html` shows them all), `assets/mockup-template.html`, `assets/options-board.html`.
 Scripts (Node 22+, no packages): `scripts/palette.mjs` (accessible palette from a brand colour), `scripts/ui-audit.mjs` (measure, score and screenshot a page or URL; needs Chrome).
