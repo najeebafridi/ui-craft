@@ -546,3 +546,20 @@ Method: public pages fetched via WebFetch/WebSearch only. All rules paraphrased.
 - Pie charts: Datawrapper allows them for simple shares; stricter guides discourage them.
 - Single-screen dashboards: Few's classic rule vs commentary warning that rigid adherence puts form over function.
 - Form validation: NN/g says validate after leaving a field, not while typing, yet live positive feedback (password strength, availability) is fine.
+
+---
+
+# Version 2 research (2026-11-16): premium craft, colour, psychology, platforms
+
+Read on public pages only; nothing downloaded or run. Full notes, with links, licences, evidence grades and what was not verified, are in `research/v2/`:
+
+| File | Covers | Main sources (licence) |
+|---|---|---|
+| [v2/premium-craft.md](v2/premium-craft.md) | what makes UI look expensive: shadows, rings, radii, micro-interactions | Rauno Freiberg, Emil Kowalski, Jakub Krehel, Josh Comeau, Tobias Ahlin, Anthony Hobday, Erik Kennedy, Linear, Stripe, Vercel Geist, Benji Taylor (all rights reserved or no licence stated: ideas only) |
+| [v2/colour.md](v2/colour.md) | OKLCH, palette building, colour and emotion research, culture, colour blindness | Evil Martians, Björn Ottosson (code public domain/MIT), MDN, Tailwind, Stripe, Radix (MIT), Material 3, NN/g, Valdez & Mehrabian 1994, Labrecque & Milne 2012, Jonauskaite 2020, Palmer & Schloss 2010, Okabe & Ito, Wikipedia (CC BY-SA) |
+| [v2/psychology.md](v2/psychology.md) | emotion, first impressions, trust, cognitive load, motivation, waiting, ethics | Norman, Walter, Kano, Lindgaard 2006, Tuch 2012, Fogg 2003, NN/g, Kahneman, Johnson & Goldstein 2003, Buell & Norton 2011, deceptive.design, FTC 2022, EU DSA Art. 25, calmtech.com |
+| [v2/platforms.md](v2/platforms.md) | iOS, Android, macOS, Windows 11, GNOME, Electron/Tauri, Flutter, watch, TV | Apple HIG (all rights reserved), Material 3, Android Developers (CC BY 4.0), Microsoft Learn (CC BY 4.0), GNOME HIG, Electron docs, Flutter docs |
+| [v2/motion-type.md](v2/motion-type.md) | durations, springs, haptics; tracking, pairing, font licences | Emil Kowalski, NN/g, Material motion, Motion docs, Apple WWDC, Butterick, Inter (OFL), Utopia, web.dev |
+| [v2/directions.md](v2/directions.md) | teardowns of premium products, award criteria, 2026 AI design skills, 15 visual directions | public product sites and design blogs (facts only), Awwwards, Apple Design Awards, frontend-design (Apache-2.0), impeccable (Apache-2.0), taste-skill (MIT), ui-ux-pro-max (MIT) |
+
+**Decisions for v2:** still no text copied from any source. Short CSS values (a shadow recipe, an easing curve) are facts, not prose. Only fonts under the SIL Open Font License are recommended (Fontshare fonts are left out because their licence could not be confirmed). Claims are graded by evidence; weak or failed findings (Zeigarnik effect, "Hooked" loops, paradox of choice, "90% of judgements are colour") are named as such in the skill.

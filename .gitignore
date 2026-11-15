@@ -9,3 +9,4 @@ evals/*/blind/
 evals/*/*/*/screens/
 evals/*/*/*/audit/
 evals/review-test/*.png
+evals/skill-snapshot-v1/
