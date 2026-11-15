@@ -1,0 +1,150 @@
+/* ui-craft direction: Maison
+   For:        Luxury goods, hotels, jewellery, fine dining, fashion, private banking, premium real estate.
+   Feeling:    Quiet confidence. Desire through restraint.
+   Signature:  Space as the luxury: one object, one line of text, and a lot of nothing around them. Slow page-level fades.
+   Type:       A high-contrast display serif at generous size with a light, quiet sans. Navigation in small tracked capitals (12px, +0.12em).
+   Shape:      Square corners. Hairlines only. No shadows, no badges, no bursts.
+   Imagery:    Few, large, carefully cropped photographs with one colour grade. Objects are given room.
+   Voice:      Sparse and assured. Third person. No exclamation marks, no discounts shouted.
+   Watch out:  Do not add urgency, pop-ups or dense grids. Slow motion is for page-level transitions only; controls still respond instantly.
+   Default:    light theme (a dark theme is included)
+   Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Hanken+Grotesk:wght@300;400;500&display=swap">   (all SIL Open Font License)
+   Own brand colour? Keep this direction and swap the colour:
+               node scripts/palette.mjs --accent "#YOURHEX" --neutral 80 --tint 2
+   Other accents that suit it: oxblood oklch(0.36 0.11 20), ink navy oklch(0.3 0.07 260), or no accent at all (text-colour buttons)
+   Load after tokens.css. */
+:root {
+  color-scheme: light;
+  --bg: #FCF9F3;
+  --surface: #FFFEFD;
+  --surface-2: #F8F3EB;
+  --surface-3: #EDE7DE;
+  --border: #E8E2D8;
+  --border-strong: #938A7B;
+  --text: #21190C;
+  --text-muted: #60584A;
+  --text-subtle: #766D5F;
+  --accent: #0B4834;
+  --accent-hover: #003C29;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #E7F4EE;
+  --accent-text: #0B4834;
+  --focus: #0B4834;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #138562;
+  --chart-2: #9475BD;
+  --chart-3: #775400;
+  --chart-4: #008FAB;
+  --chart-5: #994B6B;
+  --chart-6: #34590D;
+  --shadow-color: 43 32 12;
+  --shadow-strength: 1;
+  --ring: rgb(43 32 12 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+  /* type */
+  --font-display: "Cormorant Garamond", ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: -0.01em;  --weight-display: 500;  --text-body: 16px;
+  /* shape and depth (none) */
+  --radius-sm: 0px;  --radius: 0px;  --radius-lg: 2px;  --border-w: 1px;
+  --shadow-raised: none;
+  --shadow-overlay: 0 0 0 1px var(--border-strong), 0 16px 48px rgb(var(--shadow-color) / calc(0.12 * var(--shadow-strength)));
+  --shadow-button: none;
+  /* density and motion (slow) */
+  --control-h: 48px;  --row-h: 56px;  --space-section: 128px;
+  --dur-fast: 180ms;  --dur-base: 320ms;  --dur-slow: 560ms;  --ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);  --press-scale: 0.99;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #100B05;
+    --surface: #19140C;
+    --surface-2: #221D15;
+    --surface-3: #2C271E;
+    --border: #2F2920;
+    --border-strong: #777166;
+    --text: #EBE7E1;
+    --text-muted: #A49F97;
+    --text-subtle: #948F88;
+    --accent: #356D57;
+    --accent-hover: #28604A;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #192821;
+    --accent-text: #86AF9D;
+    --focus: #356D57;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #57BA94;
+    --chart-2: #CCACF8;
+    --chart-3: #AE8433;
+    --chart-4: #6CDCFA;
+    --chart-5: #E993B4;
+    --chart-6: #7DA75F;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #100B05;
+  --surface: #19140C;
+  --surface-2: #221D15;
+  --surface-3: #2C271E;
+  --border: #2F2920;
+  --border-strong: #777166;
+  --text: #EBE7E1;
+  --text-muted: #A49F97;
+  --text-subtle: #948F88;
+  --accent: #356D57;
+  --accent-hover: #28604A;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #192821;
+  --accent-text: #86AF9D;
+  --focus: #356D57;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #57BA94;
+  --chart-2: #CCACF8;
+  --chart-3: #AE8433;
+  --chart-4: #6CDCFA;
+  --chart-5: #E993B4;
+  --chart-6: #7DA75F;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}

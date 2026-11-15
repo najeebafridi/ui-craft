@@ -157,6 +157,7 @@ export function generate({ accent, neutral = "brand", tint = 2, secondary = null
     CHART_OFFSETS.forEach((off, i) => { t[`chart-${i + 1}`] = solve(Math.max(0.11, Math.min(A.C, 0.16)), (A.H + off) % 360, chartL[i], dark ? 1 : -1, 3.05, [t.surface]); });
     const sh = hexToRgb(oklch(dark ? 0.02 : 0.25, Math.min(cn * 3, 0.05), Hn)).map((v) => Math.round(v * 255));
     t["shadow-color"] = sh.join(" ");
+    t["shadow-strength"] = dark ? "3" : "1";   // shadows need more weight to show on dark surfaces
     t.ring = dark ? "rgb(255 255 255 / 0.09)" : `rgb(${sh.join(" ")} / 0.08)`;          // 1px edge for cards and menus (decorative)
     t.highlight = dark ? "rgb(255 255 255 / 0.07)" : "rgb(255 255 255 / 0.18)";           // inner top edge on raised/solid controls
     return t;

@@ -1,0 +1,149 @@
+/* ui-craft direction: Apothecary editorial
+   For:        Skincare, wellness retail, craft food and drink, boutiques, florists, considered e-commerce.
+   Feeling:    Warm, intelligent, hand-made.
+   Signature:  The label: precise ingredient-style lists and numbered details set like packaging typography.
+   Type:       A bookish serif for names and headings, a humane sans for details. Product names in serif, facts in sans.
+   Shape:      Flat. Thin rules. Label-like blocks, as on a well-designed jar.
+   Imagery:    Products on neutral ground in natural light; hands, materials, ingredients. Consistent crop and grade.
+   Voice:      Specific and literary: what it is, what it is made of, how to use it.
+   Watch out:  Without real photography this collapses into the cream-and-earth-tone template. Use real product images or pick another direction.
+   Default:    light theme (a dark theme is included)
+   Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600&display=swap">   (all SIL Open Font License)
+   Own brand colour? Keep this direction and swap the colour:
+               node scripts/palette.mjs --accent "#YOURHEX" --neutral 85 --tint 3
+   Load after tokens.css. */
+:root {
+  color-scheme: light;
+  --bg: #FDF9EF;
+  --surface: #FFFEFD;
+  --surface-2: #FAF3E5;
+  --surface-3: #EFE7D7;
+  --border: #EAE2D1;
+  --border-strong: #968A70;
+  --text: #231903;
+  --text-muted: #63583F;
+  --text-subtle: #796D54;
+  --accent: #4E5C2A;
+  --accent-hover: #424F1D;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #EEF2E6;
+  --accent-text: #4E5C2A;
+  --focus: #4E5C2A;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #667B2A;
+  --chart-2: #5E86C8;
+  --chart-3: #8D412A;
+  --chart-4: #12957C;
+  --chart-5: #7E5596;
+  --chart-6: #5F4A00;
+  --shadow-color: 45 31 1;
+  --shadow-strength: 1;
+  --ring: rgb(45 31 1 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+  /* type */
+  --font-display: "Libre Caslon Text", ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: -0.01em;  --weight-display: 400;  --text-body: 16px;
+  /* shape and depth (none) */
+  --radius-sm: 0px;  --radius: 2px;  --radius-lg: 4px;  --border-w: 1px;
+  --shadow-raised: none;
+  --shadow-overlay: 0 0 0 1px var(--border-strong), 0 16px 48px rgb(var(--shadow-color) / calc(0.12 * var(--shadow-strength)));
+  --shadow-button: none;
+  /* density and motion (gentle) */
+  --control-h: 44px;  --row-h: 52px;  --space-section: 96px;
+  --dur-fast: 160ms;  --dur-base: 260ms;  --dur-slow: 400ms;  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);  --press-scale: 0.98;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #120B01;
+    --surface: #1B1406;
+    --surface-2: #241D0E;
+    --surface-3: #2E2717;
+    --border: #312919;
+    --border-strong: #7A715E;
+    --text: #EDE7DC;
+    --text-muted: #A59F92;
+    --text-subtle: #958F82;
+    --accent: #5C6A38;
+    --accent-hover: #4F5D2B;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #222618;
+    --accent-text: #9EAB84;
+    --focus: #5C6A38;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #98B05F;
+    --chart-2: #97BFFF;
+    --chart-3: #C5735B;
+    --chart-4: #74E2C6;
+    --chart-5: #C99CE4;
+    --chart-6: #B3953F;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #120B01;
+  --surface: #1B1406;
+  --surface-2: #241D0E;
+  --surface-3: #2E2717;
+  --border: #312919;
+  --border-strong: #7A715E;
+  --text: #EDE7DC;
+  --text-muted: #A59F92;
+  --text-subtle: #958F82;
+  --accent: #5C6A38;
+  --accent-hover: #4F5D2B;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #222618;
+  --accent-text: #9EAB84;
+  --focus: #5C6A38;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #98B05F;
+  --chart-2: #97BFFF;
+  --chart-3: #C5735B;
+  --chart-4: #74E2C6;
+  --chart-5: #C99CE4;
+  --chart-6: #B3953F;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}

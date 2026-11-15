@@ -1,0 +1,149 @@
+/* ui-craft direction: Calm productivity
+   For:        General SaaS, project and task tools, calendars, CRMs, internal apps. The safe default when no other direction clearly fits.
+   Feeling:    Clear, friendly, capable. Nothing shouts.
+   Signature:  One satisfying completion moment (a check that draws itself, a row that settles) and beautifully calm lists.
+   Type:       One neutral sans for everything. Headings 600 with tight tracking; body 400.
+   Shape:      Medium radius. Soft two-layer shadows with a 1px ring; inputs keep a real border.
+   Imagery:    Real product UI, simple line icons, avatars. A small custom empty-state illustration at most.
+   Voice:      Plain and warm. Verb + object buttons. Specific confirmations.
+   Watch out:  Easy to make generic. It needs exact spacing, real content and one signature detail to rise above a template.
+   Default:    light theme (a dark theme is included)
+   Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">   (all SIL Open Font License)
+   Own brand colour? Keep this direction and swap the colour:
+               node scripts/palette.mjs --accent "#YOURHEX" --neutral warm --tint 1
+   Load after tokens.css. */
+:root {
+  color-scheme: light;
+  --bg: #FBF9F6;
+  --surface: #FFFEFD;
+  --surface-2: #F6F3EF;
+  --surface-3: #EBE7E3;
+  --border: #E6E2DE;
+  --border-strong: #8F8A83;
+  --text: #1E1A14;
+  --text-muted: #5D5852;
+  --text-subtle: #726D66;
+  --accent: #1C6FD2;
+  --accent-hover: #0461C3;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #E7F1FF;
+  --accent-text: #156ACD;
+  --focus: #1C6FD2;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #2670CC;
+  --chart-2: #D55A40;
+  --chart-3: #006B54;
+  --chart-4: #9C61C8;
+  --chart-5: #846300;
+  --chart-6: #00566D;
+  --shadow-color: 39 32 24;
+  --shadow-strength: 1;
+  --ring: rgb(39 32 24 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+  /* type */
+  --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: -0.022em;  --weight-display: 600;  --text-body: 14px;
+  /* shape and depth (soft) */
+  --radius-sm: 6px;  --radius: 8px;  --radius-lg: 12px;  --border-w: 1px;
+  --shadow-raised: 0 0 0 1px var(--ring), 0 1px 2px rgb(var(--shadow-color) / calc(0.06 * var(--shadow-strength))), 0 2px 4px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength)));
+  --shadow-overlay: 0 0 0 1px var(--ring), 0 4px 8px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength))), 0 12px 24px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength))), 0 24px 48px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength)));
+  --shadow-button: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(var(--shadow-color) / calc(0.14 * var(--shadow-strength)));
+  /* density and motion (crisp) */
+  --control-h: 36px;  --row-h: 40px;  --space-section: 48px;
+  --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0E0C08;
+    --surface: #171411;
+    --surface-2: #201E1A;
+    --surface-3: #2A2723;
+    --border: #2D2A25;
+    --border-strong: #75716C;
+    --text: #EAE7E4;
+    --text-muted: #A29F9C;
+    --text-subtle: #928F8C;
+    --accent: #1C6FD2;
+    --accent-hover: #0461C3;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #0F2440;
+    --accent-text: #6DA7F4;
+    --focus: #1C6FD2;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #63A6FF;
+    --chart-2: #FFA28C;
+    --chart-3: #00A482;
+    --chart-4: #DEB8FF;
+    --chart-5: #DDA800;
+    --chart-6: #00A8D2;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0E0C08;
+  --surface: #171411;
+  --surface-2: #201E1A;
+  --surface-3: #2A2723;
+  --border: #2D2A25;
+  --border-strong: #75716C;
+  --text: #EAE7E4;
+  --text-muted: #A29F9C;
+  --text-subtle: #928F8C;
+  --accent: #1C6FD2;
+  --accent-hover: #0461C3;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #0F2440;
+  --accent-text: #6DA7F4;
+  --focus: #1C6FD2;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #63A6FF;
+  --chart-2: #FFA28C;
+  --chart-3: #00A482;
+  --chart-4: #DEB8FF;
+  --chart-5: #DDA800;
+  --chart-6: #00A8D2;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}

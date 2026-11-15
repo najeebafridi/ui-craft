@@ -1,0 +1,402 @@
+[
+  {
+    "slug": "calm-productivity",
+    "name": "Calm productivity",
+    "theme": "light",
+    "for": "General SaaS, project and task tools, calendars, CRMs, internal apps. The safe default when no other direction clearly fits.",
+    "feeling": "Clear, friendly, capable. Nothing shouts.",
+    "signature": "One satisfying completion moment (a check that draws itself, a row that settles) and beautifully calm lists.",
+    "accent": "#1C6FD2",
+    "bg": "#FBF9F6",
+    "fonts": {
+      "display": "Inter",
+      "sans": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      6,
+      8,
+      12
+    ],
+    "depth": "soft",
+    "motion": "crisp",
+    "notes": []
+  },
+  {
+    "slug": "quiet-instrument",
+    "name": "Quiet instrument",
+    "theme": "dark",
+    "for": "Developer tools, issue trackers, B2B workflow software, power-user apps that people live in all day.",
+    "feeling": "Fast, calm, in control. The chrome disappears so the work is the hero.",
+    "signature": "Keyboard-first: visible shortcut hints (kbd chips), a command palette, instant response with no decorative motion.",
+    "accent": "#3570E7",
+    "bg": "#0A0C10",
+    "fonts": {
+      "display": "Geist",
+      "sans": "Geist",
+      "mono": "Geist Mono"
+    },
+    "radius": [
+      4,
+      6,
+      10
+    ],
+    "depth": "hairline",
+    "motion": "instant",
+    "notes": [
+      "Accent darkened slightly (#3672E9 -> #3570E7) so white button text passes 4.5:1."
+    ]
+  },
+  {
+    "slug": "paper-and-ink",
+    "name": "Paper and ink",
+    "theme": "light",
+    "for": "Writing, notes, knowledge bases, documentation, publishing, newsletters, reading apps.",
+    "feeling": "Literate, calm, unhurried. Like a well-set page.",
+    "signature": "Typographic care you can feel: true italics, hanging punctuation, old-style or tabular figures used on purpose, a perfect reading measure.",
+    "accent": "#234C88",
+    "bg": "#FDF8F3",
+    "fonts": {
+      "display": "Newsreader",
+      "sans": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      3,
+      5,
+      8
+    ],
+    "depth": "none",
+    "motion": "gentle",
+    "notes": [
+      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+    ]
+  },
+  {
+    "slug": "studio-gloss",
+    "name": "Studio gloss",
+    "theme": "light",
+    "for": "Premium consumer products and apps, hardware, cameras, audio, flagship product pages, portfolios of physical products.",
+    "feeling": "Polished, expensive, effortless.",
+    "signature": "The product is the hero: one huge image and one sentence per screen, with a scroll reveal that explains a feature.",
+    "accent": "#006FD8",
+    "bg": "#F9F9F9",
+    "fonts": {
+      "display": "Inter",
+      "sans": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      10,
+      18,
+      28
+    ],
+    "depth": "crisp",
+    "motion": "gentle",
+    "notes": []
+  },
+  {
+    "slug": "maison",
+    "name": "Maison",
+    "theme": "light",
+    "for": "Luxury goods, hotels, jewellery, fine dining, fashion, private banking, premium real estate.",
+    "feeling": "Quiet confidence. Desire through restraint.",
+    "signature": "Space as the luxury: one object, one line of text, and a lot of nothing around them. Slow page-level fades.",
+    "accent": "#0B4834",
+    "bg": "#FCF9F3",
+    "fonts": {
+      "display": "Cormorant Garamond",
+      "sans": "Hanken Grotesk",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      0,
+      0,
+      2
+    ],
+    "depth": "none",
+    "motion": "slow",
+    "notes": [
+      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+    ]
+  },
+  {
+    "slug": "apothecary",
+    "name": "Apothecary editorial",
+    "theme": "light",
+    "for": "Skincare, wellness retail, craft food and drink, boutiques, florists, considered e-commerce.",
+    "feeling": "Warm, intelligent, hand-made.",
+    "signature": "The label: precise ingredient-style lists and numbered details set like packaging typography.",
+    "accent": "#4E5C2A",
+    "bg": "#FDF9EF",
+    "fonts": {
+      "display": "Libre Caslon Text",
+      "sans": "Hanken Grotesk",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      0,
+      2,
+      4
+    ],
+    "depth": "none",
+    "motion": "gentle",
+    "notes": [
+      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+    ]
+  },
+  {
+    "slug": "soft-wellness",
+    "name": "Soft wellness",
+    "theme": "light",
+    "for": "Meditation, sleep, therapy, mental health, patient apps, family and care products.",
+    "feeling": "Safe, slow, kind. Lowers the heart rate.",
+    "signature": "One slow breathing element (a shape that expands and settles over 4-6s, pausable) and extremely gentle confirmations.",
+    "accent": "#23818A",
+    "bg": "#F3FBFC",
+    "fonts": {
+      "display": "Nunito",
+      "sans": "Nunito Sans",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      12,
+      20,
+      28
+    ],
+    "depth": "diffuse",
+    "motion": "gentle",
+    "notes": [
+      "Accent darkened slightly (#25838C -> #23818A) so white button text passes 4.5:1."
+    ]
+  },
+  {
+    "slug": "playful",
+    "name": "Playful game-feel",
+    "theme": "light",
+    "for": "Learning apps, kids and family, habit and fitness trackers, casual consumer apps, quizzes.",
+    "feeling": "Fun, rewarding, tactile.",
+    "signature": "Tactile buttons: a 4px solid lip that the button sinks into on press, plus one springy reward moment on success.",
+    "accent": "#0077D6",
+    "bg": "#F9F9F9",
+    "fonts": {
+      "display": "Baloo 2",
+      "sans": "Nunito",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      12,
+      16,
+      24
+    ],
+    "depth": "lip",
+    "motion": "bouncy",
+    "notes": [
+      "Accent darkened slightly (#0081E7 -> #0077D6) so white button text passes 4.5:1.",
+      "Accent is light, so text on accent buttons is dark, not white."
+    ]
+  },
+  {
+    "slug": "trusted-ledger",
+    "name": "Trusted ledger",
+    "theme": "light",
+    "for": "Banking, accounting, invoicing, payroll, insurance, tax, B2B finance dashboards.",
+    "feeling": "Safe, exact, modern. Money is handled carefully here.",
+    "signature": "Numbers set like a ledger: right-aligned, tabular, decimals lined up, currency symbols quieter than the digits, and confirmations that state the exact amount and time.",
+    "accent": "#0B4C92",
+    "bg": "#F7F9FC",
+    "fonts": {
+      "display": "IBM Plex Sans",
+      "sans": "IBM Plex Sans",
+      "mono": "IBM Plex Mono"
+    },
+    "radius": [
+      4,
+      6,
+      10
+    ],
+    "depth": "soft",
+    "motion": "crisp",
+    "notes": [
+      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+    ]
+  },
+  {
+    "slug": "neo-bank",
+    "name": "Neo-bank bold",
+    "theme": "dark",
+    "for": "Consumer fintech, cards, wallets, subscriptions, investing for younger audiences, bold consumer apps.",
+    "feeling": "Confident, current, a little loud.",
+    "signature": "Giant numerals: the balance or key figure at 56-72px, tabular, with one vivid signature colour on black.",
+    "accent": "#B1EF4A",
+    "bg": "#0C0C0C",
+    "fonts": {
+      "display": "Space Grotesk",
+      "sans": "Manrope",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      12,
+      20,
+      28
+    ],
+    "depth": "hairline",
+    "motion": "crisp",
+    "notes": [
+      "Accent is light, so text on accent buttons is dark, not white."
+    ]
+  },
+  {
+    "slug": "public-clarity",
+    "name": "Public clarity",
+    "theme": "light",
+    "for": "Government and public services, health portals, utilities, legal and benefits forms, education services, anything used by everyone.",
+    "feeling": "Dependable, fair, impossible to misread.",
+    "signature": "An unmissable focus state (3px ring plus offset) and one question per page with a summary before submit.",
+    "accent": "#195DAA",
+    "bg": "#F9F9F9",
+    "fonts": {
+      "display": "Public Sans",
+      "sans": "Public Sans",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      0,
+      2,
+      4
+    ],
+    "depth": "none",
+    "motion": "instant",
+    "notes": [
+      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+    ]
+  },
+  {
+    "slug": "marketplace",
+    "name": "Open-air marketplace",
+    "theme": "light",
+    "for": "Travel, rentals, food delivery, events, classifieds, consumer marketplaces and booking.",
+    "feeling": "Inviting, trustworthy, easy.",
+    "signature": "Search as the hero: one prominent search bar, then photo cards with honest totals and ratings.",
+    "accent": "#DA354E",
+    "bg": "#FBF8F6",
+    "fonts": {
+      "display": "Figtree",
+      "sans": "Figtree",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      10,
+      14,
+      20
+    ],
+    "depth": "crisp",
+    "motion": "crisp",
+    "notes": [
+      "Brand colour is close to error red. Error colour was shifted toward crimson; also never use the solid brand colour for error states, and always pair errors with an icon and text.",
+      "Accent darkened slightly (#DE3951 -> #DA354E) so white button text passes 4.5:1."
+    ]
+  },
+  {
+    "slug": "stage-dark",
+    "name": "Stage dark",
+    "theme": "dark",
+    "for": "Music, video, podcasts, gaming, events, streaming, portfolios of media work.",
+    "feeling": "Immersive. The content performs; the interface holds the lights.",
+    "signature": "Colour from the content: a faint ambient tint behind the current artwork (blurred, very low opacity) and large condensed titles.",
+    "accent": "#F8962D",
+    "bg": "#0F0B09",
+    "fonts": {
+      "display": "Barlow Condensed",
+      "sans": "Outfit",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      6,
+      10,
+      16
+    ],
+    "depth": "hairline",
+    "motion": "crisp",
+    "notes": [
+      "Accent is light, so text on accent buttons is dark, not white."
+    ]
+  },
+  {
+    "slug": "athletic",
+    "name": "Athletic monument",
+    "theme": "light",
+    "for": "Sportswear, fitness brands, product drops, campaigns, events, bold e-commerce.",
+    "feeling": "Powerful, urgent, physical.",
+    "signature": "Monumental type over imagery: one giant uppercase word or line that fills the width.",
+    "accent": "#E62700",
+    "bg": "#F9F9F9",
+    "fonts": {
+      "display": "Anton",
+      "sans": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      0,
+      0,
+      0
+    ],
+    "depth": "none",
+    "motion": "crisp",
+    "notes": [
+      "Brand colour is close to error red. Error colour was shifted toward crimson; also never use the solid brand colour for error states, and always pair errors with an icon and text.",
+      "Accent darkened slightly (#FC3006 -> #E62700) so white button text passes 4.5:1."
+    ]
+  },
+  {
+    "slug": "graph-paper",
+    "name": "Graph-paper technical",
+    "theme": "dark",
+    "for": "APIs, infrastructure, security, data and AI platforms, observability, technical documentation.",
+    "feeling": "Rigorous, credible, engineered.",
+    "signature": "A visible grid: a faint dotted or lined background and hairline frames that make the layout look measured.",
+    "accent": "#2CC69A",
+    "bg": "#0A0C10",
+    "fonts": {
+      "display": "Geist",
+      "sans": "Geist",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      2,
+      4,
+      6
+    ],
+    "depth": "hairline",
+    "motion": "instant",
+    "notes": [
+      "Accent is light, so text on accent buttons is dark, not white."
+    ]
+  },
+  {
+    "slug": "bright-workshop",
+    "name": "Bright workshop",
+    "theme": "light",
+    "for": "Creative and collaboration tools, agencies, studios, startup launch pages, community products.",
+    "feeling": "Energetic, witty, organised chaos.",
+    "signature": "Bold colour blocking: two or three solid colour fields with an oversized, slightly odd headline crossing them.",
+    "accent": "#2E48E9",
+    "bg": "#F9F9F9",
+    "fonts": {
+      "display": "Bricolage Grotesque",
+      "sans": "DM Sans",
+      "mono": "JetBrains Mono"
+    },
+    "radius": [
+      10,
+      16,
+      24
+    ],
+    "depth": "none",
+    "motion": "crisp",
+    "notes": [
+      "Accent is light, so text on accent buttons is dark, not white.",
+      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+    ]
+  }
+]

@@ -1,0 +1,164 @@
+/* ui-craft direction: Bright workshop
+   For:        Creative and collaboration tools, agencies, studios, startup launch pages, community products.
+   Feeling:    Energetic, witty, organised chaos.
+   Signature:  Bold colour blocking: two or three solid colour fields with an oversized, slightly odd headline crossing them.
+   Type:       A quirky display grotesque for oversized headlines; a tidy sans for text.
+   Shape:      Flat fields of solid colour, 2px dark outlines, slightly offset layers like cut paper.
+   Imagery:    Collage: screenshots, shapes and illustrated people overlapping on colour blocks.
+   Voice:      Witty and human, never corporate.
+   Watch out:  Inside the actual tool, switch to neutral chrome (Calm productivity); the loud colour is for marketing and moments.
+   Default:    light theme (a dark theme is included)
+   Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap">   (all SIL Open Font License)
+   Own brand colour? Keep this direction and swap the colour:
+               node scripts/palette.mjs --accent "#YOURHEX" --neutral pure --tint 0
+   Load after tokens.css. */
+:root {
+  color-scheme: light;
+  --bg: #F9F9F9;
+  --surface: #FEFEFE;
+  --surface-2: #F3F3F3;
+  --surface-3: #E8E8E8;
+  --border: #E3E3E3;
+  --border-strong: #8B8B8B;
+  --text: #1B1B1B;
+  --text-muted: #595959;
+  --text-subtle: #6D6D6D;
+  --accent: #2E48E9;
+  --accent-hover: #2537D9;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #EAF0FF;
+  --accent-text: #3552D3;
+  --secondary: #F7D22A;
+  --secondary-hover: #E8C300;
+  --secondary-fg: #1A1606;
+  --secondary-soft: #F7F1D6;
+  --secondary-text: #806A00;
+  --focus: #2E48E9;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #4A69CE;
+  --chart-2: #D16021;
+  --chart-3: #006A5F;
+  --chart-4: #AA5BBA;
+  --chart-5: #7A6900;
+  --chart-6: #005477;
+  --shadow-color: 34 34 34;
+  --shadow-strength: 1;
+  --ring: rgb(34 34 34 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+  /* type */
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: -0.03em;  --weight-display: 600;  --text-body: 16px;
+  /* shape and depth (none) */
+  --radius-sm: 10px;  --radius: 16px;  --radius-lg: 24px;  --border-w: 2px;
+  --shadow-raised: none;
+  --shadow-overlay: 0 0 0 1px var(--border-strong), 0 16px 48px rgb(var(--shadow-color) / calc(0.12 * var(--shadow-strength)));
+  --shadow-button: none;
+  /* density and motion (crisp) */
+  --control-h: 44px;  --row-h: 52px;  --space-section: 80px;
+  --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0C0C0C;
+    --surface: #151515;
+    --surface-2: #1E1E1E;
+    --surface-3: #282828;
+    --border: #2A2A2A;
+    --border-strong: #737373;
+    --text: #E8E8E8;
+    --text-muted: #A1A1A1;
+    --text-subtle: #909090;
+    --accent: #324FF0;
+    --accent-hover: #293FE0;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #162146;
+    --accent-text: #7E9FFF;
+    --secondary: #F7D22A;
+    --secondary-hover: #E8C300;
+    --secondary-fg: #1A1606;
+    --secondary-soft: #2C2300;
+    --secondary-text: #BDA337;
+    --focus: #324FF0;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #7E9FFF;
+    --chart-2: #FFA479;
+    --chart-3: #00A293;
+    --chart-4: #F1AEFF;
+    --chart-5: #CCB100;
+    --chart-6: #00A4E5;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0C0C0C;
+  --surface: #151515;
+  --surface-2: #1E1E1E;
+  --surface-3: #282828;
+  --border: #2A2A2A;
+  --border-strong: #737373;
+  --text: #E8E8E8;
+  --text-muted: #A1A1A1;
+  --text-subtle: #909090;
+  --accent: #324FF0;
+  --accent-hover: #293FE0;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #162146;
+  --accent-text: #7E9FFF;
+  --secondary: #F7D22A;
+  --secondary-hover: #E8C300;
+  --secondary-fg: #1A1606;
+  --secondary-soft: #2C2300;
+  --secondary-text: #BDA337;
+  --focus: #324FF0;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #7E9FFF;
+  --chart-2: #FFA479;
+  --chart-3: #00A293;
+  --chart-4: #F1AEFF;
+  --chart-5: #CCB100;
+  --chart-6: #00A4E5;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}

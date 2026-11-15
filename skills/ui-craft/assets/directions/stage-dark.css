@@ -1,0 +1,150 @@
+/* ui-craft direction: Stage dark
+   For:        Music, video, podcasts, gaming, events, streaming, portfolios of media work.
+   Feeling:    Immersive. The content performs; the interface holds the lights.
+   Signature:  Colour from the content: a faint ambient tint behind the current artwork (blurred, very low opacity) and large condensed titles.
+   Type:       A condensed display face for big titles; a confident geometric sans for everything else.
+   Shape:      Depth from surface lightness, not shadow. Artwork gets a 1px inner outline.
+   Imagery:    Cover art, posters, stills. They supply all the colour; the UI stays near-black and neutral.
+   Voice:      Short, low on hype.
+   Watch out:  Near-black, never pure black next to bright art. Dark text on the bright accent. Keep motion cinematic but short; no parallax on text.
+   Default:    dark theme (set <html data-theme="dark">; the light theme below also works)
+   Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Outfit:wght@400;500;600&display=swap">   (all SIL Open Font License)
+   Own brand colour? Keep this direction and swap the colour:
+               node scripts/palette.mjs --accent "#YOURHEX" --neutral brand --tint 1
+   Other accents that suit it: magenta oklch(0.68 0.22 350), acid green oklch(0.84 0.2 135), electric cyan oklch(0.8 0.13 210)
+   Load after tokens.css. */
+:root {
+  color-scheme: light;
+  --bg: #FBF8F6;
+  --surface: #FFFEFD;
+  --surface-2: #F7F3EF;
+  --surface-3: #EBE7E3;
+  --border: #E7E2DE;
+  --border-strong: #918984;
+  --text: #1F1914;
+  --text-muted: #5E5852;
+  --text-subtle: #746D68;
+  --accent: #F8962D;
+  --accent-hover: #E88813;
+  --accent-fg: #201307;
+  --accent-soft: #FFECDD;
+  --accent-text: #A05A00;
+  --focus: #A05A00;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #A55D00;
+  --chart-2: #00999E;
+  --chart-3: #8F2C7B;
+  --chart-4: #808800;
+  --chart-5: #006ABE;
+  --chart-6: #90120C;
+  --shadow-color: 40 32 25;
+  --shadow-strength: 1;
+  --ring: rgb(40 32 25 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+  /* type */
+  --font-display: "Barlow Condensed", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: 0em;  --weight-display: 600;  --text-body: 15px;
+  /* shape and depth (hairline) */
+  --radius-sm: 6px;  --radius: 10px;  --radius-lg: 16px;  --border-w: 1px;
+  --shadow-raised: 0 0 0 1px var(--ring);
+  --shadow-overlay: 0 0 0 1px var(--ring), 0 2px 6px rgb(var(--shadow-color) / calc(0.06 * var(--shadow-strength))), 0 12px 32px rgb(var(--shadow-color) / calc(0.12 * var(--shadow-strength)));
+  --shadow-button: inset 0 1px 0 var(--highlight);
+  /* density and motion (crisp) */
+  --control-h: 40px;  --row-h: 48px;  --space-section: 48px;
+  --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0F0B09;
+    --surface: #181411;
+    --surface-2: #211D1A;
+    --surface-3: #2B2724;
+    --border: #2D2926;
+    --border-strong: #77726D;
+    --text: #EAE7E5;
+    --text-muted: #A29F9C;
+    --text-subtle: #938F8C;
+    --accent: #F8962D;
+    --accent-hover: #E88813;
+    --accent-fg: #201307;
+    --accent-soft: #371D03;
+    --accent-text: #DA924F;
+    --focus: #F8962D;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #EA8A19;
+    --chart-2: #00D8DF;
+    --chart-3: #C761B0;
+    --chart-4: #C9D64A;
+    --chart-5: #72B6FF;
+    --chart-6: #EA6C5C;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0F0B09;
+  --surface: #181411;
+  --surface-2: #211D1A;
+  --surface-3: #2B2724;
+  --border: #2D2926;
+  --border-strong: #77726D;
+  --text: #EAE7E5;
+  --text-muted: #A29F9C;
+  --text-subtle: #938F8C;
+  --accent: #F8962D;
+  --accent-hover: #E88813;
+  --accent-fg: #201307;
+  --accent-soft: #371D03;
+  --accent-text: #DA924F;
+  --focus: #F8962D;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #EA8A19;
+  --chart-2: #00D8DF;
+  --chart-3: #C761B0;
+  --chart-4: #C9D64A;
+  --chart-5: #72B6FF;
+  --chart-6: #EA6C5C;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}

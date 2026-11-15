@@ -1,0 +1,150 @@
+/* ui-craft direction: Neo-bank bold
+   For:        Consumer fintech, cards, wallets, subscriptions, investing for younger audiences, bold consumer apps.
+   Feeling:    Confident, current, a little loud.
+   Signature:  Giant numerals: the balance or key figure at 56-72px, tabular, with one vivid signature colour on black.
+   Type:       A wide, characterful grotesque for huge numerals and headings; a clean geometric sans for text.
+   Shape:      Large radii and pill-shaped primary buttons. Flat blocks of solid colour; almost no shadow.
+   Imagery:    The card or device as an object; big flat colour fields.
+   Voice:      Casual, direct, human. Short.
+   Watch out:  One vivid colour only. Dark text on the vivid colour (never white on lime). Money is still serious: confirmations stay calm and exact.
+   Default:    dark theme (set <html data-theme="dark">; the light theme below also works)
+   Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap">   (all SIL Open Font License)
+   Own brand colour? Keep this direction and swap the colour:
+               node scripts/palette.mjs --accent "#YOURHEX" --neutral pure --tint 0
+   Other accents that suit it: coral oklch(0.72 0.19 28), electric blue oklch(0.62 0.22 258), violet oklch(0.62 0.22 300)
+   Load after tokens.css. */
+:root {
+  color-scheme: light;
+  --bg: #F9F9F9;
+  --surface: #FEFEFE;
+  --surface-2: #F3F3F3;
+  --surface-3: #E8E8E8;
+  --border: #E3E3E3;
+  --border-strong: #8B8B8B;
+  --text: #1B1B1B;
+  --text-muted: #595959;
+  --text-subtle: #6D6D6D;
+  --accent: #B1EF4A;
+  --accent-hover: #A3E036;
+  --accent-fg: #121909;
+  --accent-soft: #E9F5DC;
+  --accent-text: #527700;
+  --focus: #527700;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #598000;
+  --chart-2: #5780E6;
+  --chart-3: #983800;
+  --chart-4: #009583;
+  --chart-5: #8E44A3;
+  --chart-6: #5C4C00;
+  --shadow-color: 34 34 34;
+  --shadow-strength: 1;
+  --ring: rgb(34 34 34 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+  /* type */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: -0.03em;  --weight-display: 600;  --text-body: 16px;
+  /* shape and depth (hairline) */
+  --radius-sm: 12px;  --radius: 20px;  --radius-lg: 28px;  --border-w: 1px;
+  --shadow-raised: 0 0 0 1px var(--ring);
+  --shadow-overlay: 0 0 0 1px var(--ring), 0 2px 6px rgb(var(--shadow-color) / calc(0.06 * var(--shadow-strength))), 0 12px 32px rgb(var(--shadow-color) / calc(0.12 * var(--shadow-strength)));
+  --shadow-button: inset 0 1px 0 var(--highlight);
+  /* density and motion (crisp) */
+  --control-h: 48px;  --row-h: 56px;  --space-section: 56px;
+  --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0C0C0C;
+    --surface: #151515;
+    --surface-2: #1E1E1E;
+    --surface-3: #282828;
+    --border: #2A2A2A;
+    --border-strong: #737373;
+    --text: #E8E8E8;
+    --text-muted: #A1A1A1;
+    --text-subtle: #909090;
+    --accent: #B1EF4A;
+    --accent-hover: #A3E036;
+    --accent-fg: #121909;
+    --accent-soft: #1A2A00;
+    --accent-text: #89B645;
+    --focus: #B1EF4A;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #87B73A;
+    --chart-2: #9FBDFF;
+    --chart-3: #D96530;
+    --chart-4: #00EACF;
+    --chart-5: #DB8EF2;
+    --chart-6: #B39600;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0C0C0C;
+  --surface: #151515;
+  --surface-2: #1E1E1E;
+  --surface-3: #282828;
+  --border: #2A2A2A;
+  --border-strong: #737373;
+  --text: #E8E8E8;
+  --text-muted: #A1A1A1;
+  --text-subtle: #909090;
+  --accent: #B1EF4A;
+  --accent-hover: #A3E036;
+  --accent-fg: #121909;
+  --accent-soft: #1A2A00;
+  --accent-text: #89B645;
+  --focus: #B1EF4A;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #87B73A;
+  --chart-2: #9FBDFF;
+  --chart-3: #D96530;
+  --chart-4: #00EACF;
+  --chart-5: #DB8EF2;
+  --chart-6: #B39600;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}

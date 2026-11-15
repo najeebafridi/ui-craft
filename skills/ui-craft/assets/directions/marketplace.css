@@ -1,0 +1,149 @@
+/* ui-craft direction: Open-air marketplace
+   For:        Travel, rentals, food delivery, events, classifieds, consumer marketplaces and booking.
+   Feeling:    Inviting, trustworthy, easy.
+   Signature:  Search as the hero: one prominent search bar, then photo cards with honest totals and ratings.
+   Type:       A friendly geometric sans. Prices and ratings in semibold.
+   Shape:      Friendly radii. Photo cards with a 1px inner outline; light shadows only on things that lift.
+   Imagery:    Real places, food and people, large and consistent in aspect ratio. Photos carry the colour.
+   Voice:      Warm and welcoming. Clear total prices.
+   Watch out:  The accent is close to error red: errors use a separate crimson plus icon and text. Total price visible before the last step.
+   Default:    light theme (a dark theme is included)
+   Fonts:      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">   (all SIL Open Font License)
+   Own brand colour? Keep this direction and swap the colour:
+               node scripts/palette.mjs --accent "#YOURHEX" --neutral 60 --tint 1
+   Load after tokens.css. */
+:root {
+  color-scheme: light;
+  --bg: #FBF8F6;
+  --surface: #FFFEFD;
+  --surface-2: #F7F3EF;
+  --surface-3: #EBE7E3;
+  --border: #E7E2DE;
+  --border-strong: #918984;
+  --text: #1F1914;
+  --text-muted: #5E5853;
+  --text-subtle: #746D68;
+  --accent: #DA354E;
+  --accent-hover: #CA2141;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #FFEBEA;
+  --accent-text: #CC2443;
+  --focus: #DA354E;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #CE3C7C;
+  --danger-soft: #FFEEF3;
+  --danger-text: #AF1863;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #BD3F4D;
+  --chart-2: #00A05C;
+  --chart-3: #6142AA;
+  --chart-4: #B07000;
+  --chart-5: #007784;
+  --chart-6: #841660;
+  --shadow-color: 40 32 25;
+  --shadow-strength: 1;
+  --ring: rgb(40 32 25 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+  /* type */
+  --font-display: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: -0.02em;  --weight-display: 600;  --text-body: 16px;
+  /* shape and depth (crisp) */
+  --radius-sm: 10px;  --radius: 14px;  --radius-lg: 20px;  --border-w: 1px;
+  --shadow-raised: 0 0 0 1px var(--ring), 0 2px 4px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength))), 0 8px 16px rgb(var(--shadow-color) / calc(0.07 * var(--shadow-strength)));
+  --shadow-overlay: 0 0 0 1px var(--ring), 0 8px 16px rgb(var(--shadow-color) / calc(0.07 * var(--shadow-strength))), 0 24px 56px rgb(var(--shadow-color) / calc(0.14 * var(--shadow-strength)));
+  --shadow-button: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(var(--shadow-color) / calc(0.16 * var(--shadow-strength))), 0 2px 6px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength)));
+  /* density and motion (crisp) */
+  --control-h: 44px;  --row-h: 52px;  --space-section: 56px;
+  --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);  --press-scale: 0.97;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0F0B09;
+    --surface: #181411;
+    --surface-2: #211D1A;
+    --surface-3: #2B2724;
+    --border: #2E2926;
+    --border-strong: #77726E;
+    --text: #EAE7E5;
+    --text-muted: #A39F9C;
+    --text-subtle: #938F8C;
+    --accent: #DA354E;
+    --accent-hover: #CA2141;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #401317;
+    --accent-text: #F47981;
+    --focus: #DA354E;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #CC4A80;
+    --danger-soft: #331821;
+    --danger-text: #F088AE;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #F8767E;
+    --chart-2: #55DB90;
+    --chart-3: #9176E3;
+    --chart-4: #FFBC68;
+    --chart-5: #00C7DC;
+    --chart-6: #DB6BAE;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0F0B09;
+  --surface: #181411;
+  --surface-2: #211D1A;
+  --surface-3: #2B2724;
+  --border: #2E2926;
+  --border-strong: #77726E;
+  --text: #EAE7E5;
+  --text-muted: #A39F9C;
+  --text-subtle: #938F8C;
+  --accent: #DA354E;
+  --accent-hover: #CA2141;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #401317;
+  --accent-text: #F47981;
+  --focus: #DA354E;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #CC4A80;
+  --danger-soft: #331821;
+  --danger-text: #F088AE;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #F8767E;
+  --chart-2: #55DB90;
+  --chart-3: #9176E3;
+  --chart-4: #FFBC68;
+  --chart-5: #00C7DC;
+  --chart-6: #DB6BAE;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}

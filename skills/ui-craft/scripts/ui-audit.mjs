@@ -30,7 +30,7 @@ const CHROME = [
 ].filter(Boolean).find(existsSync);
 if (!CHROME) { console.log("No Chrome/Chromium/Edge found. Set CHROME_PATH, or review the page by eye with the checklist."); process.exit(2); }
 const PORT = 9300 + Math.floor(Math.random() * 500);
-const chrome = spawn(CHROME, [`--remote-debugging-port=${PORT}`, "--headless=new", `--user-data-dir=${mkdtempSync(join(tmpdir(), "ui-audit-profile-"))}`, "--no-first-run", "--hide-scrollbars", "about:blank"], { stdio: "ignore" });
+const chrome = spawn(CHROME, [`--remote-debugging-port=${PORT}`, "--headless=new", `--user-data-dir=${mkdtempSync(join(tmpdir(), "ui-audit-profile-"))}`, "--no-first-run", "--hide-scrollbars", "--allow-file-access-from-files", "about:blank"], { stdio: "ignore" });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function cdp(wsUrl) {
