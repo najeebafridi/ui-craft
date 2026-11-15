@@ -14,10 +14,14 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; push to
 - [x] 4. Fast mockups -> references/mockups.md, assets/mockup-template.html, assets/options-board.html
 - [x] 5. Evals: 2 rounds. Round 2: 97% vs 57% checks passed; blind judge preferred skill on 5/5. See evals/RESULTS.md
 - [x] 6. Package: .claude-plugin/ (plugin + marketplace), AGENTS.md (generated), README.md
+- [x] 11. Version 2.1.0, Phase 1 of ROADMAP.md: the Studio (docs/index.html, built by tools/build-studio.mjs from tools/studio/template.html; hosted at https://najeebafridi.github.io/ui-craft/). Palette engine split into scripts/palette-core.mjs (browser-safe) and palette.mjs (CLI); direction data moved to tools/directions-data.mjs.
 - [x] 10. Version 2.0.0, the premium upgrade: 16 visual directions (assets/directions + gallery), palette generator (scripts/palette.mjs), new guides (directions, premium-craft, color-theory, psychology-emotion, platforms), craft notes in ui-audit, tools/build-directions.mjs. Tested against v1: v2 preferred in 13 of 14 blind verdicts (evals/RESULTS.md).
 - [x] 9. Whole-app review mode + per-page summary (v1.2.0).
 - [x] 8. Review mode (v1.1.0): ui-audit score 0-100 + references/review-mode.md. Installed for the user via ~/.claude/settings.json (marketplace ui-craft, autoUpdate on).
 - [x] 7. Polish: fresh review fixed 25 consistency issues (tokens = colour guide, no 13px/11px, rows 36/40/44, sections 64–96, Radix credit). Screenshots removed from git history (repo 5.4 MB -> ~0.4 MB); they stay on disk, ignored.
+
+## Next
+See ROADMAP.md. Next phase: 2, the Immersive web skill. Do one phase per session and stop after each, so the user controls usage.
 
 ## Not done yet / next ideas
 - Published 2026-11-16: https://github.com/najeebafridi/ui-craft (public, MIT). Push future changes with `git push`.

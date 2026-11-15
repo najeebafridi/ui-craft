@@ -12,9 +12,9 @@ Numbers are in CSS px; for native apps read px as pt (iOS, macOS), dp (Android) 
 
 ## 1. Workflow (do this every time)
 
-1. **Look before you build.** Check for an existing design system: tokens, theme file, Tailwind config, component library, brand colours, fonts. **If one exists, use it; do not invent a second.** Fill gaps only.
+1. **Look before you build.** Check for an existing design system: tokens, theme file, Tailwind config, component library, brand colours, fonts, or a `DESIGN.md` brief and `theme.css` exported from the ui-craft Studio. **If one exists, use it; do not invent a second.** Fill gaps only.
 2. **Understand the person.** Who uses this, in what state of mind (rushed, anxious, sceptical, expert in flow), and what should they feel? One line. See `references/psychology-emotion.md`.
-3. **Choose a direction.** With no settled identity, pick one visual direction from `references/directions.md` to fit the audience (not for novelty), read the header of its file in `assets/directions/`, and note its signature. With a brand colour, keep the direction and rebuild the colours: `node <skill-dir>/scripts/palette.mjs --accent "#HEX"`.
+3. **Choose a direction.** With no settled identity, pick one visual direction from `references/directions.md` to fit the audience (not for novelty), read the header of its file in `assets/directions/`, and note its signature. With a brand colour, keep the direction and rebuild the colours: `node <skill-dir>/scripts/palette.mjs --accent "#HEX"`. People who prefer to choose by eye can use the ui-craft Studio (https://najeebafridi.github.io/ui-craft/): pick a direction, tune it on live screens, and export `theme.css` and a `DESIGN.md` brief for you to follow.
 4. **Write the design brief** before code (in your reply or a comment):
    ```
    Product: payroll for small businesses (web app, desktop first)

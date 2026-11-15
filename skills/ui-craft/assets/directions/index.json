@@ -44,7 +44,7 @@
     "depth": "hairline",
     "motion": "instant",
     "notes": [
-      "Accent darkened slightly (#3672E9 -> #3570E7) so white button text passes 4.5:1."
+      "Brand colour darkened slightly (#3672E9 -> #3570E7) so white button text passes 4.5:1."
     ]
   },
   {
@@ -69,7 +69,7 @@
     "depth": "none",
     "motion": "gentle",
     "notes": [
-      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+      "Brand colour is lightened in the dark theme so buttons stay visible on dark surfaces."
     ]
   },
   {
@@ -117,7 +117,7 @@
     "depth": "none",
     "motion": "slow",
     "notes": [
-      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+      "Brand colour is lightened in the dark theme so buttons stay visible on dark surfaces."
     ]
   },
   {
@@ -142,7 +142,7 @@
     "depth": "none",
     "motion": "gentle",
     "notes": [
-      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+      "Brand colour is lightened in the dark theme so buttons stay visible on dark surfaces."
     ]
   },
   {
@@ -167,7 +167,7 @@
     "depth": "diffuse",
     "motion": "gentle",
     "notes": [
-      "Accent darkened slightly (#25838C -> #23818A) so white button text passes 4.5:1."
+      "Brand colour darkened slightly (#25838C -> #23818A) so white button text passes 4.5:1."
     ]
   },
   {
@@ -192,8 +192,8 @@
     "depth": "lip",
     "motion": "bouncy",
     "notes": [
-      "Accent darkened slightly (#0081E7 -> #0077D6) so white button text passes 4.5:1.",
-      "Accent is light, so text on accent buttons is dark, not white."
+      "Brand colour darkened slightly (#0081E7 -> #0077D6) so white button text passes 4.5:1.",
+      "Second colour is light, so text on it is dark, not white."
     ]
   },
   {
@@ -218,7 +218,7 @@
     "depth": "soft",
     "motion": "crisp",
     "notes": [
-      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+      "Brand colour is lightened in the dark theme so buttons stay visible on dark surfaces."
     ]
   },
   {
@@ -243,7 +243,7 @@
     "depth": "hairline",
     "motion": "crisp",
     "notes": [
-      "Accent is light, so text on accent buttons is dark, not white."
+      "Brand colour is light, so text on it is dark, not white."
     ]
   },
   {
@@ -268,7 +268,7 @@
     "depth": "none",
     "motion": "instant",
     "notes": [
-      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+      "Brand colour is lightened in the dark theme so buttons stay visible on dark surfaces."
     ]
   },
   {
@@ -293,8 +293,8 @@
     "depth": "crisp",
     "motion": "crisp",
     "notes": [
-      "Brand colour is close to error red. Error colour was shifted toward crimson; also never use the solid brand colour for error states, and always pair errors with an icon and text.",
-      "Accent darkened slightly (#DE3951 -> #DA354E) so white button text passes 4.5:1."
+      "The brand colour is close to error red, so the error colour was shifted toward crimson. Never use the solid brand colour for errors, and always pair errors with an icon and text.",
+      "Brand colour darkened slightly (#DE3951 -> #DA354E) so white button text passes 4.5:1."
     ]
   },
   {
@@ -319,7 +319,7 @@
     "depth": "hairline",
     "motion": "crisp",
     "notes": [
-      "Accent is light, so text on accent buttons is dark, not white."
+      "Brand colour is light, so text on it is dark, not white."
     ]
   },
   {
@@ -344,8 +344,8 @@
     "depth": "none",
     "motion": "crisp",
     "notes": [
-      "Brand colour is close to error red. Error colour was shifted toward crimson; also never use the solid brand colour for error states, and always pair errors with an icon and text.",
-      "Accent darkened slightly (#FC3006 -> #E62700) so white button text passes 4.5:1."
+      "The brand colour is close to error red, so the error colour was shifted toward crimson. Never use the solid brand colour for errors, and always pair errors with an icon and text.",
+      "Brand colour darkened slightly (#FC3006 -> #E62700) so white button text passes 4.5:1."
     ]
   },
   {
@@ -370,7 +370,7 @@
     "depth": "hairline",
     "motion": "instant",
     "notes": [
-      "Accent is light, so text on accent buttons is dark, not white."
+      "Brand colour is light, so text on it is dark, not white."
     ]
   },
   {
@@ -395,8 +395,8 @@
     "depth": "none",
     "motion": "crisp",
     "notes": [
-      "Accent is light, so text on accent buttons is dark, not white.",
-      "Dark theme (accent): accent lightened so buttons stay visible on dark surfaces."
+      "Second colour is light, so text on it is dark, not white.",
+      "Brand colour is lightened in the dark theme so buttons stay visible on dark surfaces."
     ]
   }
 ]

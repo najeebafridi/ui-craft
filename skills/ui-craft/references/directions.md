@@ -31,7 +31,7 @@ Then pick the row that fits. If two fit, choose the quieter one.
 | **Graph-paper technical** `graph-paper` | APIs, infrastructure, security, data and AI platforms | rigorous, engineered | dark | Geist + JetBrains Mono | a visible measuring grid |
 | **Bright workshop** `bright-workshop` | creative tools, agencies, launch pages | energetic, witty | light | Bricolage Grotesque + DM Sans | bold colour blocking |
 
-To see them all, open `assets/directions/gallery.html` in a browser.
+To see them all, open `assets/directions/gallery.html` in a browser. To try one on live screens, change its colour, fonts, shape and motion, and export the result for any framework, use the ui-craft Studio: https://najeebafridi.github.io/ui-craft/
 
 ## How to apply one
 

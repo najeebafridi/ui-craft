@@ -4,6 +4,19 @@
 
 It works for any kind of software: web apps, dashboards, admin tools, desktop apps, mobile apps and marketing sites. It works in Claude Code, Codex, Cursor, Gemini CLI, GitHub Copilot, Windsurf, Cline and any tool that reads `AGENTS.md`.
 
+## Try it in your browser: ui-craft Studio
+
+**[https://najeebafridi.github.io/ui-craft](https://najeebafridi.github.io/ui-craft/)**
+
+A free visual tool, no install and no AI needed:
+
+1. Pick one of 16 visual directions.
+2. Set your brand colour, fonts, corner shape, depth, density and motion.
+3. Watch four live screens change (dashboard, landing page, mobile app, components), in light and dark, on desktop and phone.
+4. Export the theme for **CSS, Tailwind, SwiftUI, Jetpack Compose, Flutter or JSON**, plus a **design brief** to paste into any AI coding tool.
+
+Every colour is checked for accessibility contrast as you go. "Copy link" gives you a link to send to a client.
+
 ## What it does
 
 When your AI builds a screen, ui-craft makes it:
@@ -117,6 +130,7 @@ skills/ui-craft/
     ui-audit.mjs            measure, score and screenshot a page or live URL (needs Chrome)
   evals/                    test cases used to check the skill
 AGENTS.md                   the same core rules for Codex, Cursor, Gemini, Copilot…
+docs/index.html             the Studio (one self-contained page, hosted on GitHub Pages)
 ```
 
 Both scripts need Node 22 or newer and no npm packages.
@@ -191,10 +205,14 @@ Edit `skills/ui-craft/SKILL.md` or the reference files, then rebuild `AGENTS.md`
 python tools/build-agents-md.py
 ```
 
-To change a direction or the base tokens, edit `tools/build-directions.mjs` and run it. It regenerates `tokens.css`, the direction files and the gallery, and fails if any colour pair misses contrast:
+To change a direction, edit `tools/directions-data.mjs`; for the base tokens edit `tools/build-directions.mjs`. Then run both builds (the second rebuilds the Studio at `docs/index.html`). It regenerates `tokens.css`, the direction files and the gallery, and fails if any colour pair misses contrast:
 
 ```bash
 node tools/build-directions.mjs
+```
+
+```bash
+node tools/build-studio.mjs
 ```
 
 To re-run the tests (needs Node and Chrome), build the screens into `evals/iteration-N/<case>/<config>/outputs/`, then:
