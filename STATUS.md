@@ -16,7 +16,7 @@ Curate, don't compile. Our own words. MIT licence. Work on local `main`; ask the
 - [x] 5. Evals: 2 rounds. Round 2: 97% vs 57% checks passed; blind judge preferred skill on 5/5. See evals/RESULTS.md
 - [x] 6. Package: .claude-plugin/ (plugin + marketplace), AGENTS.md (generated), README.md
 - [x] 13. Version 2.2.0, Phase 2 of ROADMAP.md: the immersive-web skill.
-  - `skills/immersive-web/`: SKILL.md (8 hard rules, workflow, immersion ladder 0-3, budgets), 10 guides in `references/` (each split into "the idea" and "on the web"), `assets/theme-bridge.js` (tokens to scene values), `assets/scene-shell.js` (life cycle with fallbacks), `assets/starter.html` (generated), `scripts/immersive-check.mjs` (tests a page five ways).
+  - `skills/immersive-web/`: SKILL.md (9 hard rules, workflow, immersion ladder 0-3, budgets), 10 guides in `references/` (each split into "the idea" and "on the web"), `assets/theme-bridge.js` (tokens to scene values), `assets/scene-shell.js` (life cycle with fallbacks), `assets/starter.html` (generated), `scripts/immersive-check.mjs` (tests a page five ways).
   - Mixing: `skills/ui-craft/references/mixing.md`, `skills/immersive-web/references/beyond-web.md`, a new `--immersive` token (0-3) and an `immersive` level plus `scene` line for each direction in `tools/directions-data.mjs`.
   - Studio: an Immersive screen (hand-written WebGL in `tools/studio/immersive-scene.js`, no library), a "3D and scroll effects" control, "Preview as" full / reduced motion / no WebGL, and an "Immersive and motion" section in the exported brief.
   - Research notes: `research/v3/`. Tests: `evals/iteration-5/`, results in `evals/RESULTS.md`.

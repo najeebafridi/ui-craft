@@ -1,0 +1,14 @@
+{
+ "kettle-launch-story": {
+  "X": "with_skill",
+  "Y": "without_skill"
+ },
+ "observatory-themed-hero": {
+  "X": "without_skill",
+  "Y": "with_skill"
+ },
+ "printfarm-desktop-app": {
+  "X": "without_skill",
+  "Y": "with_skill"
+ }
+}

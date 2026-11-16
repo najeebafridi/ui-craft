@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Tern, a hand-thrown pour-over kettle</title>
+<meta name="description" content="Tern is a hand-thrown ceramic pour-over kettle made in Stoke-on-Trent. Chalk, sea green or ink. £48.">
+<!--
+  Design brief (ui-craft + immersive-web)
+  Product: launch page for Tern, a hand-thrown ceramic pour-over kettle, GBP 48, three glazes (chalk, sea green, ink). Mostly phones, arriving from Instagram.
+  User and feeling: someone scrolling on a phone, curious, a little sceptical of a small maker -> unhurried, tactile, specific, trustworthy.
+  Direction: Apothecary editorial (warm paper, a bookish serif, label-style detail list), accent = sea green rebuilt with palette.mjs. Light theme, dark follows the OS.
+  Type: Libre Caslon Text + Hanken Grotesk; 16-18px body; names in serif, facts in sans. Shape and depth: flat, 2px radius, thin rules.
+  Immersive: Level 3 story (a launch). Theme says 2; raised to 3 by the brief because this page is a launch with nothing to do but read and reserve. --immersive: 3 below.
+  Signature moment: one kettle on the page background; scrolling turns it on the wheel, pushes in on the spout, shows the handle, then sets it beside its two glaze siblings.
+  Scene: a form built from lathe + swept tubes (stand-in until the potter's own scan or photos exist), one warm key light from above left, a cool rim, soft contact shadow, unglazed foot, throwing rings.
+  Camera: long lens (26 degrees), slightly above; moves only when the reader scrolls (scrubbed, not timed). Tempo: gentle (theme --dur-*).
+  Beats: 1 whole kettle - 2 the spout - 3 the handle and the wheel - 4 the three glazes (picker changes the kettle) - then the label and the reservation form.
+  Reduced motion: scroll still sets the beat, but the camera cuts between whole beats. No pointer tilt. No GPU / no script: a glaze tile (the potter's own proof-piece) with a caption; all copy is HTML.
+  Budget: text paints first; three.js (about 170 KB gzip) loads after load, only for the hero scene; pixel ratio 1.5 on touch; render on demand; 7 meshes per kettle.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #FDF9EF;
+  --surface: #FFFEFD;
+  --surface-2: #FAF3E5;
+  --surface-3: #EFE7D7;
+  --border: #EAE2D1;
+  --border-strong: #968A70;
+  --text: #231903;
+  --text-muted: #63583F;
+  --text-subtle: #796D54;
+  --accent: #2F7F6E;
+  --accent-hover: #1E7261;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #E4F4F0;
+  --accent-text: #267867;
+  --focus: #2F7F6E;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #008570;
+  --chart-2: #9E71B4;
+  --chart-3: #6F5800;
+  --chart-4: #1F8CB4;
+  --chart-5: #9C4B5F;
+  --chart-6: #1F5C21;
+  --shadow-color: 45 31 1;
+  --shadow-strength: 1;
+  --ring: rgb(45 31 1 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #120B01;
+    --surface: #1B1406;
+    --surface-2: #241D0E;
+    --surface-3: #2E2717;
+    --border: #312919;
+    --border-strong: #7A715E;
+    --text: #EDE7DC;
+    --text-muted: #A59F92;
+    --text-subtle: #958F82;
+    --accent: #2F7F6E;
+    --accent-hover: #1E7261;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #142924;
+    --accent-text: #7BB2A3;
+    --focus: #2F7F6E;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #47BBA3;
+    --chart-2: #D8A8F0;
+    --chart-3: #A58932;
+    --chart-4: #80D7FF;
+    --chart-5: #ED93A6;
+    --chart-6: #6DAA6C;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #120B01;
+  --surface: #1B1406;
+  --surface-2: #241D0E;
+  --surface-3: #2E2717;
+  --border: #312919;
+  --border-strong: #7A715E;
+  --text: #EDE7DC;
+  --text-muted: #A59F92;
+  --text-subtle: #958F82;
+  --accent: #2F7F6E;
+  --accent-hover: #1E7261;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #142924;
+  --accent-text: #7BB2A3;
+  --focus: #2F7F6E;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #47BBA3;
+  --chart-2: #D8A8F0;
+  --chart-3: #A58932;
+  --chart-4: #80D7FF;
+  --chart-5: #ED93A6;
+  --chart-6: #6DAA6C;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}
+
+:root {
+  --font-display: "Libre Caslon Text", ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: -0.03em;
+  --radius-sm: 0px; --radius: 2px; --radius-lg: 4px; --border-w: 1px;
+  --dur-fast: 160ms; --dur-base: 260ms; --dur-slow: 400ms;
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --press-scale: 0.98;
+  --immersive: 3;
+  /* the three glazes: product data, the potter's own colours */
+  --glaze-chalk: #E4DECF;
+  --glaze-sea: #5C9889;
+  --glaze-ink: #272D36;
+  --gutter: max(32px, calc((100vw - 1200px) / 2));
+  --col: 460px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 16px/1.5 var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, p, ol, dl, dd, fieldset { margin: 0; padding: 0; }
+a { color: var(--accent-text); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.skip { position: absolute; left: 16px; top: 8px; z-index: 10; transform: translateY(-200%); background: var(--surface); color: var(--text); padding: 12px 16px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-weight: 500; text-decoration: none; }
+.skip:focus { transform: none; }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px; font: 500 16px/1 var(--font-sans); border-radius: var(--radius); border: 1px solid transparent; cursor: pointer; text-decoration: none; transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.btn:active { transform: scale(var(--press-scale)); }
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-outline { background: transparent; color: var(--text); border-color: var(--border-strong); min-height: 44px; padding: 0 16px; }
+.btn-outline:hover { background: var(--surface-2); }
+
+/* ---------- header ---------- */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 16px; min-height: 64px; position: relative; z-index: 5; background: var(--bg); }
+.brand { display: flex; align-items: baseline; gap: 12px; text-decoration: none; color: var(--text); min-height: 44px; align-items: center; }
+.brand b { font: 400 24px/1 var(--font-display); letter-spacing: -0.015em; }
+.brand span { font-size: 14px; color: var(--text-muted); }
+
+/* ---------- the story: scene on the stage, text in the steps ---------- */
+.story { position: relative; }
+.stage { position: relative; height: 36dvh; min-height: 260px; background: var(--bg); z-index: 2; }
+html[data-story] .stage { position: sticky; top: 0; }
+.stage::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 24px; background: linear-gradient(var(--bg), transparent); pointer-events: none; }
+.scene { position: absolute; inset: 0; overflow: hidden; }
+.scene canvas, .scene-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene canvas { opacity: 0; transition: opacity var(--dur-slow) var(--ease-out); }
+.scene[data-scene="live"] canvas, .scene[data-scene="still"] canvas { opacity: 1; }
+.scene[data-scene="live"] .scene-fallback, .scene[data-scene="still"] .scene-fallback { visibility: hidden; }
+/* no GPU, no script, still loading: the potter's glaze test tile, in the glaze that is selected */
+.scene-fallback { display: flex; align-items: center; justify-content: center; padding: 24px 16px 16px var(--stage-left, 16px); background: var(--bg); }
+.tile { position: relative; height: min(100%, 440px); aspect-ratio: 4 / 5; background: var(--glaze, var(--glaze-sea)); border-radius: var(--radius-lg); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12), inset 0 1px 0 rgb(255 255 255 / 0.25); background-image: linear-gradient(160deg, rgb(255 255 255 / 0.22), transparent 45%, rgb(0 0 0 / 0.14)); transition: background-color var(--dur-slow) var(--ease-out); }
+.tile figcaption { position: absolute; left: 0; right: 0; top: 100%; margin-top: 8px; font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+.tile-wrap { margin: 0; display: contents; }
+
+.steps { list-style: none; position: relative; z-index: 1; padding: 0 16px; }
+.steps > li { min-height: 58dvh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 16px; padding: 32px 0; scroll-margin-top: calc(36dvh + 16px); }
+h1 { font: var(--weight-display, 400) clamp(64px, 20vw, 96px)/1 var(--font-display); letter-spacing: -0.04em; text-wrap: balance; }
+h2 { font: 400 clamp(30px, 8vw, 48px)/1.1 var(--font-display); letter-spacing: -0.03em; text-wrap: balance; }
+.lede { font-size: 18px; line-height: 1.5; color: var(--text); max-width: 34ch; text-wrap: pretty; }
+.steps p { text-wrap: pretty; max-width: 40ch; color: var(--text-muted); }
+.steps .lede { color: var(--text); }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
+.cta .price { font: 400 24px/1 var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.015em; }
+.hint { font-size: 14px; color: var(--text-muted); }
+
+/* glaze chips (radios): colour never carries the meaning alone: name + tick */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; border: 0; min-width: 0; }
+.chips legend { padding: 0; font-size: 14px; font-weight: 500; color: var(--text-muted); margin-bottom: 8px; }
+.chips input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chips label { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 16px 0 8px; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); color: var(--text); cursor: pointer; font-weight: 500; transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
+.chips label:active { transform: scale(var(--press-scale)); }
+.chips label:hover { background: var(--surface-2); }
+.chips .sw { position: relative; width: 28px; height: 28px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.18); display: grid; place-items: center; color: transparent; }
+.chips .sw svg { width: 16px; height: 16px; }
+.chips input:checked + label { border-color: var(--text); box-shadow: inset 0 0 0 1px var(--text); background: var(--surface); }
+.chips input:checked + label .sw { color: #fff; }
+.chips input[value="chalk"]:checked + label .sw { color: #231903; }
+.chips input:focus-visible + label { outline: 2px solid var(--focus); outline-offset: 2px; }
+.chips [value="chalk"] + label { --c: var(--glaze-chalk); }
+.chips [value="sea"] + label { --c: var(--glaze-sea); }
+.chips [value="ink"] + label { --c: var(--glaze-ink); }
+
+/* ---------- the label + the reservation ---------- */
+.order { padding: 64px 16px 96px; border-top: 1px solid var(--border); scroll-margin-top: 0; }
+.order-in { max-width: 1200px; margin: 0 auto; display: grid; gap: 48px; align-items: start; }
+.label h2, .reserve h2 { margin-bottom: 24px; }
+.label dl { border-top: 1px solid var(--border-strong); }
+.label .row { display: grid; grid-template-columns: 32px 1fr; gap: 0 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.label .n { font-size: 12px; color: var(--text-subtle); font-variant-numeric: tabular-nums; padding-top: 4px; }
+.label dt { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+.label dd { font-size: 18px; margin-top: 4px; }
+.label dd.serif { font-family: var(--font-display); }
+.reserve form { display: grid; gap: 24px; }
+.field label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+.field input[type="email"] { width: 100%; min-height: 48px; padding: 0 16px; font: 400 16px var(--font-sans); color: var(--text); background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius); }
+.field .help { margin-top: 8px; font-size: 14px; color: var(--text-muted); }
+.sum { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 16px 0; border-top: 1px solid var(--border-strong); border-bottom: 1px solid var(--border); }
+.sum span:first-child { color: var(--text-muted); }
+.sum strong { font: 400 30px/1 var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.025em; }
+.reserve .btn-primary { width: 100%; }
+.fine { font-size: 14px; color: var(--text-muted); }
+.done { padding: 24px; background: var(--accent-soft); border-radius: var(--radius-lg); }
+.done h3 { margin: 0 0 8px; font: 400 24px/1.2 var(--font-display); letter-spacing: -0.015em; }
+.done p { margin: 0; color: var(--text); }
+.done p + p { margin-top: 8px; color: var(--text-muted); font-size: 14px; }
+.foot { padding: 32px 16px 48px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; }
+.foot-in { max-width: 1200px; margin: 0 auto; }
+
+/* ---------- desktop: scene fills the stage, steps in a left column ---------- */
+@media (min-width: 900px) {
+  .top { position: absolute; left: 0; right: 0; top: 0; background: transparent; padding: 8px var(--gutter); min-height: 80px; }
+  .stage { height: 100dvh; min-height: 0; background: transparent; z-index: 0; pointer-events: none; }
+  .stage::after { display: none; }
+  .scene-fallback { background: transparent; --stage-left: calc(var(--gutter) + var(--col) + 24px); padding: 96px 32px 48px var(--stage-left); }
+  .steps { margin-top: -100dvh; padding: 0 0 0 var(--gutter); width: calc(var(--gutter) + var(--col)); }
+  .steps > li { min-height: 92dvh; scroll-margin-top: 0; padding: 48px 0; }
+  .steps > li:last-child { width: calc(100vw - 2 * var(--gutter)); max-width: 1200px; display: grid; grid-template-columns: var(--col) 1fr; column-gap: 48px; row-gap: 16px; align-content: end; align-items: end; padding-bottom: 48px; }
+  .steps > li:last-child > h2, .steps > li:last-child > p { grid-column: 1; }
+  .steps > li:last-child > .chips { grid-column: 2; grid-row: 1 / span 2; align-self: end; }
+  h1 { font-size: clamp(80px, 8vw, 112px); }
+  h2 { font-size: clamp(36px, 3.4vw, 48px); }
+  .order-in { grid-template-columns: 1fr 1fr; gap: 96px; }
+  .order { padding: 96px var(--gutter) 128px; }
+  .foot { padding: 32px var(--gutter) 48px; }
+}
+@media (min-width: 900px) and (max-width: 1099px) { :root { --col: 400px; } }
+
+@media (max-width: 899.98px) {
+  .scene-fallback { --stage-left: 16px; }
+  .tile { height: min(100%, 300px); }
+  .steps > li:last-child { padding-bottom: 64px; }
+}
+@media (max-width: 640px), (pointer: coarse) {
+  .btn, .field input { min-height: 48px; }
+  .field input { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+  .btn, .chips label { transition: none; }
+  .btn:active, .chips label:active { transform: none; }
+}
+@media (prefers-contrast: more) { .label dt, .hint, .steps p { color: var(--text); } }
+</style>
+</head>
+<body>
+<a class="skip" href="#order">Skip the story</a>
+
+<header class="top">
+  <a class="brand" href="#top" aria-label="Tern, home"><b>Tern</b><span>Stoke-on-Trent</span></a>
+  <a class="btn btn-outline" href="#order">Reserve, £48</a>
+</header>
+
+<main id="top">
+  <section class="story" id="story" aria-label="Tern, the story">
+    <div class="stage" aria-hidden="true">
+      <div class="scene" id="scene">
+        <div class="scene-fallback">
+          <figure class="tile-wrap"><div class="tile"><figcaption id="tile-cap">Glaze tile: sea green. Photograph of Tern to come.</figcaption></div></figure>
+        </div>
+      </div>
+    </div>
+
+    <ol class="steps" id="steps">
+      <li id="beat-1">
+        <h1>Tern</h1>
+        <p class="lede">A hand-thrown pour-over kettle, made in Stoke-on-Trent. Chalk, sea green or ink.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#order">Reserve yours</a>
+          <span class="price">£48</span>
+        </div>
+        <p class="hint">Scroll, and the kettle turns as you read.</p>
+      </li>
+      <li id="beat-2">
+        <h2>A spout cut for a slow pour</h2>
+        <p>The neck is long and thin and leans out over the cup, so the water lands where you aim it, a thread at a time.</p>
+      </li>
+      <li id="beat-3">
+        <h2>Thrown by hand, one at a time</h2>
+        <p>Every Tern is shaped on the wheel and glazed in our Stoke-on-Trent pottery. The faint rings round the body are the potter’s fingers. No two are quite the same, and the foot is left bare clay.</p>
+      </li>
+      <li id="beat-4">
+        <h2>Three glazes</h2>
+        <p>Chalk, sea green and ink. Choose one and the kettle follows.</p>
+        <fieldset class="chips" id="story-chips">
+          <legend class="vh">Glaze</legend>
+          <input type="radio" name="glaze-story" id="story-chalk" value="chalk"><label for="story-chalk"><span class="sw" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Chalk</label>
+          <input type="radio" name="glaze-story" id="story-sea" value="sea" checked><label for="story-sea"><span class="sw" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Sea green</label>
+          <input type="radio" name="glaze-story" id="story-ink" value="ink"><label for="story-ink"><span class="sw" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Ink</label>
+        </fieldset>
+      </li>
+    </ol>
+  </section>
+
+  <section class="order" id="order" aria-labelledby="order-h">
+    <div class="order-in">
+      <div class="label">
+        <h2 id="label-h">The label</h2>
+        <dl>
+          <div class="row"><span class="n">01</span><div><dt>Object</dt><dd class="serif">Pour-over kettle, gooseneck spout</dd></div></div>
+          <div class="row"><span class="n">02</span><div><dt>Made</dt><dd class="serif">Thrown by hand, one at a time</dd></div></div>
+          <div class="row"><span class="n">03</span><div><dt>Place</dt><dd class="serif">Stoke-on-Trent</dd></div></div>
+          <div class="row"><span class="n">04</span><div><dt>Glazes</dt><dd class="serif">Chalk, sea green, ink</dd></div></div>
+          <div class="row"><span class="n">05</span><div><dt>Price</dt><dd class="serif" style="font-variant-numeric:tabular-nums">£48</dd></div></div>
+        </dl>
+      </div>
+
+      <div class="reserve">
+        <h2 id="order-h">Reserve your Tern</h2>
+        <form id="order-form" novalidate>
+          <fieldset class="chips" id="order-chips">
+            <legend>Glaze</legend>
+            <input type="radio" name="glaze-order" id="order-chalk" value="chalk"><label for="order-chalk"><span class="sw" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Chalk</label>
+          <input type="radio" name="glaze-order" id="order-sea" value="sea" checked><label for="order-sea"><span class="sw" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Sea green</label>
+          <input type="radio" name="glaze-order" id="order-ink" value="ink"><label for="order-ink"><span class="sw" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5l3 3 6-7"/></svg></span>Ink</label>
+          </fieldset>
+          <div class="sum"><span id="sum-label">Tern in sea green</span><strong>£48</strong></div>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="email-help">
+            <p class="help" id="email-help">We will write once, when your Tern is ready to ship.</p>
+          </div>
+          <p class="fine" id="err" role="alert" hidden></p>
+          <button class="btn btn-primary" type="submit" id="submit">Reserve Tern in sea green, £48</button>
+          <p class="fine">Sample page: connect this form to your shop before launch. Nothing is sent from here.</p>
+        </form>
+        <div class="done" id="done" hidden tabindex="-1" role="status">
+          <h3 id="done-h">Reserved: Tern in sea green, £48</h3>
+          <p id="done-p"></p>
+          <p>Sample page: nothing was sent.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot"><div class="foot-in">Tern is thrown and glazed by a small pottery in Stoke-on-Trent.</div></footer>
+<div class="vh" id="live" aria-live="polite"></div>
+
+<script type="module">
+// theme-bridge.js (ui-craft, immersive-web skill). MIT licence. No dependencies.
+// Reads the ui-craft theme tokens from CSS, so a 3D scene, a shader or a canvas uses the same colours,
+// motion and shape as the rest of the page. One theme drives every layer.
+//
+//   import { readTheme, watchTheme, bezier } from "./theme-bridge.js";
+//   let theme = readTheme();                       // colours as linear RGB (for lighting maths) and sRGB
+//   material.color.setRGB(...theme.color.accent.linear);          // three.js (working space is linear sRGB)
+//   gl.uniform3fv(uAccent, theme.color.accent.linear);            // raw WebGL: light in linear, encode to sRGB at the end
+//   const ease = bezier(...theme.motion.ease);                    // the theme's own easing curve, for camera and scroll moves
+//   watchTheme((t) => { theme = t; redraw(); });                  // light/dark switch, new direction, reduced motion
+//
+// Works with tokens.css, any direction file, a Studio theme.css, or a project's own variables: pass a name map,
+// for example readTheme(document.documentElement, { accent: "--brand-500", bg: "--background" }).
+
+const TOKEN_NAMES = {
+  bg: "--bg", surface: "--surface", surface2: "--surface-2", surface3: "--surface-3",
+  border: "--border", borderStrong: "--border-strong",
+  text: "--text", textMuted: "--text-muted", textSubtle: "--text-subtle",
+  accent: "--accent", accentHover: "--accent-hover", accentFg: "--accent-fg", accentSoft: "--accent-soft", accentText: "--accent-text",
+  secondary: "--secondary", success: "--success", warning: "--warning", danger: "--danger", info: "--info",
+  chart1: "--chart-1", chart2: "--chart-2", chart3: "--chart-3",
+};
+
+const srgbToLinear = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+const linearToSrgb = (v) => (v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055);
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const toHex = (rgb) => "#" + rgb.map((v) => Math.round(clamp01(v) * 255).toString(16).padStart(2, "0")).join("");
+
+let ctx2d;
+// Any CSS colour (hex, rgb, hsl, oklch, color-mix, a name) -> [r, g, b, a] in sRGB, 0..1.
+function parseColor(css) {
+  const m = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)$/.exec(css.trim());
+  if (m) return [m[1] / 255, m[2] / 255, m[3] / 255, m[4] === undefined ? 1 : m[4].endsWith("%") ? parseFloat(m[4]) / 100 : +m[4]];
+  if (!ctx2d) { const c = document.createElement("canvas"); c.width = c.height = 1; ctx2d = c.getContext("2d", { willReadFrequently: true }); }
+  ctx2d.clearRect(0, 0, 1, 1); ctx2d.fillStyle = "#000"; ctx2d.fillStyle = css; ctx2d.fillRect(0, 0, 1, 1);
+  const d = ctx2d.getImageData(0, 0, 1, 1).data;
+  return [d[0] / 255, d[1] / 255, d[2] / 255, d[3] / 255];
+}
+
+// One token -> { css, srgb, linear, hex, alpha }, or null when the token is not defined in this scope.
+function readColor(name, scope = document.documentElement) {
+  if (!getComputedStyle(scope).getPropertyValue(name).trim()) return null;
+  const probe = document.createElement("span");
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;color:var(${name})`;
+  (scope === document.documentElement && document.body ? document.body : scope).append(probe);
+  const css = getComputedStyle(probe).color;
+  probe.remove();
+  const [r, g, b, a] = parseColor(css);
+  return { css, srgb: [r, g, b], linear: [srgbToLinear(r), srgbToLinear(g), srgbToLinear(b)], hex: toHex([r, g, b]), alpha: a };
+}
+
+const ms = (v, fallback) => { const n = parseFloat(v); return Number.isFinite(n) ? (/\ds\s*$/.test(v) && !/ms\s*$/.test(v) ? n * 1000 : n) : fallback; };
+const px = (v, fallback) => { const n = parseFloat(v); return Number.isFinite(n) ? n : fallback; };
+
+// The whole theme in one object. Missing tokens fall back to quiet defaults, so a page without ui-craft tokens still works.
+function readTheme(scope = document.documentElement, names = {}) {
+  const map = { ...TOKEN_NAMES, ...names }, cs = getComputedStyle(scope), get = (n) => cs.getPropertyValue(n).trim();
+  const color = {};
+  for (const [key, name] of Object.entries(map)) { const c = readColor(name, scope); if (c) color[key] = c; }
+  const fallback = (key, css) => { if (!color[key]) { const [r, g, b] = parseColor(css); color[key] = { css, srgb: [r, g, b], linear: [r, g, b].map(srgbToLinear), hex: toHex([r, g, b]), alpha: 1 }; } };
+  fallback("bg", cs.backgroundColor && !/rgba?\(0, 0, 0, 0\)|transparent/.test(cs.backgroundColor) ? cs.backgroundColor : "#ffffff");
+  fallback("text", cs.color || "#1a1a1a"); fallback("surface", color.bg.css); fallback("accent", color.text.css); fallback("border", color.text.css);
+  const lum = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const easeNums = (get("--ease-out").match(/cubic-bezier\(([^)]+)\)/) || [, "0.22, 1, 0.36, 1"])[1].split(",").map(Number);
+  const shadowRgb = (get("--shadow-color").match(/[\d.]+/g) || [0, 0, 0]).slice(0, 3).map((v) => srgbToLinear(v / 255));
+  const base = ms(get("--dur-base"), 200);
+  return {
+    dark: lum(color.bg.linear) < 0.18,
+    color,
+    motion: {
+      fast: ms(get("--dur-fast"), 120), base, slow: ms(get("--dur-slow"), 300),
+      ease: easeNums.length === 4 && easeNums.every(Number.isFinite) ? easeNums : [0.22, 1, 0.36, 1],
+      press: px(get("--press-scale"), 0.97),
+      bouncy: easeNums[1] > 1 || easeNums[3] > 1,   // the curve overshoots: playful directions
+      tempo: base / 200,                            // 1 = crisp; under 1 = faster (tools); over 1 = slower (care, luxury)
+    },
+    shape: { radiusSm: px(get("--radius-sm"), 6), radius: px(get("--radius"), 8), radiusLg: px(get("--radius-lg"), 12), borderW: px(get("--border-w"), 1) },
+    shadow: { color: shadowRgb, strength: px(get("--shadow-strength"), 1) },
+    font: { display: get("--font-display") || cs.fontFamily, sans: get("--font-sans") || cs.fontFamily, mono: get("--font-mono") || "monospace" },
+    // --immersive: the most 3D and scroll effect this theme should carry. 0 still, 1 accent, 2 signature, 3 story. Unset = 1.
+    immersive: Number.isFinite(parseInt(get("--immersive"))) ? Math.min(3, Math.max(0, parseInt(get("--immersive")))) : 1,
+    reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+  };
+}
+
+// Call back with a fresh theme when it can have changed: data-theme / class / style on the scope, OS light-dark, reduced motion.
+function watchTheme(callback, scope = document.documentElement, names = {}) {
+  let queued = false;
+  const fire = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; callback(readTheme(scope, names)); }); };
+  const mo = new MutationObserver(fire); mo.observe(scope, { attributes: true, attributeFilter: ["data-theme", "class", "style"] });
+  const queries = ["(prefers-color-scheme: dark)", "(prefers-reduced-motion: reduce)", "(prefers-contrast: more)"].map((q) => matchMedia(q));
+  queries.forEach((q) => q.addEventListener("change", fire));
+  return () => { mo.disconnect(); queries.forEach((q) => q.removeEventListener("change", fire)); };
+}
+
+// CSS cubic-bezier(x1, y1, x2, y2) as a function of t in 0..1. Use it to move a camera or a scroll scene with the theme's own curve.
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const X = (t) => ((ax * t + bx) * t + cx) * t, Y = (t) => ((ay * t + by) * t + cy) * t, dX = (t) => (3 * ax * t + 2 * bx) * t + cx;
+  return (x) => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 6; i++) { const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= (X(t) - x) / d; }
+    return Y(Math.min(1, Math.max(0, t)));
+  };
+}
+
+// Mix two linear-RGB colours in OKLab. Gradients and shader ramps stay clean in the middle instead of going grey or muddy.
+function mixOklab(a, b, t) {
+  const toLab = ([r, g, bl]) => { const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * bl), m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * bl), s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * bl); return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s]; };
+  const A = toLab(a), B = toLab(b), [L, p, q] = A.map((v, i) => v + (B[i] - v) * t);
+  const l = (L + 0.3963377774 * p + 0.2158037573 * q) ** 3, m = (L - 0.1055613458 * p - 0.0638541728 * q) ** 3, s = (L - 0.0894841775 * p - 1.291485548 * q) ** 3;
+  return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+}
+
+// scene-shell.js (ui-craft, immersive-web skill). MIT licence. No dependencies.
+// The life cycle every real-time scene needs, written once. It works with three.js, raw WebGL, WebGPU or a 2D canvas:
+// you supply init / frame / resize, the shell supplies the rules.
+//
+//   - the fallback inside the host stays visible until the first frame is drawn, and comes back if the scene fails
+//   - prefers-reduced-motion: the scene draws single still frames, never a running loop
+//   - no WebGL, a thrown init, or a lost context: the fallback shows, the page keeps working
+//   - nothing runs while the scene is off screen or the tab is hidden
+//   - renders on demand: frame() returns true only while something is still moving
+//   - pixel ratio is capped, then lowered step by step if frames get slow
+//
+//   <div class="scene" id="hero-scene" aria-hidden="true">
+//     <img class="scene-fallback" src="hero-poster.avif" alt="">      <!-- or CSS / SVG art -->
+//   </div>
+//
+//   const scene = mountScene(document.getElementById("hero-scene"), {
+//     init(canvas) { /* create renderer or context; may be async (lazy import of a library goes here) */ },
+//     resize(width, height, pixelRatio) { /* renderer.setPixelRatio(pixelRatio); renderer.setSize(width, height, false) */ },
+//     frame(time, delta, state) { /* draw; state.reduced is true for still frames; return true to keep animating */ },
+//     dispose() { /* free geometries, materials, textures, the renderer */ },
+//   });
+//   scene.invalidate();        // ask for a frame after any change (scroll, theme, pointer)
+//
+// CSS the shell expects:
+//   .scene { position: relative }  .scene canvas, .scene-fallback { position: absolute; inset: 0; width: 100%; height: 100% }
+//   .scene canvas { opacity: 0; transition: opacity var(--dur-slow) var(--ease-out) }
+//   .scene[data-scene="live"] canvas, .scene[data-scene="still"] canvas { opacity: 1 }
+//   .scene[data-scene="live"] .scene-fallback, .scene[data-scene="still"] .scene-fallback { visibility: hidden }
+
+function supports(kind = "webgl") {
+  if (kind === "webgpu") return "gpu" in navigator;
+  if (kind === "2d") return true;
+  try {
+    const c = document.createElement("canvas"), gl = c.getContext(kind === "webgl2" ? "webgl2" : "webgl", { failIfMajorPerformanceCaveat: false });
+    if (!gl) return false;
+    gl.getExtension("WEBGL_lose_context")?.loseContext();   // hand the test context straight back
+    return true;
+  } catch { return false; }
+}
+
+// A coarse guess at the device, to pick a starting quality. Measure real frame times before trusting it.
+function deviceTier() {
+  const nav = navigator, coarse = matchMedia("(pointer: coarse)").matches;
+  if (nav.connection?.saveData || matchMedia("(prefers-reduced-data: reduce)").matches) return "low";
+  if ((nav.deviceMemory && nav.deviceMemory <= 4) || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4)) return "low";
+  return coarse ? "mid" : "high";
+}
+
+function mountScene(host, hooks, options = {}) {
+  const opt = { need: "webgl", maxPixelRatio: 2, touchMaxPixelRatio: 1.5, minScale: 0.5, lazy: true, rootMargin: "200px", slowFrameMs: 24, ...options };
+  const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  const state = { mode: "fallback", reduced: opt.reduced ?? reducedQuery.matches, visible: false, width: 0, height: 0, pixelRatio: 1, scale: 1, tier: deviceTier() };
+  let canvas = host.querySelector("canvas"), ready = false, starting = false, dead = false, wired = false, raf = 0, last = 0, wanted = false, slow = 0, quick = 0;
+  const setMode = (m) => { state.mode = m; host.dataset.scene = m; };
+  setMode("fallback");
+
+  const cap = () => Math.min(devicePixelRatio || 1, matchMedia("(pointer: coarse)").matches ? opt.touchMaxPixelRatio : opt.maxPixelRatio) * (state.tier === "low" ? 0.75 : 1);
+  function measure() {
+    const r = host.getBoundingClientRect(), w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height)), pr = Math.max(0.5, cap() * state.scale);
+    if (w === state.width && h === state.height && pr === state.pixelRatio) return;
+    state.width = w; state.height = h; state.pixelRatio = pr;
+    if (ready) { hooks.resize?.(w, h, pr); invalidate(); }
+  }
+
+  function tick(now) {
+    raf = 0;
+    if (!ready || dead || !state.visible || document.hidden) return;
+    const delta = last ? Math.min(100, now - last) : 16.7; last = now; wanted = false;
+    let more = false;
+    try { more = hooks.frame(now, delta, state) === true; } catch (err) { fail(err); return; }
+    if (state.mode === "fallback") setMode(state.reduced ? "still" : "live");
+    if (state.reduced) { last = 0; return; }                  // still frames only: never loop
+    if (more) {                                               // adapt resolution only while the loop is really running
+      if (delta > opt.slowFrameMs) { quick = 0; if (++slow > 20 && state.scale > opt.minScale) { state.scale = Math.max(opt.minScale, state.scale * 0.85); slow = 0; measure(); } }
+      else if (delta < 13) { slow = 0; if (++quick > 240 && state.scale < 1) { state.scale = Math.min(1, state.scale / 0.85); quick = 0; measure(); } }
+    } else last = 0;
+    if (more || wanted) raf = requestAnimationFrame(tick);
+  }
+  function invalidate() { wanted = true; if (!raf && ready && !dead && state.visible && !document.hidden) raf = requestAnimationFrame(tick); }
+
+  function fail(err) {
+    if (err) console.warn("Scene stopped, showing the fallback:", err);
+    ready = false; cancelAnimationFrame(raf); raf = 0; setMode("fallback");
+  }
+
+  async function start() {
+    if (ready || starting || dead || opt.disabled) return;
+    if (!supports(opt.need)) return;                          // fallback stays
+    starting = true;
+    try {
+      if (!canvas) { canvas = document.createElement("canvas"); canvas.setAttribute("aria-hidden", "true"); host.append(canvas); }
+      if (!wired) {                                           // once per canvas, however often the scene restarts
+        wired = true;
+        canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); fail(); });
+        canvas.addEventListener("webglcontextrestored", () => { if (!ready && !starting) start(); });
+      }
+      const ok = await hooks.init(canvas, state);
+      if (ok === false || dead) { starting = false; return; }
+      ready = true; state.width = 0; measure();             // measure() calls resize() and asks for the first frame
+    } catch (err) { fail(err); }
+    starting = false;
+  }
+
+  const io = new IntersectionObserver(([entry]) => {
+    state.visible = entry.isIntersecting;
+    if (state.visible) { if (!ready) start(); else { last = 0; invalidate(); } }
+  }, { rootMargin: opt.lazy ? opt.rootMargin : "100000px" });
+  io.observe(host);
+  const ro = new ResizeObserver(measure); ro.observe(host);
+  const onVisibility = () => { if (!document.hidden) { last = 0; invalidate(); } };
+  const onMotion = () => { if (opt.reduced === undefined) { state.reduced = reducedQuery.matches; last = 0; invalidate(); } };
+  document.addEventListener("visibilitychange", onVisibility);
+  reducedQuery.addEventListener("change", onMotion);
+
+  return {
+    state, invalidate,
+    setReduced(v) { state.reduced = !!v; opt.reduced = !!v; last = 0; if (ready) setMode(v ? "still" : "live"); invalidate(); },
+    destroy() {
+      dead = true; cancelAnimationFrame(raf); io.disconnect(); ro.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility); reducedQuery.removeEventListener("change", onMotion);
+      if (ready) { try { hooks.dispose?.(); } catch {} }
+      ready = false; setMode("fallback");
+    },
+  };
+}
+
+
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const root = document.documentElement;
+const GLAZES = {
+  chalk: { name: "chalk", Name: "Chalk", rough: 0.6, coat: 0.1 },
+  sea:   { name: "sea green", Name: "Sea green", rough: 0.3, coat: 0.55 },
+  ink:   { name: "ink", Name: "Ink", rough: 0.22, coat: 0.8 },
+};
+let theme = readTheme();
+let glaze = "sea";
+let api = null;                         // the scene, once it exists
+
+/* ---------- the glaze choice: works with no scene at all ---------- */
+function setGlaze(key, announce = true) {
+  if (!GLAZES[key]) return;
+  glaze = key;
+  const g = GLAZES[key];
+  root.style.setProperty("--glaze", `var(--glaze-${key})`);
+  $$('input[type="radio"]').forEach((r) => { r.checked = r.value === key; });
+  $("#tile-cap").textContent = `Glaze tile: ${g.name}. Photograph of Tern to come.`;
+  $("#sum-label").textContent = `Tern in ${g.name}`;
+  $("#submit").textContent = `Reserve Tern in ${g.name}, £48`;
+  if (announce) $("#live").textContent = `Glaze: ${g.name}`;
+  api?.setGlaze(key);
+}
+$$('input[type="radio"]').forEach((r) => r.addEventListener("change", () => setGlaze(r.value)));
+
+$("#order-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const email = $("#email"), err = $("#err");
+  if (!email.value.trim() || !email.checkValidity()) {
+    err.hidden = false; err.textContent = "Add an email address like name@example.com so we know where to write."; email.setAttribute("aria-invalid", "true"); email.focus(); return;
+  }
+  err.hidden = true; email.removeAttribute("aria-invalid");
+  const g = GLAZES[glaze];
+  $("#done-h").textContent = `Reserved: Tern in ${g.name}, £48`;
+  $("#done-p").textContent = `We will write to ${email.value.trim()} when it is ready to ship.`;
+  e.target.hidden = true; $("#done").hidden = false; $("#done").focus();
+});
+
+/* ---------- layout read once and on resize; scroll only reads scrollY ---------- */
+const stage = $(".stage"), stepsEl = $("#steps"), steps = $$("#steps > li"), header = $(".top");
+const L = { desktop: true, centers: [], textRight: 0, stageH: 0, headH: 0 };
+function measureLayout() {
+  L.desktop = matchMedia("(min-width: 900px)").matches;
+  const sy = scrollY;
+  L.centers = steps.map((li) => { const r = li.getBoundingClientRect(); return r.top + sy + r.height / 2; });
+  L.textRight = stepsEl.getBoundingClientRect().right + 24;
+  L.stageH = stage.getBoundingClientRect().height;
+  L.headH = L.desktop ? 0 : header.getBoundingClientRect().height;
+}
+const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+function readBeat() {
+  const n = L.centers.length; if (!n) return 0;
+  const bottom = L.desktop ? 0 : L.stageH + Math.max(0, L.headH - scrollY);
+  const ref = scrollY + (L.desktop ? innerHeight * 0.5 : bottom + (innerHeight - bottom) * 0.5);
+  if (ref <= L.centers[0]) return 0;
+  if (ref >= L.centers[n - 1]) return n - 1;
+  let i = 0; while (i < n - 2 && ref >= L.centers[i + 1]) i++;
+  return i + smooth(0.25, 0.75, (ref - L.centers[i]) / (L.centers[i + 1] - L.centers[i]));
+}
+let beatTarget = 0;
+const onScroll = () => { beatTarget = readBeat(); api?.wake(); };
+addEventListener("scroll", onScroll, { passive: true });
+addEventListener("resize", () => { measureLayout(); onScroll(); });
+measureLayout();
+document.fonts?.ready.then(() => { measureLayout(); onScroll(); });
+
+/* ---------- the scene ---------- */
+const host = $("#scene");
+const finePointer = matchMedia("(pointer: fine)").matches;
+let THREE, renderer, camera, scene3, kettles = [], keyL, hemi, rim, shadowMat, mouthMat, pmrem, envTex;
+const disposables = [];
+let W = 1, H = 1, cur = 0, pX = 0, pY = 0, tpx = 0, tpy = 0;
+let shell;
+
+// ---- camera: one key per beat. Targets are in the kettle's own space; hw/hh = half the width/height that must fit the frame.
+function keys() {
+  const d = L.desktop;
+  return [
+    { t: [0.3, 1.0, 0], az: 0.30, el: 0.13, fov: 26, hw: 2.75, hh: 1.3, rot: -0.15 },
+    { t: [1.1, 1.55, 0], az: 0.40, el: 0.07, fov: 22, hw: 2.5, hh: 1.2, rot: -0.3 },
+    { t: [0.0, 1.0, 0], az: -0.12, el: 0.16, fov: 26, hw: 2.75, hh: 1.3, rot: 2.1 },
+    d ? { t: [0.0, 1.0, -0.5], az: 0.0, el: 0.2, fov: 26, hw: 7.6, hh: 1.4, rot: -0.35 }
+      : { t: [0.25, 1.0, 0], az: 0.1, el: 0.14, fov: 26, hw: 2.75, hh: 1.3, rot: 0.55 },
+  ];
+}
+// the part of the canvas (px) where the subject should sit
+function region(i) {
+  if (!L.desktop) return [0, 0, W, H];
+  return i === 3 ? [0, 0, W, H * 0.6] : [L.textRight, 0, W, H];
+}
+const lerp = (a, b, t) => a + (b - a) * t;
+
+function buildKettle() {
+  const T = THREE;
+  const g = new T.Group();
+  const white = (geo) => { const n = geo.attributes.position.count, a = new Float32Array(n * 3).fill(1); geo.setAttribute("color", new T.BufferAttribute(a, 3)); return geo; };
+  const lathe = (pts, seg = 72, n = 90) => new T.LatheGeometry(new T.SplineCurve(pts.map((p) => new T.Vector2(p[0], p[1]))).getPoints(n), seg);
+  const sweep = (curve, segs, radial, rFn, flat = 1, planar = false) => {
+    const fr = curve.computeFrenetFrames(segs, false), pos = [], idx = [];
+    for (let i = 0; i <= segs; i++) {
+      const t = i / segs, p = curve.getPointAt(t), r = rFn(t);
+      let N = fr.normals[i], B = fr.binormals[i];
+      if (planar) { const tg = curve.getTangentAt(t); B = new T.Vector3(0, 0, 1); N = new T.Vector3().crossVectors(B, tg).normalize(); }
+      for (let j = 0; j < radial; j++) {
+        const a = (j / radial) * Math.PI * 2, c = Math.cos(a) * r, s = Math.sin(a) * r * flat;
+        pos.push(p.x + c * N.x + s * B.x, p.y + c * N.y + s * B.y, p.z + c * N.z + s * B.z);
+      }
+    }
+    for (let i = 0; i < segs; i++) for (let j = 0; j < radial; j++) {
+      const a = i * radial + j, b = i * radial + ((j + 1) % radial), c = (i + 1) * radial + j, d = (i + 1) * radial + ((j + 1) % radial);
+      idx.push(a, c, b, b, c, d);
+    }
+    const geo = new T.BufferGeometry(); geo.setAttribute("position", new T.Float32BufferAttribute(pos, 3)); geo.setIndex(idx); geo.computeVertexNormals();
+    return white(geo);
+  };
+  // body: glaze thins over the rim and pools toward the foot (a darker, deeper colour low down)
+  const body = lathe([[0.001, 0.09], [0.6, 0.09], [0.8, 0.11], [0.93, 0.2], [1.0, 0.38], [1.03, 0.62], [1.03, 0.95], [0.99, 1.25], [0.93, 1.47], [0.82, 1.64], [0.66, 1.74], [0.53, 1.79], [0.47, 1.78], [0.455, 1.72]]);
+  { const p = body.attributes.position, n = p.count, col = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) { const y = (p.getY(i) - 0.09) / 1.7, f = 0.78 + 0.3 * smooth(0.02, 0.9, y); col[i * 3] = col[i * 3 + 1] = col[i * 3 + 2] = f; }
+    body.setAttribute("color", new T.BufferAttribute(col, 3)); }
+  const lid = white(lathe([[0.54, 1.79], [0.55, 1.83], [0.5, 1.87], [0.4, 1.93], [0.24, 1.97], [0.001, 1.985]], 64, 40));
+  const knob = white(new T.SphereGeometry(1, 24, 16)); knob.scale(0.11, 0.085, 0.11); knob.translate(0, 2.0, 0);
+  const foot = white(lathe([[0.001, 0], [0.64, 0], [0.7, 0.015], [0.73, 0.09], [0.001, 0.09]], 64, 16));
+  const spoutC = new T.CatmullRomCurve3([[0.8, 0.28], [1.15, 0.42], [1.45, 0.78], [1.55, 1.22], [1.72, 1.68], [2.08, 1.93], [2.42, 1.9]].map((p) => new T.Vector3(p[0], p[1], 0)), false, "centripetal");
+  const spout = sweep(spoutC, 56, 18, (t) => 0.06 + 0.12 * (1 - t) ** 2.4 + 0.014 * smooth(0.88, 1, t));
+  const handleC = new T.CatmullRomCurve3([[-0.85, 1.52], [-1.4, 1.66], [-1.92, 1.32], [-1.98, 0.88], [-1.7, 0.52], [-0.9, 0.42]].map((p) => new T.Vector3(p[0], p[1], 0)), false, "centripetal");
+  const handle = sweep(handleC, 48, 16, (t) => 0.075 + 0.02 * Math.sin(t * Math.PI), 2.1, true);
+  [body, lid, knob, foot, spout, handle].forEach((x) => disposables.push(x));
+
+  const mat = (bump) => new T.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.4, clearcoatRoughness: 0.28, vertexColors: true, bumpMap: bump ? bump : null, bumpScale: bump ? 1.4 : 0 });
+  const mBody = mat(throwing), mPart = mat(null);
+  const mClay = clayMat, tip = new T.Mesh(new T.CircleGeometry(0.052, 20), mouthMat);
+  const tg = spoutC.getTangentAt(1), tp = spoutC.getPointAt(1);
+  tip.position.copy(tp).addScaledVector(tg, 0.003); tip.quaternion.setFromUnitVectors(new T.Vector3(0, 0, 1), tg);
+  disposables.push(tip.geometry);
+  g.add(new T.Mesh(body, mBody), new T.Mesh(lid, mBody), new T.Mesh(knob, mPart), new T.Mesh(spout, mPart), new T.Mesh(handle, mPart), new T.Mesh(foot, mClay), tip);
+  const shadow = new T.Mesh(shadowGeo, shadowMat); shadow.rotation.x = -Math.PI / 2; shadow.position.set(0.45, 0.004, -0.1); shadow.renderOrder = -1; g.add(shadow);
+  const k = { group: g, mats: [mBody, mPart], col: [0.5, 0.5, 0.5], rough: 0.4, coat: 0.3, key: null };
+  disposables.push(mBody, mPart);
+  return k;
+}
+
+let throwing, clayMat, shadowGeo;
+function glazeLinear(key) { return readColor(`--glaze-${key}`)?.linear || [0.5, 0.5, 0.5]; }
+function assignGlazes(snap) {
+  const others = Object.keys(GLAZES).filter((k) => k !== glaze);
+  [glaze, ...others].forEach((key, i) => { const k = kettles[i]; if (!k) return; k.key = key; k.tCol = glazeLinear(key); k.tRough = GLAZES[key].rough; k.tCoat = GLAZES[key].coat; if (snap) { k.col = [...k.tCol]; k.rough = k.tRough; k.coat = k.tCoat; } });
+}
+
+function applyTheme() {
+  if (!scene3) return;
+  const c = theme.color, dark = theme.dark;
+  keyL.color.setRGB(...(dark ? c.text.linear : c.surface.linear)); keyL.intensity = dark ? 2.4 : 2.6;
+  hemi.color.setRGB(...c.surface2.linear); hemi.groundColor.setRGB(...c.surface3.linear); hemi.intensity = dark ? 0.5 : 0.8;
+  rim.color.setRGB(...(dark ? c.accentText.linear : mixOklab(c.surface.linear, c.accent.linear, 0.4))); rim.intensity = dark ? 3.0 : 1.6;
+  scene3.environmentIntensity = dark ? 0.3 : 0.5;
+  shadowMat.color.setRGB(...theme.shadow.color); shadowMat.opacity = Math.min(0.75, Math.max(0.25, 0.3 * theme.shadow.strength));
+  mouthMat.color.setRGB(...theme.shadow.color);
+  assignGlazes(false);
+}
+
+function placeKettles() {
+  const d = L.desktop;
+  kettles[0].group.position.set(0, 0, 0);
+  kettles[1].group.position.set(d ? -4.3 : 0, 0, -0.9); kettles[2].group.position.set(d ? 4.3 : 0, 0, -0.9);
+}
+
+const hooks = {
+  async init(canvas) {
+    THREE = await import("three");
+    const { RoomEnvironment } = await import("three/addons/environments/RoomEnvironment.js");
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: "high-performance" });
+    renderer.setClearColor(0x000000, 0);
+    renderer.toneMapping = THREE.NeutralToneMapping; renderer.toneMappingExposure = 1.0;
+    scene3 = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(26, 1, 0.1, 120);
+    pmrem = new THREE.PMREMGenerator(renderer); envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture; scene3.environment = envTex;
+    keyL = new THREE.DirectionalLight(0xffffff, 2.4); keyL.position.set(-4, 7, 4);
+    rim = new THREE.DirectionalLight(0xffffff, 1.5); rim.position.set(5, 3, -5);
+    hemi = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.7);
+    scene3.add(keyL, rim, hemi);
+    // throwing rings: a faint bump texture, rows of slightly uneven ridges
+    { const c = document.createElement("canvas"); c.width = 4; c.height = 1024; const x = c.getContext("2d"); let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647; let drift = 0;
+      for (let y = 0; y < 1024; y++) { drift += (rnd() - 0.5) * 0.05; const v = 0.5 + 0.2 * Math.sin(y * 0.135 + drift * 8) + 0.07 * Math.sin(y * 0.41) ; x.fillStyle = `rgb(${v * 255},${v * 255},${v * 255})`; x.fillRect(0, y, 4, 1); }
+      throwing = new THREE.CanvasTexture(c); throwing.wrapS = THREE.RepeatWrapping; throwing.colorSpace = THREE.NoColorSpace; disposables.push(throwing); }
+    // soft contact shadow
+    { const c = document.createElement("canvas"); c.width = c.height = 128; const x = c.getContext("2d"), gr = x.createRadialGradient(64, 64, 4, 64, 64, 62);
+      gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(0.45, "rgba(255,255,255,0.55)"); gr.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = gr; x.fillRect(0, 0, 128, 128);
+      const t = new THREE.CanvasTexture(c); disposables.push(t);
+      shadowMat = new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false }); shadowGeo = new THREE.PlaneGeometry(4.6, 3.4); disposables.push(shadowMat, shadowGeo); }
+    mouthMat = new THREE.MeshBasicMaterial({ color: 0x000000, toneMapped: false });
+    clayMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color().setRGB(0.5, 0.31, 0.2), roughness: 0.85, vertexColors: true });
+    disposables.push(mouthMat, clayMat);
+    for (let i = 0; i < 3; i++) { const k = buildKettle(); kettles.push(k); scene3.add(k.group); }
+    measureLayout(); placeKettles(); assignGlazes(true); applyTheme();
+    beatTarget = readBeat(); cur = reducedNow() ? Math.round(beatTarget) : beatTarget;
+    return true;
+  },
+  resize(w, h, pr) {
+    W = w; H = h; renderer.setPixelRatio(pr); renderer.setSize(w, h, false); camera.aspect = w / h;
+    measureLayout(); placeKettles(); beatTarget = readBeat();
+  },
+  frame(time, dtMs, st) {
+    root.dataset.story = "on";
+    const dt = dtMs / 1000, reduced = st.reduced; let more = false;
+    // beat: damped toward the scroll position (theme tempo); whole beats only when motion is reduced
+    const tau = (theme.motion.base / 1000) * 0.7;
+    if (reduced) cur = Math.round(beatTarget);
+    else { cur += (beatTarget - cur) * (1 - Math.exp(-dt / tau)); if (Math.abs(beatTarget - cur) > 0.0006) more = true; else cur = beatTarget; }
+    // pointer: a small turn of the camera, only with a mouse
+    if (!reduced && finePointer) { const k = 1 - Math.exp(-dt / 0.22); pX += (tpx - pX) * k; pY += (tpy - pY) * k; if (Math.abs(tpx - pX) + Math.abs(tpy - pY) > 0.001) more = true; } else { pX = pY = 0; }
+    // glaze: colour and finish ease to the new glaze
+    const kc = reduced ? 1 : 1 - Math.exp(-dt / 0.14);
+    for (const k of kettles) {
+      let moving = false;
+      for (let a = 0; a < 3; a++) { const d = k.tCol[a] - k.col[a]; if (Math.abs(d) > 0.0005) { k.col[a] += d * kc; moving = true; } else k.col[a] = k.tCol[a]; }
+      k.rough += (k.tRough - k.rough) * kc; k.coat += (k.tCoat - k.coat) * kc;
+      if (Math.abs(k.tRough - k.rough) > 0.002 || Math.abs(k.tCoat - k.coat) > 0.002) moving = true;
+      if (moving && !reduced) more = true;
+      for (const m of k.mats) { m.color.setRGB(k.col[0], k.col[1], k.col[2]); m.roughness = k.rough; m.clearcoat = k.coat; }
+    }
+    // camera for this beat
+    const K = keys(), i = Math.min(2, Math.floor(cur)), f = cur - i, A = K[i], B = K[i + 1];
+    const mix = (n) => lerp(A[n], B[n], f);
+    const fov = mix("fov"), hw = mix("hw"), hh = mix("hh"), rot = mix("rot"), az = mix("az") + pX * 0.2, el = mix("el") - pY * 0.05;
+    const ra = region(i), rb = region(i + 1), r = ra.map((v, n) => lerp(v, rb[n], f));
+    const rw = Math.max(80, r[2] - r[0]), rh = Math.max(80, r[3] - r[1]), tanF = Math.tan((fov * Math.PI) / 360);
+    const dist = Math.max((hw * H) / (tanF * rw), (hh * H) / (tanF * rh));
+    const local = new THREE.Vector3(mix2(A.t[0], B.t[0], f), mix2(A.t[1], B.t[1], f), mix2(A.t[2], B.t[2], f)).applyAxisAngle(new THREE.Vector3(0, 1, 0), rot);
+    camera.fov = fov;
+    camera.position.set(local.x + dist * Math.sin(az) * Math.cos(el), local.y + dist * Math.sin(el), local.z + dist * Math.cos(az) * Math.cos(el));
+    camera.lookAt(local);
+    const cx = (r[0] + r[2]) / 2 - W / 2, cy = (r[1] + r[3]) / 2 - H / 2;
+    camera.setViewOffset(W, H, -cx, -cy, W, H);
+    camera.updateProjectionMatrix();
+    // kettles
+    const desk = L.desktop;
+    kettles[0].group.rotation.y = rot;
+    kettles[1].group.rotation.y = rot + 0.35; kettles[2].group.rotation.y = rot - 0.3;
+    kettles[1].group.visible = kettles[2].group.visible = desk && cur > 1.6;
+    renderer.render(scene3, camera);
+    return more;
+  },
+  dispose() {
+    disposables.forEach((d) => d.dispose?.()); disposables.length = 0; envTex?.dispose(); pmrem?.dispose(); renderer?.dispose();
+    kettles = []; scene3 = null;
+  },
+};
+function mix2(a, b, t) { return a + (b - a) * t; }
+const reducedNow = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function start() {
+  if (theme.immersive === 0) return;
+  shell = mountScene(host, hooks, { need: "webgl", maxPixelRatio: 2, touchMaxPixelRatio: 1.5 });
+  api = {
+    wake: () => shell.invalidate(),
+    setGlaze: (key) => { if (scene3) { assignGlazes(false); } shell.invalidate(); },
+  };
+  watchTheme((next) => { theme = next; applyTheme(); shell.invalidate(); });
+  if (finePointer) addEventListener("pointermove", (e) => { if (e.pointerType !== "mouse") return; tpx = (e.clientX / innerWidth - 0.5) * 2; tpy = (e.clientY / innerHeight - 0.5) * 2; shell.invalidate(); }, { passive: true });
+}
+// text and fallback paint first; the engine starts after load
+const go = () => (window.requestIdleCallback ? requestIdleCallback(start, { timeout: 1200 }) : setTimeout(start, 200));
+if (document.readyState === "complete") go(); else addEventListener("load", go, { once: true });
+setGlaze("sea", false);
+</script>
+</body>
+</html>

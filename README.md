@@ -75,16 +75,17 @@ You get background, surface, text, border, accent, status and chart colours for 
 
 Ask for a 3D hero, a shader, a scroll-driven story, page transitions, or "make it feel cinematic", and the **immersive-web** skill takes over. It works with Three.js, React Three Fiber, plain WebGL, WebGPU and CSS, and covers the path from Blender to the browser.
 
-It follows eight hard rules:
+Its hard rules, in short:
 
 1. **Content first.** Headings, copy and buttons are real HTML. The scene sits on top and can vanish without loss.
 2. **Three states for every effect:** full, a still version for people who ask for reduced motion, and a fallback when the device has no WebGL.
 3. **A speed budget.** Text paints first, the 3D engine loads after, phones get a lighter scene.
-4. **One signature moment per page**, not effects everywhere.
+4. **One signature moment per page**, bold and specific to the product, not effects everywhere.
 5. **Never take over the scroll.**
-6. **Keyboard and screen readers** reach everything real.
-7. **Motion rests, sound waits, nothing flashes.**
-8. **Original and licensed** work only.
+6. **Words and scene never share a place:** text has its own lane or surface.
+7. **Keyboard and screen readers** reach everything real.
+8. **Motion rests, sound waits, nothing flashes.**
+9. **Original and licensed** work only.
 
 **One theme drives everything.** The scene reads the same theme tokens as the page (`--accent`, `--bg`, `--surface`, the motion tokens), so any of the 16 directions can colour a 3D scene, a shader palette or a motion style, in light and dark. Each direction also says how far to go, on a ladder from 0 (still) to 3 (scroll story). A finance tool stays at 0; a product launch may go to 3.
 
@@ -96,7 +97,7 @@ It follows eight hard rules:
 node .agents/skills/immersive-web/scripts/immersive-check.mjs page.html
 ```
 
-The script opens the page five ways (desktop, phone, reduced motion, no WebGL, no JavaScript). It measures page weight, what loads before first paint, draw calls, the phone's pixel ratio, native scrolling, and whether the scene pauses off screen. It saves screenshots of every case. It cannot measure frame rate or judge beauty.
+The script opens the page five ways (desktop, phone, reduced motion, no WebGL, no JavaScript). It measures page weight, what loads before first paint, draw calls, the phone's pixel ratio, native scrolling, and whether the scene pauses off screen. It saves screenshots of every case, and with `--poster` it saves the scene as an image to use as the fallback. It cannot measure frame rate or judge beauty.
 
 **Honest limit:** an AI can direct a scene, light it, write shaders and wire a model in. It cannot sculpt film-quality 3D art from nothing. For that you still need a 3D artist or a licensed model.
 

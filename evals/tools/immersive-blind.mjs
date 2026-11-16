@@ -22,7 +22,8 @@ for (const c of cases) for (const cfg of configs) {
   if (!existsSync(page)) { console.log("missing", page); continue; }
   if (skip && existsSync(join(run, "immersive.json"))) continue;
   console.log("checking", c, cfg);
-  try { execFileSync("node", [CHECK, page, "--out", join(run, "screens"), "--json", join(run, "immersive.json")], { stdio: "pipe", timeout: 260000 }); }
+  const extra = JSON.parse(readFileSync(join(root, c, "eval_metadata.json"), "utf8")).check_args || [];   // e.g. ["--app"] for an app window
+  try { execFileSync("node", [CHECK, page, "--out", join(run, "screens"), "--json", join(run, "immersive.json"), ...extra], { stdio: "pipe", timeout: 260000 }); }
   catch (e) { console.log("  check failed:", String(e.stdout || e.message).slice(-300)); }
 }
 

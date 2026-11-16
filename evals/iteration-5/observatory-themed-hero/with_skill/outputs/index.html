@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Public stargazing nights | Kielder Dark Sky Observatory</title>
+<meta name="description" content="Guided stargazing nights in Kielder Forest, Northumberland. Dates, what you will see this month, booking and how to get there.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="theme.css">
+<!--
+Design brief
+Product: public stargazing nights at a dark sky observatory (responsive web, phone first for booking)
+User and feeling: a family or couple planning an evening out, a little unsure about cold, dark and distance -> wonder, then reassurance
+Direction: Stage dark (Studio theme.css, accent #7FA8FF, dark default, both themes shipped). Signature: large condensed titles, colour from the content (the Milky Way tint)
+Type: Barlow Condensed display, Outfit text 15px, JetBrains Mono for times and prices   Shape and depth: 6/10/16px, hairline
+Primary task: pick a night and book places
+Immersive: level 2 (theme --immersive: 2). Stack: plain HTML + one raw WebGL fragment shader on a single triangle, lazy, 0 KB of libraries.
+Signature moment: "your eyes adjust". The sky opens on the brightest stars only; faint stars and the Milky Way fade in over about two seconds, the sky turns a few degrees with the pointer, then it rests.
+Scene: a procedural night sky on the page background (stars by brightness class, a warped Milky Way with a dust lane), a conifer skyline in --bg in front. No model needed.
+Reduced motion: the finished sky as one still frame. No GPU / no script: the same sky as CSS dots and a CSS band, same skyline.
+Budget: no library, one canvas, pixel ratio capped by the shell, pauses off screen and in hidden tabs.
+Data on this page (dates, prices, seats, journey times) is sample content for review.
+-->
+<style>
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body { overflow-x: hidden; }
+.wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--space-6); }
+.skip { position: absolute; left: var(--space-4); top: -80px; z-index: 20; padding: var(--space-2) var(--space-4); background: var(--surface); color: var(--text); border-radius: var(--radius); box-shadow: var(--shadow-overlay); }
+.skip:focus { top: var(--space-4); }
+.num, time, .price { font-variant-numeric: tabular-nums; }
+.mono { font-family: var(--font-mono); font-size: 14px; }
+
+/* ---------- controls ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--control-h); padding: 0 var(--space-5); border-radius: var(--radius); border: var(--border-w) solid transparent; font: var(--weight-medium) 15px var(--font-sans); text-decoration: none; cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.btn:active { transform: scale(var(--press-scale)); }
+.btn-primary { background: var(--accent); color: var(--accent-fg); box-shadow: var(--shadow-button); }
+.btn-primary[disabled] { background: var(--surface-3); color: var(--text-muted); cursor: not-allowed; box-shadow: none; }
+.btn-text { color: var(--text); padding: 0 var(--space-3); min-height: var(--control-h); }
+.btn-quiet { color: var(--text); border-color: var(--border-strong); background: transparent; }
+@media (hover: hover) { .btn-primary:not([disabled]):hover { background: var(--accent-hover); } .btn-quiet:hover, .btn-text:hover { background: var(--surface-2); } }
+
+/* ---------- hero ---------- */
+.hero { position: relative; isolation: isolate; min-height: clamp(600px, 94svh, 880px); display: flex; flex-direction: column; overflow: hidden; }
+.scene { position: absolute; inset: 0; z-index: -2; }
+.scene canvas, .scene-fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene canvas { opacity: 0; transition: opacity var(--dur-slow) var(--ease-out); }
+.scene[data-scene="live"] canvas, .scene[data-scene="still"] canvas { opacity: 1; }
+.scene[data-scene="live"] .scene-fallback, .scene[data-scene="still"] .scene-fallback { visibility: hidden; }
+/* the fallback is the same sky: a Milky Way band and fixed stars, all from tokens */
+.scene-fallback { background-image: radial-gradient(circle at 0.0% 66.3%, color-mix(in oklab, var(--text) 38%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 72.9% 38.4%, color-mix(in oklab, var(--text) 60%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 75.5% 39.1%, color-mix(in oklab, var(--text) 55%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 81.7% 17.4%, color-mix(in oklab, var(--text) 58%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 69.8% 3.9%, color-mix(in oklab, var(--text) 48%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 92.2% 58.1%, color-mix(in oklab, var(--text) 50%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 92.3% 49.6%, color-mix(in oklab, var(--text) 53%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 91.2% 65.4%, color-mix(in oklab, var(--text) 43%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 83.7% 23.9%, color-mix(in oklab, var(--text) 41%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 42.8% 21.2%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 55.7% 52.5%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 5.9% 19.7%, color-mix(in oklab, var(--text) 50%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 42.1% 13.9%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 5.5% 26.3%, color-mix(in oklab, var(--text) 56%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 92.4% 37.1%, color-mix(in oklab, var(--text) 46%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 28.4% 26.2%, color-mix(in oklab, var(--text) 43%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 53.2% 44.2%, color-mix(in oklab, var(--text) 66%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 45.8% 62.1%, color-mix(in oklab, var(--text) 55%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 51.6% 36.4%, color-mix(in oklab, var(--text) 67%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 39.7% 51.0%, color-mix(in oklab, var(--text) 53%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 35.1% 23.8%, color-mix(in oklab, var(--text) 61%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 87.8% 8.0%, color-mix(in oklab, var(--text) 33%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 40.7% 11.1%, color-mix(in oklab, var(--text) 69%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 22.0% 45.5%, color-mix(in oklab, var(--text) 48%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 59.3% 9.9%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 88.5% 64.1%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 90.8% 54.8%, color-mix(in oklab, var(--text) 30%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 24.8% 5.5%, color-mix(in oklab, var(--text) 54%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 23.1% 53.4%, color-mix(in oklab, var(--text) 57%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 23.8% 63.5%, color-mix(in oklab, var(--text) 44%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 89.4% 8.5%, color-mix(in oklab, var(--text) 30%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 91.3% 45.9%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 2.1% 64.8%, color-mix(in oklab, var(--text) 68%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 56.5% 48.9%, color-mix(in oklab, var(--text) 38%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 20.9% 40.6%, color-mix(in oklab, var(--text) 60%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 70.1% 51.4%, color-mix(in oklab, var(--text) 31%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 11.0% 66.2%, color-mix(in oklab, var(--text) 57%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 89.3% 2.7%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 86.1% 71.5%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 76.5% 30.2%, color-mix(in oklab, var(--text) 59%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 88.2% 28.7%, color-mix(in oklab, var(--text) 46%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 88.7% 40.2%, color-mix(in oklab, var(--text) 54%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 73.5% 24.1%, color-mix(in oklab, var(--text) 46%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 19.9% 22.4%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 99.4% 45.5%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 91.8% 14.4%, color-mix(in oklab, var(--text) 35%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 49.7% 40.1%, color-mix(in oklab, var(--text) 67%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 48.2% 13.5%, color-mix(in oklab, var(--text) 36%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 66.3% 37.6%, color-mix(in oklab, var(--text) 50%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 75.7% 26.1%, color-mix(in oklab, var(--text) 31%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 29.9% 39.0%, color-mix(in oklab, var(--text) 58%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 29.1% 17.0%, color-mix(in oklab, var(--text) 47%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 7.5% 55.6%, color-mix(in oklab, var(--text) 66%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 91.0% 49.0%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 2.5% 54.9%, color-mix(in oklab, var(--text) 58%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 89.8% 2.7%, color-mix(in oklab, var(--text) 33%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 10.8% 6.1%, color-mix(in oklab, var(--text) 54%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 94.6% 13.8%, color-mix(in oklab, var(--text) 38%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 67.5% 17.5%, color-mix(in oklab, var(--text) 69%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 42.3% 48.5%, color-mix(in oklab, var(--text) 45%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 41.6% 4.4%, color-mix(in oklab, var(--text) 62%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 97.4% 11.0%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 50.9% 8.8%, color-mix(in oklab, var(--text) 54%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 17.1% 5.6%, color-mix(in oklab, var(--text) 55%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 55.6% 34.6%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 7.5% 29.8%, color-mix(in oklab, var(--text) 30%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 0.6% 29.8%, color-mix(in oklab, var(--text) 39%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 92.4% 56.0%, color-mix(in oklab, var(--text) 47%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 85.5% 69.3%, color-mix(in oklab, var(--text) 56%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 57.2% 25.1%, color-mix(in oklab, var(--text) 49%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 49.5% 40.9%, color-mix(in oklab, var(--text) 56%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 63.3% 52.5%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 84.5% 71.2%, color-mix(in oklab, var(--text) 49%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 95.7% 70.2%, color-mix(in oklab, var(--text) 33%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 34.3% 63.6%, color-mix(in oklab, var(--text) 59%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 95.5% 56.7%, color-mix(in oklab, var(--text) 39%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 79.8% 7.5%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 80.0% 45.7%, color-mix(in oklab, var(--text) 51%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 44.3% 62.8%, color-mix(in oklab, var(--text) 64%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 27.1% 49.4%, color-mix(in oklab, var(--text) 45%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 18.8% 42.4%, color-mix(in oklab, var(--text) 65%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 82.2% 24.3%, color-mix(in oklab, var(--text) 65%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 11.6% 22.2%, color-mix(in oklab, var(--text) 85%, transparent) 0 1.6px, transparent 2.2px),
+    radial-gradient(circle at 0.1% 9.5%, color-mix(in oklab, var(--text) 30%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 69.3% 64.6%, color-mix(in oklab, var(--text) 38%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 94.7% 50.4%, color-mix(in oklab, var(--text) 34%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 62.7% 1.1%, color-mix(in oklab, var(--text) 53%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 75.1% 9.2%, color-mix(in oklab, var(--text) 58%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 95.5% 39.4%, color-mix(in oklab, var(--text) 61%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 70.2% 52.8%, color-mix(in oklab, var(--text) 34%, transparent) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 24% 28%, var(--accent) 0 2.4px, transparent 3.4px); background-repeat: no-repeat; }
+.scene-fallback::before { content: ""; position: absolute; inset: -20%; transform: rotate(-24deg); background:
+  radial-gradient(60% 9% at 56% 50%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 70%),
+  radial-gradient(90% 20% at 50% 50%, color-mix(in oklab, var(--accent) 11%, transparent), transparent 72%); }
+.scene-fallback::after { content: ""; position: absolute; inset: auto 0 0 0; height: 30%; background: linear-gradient(to top, color-mix(in oklab, var(--accent) 9%, transparent), transparent); }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(70% 62% at 18% 46%, color-mix(in oklab, var(--bg) 86%, transparent) 0%, color-mix(in oklab, var(--bg) 55%, transparent) 55%, transparent 100%); }
+.trees { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: clamp(88px, 15vw, 168px); z-index: 0; display: block; fill: var(--bg); pointer-events: none; }
+
+.top { display: flex; align-items: center; gap: var(--space-5); min-height: 72px; }
+.brand { margin-right: auto; font: var(--weight-display) 20px/1.1 var(--font-display); letter-spacing: 0.02em; text-transform: uppercase; color: var(--text); text-decoration: none; }
+.brand span { display: block; font: var(--weight-medium) 12px/1.2 var(--font-sans); letter-spacing: var(--tracking-caps); color: var(--text-muted); }
+.top nav { display: flex; gap: var(--space-1); }
+.top nav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--space-3); color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: var(--weight-medium); border-radius: var(--radius-sm); }
+.top nav a:hover { color: var(--text); background: var(--surface-2); }
+.theme-toggle { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: var(--radius); border: var(--border-w) solid var(--border-strong); background: transparent; color: var(--text); cursor: pointer; }
+.theme-toggle:hover { background: var(--surface-2); }
+.theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+.hero-body { flex: 1; display: flex; align-items: center; padding-top: var(--space-6); padding-bottom: clamp(104px, 18vw, 200px); }
+.hero h1 { font-size: clamp(60px, 11.5vw, 120px); line-height: 0.98; letter-spacing: var(--tracking-display); text-transform: uppercase; max-width: 9.5em; }
+.hero .lead { margin-top: var(--space-5); font-size: 18px; line-height: 1.5; color: var(--text); max-width: 34em; opacity: .92; }
+.hero .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-5); }
+.next { margin-top: var(--space-5); font-size: 14px; color: var(--text-muted); }
+.next b { color: var(--text); font-weight: var(--weight-medium); }
+
+/* ---------- sections ---------- */
+section.block { padding: var(--space-8) 0 0; }
+.sec-head { display: grid; gap: var(--space-2); margin-bottom: var(--space-6); max-width: var(--reading-max); }
+.sec-head h2 { font-size: clamp(36px, 6vw, 60px); line-height: 1.02; letter-spacing: var(--tracking-display); text-transform: uppercase; }
+.sec-head p { color: var(--text-muted); font-size: 16px; }
+
+/* booking */
+.book { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { padding: 0; font-size: 14px; font-weight: var(--weight-medium); color: var(--text-muted); margin-bottom: var(--space-3); }
+.sessions { display: grid; border-top: var(--border-w) solid var(--border); }
+.session { position: relative; display: grid; grid-template-columns: auto 88px minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-4); min-height: 72px; padding: var(--space-3) var(--space-4); border-bottom: var(--border-w) solid var(--border); cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out); }
+.session input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); }
+.session .d { font: var(--weight-display) 30px/1 var(--font-display); text-transform: uppercase; }
+.session .d small { display: block; font: var(--weight-medium) 12px/1.3 var(--font-sans); letter-spacing: var(--tracking-caps); color: var(--text-muted); }
+.session .what b { display: block; font-weight: var(--weight-medium); font-size: 15px; }
+.session .what span { font-size: 14px; color: var(--text-muted); }
+.session .left { font-size: 14px; color: var(--text-muted); text-align: right; white-space: nowrap; }
+@media (hover: hover) { .session:not(.is-full):hover { background: var(--surface); } }
+.session:has(input:checked) { background: var(--surface-2); box-shadow: inset 3px 0 0 var(--accent); }
+.session:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: -2px; }
+.session input:focus-visible { outline: none; }
+.session.is-full { cursor: not-allowed; }
+.session.is-full .d, .session.is-full .what b { color: var(--text-muted); }
+.session.is-full .left { color: var(--text-muted); }
+.hint { margin-top: var(--space-3); font-size: 14px; color: var(--text-muted); }
+
+.panel { position: sticky; top: var(--space-4); background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-raised); padding: var(--space-5); display: grid; gap: var(--space-5); }
+.panel h3 { font-size: 30px; text-transform: uppercase; letter-spacing: var(--tracking-heading); }
+.sum { display: grid; gap: var(--space-1); }
+.sum .big { font: var(--weight-display) 24px/1.15 var(--font-display); text-transform: uppercase; letter-spacing: var(--tracking-heading); }
+.sum p { color: var(--text-muted); font-size: 14px; }
+.guests { display: grid; gap: var(--space-3); }
+.guest { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); }
+.guest b { font-weight: var(--weight-medium); display: block; }
+.guest span { font-size: 14px; color: var(--text-muted); }
+.stepper { display: inline-flex; align-items: center; border: var(--border-w) solid var(--border-strong); border-radius: var(--radius); overflow: hidden; }
+.stepper button { width: 40px; height: 40px; background: transparent; border: 0; color: var(--text); font-size: 18px; cursor: pointer; }
+.stepper button:hover:not([disabled]) { background: var(--surface-2); }
+.stepper button[disabled] { color: var(--text-subtle); opacity: .55; cursor: not-allowed; }
+.stepper output { min-width: 32px; text-align: center; font-weight: var(--weight-medium); }
+.field { display: grid; gap: var(--space-2); }
+.field label { font-size: 14px; font-weight: var(--weight-medium); }
+.field input { height: var(--control-h); padding: 0 var(--space-3); border-radius: var(--radius); border: var(--border-w) solid var(--border-strong); background: var(--bg); color: var(--text); }
+.field input[aria-invalid="true"] { border-color: var(--danger); }
+.field .err { display: none; align-items: center; gap: var(--space-2); font-size: 14px; color: var(--danger-text); }
+.field .err svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.field input[aria-invalid="true"] ~ .err { display: flex; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+.total { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-4); padding-top: var(--space-4); border-top: var(--border-w) solid var(--border); }
+.total span { color: var(--text-muted); font-size: 14px; }
+.total b { font: var(--weight-display) 36px/1 var(--font-display); letter-spacing: var(--tracking-heading); }
+.panel .btn { width: 100%; }
+.fine { font-size: 14px; color: var(--text-muted); }
+.stack { display: grid; gap: var(--space-5); }
+[hidden] { display: none !important; }
+.done { display: grid; gap: var(--space-3); }
+.done h3 { color: var(--text); }
+.done .tick { width: 40px; height: 40px; border-radius: var(--radius-full); display: grid; place-items: center; background: var(--success-soft); color: var(--success-text); }
+.done .tick svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+
+/* what you'll see */
+.moon { display: grid; gap: var(--space-3); margin-bottom: var(--space-7); }
+.moon-bars { display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 2px; align-items: end; height: 72px; }
+.moon-bars i { display: block; background: var(--surface-3); border-radius: 1px; min-height: 3px; }
+.moon-bars i.s { background: var(--accent); }
+.moon-marks { display: grid; grid-template-columns: repeat(30, minmax(0, 1fr)); gap: 2px; height: 8px; }
+.moon-marks i { border-left: 1px solid var(--border-strong); }
+.moon-key { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-2) var(--space-5); font-size: 14px; color: var(--text-muted); }
+.moon-key .sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; background: var(--accent); vertical-align: -1px; margin-right: var(--space-2); }
+.sights { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-8); margin: 0; padding: 0; list-style: none; }
+.sights li { display: grid; gap: var(--space-1); padding: var(--space-4) 0 var(--space-5); border-top: var(--border-w) solid var(--border); align-content: start; }
+.sights h3 { font-size: 30px; text-transform: uppercase; letter-spacing: var(--tracking-heading); }
+.sights .how { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); font-size: 14px; color: var(--text-muted); }
+.sights .how b { font-weight: var(--weight-medium); color: var(--text); }
+.tag { display: inline-flex; align-items: center; height: 24px; padding: 0 var(--space-2); border: var(--border-w) solid var(--border-strong); border-radius: var(--radius-sm); font-size: 12px; font-weight: var(--weight-medium); color: var(--text); }
+.sights p { color: var(--text-muted); max-width: 44ch; }
+
+/* getting there */
+.visit { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; }
+.facts { display: grid; margin: 0; padding: 0; list-style: none; border-top: var(--border-w) solid var(--border); }
+.facts li { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-4) 0; border-bottom: var(--border-w) solid var(--border); }
+.facts b { font-weight: var(--weight-medium); }
+.facts span { color: var(--text-muted); }
+.addr { font-style: normal; display: grid; gap: var(--space-1); margin-bottom: var(--space-5); }
+.addr strong { font: var(--weight-display) 30px/1.05 var(--font-display); text-transform: uppercase; letter-spacing: var(--tracking-heading); }
+.addr span { color: var(--text-muted); }
+table { width: 100%; border-collapse: collapse; }
+caption { text-align: left; font-size: 14px; font-weight: var(--weight-medium); color: var(--text-muted); padding-bottom: var(--space-3); }
+th, td { text-align: left; padding: 0 var(--space-2) 0 0; height: var(--row-h); border-top: var(--border-w) solid var(--border); font-weight: var(--weight-regular); }
+th { color: var(--text); }
+td { text-align: right; padding-right: 0; color: var(--text-muted); }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: var(--border-w) solid var(--border); }
+.rules { margin-top: var(--space-5); padding: var(--space-4) var(--space-5); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-raised); display: grid; gap: var(--space-1); }
+.rules b { font-weight: var(--weight-medium); }
+.rules span { color: var(--text-muted); font-size: 14px; }
+
+footer { margin-top: var(--space-9); border-top: var(--border-w) solid var(--border); padding: var(--space-6) 0 var(--space-7); font-size: 14px; color: var(--text-muted); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-3) var(--space-6); }
+
+@media (max-width: 1023px) {
+  .book, .visit { grid-template-columns: minmax(0, 1fr); gap: var(--space-7); }
+  .panel { position: static; }
+}
+@media (max-width: 640px) {
+  .wrap { padding: 0 var(--space-4); }
+  .top nav { display: none; }
+  .top { min-height: 64px; }
+  .hero { min-height: 640px; }
+  .hero::before { background: radial-gradient(90% 60% at 30% 44%, color-mix(in oklab, var(--bg) 86%, transparent) 0%, color-mix(in oklab, var(--bg) 55%, transparent) 60%, transparent 100%); }
+  .hero .lead { font-size: 16px; }
+  .hero .actions .btn { flex: 1 1 100%; }
+  section.block { padding-top: var(--space-7); }
+  .session { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "r d l" "r w w"; row-gap: var(--space-1); padding: var(--space-3) var(--space-3); }
+  .session input { grid-area: r; }
+  .session .d { grid-area: d; display: flex; align-items: baseline; gap: var(--space-2); font-size: 24px; }
+  .session .d small { display: inline; }
+  .session .what { grid-area: w; }
+  .session .left { grid-area: l; }
+  .sights { grid-template-columns: minmax(0, 1fr); }
+  .facts li { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); }
+  .fields { grid-template-columns: minmax(0, 1fr); }
+  .panel { padding: var(--space-4); }
+  .moon-bars { height: 56px; }
+  button, .btn, input, select, .theme-toggle, .stepper button { min-height: 44px; }
+  .stepper button { min-width: 44px; }
+  .theme-toggle { width: 44px; }
+  input, select { font-size: 16px; }
+  .session { min-height: 72px; }
+}
+@media (pointer: coarse) { .stepper button { min-width: 44px; min-height: 44px; } .btn, input { min-height: 44px; } }
+@media (prefers-contrast: more) { .hero::before { background: color-mix(in oklab, var(--bg) 70%, transparent); } }
+</style>
+</head>
+<body>
+<a class="skip" href="#book">Skip to booking</a>
+
+<header class="hero" id="top">
+  <div class="scene" id="scene" aria-hidden="true"><div class="scene-fallback"></div></div>
+  <svg class="trees" viewBox="0 0 1600 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"><path d="M-10 200 L-10 180 L-8.0 194.0 L-10.0 190.0 L1.0 163.1 L-4.9 156.7 L3.0 129.1 L0.3 123.3 L5.1 95.1 L8.3 87.9 L11.5 95.1 L16.4 123.3 L13.6 129.1 L21.5 156.7 L15.6 163.1 L26.6 190.0 L24.2 194.0 L22.2 190.0 L35.0 159.8 L28.1 152.5 L37.4 121.5 L34.1 115.0 L39.8 83.2 L43.5 75.2 L47.3 83.2 L52.9 115.0 L49.7 121.5 L58.9 152.5 L52.1 159.8 L64.9 190.0 L66.7 194.0 L64.7 190.0 L73.8 161.1 L68.9 154.1 L75.5 124.4 L73.2 118.2 L77.2 87.8 L79.8 80.1 L82.5 87.8 L86.5 118.2 L84.2 124.4 L90.7 154.1 L85.9 161.1 L95.0 190.0 L96.4 194.0 L94.4 190.0 L108.0 161.9 L100.7 155.2 L110.5 126.4 L107.1 120.3 L113.0 90.8 L117.0 83.4 L121.0 90.8 L127.0 120.3 L123.6 126.4 L133.3 155.2 L126.1 161.9 L139.7 190.0 L122.9 194.0 L120.9 190.0 L129.2 158.1 L124.8 150.4 L130.7 117.7 L128.6 110.9 L132.3 77.4 L134.7 68.9 L137.1 77.4 L140.8 110.9 L138.7 117.7 L144.6 150.4 L140.2 158.1 L148.5 190.0 L146.9 194.0 L144.9 190.0 L156.5 159.2 L150.3 151.8 L158.7 120.2 L155.7 113.6 L160.8 81.2 L164.2 73.0 L167.6 81.2 L172.7 113.6 L169.8 120.2 L178.1 151.8 L172.0 159.2 L183.6 190.0 L181.8 194.0 L179.8 190.0 L187.0 169.2 L183.2 164.2 L188.3 142.9 L186.5 138.4 L189.7 116.6 L191.7 111.0 L193.8 116.6 L197.0 138.4 L195.2 142.9 L200.3 164.2 L196.5 169.2 L203.6 190.0 L203.5 194.0 L201.5 190.0 L207.8 165.5 L204.4 159.6 L208.9 134.5 L207.3 129.3 L210.1 103.5 L211.9 97.0 L213.8 103.5 L216.5 129.3 L215.0 134.5 L219.5 159.6 L216.1 165.5 L222.4 190.0 L222.5 194.0 L220.5 190.0 L231.3 169.2 L225.5 164.2 L233.3 142.8 L230.5 138.3 L235.3 116.5 L238.4 110.9 L241.6 116.5 L246.3 138.3 L243.6 142.8 L251.3 164.2 L245.6 169.2 L256.3 190.0 L250.8 194.0 L248.8 190.0 L258.0 169.6 L253.1 164.6 L259.7 143.7 L257.3 139.3 L261.4 117.8 L264.0 112.4 L266.7 117.8 L270.7 139.3 L268.4 143.7 L275.0 164.6 L270.1 169.6 L279.2 190.0 L275.3 194.0 L273.3 190.0 L286.0 175.3 L279.2 171.8 L288.4 156.7 L285.2 153.5 L290.8 138.1 L294.5 134.2 L298.2 138.1 L303.8 153.5 L300.6 156.7 L309.8 171.8 L303.0 175.3 L315.7 190.0 L311.7 194.0 L309.7 190.0 L318.8 172.4 L314.0 168.2 L320.5 150.1 L318.2 146.3 L322.2 127.9 L324.8 123.2 L327.5 127.9 L331.4 146.3 L329.2 150.1 L335.7 168.2 L330.8 172.4 L339.9 190.0 L330.9 194.0 L328.9 190.0 L339.2 172.0 L333.7 167.7 L341.1 149.2 L338.5 145.4 L343.1 126.5 L346.1 121.7 L349.1 126.5 L353.7 145.4 L351.1 149.2 L358.5 167.7 L353.0 172.0 L363.4 190.0 L363.8 194.0 L361.8 190.0 L374.1 167.1 L367.5 161.5 L376.4 138.0 L373.3 133.1 L378.7 109.0 L382.3 102.9 L385.9 109.0 L391.3 133.1 L388.2 138.0 L397.1 161.5 L390.5 167.1 L402.8 190.0 L399.0 194.0 L397.0 190.0 L409.7 164.9 L402.9 158.8 L412.1 133.1 L408.9 127.7 L414.5 101.3 L418.2 94.6 L422.0 101.3 L427.6 127.7 L424.4 133.1 L433.6 158.8 L426.8 164.9 L439.5 190.0 L428.3 194.0 L426.3 190.0 L439.4 163.5 L432.4 157.1 L441.8 130.0 L438.5 124.3 L444.3 96.4 L448.2 89.4 L452.0 96.4 L457.8 124.3 L454.5 130.0 L463.9 157.1 L456.9 163.5 L470.0 190.0 L454.9 194.0 L452.9 190.0 L461.7 162.4 L457.0 155.8 L463.3 127.5 L461.1 121.6 L464.9 92.6 L467.5 85.3 L470.1 92.6 L473.9 121.6 L471.7 127.5 L478.0 155.8 L473.3 162.4 L482.1 190.0 L480.0 194.0 L478.0 190.0 L491.0 161.3 L484.1 154.5 L493.4 125.1 L490.1 118.9 L495.8 88.8 L499.6 81.2 L503.4 88.8 L509.1 118.9 L505.8 125.1 L515.1 154.5 L508.2 161.3 L521.2 190.0 L507.9 194.0 L505.9 190.0 L519.2 157.9 L512.1 150.2 L521.7 117.3 L518.3 110.4 L524.2 76.7 L528.1 68.2 L532.1 76.7 L537.9 110.4 L534.6 117.3 L544.2 150.2 L537.0 157.9 L550.4 190.0 L535.9 194.0 L533.9 190.0 L540.3 160.4 L536.9 153.2 L541.5 122.9 L539.8 116.5 L542.6 85.4 L544.5 77.5 L546.4 85.4 L549.2 116.5 L547.6 122.9 L552.2 153.2 L548.8 160.4 L555.2 190.0 L547.7 194.0 L545.7 190.0 L558.0 161.4 L551.4 154.5 L560.2 125.2 L557.1 119.1 L562.5 89.0 L566.1 81.4 L569.7 89.0 L575.1 119.1 L572.0 125.2 L580.8 154.5 L574.2 161.4 L586.5 190.0 L583.9 194.0 L581.9 190.0 L588.4 165.3 L584.9 159.3 L589.6 134.0 L587.9 128.6 L590.8 102.7 L592.7 96.1 L594.6 102.7 L597.4 128.6 L595.8 134.0 L600.5 159.3 L597.0 165.3 L603.5 190.0 L602.7 194.0 L600.7 190.0 L614.1 163.5 L607.0 157.1 L616.6 129.9 L613.2 124.2 L619.2 96.4 L623.1 89.3 L627.0 96.4 L632.9 124.2 L629.5 129.9 L639.2 157.1 L632.0 163.5 L645.5 190.0 L639.2 194.0 L637.2 190.0 L649.1 161.1 L642.7 154.1 L651.3 124.5 L648.3 118.2 L653.6 87.8 L657.1 80.2 L660.6 87.8 L665.8 118.2 L662.8 124.5 L671.4 154.1 L665.0 161.1 L676.9 190.0 L674.2 194.0 L672.2 190.0 L682.6 164.3 L677.0 158.2 L684.5 131.9 L681.9 126.4 L686.5 99.4 L689.5 92.6 L692.6 99.4 L697.2 126.4 L694.5 131.9 L702.0 158.2 L696.5 164.3 L706.9 190.0 L694.0 194.0 L692.0 190.0 L702.5 162.0 L696.9 155.2 L704.5 126.5 L701.8 120.5 L706.5 91.1 L709.6 83.6 L712.7 91.1 L717.3 120.5 L714.6 126.5 L722.2 155.2 L716.6 162.0 L727.2 190.0 L722.5 194.0 L720.5 190.0 L728.0 160.7 L724.0 153.7 L729.4 123.7 L727.5 117.4 L730.8 86.6 L733.0 78.9 L735.2 86.6 L738.5 117.4 L736.6 123.7 L742.0 153.7 L738.0 160.7 L745.6 190.0 L743.3 194.0 L741.3 190.0 L752.0 155.2 L746.3 146.9 L754.0 111.2 L751.2 103.7 L755.9 67.2 L759.1 58.0 L762.2 67.2 L766.9 103.7 L764.2 111.2 L771.9 146.9 L766.2 155.2 L776.9 190.0 L766.7 194.0 L764.7 190.0 L777.7 162.7 L770.8 156.1 L780.1 128.1 L776.8 122.3 L782.6 93.6 L786.4 86.3 L790.2 93.6 L795.9 122.3 L792.6 128.1 L802.0 156.1 L795.1 162.7 L808.1 190.0 L804.0 194.0 L802.0 190.0 L810.8 159.1 L806.1 151.6 L812.5 120.0 L810.3 113.3 L814.1 80.8 L816.7 72.6 L819.3 80.8 L823.2 113.3 L821.0 120.0 L827.3 151.6 L822.6 159.1 L831.4 190.0 L828.9 194.0 L826.9 190.0 L839.1 168.2 L832.6 162.9 L841.3 140.6 L838.3 135.9 L843.6 112.9 L847.2 107.1 L850.7 112.9 L856.1 135.9 L853.0 140.6 L861.8 162.9 L855.3 168.2 L867.4 190.0 L868.0 194.0 L866.0 190.0 L875.6 166.6 L870.5 160.9 L877.4 136.9 L874.9 131.8 L879.2 107.2 L882.0 101.0 L884.8 107.2 L889.0 131.8 L886.6 136.9 L893.5 160.9 L888.4 166.6 L898.0 190.0 L891.7 194.0 L889.7 190.0 L902.4 169.1 L895.6 164.1 L904.8 142.7 L901.5 138.2 L907.1 116.2 L910.8 110.7 L914.6 116.2 L920.1 138.2 L916.9 142.7 L926.1 164.1 L919.3 169.1 L932.0 190.0 L928.8 194.0 L926.8 190.0 L939.8 170.0 L932.9 165.2 L942.2 144.8 L938.9 140.5 L944.7 119.5 L948.5 114.2 L952.3 119.5 L958.0 140.5 L954.7 144.8 L964.1 165.2 L957.2 170.0 L970.2 190.0 L956.4 194.0 L954.4 190.0 L965.8 175.6 L959.7 172.2 L968.0 157.4 L965.1 154.4 L970.1 139.3 L973.5 135.4 L976.8 139.3 L981.8 154.4 L978.9 157.4 L987.2 172.2 L981.1 175.6 L992.5 190.0 L979.5 194.0 L977.5 190.0 L990.9 166.8 L983.7 161.2 L993.4 137.5 L990.0 132.5 L995.9 108.1 L999.8 101.9 L1003.7 108.1 L1009.6 132.5 L1006.2 137.5 L1015.8 161.2 L1008.7 166.8 L1022.1 190.0 L1005.2 194.0 L1003.2 190.0 L1009.2 170.4 L1006.0 165.7 L1010.3 145.7 L1008.8 141.5 L1011.5 120.9 L1013.2 115.7 L1015.0 120.9 L1017.7 141.5 L1016.1 145.7 L1020.5 165.7 L1017.3 170.4 L1023.3 190.0 L1024.8 194.0 L1022.8 190.0 L1035.5 162.1 L1028.7 155.3 L1037.8 126.7 L1034.6 120.7 L1040.2 91.3 L1043.9 83.9 L1047.7 91.3 L1053.3 120.7 L1050.0 126.7 L1059.2 155.3 L1052.4 162.1 L1065.1 190.0 L1053.3 194.0 L1051.3 190.0 L1058.4 167.5 L1054.6 162.1 L1059.7 139.0 L1057.9 134.2 L1061.0 110.5 L1063.1 104.5 L1065.2 110.5 L1068.3 134.2 L1066.5 139.0 L1071.6 162.1 L1067.8 167.5 L1074.9 190.0 L1071.3 194.0 L1069.3 190.0 L1079.4 165.1 L1074.0 159.2 L1081.3 133.7 L1078.7 128.3 L1083.1 102.2 L1086.1 95.6 L1089.1 102.2 L1093.5 128.3 L1091.0 133.7 L1098.2 159.2 L1092.8 165.1 L1102.9 190.0 L1094.7 194.0 L1092.7 190.0 L1102.1 163.3 L1097.1 156.9 L1103.9 129.6 L1101.5 123.9 L1105.6 95.9 L1108.4 88.8 L1111.2 95.9 L1115.3 123.9 L1112.9 129.6 L1119.7 156.9 L1114.7 163.3 L1124.2 190.0 L1112.8 194.0 L1110.8 190.0 L1116.5 164.3 L1113.5 158.2 L1117.6 131.9 L1116.2 126.3 L1118.7 99.4 L1120.4 92.5 L1122.1 99.4 L1124.6 126.3 L1123.2 131.9 L1127.3 158.2 L1124.2 164.3 L1130.0 190.0 L1128.8 194.0 L1126.8 190.0 L1136.1 158.2 L1131.2 150.5 L1137.9 117.9 L1135.5 111.0 L1139.6 77.6 L1142.4 69.1 L1145.1 77.6 L1149.2 111.0 L1146.8 117.9 L1153.6 150.5 L1148.6 158.2 L1157.9 190.0 L1156.1 194.0 L1154.1 190.0 L1163.8 160.2 L1158.6 153.0 L1165.6 122.4 L1163.1 116.0 L1167.4 84.7 L1170.3 76.7 L1173.1 84.7 L1177.4 116.0 L1174.9 122.4 L1181.9 153.0 L1176.7 160.2 L1186.4 190.0 L1179.5 194.0 L1177.5 190.0 L1188.1 159.0 L1182.4 151.5 L1190.0 119.7 L1187.4 113.1 L1192.0 80.5 L1195.1 72.2 L1198.2 80.5 L1202.8 113.1 L1200.2 119.7 L1207.8 151.5 L1202.1 159.0 L1212.7 190.0 L1211.1 194.0 L1209.1 190.0 L1222.5 162.6 L1215.3 156.0 L1225.0 127.9 L1221.6 122.0 L1227.6 93.2 L1231.5 85.9 L1235.5 93.2 L1241.4 122.0 L1238.0 127.9 L1247.7 156.0 L1240.5 162.6 L1254.0 190.0 L1248.0 194.0 L1246.0 190.0 L1258.1 167.6 L1251.6 162.3 L1260.4 139.3 L1257.3 134.5 L1262.6 111.0 L1266.2 105.1 L1269.8 111.0 L1275.1 134.5 L1272.0 139.3 L1280.8 162.3 L1274.3 167.6 L1286.4 190.0 L1271.4 194.0 L1269.4 190.0 L1280.9 162.5 L1274.8 155.9 L1283.1 127.7 L1280.2 121.8 L1285.2 92.9 L1288.6 85.6 L1292.0 92.9 L1297.0 121.8 L1294.1 127.7 L1302.4 155.9 L1296.3 162.5 L1307.8 190.0 L1299.9 194.0 L1297.9 190.0 L1307.9 162.9 L1302.6 156.4 L1309.8 128.5 L1307.3 122.7 L1311.7 94.2 L1314.6 87.0 L1317.5 94.2 L1321.9 122.7 L1319.4 128.5 L1326.5 156.4 L1321.2 162.9 L1331.2 190.0 L1325.6 194.0 L1323.6 190.0 L1330.1 163.5 L1326.6 157.2 L1331.3 130.1 L1329.6 124.4 L1332.5 96.6 L1334.3 89.5 L1336.2 96.6 L1339.1 124.4 L1337.4 130.1 L1342.1 157.2 L1338.6 163.5 L1345.1 190.0 L1338.2 194.0 L1336.2 190.0 L1344.6 160.0 L1340.1 152.8 L1346.1 122.0 L1344.0 115.6 L1347.7 84.0 L1350.1 76.1 L1352.6 84.0 L1356.3 115.6 L1354.2 122.0 L1360.2 152.8 L1355.7 160.0 L1364.1 190.0 L1356.0 194.0 L1354.0 190.0 L1364.8 160.6 L1359.1 153.6 L1366.8 123.5 L1364.1 117.1 L1368.8 86.3 L1372.0 78.5 L1375.2 86.3 L1379.9 117.1 L1377.2 123.5 L1384.9 153.6 L1379.2 160.6 L1390.0 190.0 L1376.6 194.0 L1374.6 190.0 L1380.1 153.2 L1377.2 144.4 L1381.1 106.7 L1379.7 98.7 L1382.1 60.1 L1383.7 50.3 L1385.3 60.1 L1387.6 98.7 L1386.3 106.7 L1390.2 144.4 L1387.3 153.2 L1392.7 190.0 L1393.6 194.0 L1391.6 190.0 L1397.4 153.5 L1394.3 144.7 L1398.5 107.3 L1397.0 99.4 L1399.6 61.0 L1401.3 51.3 L1402.9 61.0 L1405.5 99.4 L1404.0 107.3 L1408.2 144.7 L1405.1 153.5 L1410.9 190.0 L1407.0 194.0 L1405.0 190.0 L1413.8 152.3 L1409.1 143.3 L1415.4 104.7 L1413.2 96.6 L1417.0 57.0 L1419.6 47.0 L1422.2 57.0 L1426.0 96.6 L1423.8 104.7 L1430.1 143.3 L1425.5 152.3 L1434.2 190.0 L1433.6 194.0 L1431.6 190.0 L1437.1 152.9 L1434.1 144.0 L1438.1 105.9 L1436.7 97.9 L1439.1 58.9 L1440.7 49.0 L1442.3 58.9 L1444.8 97.9 L1443.4 105.9 L1447.3 144.0 L1444.4 152.9 L1449.9 190.0 L1445.3 194.0 L1443.3 190.0 L1454.1 158.9 L1448.4 151.5 L1456.1 119.6 L1453.4 112.9 L1458.2 80.3 L1461.3 72.0 L1464.5 80.3 L1469.3 112.9 L1466.5 119.6 L1474.3 151.5 L1468.5 158.9 L1479.3 190.0 L1465.7 194.0 L1463.7 190.0 L1470.5 158.2 L1466.9 150.6 L1471.8 118.0 L1470.1 111.1 L1473.1 77.7 L1475.1 69.2 L1477.1 77.7 L1480.1 111.1 L1478.4 118.0 L1483.3 150.6 L1479.7 158.2 L1486.5 190.0 L1486.0 194.0 L1484.0 190.0 L1491.5 159.9 L1487.5 152.6 L1492.9 121.7 L1491.0 115.3 L1494.3 83.6 L1496.5 75.6 L1498.7 83.6 L1502.0 115.3 L1500.1 121.7 L1505.5 152.6 L1501.5 159.9 L1509.0 190.0 L1508.9 194.0 L1506.9 190.0 L1514.9 166.5 L1510.6 160.8 L1516.4 136.7 L1514.4 131.6 L1517.9 106.9 L1520.3 100.6 L1522.7 106.9 L1526.2 131.6 L1524.2 136.7 L1530.0 160.8 L1525.7 166.5 L1533.8 190.0 L1527.3 194.0 L1525.3 190.0 L1532.8 164.9 L1528.8 158.9 L1534.2 133.2 L1532.3 127.8 L1535.6 101.4 L1537.8 94.8 L1540.0 101.4 L1543.3 127.8 L1541.4 133.2 L1546.8 158.9 L1542.8 164.9 L1550.4 190.0 L1550.9 194.0 L1548.9 190.0 L1560.0 170.6 L1554.1 165.9 L1562.1 146.0 L1559.3 141.9 L1564.1 121.5 L1567.4 116.3 L1570.6 121.5 L1575.5 141.9 L1572.7 146.0 L1580.7 165.9 L1574.8 170.6 L1585.9 190.0 L1585.7 194.0 L1583.7 190.0 L1596.0 169.3 L1589.4 164.3 L1598.2 143.0 L1595.1 138.5 L1600.5 116.7 L1604.1 111.2 L1607.7 116.7 L1613.2 138.5 L1610.0 143.0 L1618.9 164.3 L1612.3 169.3 L1624.6 190.0 L1620 200 Z"/></svg>
+  <div class="wrap" style="width:100%">
+    <div class="top">
+      <a class="brand" href="#top">Kielder<span>Dark Sky Observatory</span></a>
+      <nav aria-label="Page">
+        <a href="#book">Dates and booking</a>
+        <a href="#sky">What you'll see</a>
+        <a href="#visit">Getting there</a>
+      </nav>
+      <button class="theme-toggle" id="theme" type="button" aria-label="Switch to light theme" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="wrap hero-body" style="width:100%">
+    <div>
+      <h1>Come and see the whole sky</h1>
+      <p class="lead">Guided stargazing nights in Kielder Forest, Northumberland. One of the darkest skies in England, our astronomers, telescopes set up and hot drinks at the break.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#book">Book a night</a>
+        <a class="btn btn-text" href="#visit">How to get here</a>
+      </div>
+      <p class="next">Next night: <b>Fri 20 Nov, 19:30</b>, Moon and planets, <span class="num">14</span> places left</p>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="block" id="book" aria-labelledby="book-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="book-h">Dates and booking</h2>
+      <p>Each night runs about three hours, outdoors, whatever the temperature. Pick a night, say how many are coming, and we hold your places.</p>
+    </div>
+    <form class="book" id="form" novalidate>
+      <fieldset>
+        <legend>Choose a night</legend>
+        <div class="sessions">
+          <label class="session"><input type="radio" name="night" value="2026-11-20" checked data-left="14" data-label="Fri 20 Nov, 19:30" data-what="Moon and planets, about three hours">
+            <span class="d num">20 Nov<small>Fri, 19:30</small></span>
+            <span class="what"><b>Moon and planets</b><span>Moon <span class="num">85%</span> lit</span></span>
+            <span class="left num">14 places left</span></label>
+          <label class="session is-full"><input type="radio" name="night" value="2026-11-21" disabled data-left="0" data-label="Sat 21 Nov, 19:30" data-what="Moon and planets, about three hours">
+            <span class="d num">21 Nov<small>Sat, 19:30</small></span>
+            <span class="what"><b>Moon and planets</b><span>Moon <span class="num">92%</span> lit. Join the waiting list at the door</span></span>
+            <span class="left num">Sold out</span></label>
+          <label class="session"><input type="radio" name="night" value="2026-11-27" data-left="22" data-label="Fri 27 Nov, 19:00" data-what="Moon and planets, about three hours">
+            <span class="d num">27 Nov<small>Fri, 19:00</small></span>
+            <span class="what"><b>Moon and planets</b><span>Moon <span class="num">88%</span> lit</span></span>
+            <span class="left num">22 places left</span></label>
+          <label class="session"><input type="radio" name="night" value="2026-12-04" data-left="30" data-label="Fri 4 Dec, 19:00" data-what="Deep sky and the Milky Way, about three hours">
+            <span class="d num">4 Dec<small>Fri, 19:00</small></span>
+            <span class="what"><b>Deep sky and the Milky Way</b><span>Moon <span class="num">21%</span> lit</span></span>
+            <span class="left num">30 places left</span></label>
+          <label class="session"><input type="radio" name="night" value="2026-12-05" data-left="9" data-label="Sat 5 Dec, 19:00" data-what="Deep sky and the Milky Way, about three hours">
+            <span class="d num">5 Dec<small>Sat, 19:00</small></span>
+            <span class="what"><b>Deep sky and the Milky Way</b><span>Moon <span class="num">13%</span> lit</span></span>
+            <span class="left num">9 places left</span></label>
+          <label class="session"><input type="radio" name="night" value="2026-12-11" data-left="26" data-label="Fri 11 Dec, 19:00" data-what="Deep sky and the Milky Way, about three hours">
+            <span class="d num">11 Dec<small>Fri, 19:00</small></span>
+            <span class="what"><b>Deep sky and the Milky Way</b><span>Moon <span class="num">7%</span> lit</span></span>
+            <span class="left num">26 places left</span></label>
+        </div>
+        <p class="hint">Moon lit is the share of the Moon's face that is bright at 20:00. A bright Moon washes out faint stars, so those nights focus on the Moon and the planets. Dark nights show the Milky Way.</p>
+      </fieldset>
+
+      <div class="panel" id="panel">
+        <div id="booking-main" class="stack">
+          <h3>Your booking</h3>
+          <div class="sum" aria-live="polite">
+            <span class="big" id="s-date">Fri 20 Nov, 19:30</span>
+            <p id="s-what">Moon and planets, about three hours</p>
+          </div>
+          <div class="guests">
+            <div class="guest">
+              <div><b>Adults</b><span><span class="num">£24</span> each</span></div>
+              <div class="stepper" role="group" aria-label="Adults">
+                <button type="button" data-g="adult" data-d="-1" aria-label="Fewer adults">&minus;</button>
+                <output id="v-adult" class="num" aria-live="polite">2</output>
+                <button type="button" data-g="adult" data-d="1" aria-label="More adults">+</button>
+              </div>
+            </div>
+            <div class="guest">
+              <div><b>Children, 8 to 15</b><span><span class="num">£14</span> each. Under 8s can't join a night.</span></div>
+              <div class="stepper" role="group" aria-label="Children">
+                <button type="button" data-g="child" data-d="-1" aria-label="Fewer children">&minus;</button>
+                <output id="v-child" class="num" aria-live="polite">0</output>
+                <button type="button" data-g="child" data-d="1" aria-label="More children">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="fields">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" required>
+              <span class="err" id="name-e"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>Enter the name for the booking.</span>
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required>
+              <span class="err" id="email-e"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>Enter an email address like name@example.com.</span>
+            </div>
+          </div>
+          <div class="total"><span>Total, pay at the door or online</span><b class="price" id="s-total">£48</b></div>
+          <button class="btn btn-primary" type="submit" id="go">Book 2 places</button>
+          <p class="fine">If cloud or rain cancels the night, move to another date or take a refund. No extras are added to your booking.</p>
+        </div>
+        <div class="done" id="booking-done" hidden tabindex="-1">
+          <div class="tick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+          <h3 id="done-h">Booked</h3>
+          <p id="done-p"></p>
+          <button class="btn btn-quiet" type="button" id="again">Change booking</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="block" id="sky" aria-labelledby="sky-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="sky-h">What you'll see this month</h2>
+      <p>Your eyes need about twenty minutes in the dark to take in a sky like this. On the hill we give you the full twenty before anyone picks up a telescope.</p>
+    </div>
+    <figure class="moon" style="margin-left:0;margin-right:0">
+      <div class="moon-bars" role="img" aria-label="Moon brightness for the next 30 days from 16 November. It is half lit now, full on 24 November, and new on 9 December. Nights with sessions are marked.">
+        <i style="height:47%"></i>
+        <i style="height:57%"></i>
+        <i style="height:68%"></i>
+        <i style="height:77%"></i>
+        <i class="s" style="height:85%"></i>
+        <i style="height:92%"></i>
+        <i style="height:97%"></i>
+        <i style="height:99%"></i>
+        <i style="height:100%"></i>
+        <i style="height:98%"></i>
+        <i style="height:94%"></i>
+        <i class="s" style="height:88%"></i>
+        <i style="height:80%"></i>
+        <i style="height:71%"></i>
+        <i style="height:61%"></i>
+        <i style="height:51%"></i>
+        <i style="height:40%"></i>
+        <i style="height:30%"></i>
+        <i class="s" style="height:21%"></i>
+        <i class="s" style="height:13%"></i>
+        <i style="height:7%"></i>
+        <i style="height:4%"></i>
+        <i style="height:4%"></i>
+        <i style="height:4%"></i>
+        <i style="height:4%"></i>
+        <i class="s" style="height:7%"></i>
+        <i style="height:14%"></i>
+        <i style="height:22%"></i>
+        <i style="height:31%"></i>
+        <i style="height:41%"></i>
+      </div>
+      <div class="moon-key"><span>16 Nov</span><span><i class="sw" aria-hidden="true"></i>Our nights</span><span>New Moon 9 Dec</span><span>15 Dec</span></div>
+      <figcaption class="fine">Bar height is how much of the Moon is lit. Short bars are dark skies.</figcaption>
+    </figure>
+    <ul class="sights">
+      <li><h3>The Milky Way</h3><div class="how"><span class="tag">Naked eye</span><span>Best <b>4 to 12 Dec</b>, after dusk</span></div><p>The faint arch of our own galaxy, with its dark dust lane, rises from the forest edge when the Moon is out of the way.</p></li>
+      <li><h3>Leonid meteors</h3><div class="how"><span class="tag">Naked eye</span><span>Peak <b>17 to 18 Nov</b>, tail on 20 Nov</span></div><p>Fast, faint streaks from comet dust. A few an hour on our first night; lie back on a mat, we lend them.</p></li>
+      <li><h3>Andromeda Galaxy</h3><div class="how"><span class="tag">Naked eye</span><span class="tag">Binoculars</span><span>High in the evening</span></div><p>A smudge of light 2.5 million years old, and the furthest thing most people will ever see without a telescope.</p></li>
+      <li><h3>Saturn</h3><div class="how"><span class="tag">Telescope</span><span>South after dusk, <b>all month</b></span></div><p>The rings and one or two moons, steady enough to hold a queue of small gasps.</p></li>
+      <li><h3>The Moon up close</h3><div class="how"><span class="tag">Telescope</span><span><b>20, 21 and 27 Nov</b></span></div><p>Craters and mountain shadows along the edge of the lit side. A bright Moon is the best show we have when the faint stars are drowned out.</p></li>
+      <li><h3>Pleiades and Orion</h3><div class="how"><span class="tag">Naked eye</span><span class="tag">Telescope</span><span>Pleiades early, Orion by 22:00</span></div><p>A young star cluster in the east, then the Orion Nebula, a star nursery glowing in the sword.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="block" id="visit" aria-labelledby="visit-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="visit-h">Getting there</h2>
+      <p>The last few miles are a forest road with no street lights. That is the point, and it is why a little planning helps.</p>
+    </div>
+    <div class="visit">
+      <div>
+        <address class="addr"><strong>Kielder Dark Sky Observatory</strong><span>Kielder Forest, Northumberland</span><span>Postcode and what3words are in your booking email.</span></address>
+        <ul class="facts">
+          <li><b>By car</b><span>Free car park on the hill. Follow the observatory signs from Kielder village, dipped headlights only for the last mile.</span></li>
+          <li><b>By public transport</b><span>No buses run after dark. A taxi from Bellingham takes about <span class="num">25</span> minutes; book it before you come.</span></li>
+          <li><b>Arrive</b><span>Between <span class="num">18:45</span> and <span class="num">19:15</span> for a <span class="num">19:30</span> start. Doors are closed once the night begins so no white light spoils anyone's eyes.</span></li>
+          <li><b>Phone signal</b><span>Patchy to none. Save your booking email before you leave.</span></li>
+          <li><b>Access</b><span>A step-free path from the car park to the main deck. Tell us in advance if you need help and we will meet you.</span></li>
+        </ul>
+        <div class="rules"><b>Wear more than you think</b><span>It is several degrees colder than the valley, and you will stand still. Layers, a hat, gloves, sturdy shoes. We lend red torches; white ones stay in the car.</span></div>
+      </div>
+      <table>
+        <caption>Driving time by car</caption>
+        <tbody>
+          <tr><th scope="row">Kielder village</th><td class="num">10 min</td></tr>
+          <tr><th scope="row">Bellingham</th><td class="num">25 min</td></tr>
+          <tr><th scope="row">Hexham</th><td class="num">1 hr</td></tr>
+          <tr><th scope="row">Carlisle</th><td class="num">1 hr 10</td></tr>
+          <tr><th scope="row">Newcastle</th><td class="num">1 hr 30</td></tr>
+          <tr><th scope="row">Edinburgh</th><td class="num">2 hr 15</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap"><span>Kielder Dark Sky Observatory. Public nights are run by volunteers and staff.</span><span>Sample content: dates, prices, seats and journey times are placeholders for review.</span></div>
+</footer>
+
+<script type="module">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const TOKEN_NAMES = {
+  bg: "--bg", surface: "--surface", surface2: "--surface-2", surface3: "--surface-3",
+  border: "--border", borderStrong: "--border-strong",
+  text: "--text", textMuted: "--text-muted", textSubtle: "--text-subtle",
+  accent: "--accent", accentHover: "--accent-hover", accentFg: "--accent-fg", accentSoft: "--accent-soft", accentText: "--accent-text",
+  secondary: "--secondary", success: "--success", warning: "--warning", danger: "--danger", info: "--info",
+  chart1: "--chart-1", chart2: "--chart-2", chart3: "--chart-3",
+};
+
+const srgbToLinear = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+const linearToSrgb = (v) => (v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055);
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const toHex = (rgb) => "#" + rgb.map((v) => Math.round(clamp01(v) * 255).toString(16).padStart(2, "0")).join("");
+
+let ctx2d;
+
+function parseColor(css) {
+  const m = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)$/.exec(css.trim());
+  if (m) return [m[1] / 255, m[2] / 255, m[3] / 255, m[4] === undefined ? 1 : m[4].endsWith("%") ? parseFloat(m[4]) / 100 : +m[4]];
+  if (!ctx2d) { const c = document.createElement("canvas"); c.width = c.height = 1; ctx2d = c.getContext("2d", { willReadFrequently: true }); }
+  ctx2d.clearRect(0, 0, 1, 1); ctx2d.fillStyle = "#000"; ctx2d.fillStyle = css; ctx2d.fillRect(0, 0, 1, 1);
+  const d = ctx2d.getImageData(0, 0, 1, 1).data;
+  return [d[0] / 255, d[1] / 255, d[2] / 255, d[3] / 255];
+}
+
+
+function readColor(name, scope = document.documentElement) {
+  if (!getComputedStyle(scope).getPropertyValue(name).trim()) return null;
+  const probe = document.createElement("span");
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;color:var(${name})`;
+  (scope === document.documentElement && document.body ? document.body : scope).append(probe);
+  const css = getComputedStyle(probe).color;
+  probe.remove();
+  const [r, g, b, a] = parseColor(css);
+  return { css, srgb: [r, g, b], linear: [srgbToLinear(r), srgbToLinear(g), srgbToLinear(b)], hex: toHex([r, g, b]), alpha: a };
+}
+
+const ms = (v, fallback) => { const n = parseFloat(v); return Number.isFinite(n) ? (/\ds\s*$/.test(v) && !/ms\s*$/.test(v) ? n * 1000 : n) : fallback; };
+const px = (v, fallback) => { const n = parseFloat(v); return Number.isFinite(n) ? n : fallback; };
+
+
+function readTheme(scope = document.documentElement, names = {}) {
+  const map = { ...TOKEN_NAMES, ...names }, cs = getComputedStyle(scope), get = (n) => cs.getPropertyValue(n).trim();
+  const color = {};
+  for (const [key, name] of Object.entries(map)) { const c = readColor(name, scope); if (c) color[key] = c; }
+  const fallback = (key, css) => { if (!color[key]) { const [r, g, b] = parseColor(css); color[key] = { css, srgb: [r, g, b], linear: [r, g, b].map(srgbToLinear), hex: toHex([r, g, b]), alpha: 1 }; } };
+  fallback("bg", cs.backgroundColor && !/rgba?\(0, 0, 0, 0\)|transparent/.test(cs.backgroundColor) ? cs.backgroundColor : "#ffffff");
+  fallback("text", cs.color || "#1a1a1a"); fallback("surface", color.bg.css); fallback("accent", color.text.css); fallback("border", color.text.css);
+  const lum = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const easeNums = (get("--ease-out").match(/cubic-bezier\(([^)]+)\)/) || [, "0.22, 1, 0.36, 1"])[1].split(",").map(Number);
+  const shadowRgb = (get("--shadow-color").match(/[\d.]+/g) || [0, 0, 0]).slice(0, 3).map((v) => srgbToLinear(v / 255));
+  const base = ms(get("--dur-base"), 200);
+  return {
+    dark: lum(color.bg.linear) < 0.18,
+    color,
+    motion: {
+      fast: ms(get("--dur-fast"), 120), base, slow: ms(get("--dur-slow"), 300),
+      ease: easeNums.length === 4 && easeNums.every(Number.isFinite) ? easeNums : [0.22, 1, 0.36, 1],
+      press: px(get("--press-scale"), 0.97),
+      bouncy: easeNums[1] > 1 || easeNums[3] > 1,   // the curve overshoots: playful directions
+      tempo: base / 200,                            // 1 = crisp; under 1 = faster (tools); over 1 = slower (care, luxury)
+    },
+    shape: { radiusSm: px(get("--radius-sm"), 6), radius: px(get("--radius"), 8), radiusLg: px(get("--radius-lg"), 12), borderW: px(get("--border-w"), 1) },
+    shadow: { color: shadowRgb, strength: px(get("--shadow-strength"), 1) },
+    font: { display: get("--font-display") || cs.fontFamily, sans: get("--font-sans") || cs.fontFamily, mono: get("--font-mono") || "monospace" },
+    // --immersive: the most 3D and scroll effect this theme should carry. 0 still, 1 accent, 2 signature, 3 story. Unset = 1.
+    immersive: Number.isFinite(parseInt(get("--immersive"))) ? Math.min(3, Math.max(0, parseInt(get("--immersive")))) : 1,
+    reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+  };
+}
+
+
+function watchTheme(callback, scope = document.documentElement, names = {}) {
+  let queued = false;
+  const fire = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; callback(readTheme(scope, names)); }); };
+  const mo = new MutationObserver(fire); mo.observe(scope, { attributes: true, attributeFilter: ["data-theme", "class", "style"] });
+  const queries = ["(prefers-color-scheme: dark)", "(prefers-reduced-motion: reduce)", "(prefers-contrast: more)"].map((q) => matchMedia(q));
+  queries.forEach((q) => q.addEventListener("change", fire));
+  return () => { mo.disconnect(); queries.forEach((q) => q.removeEventListener("change", fire)); };
+}
+
+
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const X = (t) => ((ax * t + bx) * t + cx) * t, Y = (t) => ((ay * t + by) * t + cy) * t, dX = (t) => (3 * ax * t + 2 * bx) * t + cx;
+  return (x) => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 6; i++) { const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= (X(t) - x) / d; }
+    return Y(Math.min(1, Math.max(0, t)));
+  };
+}
+
+
+function mixOklab(a, b, t) {
+  const toLab = ([r, g, bl]) => { const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * bl), m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * bl), s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * bl); return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s]; };
+  const A = toLab(a), B = toLab(b), [L, p, q] = A.map((v, i) => v + (B[i] - v) * t);
+  const l = (L + 0.3963377774 * p + 0.2158037573 * q) ** 3, m = (L - 0.1055613458 * p - 0.0638541728 * q) ** 3, s = (L - 0.0894841775 * p - 1.291485548 * q) ** 3;
+  return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function supports(kind = "webgl") {
+  if (kind === "webgpu") return "gpu" in navigator;
+  if (kind === "2d") return true;
+  try {
+    const c = document.createElement("canvas"), gl = c.getContext(kind === "webgl2" ? "webgl2" : "webgl", { failIfMajorPerformanceCaveat: false });
+    if (!gl) return false;
+    gl.getExtension("WEBGL_lose_context")?.loseContext();   // hand the test context straight back
+    return true;
+  } catch { return false; }
+}
+
+
+function deviceTier() {
+  const nav = navigator, coarse = matchMedia("(pointer: coarse)").matches;
+  if (nav.connection?.saveData || matchMedia("(prefers-reduced-data: reduce)").matches) return "low";
+  if ((nav.deviceMemory && nav.deviceMemory <= 4) || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4)) return "low";
+  return coarse ? "mid" : "high";
+}
+
+function mountScene(host, hooks, options = {}) {
+  const opt = { need: "webgl", maxPixelRatio: 2, touchMaxPixelRatio: 1.5, minScale: 0.5, lazy: true, rootMargin: "200px", slowFrameMs: 24, ...options };
+  const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  const state = { mode: "fallback", reduced: opt.reduced ?? reducedQuery.matches, visible: false, width: 0, height: 0, pixelRatio: 1, scale: 1, tier: deviceTier() };
+  let canvas = host.querySelector("canvas"), ready = false, starting = false, dead = false, wired = false, raf = 0, last = 0, wanted = false, slow = 0, quick = 0;
+  const setMode = (m) => { state.mode = m; host.dataset.scene = m; };
+  setMode("fallback");
+
+  const cap = () => Math.min(devicePixelRatio || 1, matchMedia("(pointer: coarse)").matches ? opt.touchMaxPixelRatio : opt.maxPixelRatio) * (state.tier === "low" ? 0.75 : 1);
+  function measure() {
+    const r = host.getBoundingClientRect(), w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height)), pr = Math.max(0.5, cap() * state.scale);
+    if (w === state.width && h === state.height && pr === state.pixelRatio) return;
+    state.width = w; state.height = h; state.pixelRatio = pr;
+    if (ready) { hooks.resize?.(w, h, pr); invalidate(); }
+  }
+
+  function tick(now) {
+    raf = 0;
+    if (!ready || dead || !state.visible || document.hidden) return;
+    const delta = last ? Math.min(100, now - last) : 16.7; last = now; wanted = false;
+    let more = false;
+    try { more = hooks.frame(now, delta, state) === true; } catch (err) { fail(err); return; }
+    if (state.mode === "fallback") setMode(state.reduced ? "still" : "live");
+    if (state.reduced) { last = 0; return; }                  // still frames only: never loop
+    if (more) {                                               // adapt resolution only while the loop is really running
+      if (delta > opt.slowFrameMs) { quick = 0; if (++slow > 20 && state.scale > opt.minScale) { state.scale = Math.max(opt.minScale, state.scale * 0.85); slow = 0; measure(); } }
+      else if (delta < 13) { slow = 0; if (++quick > 240 && state.scale < 1) { state.scale = Math.min(1, state.scale / 0.85); quick = 0; measure(); } }
+    } else last = 0;
+    if (more || wanted) raf = requestAnimationFrame(tick);
+  }
+  function invalidate() { wanted = true; if (!raf && ready && !dead && state.visible && !document.hidden) raf = requestAnimationFrame(tick); }
+
+  function fail(err) {
+    if (err) console.warn("Scene stopped, showing the fallback:", err);
+    ready = false; cancelAnimationFrame(raf); raf = 0; setMode("fallback");
+  }
+
+  async function start() {
+    if (ready || starting || dead || opt.disabled) return;
+    if (!supports(opt.need)) return;                          // fallback stays
+    starting = true;
+    try {
+      if (!canvas) { canvas = document.createElement("canvas"); canvas.setAttribute("aria-hidden", "true"); host.append(canvas); }
+      if (!wired) {                                           // once per canvas, however often the scene restarts
+        wired = true;
+        canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); fail(); });
+        canvas.addEventListener("webglcontextrestored", () => { if (!ready && !starting) start(); });
+      }
+      const ok = await hooks.init(canvas, state);
+      if (ok === false || dead) { starting = false; return; }
+      ready = true; state.width = 0; measure();             // measure() calls resize() and asks for the first frame
+    } catch (err) { fail(err); }
+    starting = false;
+  }
+
+  const io = new IntersectionObserver(([entry]) => {
+    state.visible = entry.isIntersecting;
+    if (state.visible) { if (!ready) start(); else { last = 0; invalidate(); } }
+  }, { rootMargin: opt.lazy ? opt.rootMargin : "100000px" });
+  io.observe(host);
+  const ro = new ResizeObserver(measure); ro.observe(host);
+  const onVisibility = () => { if (!document.hidden) { last = 0; invalidate(); } };
+  const onMotion = () => { if (opt.reduced === undefined) { state.reduced = reducedQuery.matches; last = 0; invalidate(); } };
+  document.addEventListener("visibilitychange", onVisibility);
+  reducedQuery.addEventListener("change", onMotion);
+
+  return {
+    state, invalidate,
+    setReduced(v) { state.reduced = !!v; opt.reduced = !!v; last = 0; if (ready) setMode(v ? "still" : "live"); invalidate(); },
+    destroy() {
+      dead = true; cancelAnimationFrame(raf); io.disconnect(); ro.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility); reducedQuery.removeEventListener("change", onMotion);
+      if (ready) { try { hooks.dispose?.(); } catch {} }
+      ready = false; setMode("fallback");
+    },
+  };
+}
+
+
+// ================= the sky =================
+const host = document.getElementById("scene");
+let theme = readTheme(), gl, U = {};
+const ease = (t) => bezier(...theme.motion.ease)(t);
+
+const VERT = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
+const FRAG = `precision highp float;
+uniform vec2 uRes; uniform float uAdapt, uRot, uPx;
+uniform vec3 uStar, uCool, uWarm, uMilky, uAccent;
+float h21(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
+  return mix(mix(h21(i), h21(i + vec2(1., 0.)), f.x), mix(h21(i + vec2(0., 1.)), h21(i + vec2(1., 1.)), f.x), f.y); }
+float fbm(vec2 p){ float a = .5, s = 0.; mat2 m = mat2(1.6, 1.2, -1.2, 1.6); for(int i = 0; i < 5; i++){ s += a * vn(p); p = m * p; a *= .5; } return s; }
+// one grid layer of stars; rank 0 = brightest class, 1 = faintest. Returns brightness, writes colour mix.
+float layer(vec2 p, float cell, float dens, float sizeK, out float tint){
+  vec2 g = p / cell, id = floor(g), f = fract(g) - .5;
+  tint = 0.;
+  if (h21(id + 1.7) > dens) return 0.;
+  vec2 off = (vec2(h21(id + 7.1), h21(id + 13.7)) - .5) * .7;
+  float rank = h21(id + 3.3);
+  float seen = smoothstep(0., .22, uAdapt * 1.15 + .3 - rank);                 // dark adaptation: faint ones arrive last
+  float mag = pow(1. - rank, 2.2);
+  float d = length(f - off) * cell;
+  float r = uPx * (.55 + sizeK * mag);
+  tint = h21(id + 21.9);
+  return exp(-(d * d) / (r * r)) * (.18 + .82 * mag) * seen;
+}
+void main(){
+  vec2 uv = (gl_FragCoord.xy - .5 * uRes) / uRes.y;
+  float c = cos(uRot), s = sin(uRot);
+  vec2 q = mat2(c, -s, s, c) * (uv - vec2(.35, -.35)) + vec2(.35, -.35);        // the sky turns about a pole near the lower right
+  vec2 axis = vec2(.62, .78), nrm = vec2(-.78, .62);
+  float along = dot(q - vec2(.05, 0.), axis), perp = dot(q - vec2(.05, 0.), nrm);
+  perp += (fbm(q * 2.3 + 3.1) - .5) * .30;                                       // warp the band so it is not a stripe
+  float band = exp(-perp * perp / (2. * .17 * .17));
+  float bulge = .55 + .45 * exp(-pow(along - .15, 2.) / .6);
+  float cloud = fbm(q * 5.5 + vec2(1.7, 9.2));
+  float dust = smoothstep(.47, .72, fbm(q * 8. + vec2(4., 1.3)));
+  float lane = exp(-pow(perp + (fbm(q * 4. + 8.) - .5) * .09, 2.) / (2. * .028 * .028));
+  float glow = band * bulge * (.30 + 1.0 * cloud) * (1. - .75 * lane * (.35 + .65 * dust)) * (1. - .45 * dust * band);
+  float milky = glow * (.20 + .80 * uAdapt) * .62;
+  float t1, t2, t3;
+  float st = layer(q, .050, .42, 1.9, t1);
+  st += layer(q + 3.3, .024, .38 + .28 * band, 1.2, t2) * .85;
+  st += layer(q + 8.1, .012, .20 + .62 * band, .8, t3) * .6;                      // a crowd of faint stars inside the band
+  float tint = (t1 * st + t2 * .5 + t3 * .3) / (st + .5);
+  vec3 sc = mix(mix(uCool, uStar, smoothstep(.2, .5, tint)), uWarm, smoothstep(.62, .9, tint));
+  // one planet, the only accent
+  vec2 pp = mat2(c, -s, s, c) * (vec2(-.28, .22) - vec2(.35, -.35)) + vec2(.35, -.35);
+  float pd = length(q - pp);
+  float planet = exp(-pd * pd / (uPx * uPx * 5.5)) + .18 * exp(-pd / (uPx * 9.));
+  float horizon = exp(-(gl_FragCoord.y / uRes.y) / .13) * .13 * (.35 + .65 * uAdapt);
+  float Im = clamp(milky + horizon, 0., 1.), Is = clamp(st, 0., 1.), Ip = clamp(planet, 0., 1.) * uAdapt;
+  float grain = (h21(gl_FragCoord.xy) - .5) * .028 * smoothstep(0., .06, Im);
+  Im = clamp(Im + grain, 0., 1.);
+  float a = clamp(Im + Is + Ip, 0., 1.);
+  vec3 col = uMilky * Im + sc * Is + uAccent * Ip;
+  gl_FragColor = vec4(min(col, vec3(a)), a);                                       // premultiplied: the page background shows through
+}`;
+
+let adaptStart = 0, adapt = 0, rot = -0.05, target = 0, ptr = 0.5, cool, warm, milkyCol, starCol, lastFrame = 0;
+const mixSrgb = (a, b, t) => { const m = mixOklab(a.linear, b.linear, t); return m.map((v) => Math.min(1, Math.max(0, linearToSrgb(v)))); };
+function paletteFromTheme() {
+  const c = theme.color;
+  starCol = c.text.srgb;
+  cool = mixSrgb(c.text, c.accent, .28);
+  warm = mixSrgb(c.text, c.warning || c.accent, .38);
+  milkyCol = theme.dark ? mixSrgb(c.accent, c.text, .22) : (c.accentText || c.accent).srgb;
+}
+paletteFromTheme();
+
+const scene = theme.immersive === 0 ? null : mountScene(host, {
+  init(canvas) {
+    gl = canvas.getContext("webgl", { alpha: true, antialias: false, premultipliedAlpha: true, powerPreference: "low-power" });
+    if (!gl) return false;
+    const program = gl.createProgram();
+    for (const [type, source] of [[gl.VERTEX_SHADER, VERT], [gl.FRAGMENT_SHADER, FRAG]]) {
+      const sh = gl.createShader(type); gl.shaderSource(sh, source); gl.compileShader(sh);
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh));
+      gl.attachShader(program, sh);
+    }
+    gl.bindAttribLocation(program, 0, "p"); gl.linkProgram(program); gl.useProgram(program);
+    for (const n of ["uRes", "uAdapt", "uRot", "uPx", "uStar", "uCool", "uWarm", "uMilky", "uAccent"]) U[n] = gl.getUniformLocation(program, n);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    gl.clearColor(0, 0, 0, 0);
+  },
+  resize(w, h, pr) {
+    gl.canvas.width = Math.round(w * pr); gl.canvas.height = Math.round(h * pr);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    host._h = h;
+  },
+  frame(now, delta, state) {
+    if (!adaptStart) adaptStart = now;
+    const T = 2400 * theme.motion.tempo;                      // the eyes adjust: about two seconds, then the sky rests
+    adapt = state.reduced ? 1 : ease(Math.min(1, (now - adaptStart) / T));
+    target = state.reduced ? 0 : (ptr - .5) * -.10;
+    const k = state.reduced ? 1 : 1 - Math.exp(-delta / (theme.motion.slow * 0.9));   // pointer follow settles in about 650 ms
+    const drift = state.reduced ? 0 : -0.05 * (1 - adapt);    // the opening turn of the sky also comes to rest
+    rot += (target + drift - rot) * k;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform2f(U.uRes, gl.canvas.width, gl.canvas.height);
+    gl.uniform1f(U.uAdapt, adapt); gl.uniform1f(U.uRot, rot);
+    gl.uniform1f(U.uPx, 1 / (host._h || 700));
+    gl.uniform3fv(U.uStar, starCol); gl.uniform3fv(U.uCool, cool); gl.uniform3fv(U.uWarm, warm);
+    gl.uniform3fv(U.uMilky, milkyCol); gl.uniform3fv(U.uAccent, theme.color.accent.srgb);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    return !state.reduced && (adapt < 1 || Math.abs(target + drift - rot) > 0.0004);
+  },
+  dispose() { gl?.getExtension("WEBGL_lose_context")?.loseContext(); gl = null; },
+});
+if (scene) {
+  watchTheme((next) => { theme = next; paletteFromTheme(); scene.invalidate(); });
+  addEventListener("pointermove", (e) => { if (e.pointerType === "touch") return; ptr = e.clientX / innerWidth; scene.invalidate(); }, { passive: true });
+}
+window.__sky = { get mode() { return host.dataset.scene; } };
+
+// ================= theme toggle =================
+const root = document.documentElement, toggle = document.getElementById("theme");
+function syncToggle() {
+  const dark = root.dataset.theme === "dark";
+  toggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+  toggle.setAttribute("aria-pressed", String(!dark));
+}
+toggle.addEventListener("click", () => { root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark"; syncToggle(); });
+syncToggle();
+
+// ================= booking =================
+const PRICE = { adult: 24, child: 14 };
+const form = document.getElementById("form"), $ = (id) => document.getElementById(id);
+const sessions = [...form.querySelectorAll(".session")];
+const state = { adult: 2, child: 0 };
+const chosen = () => form.querySelector('input[name="night"]:checked');
+function render() {
+  const r = chosen(), left = +r.dataset.left, n = state.adult + state.child;
+  $("s-date").textContent = r.dataset.label;
+  $("s-what").textContent = r.dataset.what;
+  $("v-adult").textContent = state.adult; $("v-child").textContent = state.child;
+  $("s-total").textContent = "£" + (state.adult * PRICE.adult + state.child * PRICE.child);
+  $("go").textContent = "Book " + n + (n === 1 ? " place" : " places");
+  const dis = (g, d) => form.querySelector(`[data-g="${g}"][data-d="${d}"]`);
+  dis("adult", -1).disabled = state.adult <= 1;
+  dis("child", -1).disabled = state.child <= 0;
+  dis("adult", 1).disabled = dis("child", 1).disabled = n >= Math.min(left, 10);
+}
+form.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-g]"); if (!b || b.disabled) return;
+  state[b.dataset.g] += +b.dataset.d; render();
+});
+form.addEventListener("change", (e) => {
+  if (e.target.name !== "night") return;
+  const left = +e.target.dataset.left;
+  while (state.adult + state.child > Math.min(left, 10)) { if (state.child > 0) state.child--; else state.adult--; }
+  render();
+});
+function check(input, ok) { input.setAttribute("aria-invalid", ok ? "false" : "true"); return ok; }
+const name = $("name"), email = $("email");
+name.addEventListener("input", () => name.setAttribute("aria-invalid", "false"));
+email.addEventListener("input", () => email.setAttribute("aria-invalid", "false"));
+name.setAttribute("aria-describedby", "name-e"); email.setAttribute("aria-describedby", "email-e");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const okName = check(name, name.value.trim().length > 1), okMail = check(email, /^\S+@\S+\.\S+$/.test(email.value.trim()));
+  if (!okName) { name.focus(); return; }
+  if (!okMail) { email.focus(); return; }
+  const r = chosen(), n = state.adult + state.child;
+  $("done-h").textContent = "Booked";
+  $("done-p").textContent = n + (n === 1 ? " place" : " places") + " for " + r.dataset.label + ", " + r.dataset.what.toLowerCase() + ". A confirmation will go to " + email.value.trim() + ". Total £" + (state.adult * PRICE.adult + state.child * PRICE.child) + ". (Demo: nothing is sent.)";
+  $("booking-main").hidden = true; $("booking-done").hidden = false; $("booking-done").focus();
+});
+$("again").addEventListener("click", () => { $("booking-done").hidden = true; $("booking-main").hidden = false; $("go").focus(); });
+render();
+</script>
+</body>
+</html>

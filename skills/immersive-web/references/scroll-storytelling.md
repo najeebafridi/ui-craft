@@ -45,9 +45,11 @@ The text steps are ordinary HTML in the normal flow. The scene sits beside (desk
 @media (max-width: 860px) {
   .story { display: block; }
   .stage { height: 40vh; z-index: 1; background: var(--bg); }      /* scene pinned on top, steps pass below */
-  .steps > li { min-height: 55vh; }
+  .steps > li { min-height: 55vh; justify-content: flex-start; padding-top: 24px; }   /* text starts right under the scene: no empty gap */
 }
 ```
+
+On a phone the pinned scene and the current step's text must be visible **together** in one screen, with the subject filling its stage. A small object at the top, a dark gap, and text far below is the most common phone failure: open the phone screenshot at the middle of the story and check.
 
 - `position: sticky` keeps native scrolling, the scrollbar, keyboard scrolling and find-in-page. Avoid libraries that pin by taking over the scroll.
 - Sticky fails silently if an ancestor has `overflow: hidden/auto` or the sticky box has no room to travel. In a grid, let the stage span every row of the story.

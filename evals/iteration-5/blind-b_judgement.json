@@ -1,0 +1,47 @@
+{
+  "kettle-launch-story": {
+    "X": {"impact":7,"scene_craft":7,"content":8,"phone":6,"robustness":9,"fit":7,"approve":7},
+    "Y": {"impact":7,"scene_craft":5,"content":5,"phone":6,"robustness":3,"fit":6,"approve":4},
+    "winner": "X",
+    "reason": "X models an actual gooseneck pour-over kettle with throwing rings and a bare clay foot, puts the name, £48 and 'Reserve yours' in the first view, and ends in a glaze picker plus a reservation form whose button reads 'Reserve Tern in sea green, £48'; without WebGL or JS it still shows the full page with a captioned glaze tile. Y has more cinematic staging (spotlit plinth, steam particles, a dramatic close-up of the spout pouring), but the kettle is a faceted, generic teapot with a short spout in the hero, there is no price or buy action until the last section, and without WebGL or JS the visitor gets only the title and 109 characters. Y's mood is close to X's on impact, but X is the one a client could ship.",
+    "winner_weaknesses": [
+      "Mid-scroll on desktop the chalk kettle slides behind the 'Thrown by hand, one at a time' heading and paragraph, which makes the copy unreadable, and a third kettle is cut off at the right edge; keep text and model in separate zones or add a scrim.",
+      "On the phone the kettle sits in the top half above a large empty band, so 'Tern', the price and the CTA start low in the first screen, and the 'Three glazes' section has about half a screen of empty dark space before its text; tighten the sticky scene height and the scroll spacing."
+    ],
+    "loser_strengths": [
+      "More cinematic lighting and staging: a spotlit plinth, rising steam particles and a camera move to the spout with water threading out tell the 'slow pour' story better than X's turntable.",
+      "Stronger copy voice ('Made slowly, to pour slowly', '700 ml, dishwasher safe, not for the hob', 'limited by what the kiln allows') and a lighter page (131 KB)."
+    ],
+    "copied_or_manipulative": {"X": "none; the form is clearly labelled as a sample that sends nothing", "Y": "none; 'A small first batch, limited by what the kiln allows' is soft scarcity but plausible and not a countdown"}
+  },
+  "observatory-themed-hero": {
+    "X": {"impact":8,"scene_craft":8,"content":9,"phone":8,"robustness":9,"fit":9,"approve":8},
+    "Y": {"impact":7,"scene_craft":6,"content":8,"phone":7,"robustness":6,"fit":8,"approve":7},
+    "winner": "X",
+    "reason": "X's hero is a believable dense starfield with a Milky Way dust lane over a Kielder pine-forest silhouette, it comes to rest, and the no-WebGL/no-JS fallback still shows stars, the band and the trees. The page then has a real signature: a moon-phase bar chart that marks 'our nights' against Moon brightness, with a clear dates list and booking total. Y is close in structure and copy ('Look up. Really up.', Bortle class, Moon-rise time), but its sky reads as grainy cloud noise more than stars, it never stops drawing (61 fps idle, no context-loss handler), and its fallback is an empty dark gradient.",
+    "winner_weaknesses": [
+      "The top nav links ('Dates and booking', 'What you'll see', 'Getting there') sit directly over bright stars and the Milky Way band, so contrast is weak; add a subtle top scrim or a higher-contrast text colour.",
+      "The booking summary shows 'Total £48' and 'Book 2 places' without stating the per-person price, and the hero CTA area has no price at all; show '£24 per person' near the dates and the hero."
+    ],
+    "loser_strengths": [
+      "Punchier headline with the accent word ('REALLY') and a mono eyebrow 'Bortle class 2 · Northumberland' that gives instant credibility to astronomers.",
+      "Richer 'what you'll see' list with direction, time and kit tags (Telescope / Binoculars / Naked eye) plus a highlighted Leonids feature, and practical extras like 'Stay nearby' and refund terms."
+    ],
+    "copied_or_manipulative": {"X": "none; 'places left' counts are marked as sample data", "Y": "none; '6 left' badges are marked sample data"}
+  },
+  "printfarm-desktop-app": {
+    "X": {"impact":6,"scene_craft":6,"content":9,"phone":7,"robustness":7,"fit":9,"approve":8},
+    "Y": {"impact":7,"scene_craft":5,"content":6,"phone":5,"robustness":3,"fit":6,"approve":4},
+    "winner": "X",
+    "reason": "X reads like a real work tool. A status strip shows counts, a clear failure banner offers 'Requeue job', and the wireframe floor view uses column height for print progress, with P4 drawn in red. The six printer cards are dense and readable, and the queue has reorder controls. The motion rests and a pause control exists. Y looks more like a sci-fi cockpit, but its 'live part' is a generic torus knot labelled 'Gearbox housing x4'. Its printer cards are half empty, the queue and form text is tiny, a toast covers card buttons, and with no WebGL or no JS the whole printer grid and queue are blank.",
+    "winner_weaknesses": [
+      "Without WebGL the floor view shows only an empty perspective grid with no printers, so the wall-display hero becomes a blank box; draw the six columns in 2D/SVG as the fallback.",
+      "The 'cinematic sci-fi cockpit' brief is only lightly met: the 3D is a small static wireframe strip with little drama for the wall monitor, and at 1440x900 the bottom row of printer cards is cut off below the fold; add a proper wall mode with a bigger animated floor scene and fit all six cards on one screen at desk size."
+    ],
+    "loser_strengths": [
+      "Stronger cockpit atmosphere: glowing cyan card edges, striped progress bars, big monospaced percentages and a Desk/Wall toggle feel closer to the owner's sci-fi request.",
+      "Per-printer Pause/Cancel and Retry/Clear buttons on every card, plus an 'Auto-start on the next free printer' option in the add-job form."
+    ],
+    "copied_or_manipulative": {"X": "none", "Y": "none, though the 'live part' 3D model is a generic torus knot presented as the actual 'Gearbox housing' being printed, which is misleading"}
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "kettle-launch-story": {
+    "X": {"impact":7,"scene_craft":7,"content":8,"phone":8,"robustness":7,"fit":8,"approve":7},
+    "Y": {"impact":8,"scene_craft":6,"content":7,"phone":6,"robustness":3,"fit":7,"approve":5},
+    "winner": "X",
+    "reason": "X shows a convincing glazed kettle with throwing rings and a long gooseneck spout, a glaze picker (chalk, sea green, ink) that recolours it, a spec list, and a reserve form with the price, and its phone and fallback pages are complete. Y has the more cinematic scroll (close-up spout with a falling water stream, dark staging), but its teapot is a faceted white low-poly shape that looks unfinished, it only offers chalk, the phone end screen has the label text sitting on top of the pot, and without WebGL or JavaScript the page shrinks to one hero screen. Fairly close on first impression, clear on robustness and polish.",
+    "winner_weaknesses": ["Mid-scroll on desktop the 'Thrown by hand, one at a time' heading and body copy sit directly on the pale kettle and become unreadable; give the copy a clear lane or fade the model there.", "Hero is a flat left text and right model with a lot of empty dark space below it, and the no-WebGL/reduced-motion fallback is just a flat green gradient tile labelled 'Photograph of Tern to come', which is weak next to the 3D version."],
+    "loser_strengths": ["More dramatic scroll choreography: the camera swings to the spout and a thin water stream pours, which is on-theme for a pour-over kettle.", "Steam particles and a staged turntable give a stronger first cinematic beat, and the big serif Tern plus the large £48 closing screen is bold."],
+    "copied_or_manipulative": {"X": "none (form is labelled as a sample)", "Y": "none (placeholder link is labelled)"}
+  },
+  "observatory-themed-hero": {
+    "X": {"impact":7,"scene_craft":6,"content":8,"phone":7,"robustness":8,"fit":7,"approve":6},
+    "Y": {"impact":9,"scene_craft":8,"content":9,"phone":8,"robustness":9,"fit":8,"approve":8},
+    "winner": "Y",
+    "reason": "Y's hero reads as a real night sky: dense stars, a Milky Way with dust lanes and a pine-forest silhouette that places it in Kielder, then a moon-phase bar chart that explains why some nights are dark, a dates list, booking panel and drive-time table. X's hero is a hazy blue noisy cloud with few stars and a ridge line, which is nice but less memorable, and it scored lower on the neutral checks (never stops drawing, no context-lost handler). Both keep the content in the HTML and fall back to a calm dark hero.",
+    "winner_weaknesses": ["The scene never comes to rest (about 60 frames/s drawn when idle) and there is no pause control, so battery and motion-sensitive visitors are not served.", "The no-WebGL and reduced-motion hero drops the Milky Way and forest-lit richness down to faint stars on near-black, a clear step down; and the nav links are low-contrast over the starfield on desktop."],
+    "loser_strengths": ["Bolder headline 'Look up. Really up.' with the accent on 'Really', a stronger voice than Y's plain 'Come and see the whole sky'.", "Booking form already filled with a realistic sample (Priya Raman, total £36) and an arrival checklist; the Leonids and object list with naked-eye or telescope tags is practical."],
+    "copied_or_manipulative": {"X": "none (sample data labelled)", "Y": "none (sample content labelled; places-left counts are marked as placeholders)"}
+  },
+  "printfarm-desktop-app": {
+    "X": {"impact":8,"scene_craft":7,"content":6,"phone":4,"robustness":4,"fit":6,"approve":5},
+    "Y": {"impact":6,"scene_craft":7,"content":9,"phone":8,"robustness":9,"fit":9,"approve":8},
+    "winner": "Y",
+    "reason": "Y is a believable all-day work tool: a wireframe floor view where each printer is a box whose column height is its progress, six dense printer cards with done, left, nozzle and bed, a queue with reorder and remove, and an add-job form with a printer picker, and it degrades to a flat floor plan and still works. X feels more like a sci-fi cockpit (glowing cyan cards, a live torus-knot wireframe) but the six cards are tall and mostly empty, the 3D is a generic knot unrelated to the shop, and with no WebGL the live-part panel is blank and the animation ignores reduced motion.",
+    "winner_weaknesses": ["Quite restrained for an owner who asked for a cockpit on a wall monitor: the floor view is small and the cards have no glow or drama, and 'Wall display' mode was not shown, so the cinematic ask is only half met.", "Printer cards on desktop run below the first screen (Dross and Flux cut off) and the phone page is a very long single column; ideally the six states fit one screen and a failed printer is pinned first."],
+    "loser_strengths": ["Much stronger first impression and sci-fi mood: glowing status borders, mono readouts, a live slicing wireframe, a 'Flux started next job' toast.", "Everything (six printers, alert, queue, add-job form) fits one 1440x900 screen with a Desk/Wall switch, which suits a wall monitor."],
+    "copied_or_manipulative": {"X": "none", "Y": "none"}
+  }
+}

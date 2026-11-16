@@ -35,6 +35,10 @@ What carries over unchanged: one signature moment; mostly neutral with a rare ac
 | Tools used all day (editors, IDEs, mail) | every animation is paid thousands of times | Level 0-1. Motion only as feedback, under 200 ms. A signature moment only in onboarding or the about screen |
 | Kiosks, cars, industrial screens | glances, gloves, sunlight, safety | Follow the domain's rules first; large still targets; no ambient motion |
 
+**A work tool that is also a showpiece.** Some screens have two audiences: operators at a desk all day, and a wall monitor, a lobby or a demo. Build two modes and say so. *Desk mode* (the default): level 0-1, dense, quick, everything critical in one window with no page scroll. *Display mode* (a clear toggle and a shortcut): read-only, larger type, and the asked-for character delivered in full at level 2: the scene large, staged and slowly alive, with a pause control. Do not answer "make it feel like a cockpit" with a quiet tool and a small widget: the owner asked for something, and the display mode is where they get it.
+
+**The genre must show at a glance, even when restrained.** If the brief asks for a sci-fi, game or film feel, the first screenshot of the working view should read as that genre through its traits (signal colours with meaning, readout type, line work, a glow used as a state signal), while passing every usability rule. Restraint that makes the character invisible has failed the brief as surely as decoration that hides the data.
+
 "Restrained" is not "none of the character". The theme still carries the direction: its colour, type, corner shape, tempo, one material detail. A finance tool in a sci-fi-inspired theme is sci-fi through thin lines, a mono typeface and exact grids, not through a spinning hologram.
 
 ## By platform
@@ -45,6 +49,8 @@ What carries over unchanged: one signature moment; mostly neutral with a rare ac
 - **Tauri** uses the system webview: WebView2 (Chromium) on Windows, WKWebView on macOS and iOS, WebKitGTK on Linux, the system WebView on Android. Four engines, and Linux's can be old. Keep the WebGL path conservative, treat WebGPU as optional, and **always** ship the fallback: here it will really be seen.
 - `prefers-reduced-motion`, `prefers-color-scheme` and `prefers-contrast` come through from the OS in both; use them exactly as on the web.
 - It is an app, not a page: no scroll story as navigation, no hero banner, no hand cursor on buttons, native-feeling menus and shortcuts, a sidebar and toolbar. The scene lives in a content pane.
+- The main view fits the window. At a common size (1440x900, and 1280x720) everything the operator must see is visible without scrolling the page; long lists scroll inside their own pane. Check the first screenshot for anything cut off at the bottom.
+- A functional 3D view (a floor plan, a device) needs a flat fallback that shows the **same data**: the six bays as SVG columns, not an empty grid.
 - Windows are resized constantly and can sit on two screens with different pixel ratios: size the canvas from its box and re-read the pixel ratio on resize.
 - Pause when the window is hidden, minimised or unfocused for an ambient scene (`visibilitychange`, `blur`).
 - Window materials (macOS vibrancy, Windows Mica) are the system's own "shader". Prefer them for chrome over a custom effect; Mica falls back to a solid colour by itself in battery saver.

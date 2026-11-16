@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge Deck</title>
+<style>
+:root{
+  --bg:#05080d; --panel:#0b121b; --panel2:#0f1824; --line:#1b2b3d; --line2:#2a4259;
+  --text:#dbe8f5; --muted:#8aa3bb; --dim:#5f7890;
+  --cyan:#3fe0ff; --cyan-soft:rgba(63,224,255,.12);
+  --ok:#4dffb0; --warn:#ffc247; --bad:#ff4d5e; --bad-soft:rgba(255,77,94,.14);
+  --mono:"Cascadia Mono","Consolas","SF Mono",monospace;
+  --sans:"Segoe UI","Inter",system-ui,sans-serif;
+  --fs:14px;
+}
+body.wall{--fs:17px}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font:var(--fs)/1.45 var(--sans);overflow:hidden}
+#bg{position:fixed;inset:0;z-index:0;width:100%;height:100%}
+.vig{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(5,8,13,.75) 100%)}
+.app{position:relative;z-index:2;height:100vh;display:grid;grid-template-rows:auto auto 1fr;gap:12px;padding:12px 16px 16px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* top bar */
+header{display:flex;align-items:center;gap:20px;padding:8px 16px;background:rgba(11,18,27,.82);border:1px solid var(--line);border-radius:6px;backdrop-filter:blur(8px)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:1em}
+.logo i{width:22px;height:22px;border:2px solid var(--cyan);transform:rotate(45deg);display:block;box-shadow:0 0 12px rgba(63,224,255,.5) inset}
+.stats{display:flex;gap:24px;margin-left:12px}
+.stat{display:flex;flex-direction:column;line-height:1.15}
+.stat small{color:var(--muted);font-size:.8em;letter-spacing:.06em;text-transform:uppercase}
+.stat b{font:600 1.5em var(--mono);font-variant-numeric:tabular-nums}
+.stat.bad b{color:var(--bad)}
+.sp{flex:1}
+.clock{font:500 1.2em var(--mono);color:var(--muted)}
+.seg{display:flex;border:1px solid var(--line2);border-radius:4px;overflow:hidden}
+.seg button{background:transparent;border:0;padding:6px 14px;cursor:pointer;color:var(--muted);min-height:32px}
+.seg button[aria-pressed=true]{background:var(--cyan-soft);color:var(--cyan)}
+.seg button:hover{color:var(--text)}
+
+/* alert */
+#alerts{display:grid;gap:8px}
+.alert{display:flex;align-items:center;gap:14px;padding:10px 16px;border:1px solid var(--bad);background:linear-gradient(90deg,var(--bad-soft),rgba(11,18,27,.9));border-radius:6px;animation:pulse 2s ease-in-out infinite}
+.alert svg{flex:none}
+.alert b{color:var(--bad)}
+.alert .sp{flex:1}
+@keyframes pulse{50%{box-shadow:0 0 18px rgba(255,77,94,.35)}}
+
+/* main layout */
+main{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:12px;min-height:0}
+body.wall main{grid-template-columns:minmax(0,1fr) 420px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:12px;min-height:0}
+.card{position:relative;display:flex;flex-direction:column;gap:8px;padding:12px 14px;background:rgba(11,18,27,.86);border:1px solid var(--line);border-radius:6px;cursor:pointer;text-align:left;overflow:hidden;transition:border-color .15s,background .15s}
+.card:hover{border-color:var(--line2)}
+.card[aria-pressed=true]{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan) inset}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--dim))}
+.card.failed{background:linear-gradient(180deg,rgba(255,77,94,.16),rgba(11,18,27,.9));border-color:var(--bad)}
+.card .top{display:flex;align-items:center;gap:8px}
+.card .name{font-weight:600;font-size:1.05em}
+.badge{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font:600 .8em var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--c)}
+.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.badge.live::before{animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.25}}
+.job{color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{color:var(--muted);font-size:.86em}
+.bar{height:8px;background:#122030;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);transition:width .8s linear;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pct{font:600 2em/1 var(--mono);font-variant-numeric:tabular-nums}
+.eta{text-align:right}
+.eta b{font:600 1.15em var(--mono);display:block}
+.temps{display:flex;gap:16px;font-size:.9em}
+.temps span{color:var(--muted)}
+.temps b{font-family:var(--mono);color:var(--text);font-variant-numeric:tabular-nums}
+.fail-msg{color:#ffb3bb;font-size:.9em}
+.acts{display:flex;gap:8px;margin-top:auto}
+.btn{min-height:32px;padding:4px 12px;background:transparent;border:1px solid var(--line2);border-radius:4px;cursor:pointer;color:var(--text);transition:background .12s,border-color .12s}
+.btn:hover{background:var(--cyan-soft);border-color:var(--cyan)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--cyan);color:#021018;border-color:var(--cyan);font-weight:600}
+.btn.primary:hover{background:#7aebff}
+.btn.danger{border-color:var(--bad);color:#ffb3bb}
+.btn.danger:hover{background:var(--bad-soft)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* side */
+aside{display:grid;grid-template-rows:minmax(180px,38%) minmax(0,1fr);gap:12px;min-height:0}
+.panel{background:rgba(11,18,27,.86);border:1px solid var(--line);border-radius:6px;min-height:0;display:flex;flex-direction:column}
+.panel h2{margin:0;padding:10px 14px;font-size:.8em;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.view{position:relative;overflow:hidden}
+#view{flex:1;min-height:0;position:relative}
+#view canvas{position:absolute;inset:0;width:100%;height:100%}
+.vlabel{position:absolute;left:12px;bottom:10px;font:.85em var(--mono);color:var(--cyan);text-shadow:0 0 8px #000}
+.qlist{list-style:none;margin:0;padding:6px;overflow:auto;flex:1;min-height:0}
+.qlist li{display:grid;grid-template-columns:24px 1fr auto;gap:8px;align-items:center;padding:8px;border-radius:4px}
+.qlist li:hover{background:var(--panel2)}
+.qlist .n{color:var(--dim);font:.9em var(--mono)}
+.qlist .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qlist .m{color:var(--muted);font-size:.85em}
+.qlist .x{background:none;border:0;color:var(--dim);cursor:pointer;width:32px;height:32px;border-radius:4px;font-size:1.1em}
+.qlist .x:hover{color:var(--bad);background:var(--bad-soft)}
+.empty{padding:18px;color:var(--muted);text-align:center}
+form{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+form label{display:grid;gap:3px;font-size:.78em;color:var(--muted);letter-spacing:.04em}
+form .full{grid-column:1/-1}
+input,select{background:#08111a;border:1px solid var(--line2);border-radius:4px;padding:6px 8px;min-height:34px;width:100%}
+input:hover,select:hover{border-color:var(--dim)}
+.sw{display:flex;align-items:center;gap:8px;font-size:.85em;color:var(--muted)}
+.sw input{width:auto;min-height:0}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:var(--panel2);border:1px solid var(--cyan);padding:8px 16px;border-radius:4px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+@media (max-width:1100px){main{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr);grid-template-rows:none}body{overflow:auto}.app{height:auto}aside{grid-template-rows:240px auto}.stats{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="vig"></div>
+<div class="app">
+  <header>
+    <div class="logo"><i></i>Forge Deck</div>
+    <div class="stats" id="stats"></div>
+    <div class="sp"></div>
+    <div class="clock num" id="clock">--:--:--</div>
+    <div class="seg" role="group" aria-label="Display mode">
+      <button id="mDesk" aria-pressed="true" title="Desk mode (D)">Desk</button>
+      <button id="mWall" aria-pressed="false" title="Wall mode (W)">Wall</button>
+    </div>
+  </header>
+  <div id="alerts" aria-live="assertive"></div>
+  <main>
+    <section class="grid" id="grid" aria-label="Printers"></section>
+    <aside>
+      <section class="panel">
+        <h2><span id="vtitle">Live part</span><span class="num" id="vsub"></span></h2>
+        <div id="view"><div class="vlabel num" id="vlabel"></div></div>
+      </section>
+      <section class="panel">
+        <h2><span>Job queue</span><span class="num" id="qcount"></span></h2>
+        <ul class="qlist" id="qlist"></ul>
+        <form id="qform">
+          <label class="full">Job name<input id="fName" required placeholder="e.g. Bracket v3 x12" autocomplete="off"></label>
+          <label>Material<select id="fMat"><option>PLA</option><option>PETG</option><option>ABS</option><option>TPU</option></select></label>
+          <label>Est. time (min)<input id="fMin" type="number" min="5" max="2880" value="90" class="num"></label>
+          <label class="full sw"><input id="fAuto" type="checkbox" checked> Auto-start on the next free printer</label>
+          <button class="btn primary full" type="submit">Add to queue</button>
+        </form>
+      </section>
+    </aside>
+  </main>
+</div>
+<div id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+"use strict";
+/* ---------- data ---------- */
+const COL = {printing:'#3fe0ff', heating:'#ffc247', idle:'#5f7890', done:'#4dffb0', failed:'#ff4d5e', paused:'#ffc247'};
+const LABEL = {printing:'Printing', heating:'Heating', idle:'Idle', done:'Done', failed:'Failed', paused:'Paused'};
+const TARGET = {PLA:[210,60], PETG:[240,80], ABS:[250,100], TPU:[225,50]};
+const FAILS = ['Filament runout','Nozzle clog detected','Bed adhesion lost (spaghetti)','Thermal runaway guard tripped','Layer shift detected'];
+let seq = 1040;
+const P = [
+ mk('Atlas',   'printing','Gearbox housing x4','PETG',410,.62),
+ mk('Borealis','printing','Phone stand batch','PLA',150,.18),
+ mk('Cinder',  'failed','Drone arm L','ABS',240,.47,'Nozzle clog detected'),
+ mk('Dynamo',  'heating','Cable clip x40','PLA',75,0),
+ mk('Ember',   'printing','Enclosure lid','ABS',320,.86),
+ mk('Flux',    'idle')
+];
+const Q = [
+ job('Hinge pin x24','PETG',120), job('Wall plaque - Mercer & Co','PLA',200),
+ job('Prototype grip v2','TPU',95), job('Spool holder x6','PLA',260)
+];
+function mk(name,state,job,mat,min,prog,err){
+  const p={name,state,job:job||null,mat:mat||null,total:min||0,progress:prog||0,err:err||null,nozzle:25,bed:24,paused:false};
+  if(state!=='idle'){const t=TARGET[mat];p.nozzle=state==='heating'?150:t[0];p.bed=state==='heating'?42:t[1];}
+  if(state==='failed'){p.nozzle=Math.round(t0(mat)*.7);p.bed=Math.round(TARGET[mat][1]*.9);}
+  return p;
+}
+function t0(m){return TARGET[m][0]}
+function job(name,mat,min,auto=true){return {id:++seq,name,mat,min,auto}}
+const sel = {i:0};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fmt(min){min=Math.max(0,Math.round(min));const h=Math.floor(min/60),m=min%60;return h?`${h}h ${String(m).padStart(2,'0')}m`:`${m}m`}
+function remain(p){return p.total*(1-p.progress)}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),3500)}
+
+/* ---------- render ---------- */
+function render(){
+  const ae=document.activeElement;const key=ae&&ae.closest&&ae.closest('#grid')?(ae.dataset.card?'[data-card="'+ae.dataset.card+'"]':ae.dataset.act?'[data-act="'+ae.dataset.act+'"][data-i="'+ae.dataset.i+'"]':null):null;
+  // stats
+  const c=s=>P.filter(p=>p.state===s).length;
+  const act=c('printing')+c('paused');
+  const last=Math.max(0,...P.filter(p=>p.state==='printing').map(remain));
+  $('#stats').innerHTML=
+    `<div class="stat"><small>Printing</small><b>${act}/6</b></div>`+
+    `<div class="stat ${c('failed')?'bad':''}"><small>Failed</small><b>${c('failed')}</b></div>`+
+    `<div class="stat"><small>Queued</small><b>${Q.length}</b></div>`+
+    `<div class="stat"><small>Last finish</small><b>${last?fmt(last):'--'}</b></div>`;
+  // alerts
+  $('#alerts').innerHTML=P.map((p,i)=>p.state==='failed'?
+   `<div class="alert" role="alert"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff4d5e" stroke-width="2"><path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5M12 18v.5"/></svg>
+    <span><b>${p.name} failed</b> at ${Math.round(p.progress*100)}% &mdash; ${esc(p.err)}. Job: ${esc(p.job)}</span><span class="sp"></span>
+    <button class="btn danger" data-act="retry" data-i="${i}">Retry job</button>
+    <button class="btn" data-act="clear" data-i="${i}">Clear printer</button></div>`:'').join('');
+  // cards
+  $('#grid').innerHTML=P.map((p,i)=>{
+    const col=COL[p.state];
+    const pct=Math.round(p.progress*100);
+    const tg=p.mat?TARGET[p.mat]:null;
+    let body;
+    if(p.state==='idle') body=`<div class="job" style="color:var(--muted)">Ready &mdash; nothing assigned</div><div class="sub">${Q.length?`Next in queue: ${esc(Q[0].name)}`:'Queue is empty'}</div>`;
+    else body=`<div class="job">${esc(p.job)}</div><div class="sub">${p.mat} &middot; ${fmt(p.total)} total</div>`;
+    const prog = p.state==='idle'?'':
+      `<div class="row"><div class="pct">${pct}<span style="font-size:.5em;color:var(--muted)">%</span></div>
+       <div class="eta"><span class="sub">${p.state==='failed'?'Stopped':p.state==='done'?'Finished':'Time left'}</span><b>${p.state==='failed'||p.state==='done'?'--':fmt(remain(p))}</b></div></div>
+       <div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${pct}%"></i></div>`;
+    const temps = `<div class="temps"><span>Nozzle <b>${Math.round(p.nozzle)}&deg;</b>${tg&&p.state!=='failed'?`<span> / ${tg[0]}&deg;</span>`:''}</span><span>Bed <b>${Math.round(p.bed)}&deg;</b>${tg&&p.state!=='failed'?`<span> / ${tg[1]}&deg;</span>`:''}</span></div>`;
+    let acts='';
+    if(p.state==='printing'||p.state==='paused') acts=`<button class="btn" data-act="pause" data-i="${i}">${p.state==='paused'?'Resume':'Pause'}</button><button class="btn danger" data-act="cancel" data-i="${i}">Cancel</button>`;
+    if(p.state==='failed') acts=`<button class="btn primary" data-act="retry" data-i="${i}">Retry job</button><button class="btn" data-act="clear" data-i="${i}">Clear</button>`;
+    if(p.state==='done') acts=`<button class="btn primary" data-act="clear" data-i="${i}">Clear bed</button>`;
+    if(p.state==='idle') acts=`<button class="btn primary" data-act="next" data-i="${i}" ${Q.length?'':'disabled'}>Start next job</button>`;
+    return `<div class="card ${p.state}" style="--c:${col}" tabindex="0" role="button" aria-pressed="${sel.i===i}" data-card="${i}" aria-label="${p.name}, ${LABEL[p.state]}">
+      <div class="top"><span class="name">${p.name}</span><span class="badge ${p.state==='printing'||p.state==='heating'?'live':''}">${LABEL[p.state]}</span></div>
+      ${body}${prog}${p.state==='failed'?`<div class="fail-msg">${esc(p.err)}</div>`:temps}
+      <div class="acts">${acts}</div></div>`;
+  }).join('');
+  // queue
+  $('#qcount').textContent=Q.length+' waiting';
+  $('#qlist').innerHTML=Q.length?Q.map((j,k)=>`<li><span class="n">${k+1}</span><div><div class="t">${esc(j.name)}</div><div class="m">${j.mat} &middot; ${fmt(j.min)}${j.auto?'':' &middot; manual start'}</div></div><button class="x" data-q="${j.id}" aria-label="Remove ${esc(j.name)}">&times;</button></li>`).join(''):
+    `<li class="empty">Queue is empty. Add a job below.</li>`;
+  if(key){const n=document.querySelector('#grid '+key);if(n)n.focus()}
+  updateView();
+}
+function updateView(){
+  const p=P[sel.i];
+  $('#vtitle').textContent=p.name+' - live part';
+  $('#vsub').textContent=p.state==='idle'?'':Math.round(p.progress*100)+'%';
+  $('#vlabel').textContent=p.job?`${p.job}`:'No active job';
+  setScene(p);
+}
+
+/* ---------- actions ---------- */
+function startJob(p,j){
+  Object.assign(p,{state:'heating',job:j.name,mat:j.mat,total:j.min,progress:0,err:null,nozzle:30,bed:26,paused:false});
+}
+function dispatch(){
+  P.forEach(p=>{
+    if(p.state!=='idle')return;
+    const k=Q.findIndex(j=>j.auto); if(k<0)return;
+    startJob(p,Q.splice(k,1)[0]); toast(`${p.name} started next job`);
+  });
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');
+  if(b){
+    e.stopPropagation();
+    const i=+b.dataset.i,p=P[i],a=b.dataset.act;
+    if(a==='pause'){p.state=p.state==='paused'?'printing':'paused'}
+    if(a==='cancel'){toast(`${p.name}: ${p.job} cancelled`);Object.assign(p,{state:'idle',job:null,progress:0,nozzle:25,bed:24})}
+    if(a==='clear'){Object.assign(p,{state:'idle',job:null,progress:0,err:null,nozzle:25,bed:24})}
+    if(a==='retry'){Q.unshift(job(p.job,p.mat,p.total,true));Object.assign(p,{state:'idle',job:null,progress:0,err:null,nozzle:25,bed:24});toast('Job back at the top of the queue')}
+    if(a==='next'){const j=Q.shift();if(j)startJob(p,j)}
+    if(a==='retry'||a==='clear')dispatch();
+    render();return;
+  }
+  const x=e.target.closest('[data-q]');
+  if(x){const k=Q.findIndex(j=>j.id==x.dataset.q);const [r]=Q.splice(k,1);toast(`Removed ${r.name}`);render();return}
+  const c=e.target.closest('[data-card]');
+  if(c){sel.i=+c.dataset.card;render()}
+});
+document.addEventListener('keydown',e=>{
+  const c=e.target.closest&&e.target.closest('[data-card]');
+  if(c&&e.target===c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();sel.i=+c.dataset.card;render()}
+  if(/INPUT|SELECT/.test(e.target.tagName))return;
+  if(e.key==='w'||e.key==='W')setMode(true);
+  if(e.key==='d'||e.key==='D')setMode(false);
+  if(e.key>='1'&&e.key<='6'){sel.i=+e.key-1;render()}
+});
+$('#qform').addEventListener('submit',e=>{
+  e.preventDefault();
+  const n=$('#fName').value.trim(); if(!n)return;
+  Q.push(job(n,$('#fMat').value,Math.max(5,+$('#fMin').value||60),$('#fAuto').checked));
+  $('#fName').value='';toast(`Queued: ${n}`);dispatch();render();$('#fName').focus();
+});
+function setMode(wall){
+  document.body.classList.toggle('wall',wall);
+  $('#mWall').setAttribute('aria-pressed',wall);$('#mDesk').setAttribute('aria-pressed',!wall);
+  onResize();
+}
+$('#mWall').onclick=()=>setMode(true);$('#mDesk').onclick=()=>setMode(false);
+
+/* ---------- simulation ---------- */
+setInterval(()=>{
+  P.forEach(p=>{
+    const t=p.mat?TARGET[p.mat]:[25,24];
+    if(p.state==='heating'){
+      p.nozzle=Math.min(t[0],p.nozzle+14);p.bed=Math.min(t[1],p.bed+5);
+      if(p.nozzle>=t[0]&&p.bed>=t[1])p.state='printing';
+    }else if(p.state==='printing'){
+      p.progress=Math.min(1,p.progress+1/(p.total*60)*60); // 1 sim-minute per second
+      p.nozzle=t[0]+(Math.random()-.5)*2;p.bed=t[1]+(Math.random()-.5);
+      if(Math.random()<.0025){p.state='failed';p.err=FAILS[Math.floor(Math.random()*FAILS.length)];p.nozzle*=.8;toast(`${p.name} FAILED: ${p.err}`)}
+      else if(p.progress>=1){p.state='done';toast(`${p.name} finished ${p.job}`)}
+    }else if(p.state==='done'||p.state==='idle'){
+      p.nozzle=Math.max(25,p.nozzle-6);p.bed=Math.max(24,p.bed-3);
+    }else if(p.state==='failed'){p.nozzle=Math.max(25,p.nozzle-4);p.bed=Math.max(24,p.bed-2)}
+  });
+  dispatch();render();
+},1000);
+setInterval(()=>{$('#clock').textContent=new Date().toLocaleTimeString([], {hour12:false})},500);
+
+/* ---------- 3D ---------- */
+let scene3, cam, rend, partMesh, partWire, clip, grid3, stars, rings, bgRend, bgScene, bgCam, bgObjs=[];
+const viewEl=$('#view');
+function initViewer(){
+  if(!window.THREE){viewEl.insertAdjacentHTML('afterbegin','<div class="empty">3D preview needs internet access for the three.js library.</div>');return}
+  rend=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  rend.setPixelRatio(Math.min(devicePixelRatio,2));rend.localClippingEnabled=true;
+  viewEl.insertBefore(rend.domElement,viewEl.firstChild);
+  scene3=new THREE.Scene();scene3.fog=new THREE.FogExp2(0x05080d,.045);
+  cam=new THREE.PerspectiveCamera(40,1,.1,100);cam.position.set(5.5,4,7);
+  clip=new THREE.Plane(new THREE.Vector3(0,-1,0),0);
+  const geo=new THREE.TorusKnotGeometry(1.4,.5,220,28,2,3);geo.computeBoundingBox();
+  geo.translate(0,-geo.boundingBox.min.y,0);
+  partMesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:0x3fe0ff,metalness:.6,roughness:.35,clippingPlanes:[clip],side:THREE.DoubleSide,transparent:true,opacity:.92}));
+  partWire=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x3fe0ff,wireframe:true,transparent:true,opacity:.12}));
+  scene3.add(partMesh,partWire);
+  grid3=new THREE.GridHelper(10,20,0x3fe0ff,0x1b3a52);grid3.material.transparent=true;grid3.material.opacity=.6;scene3.add(grid3);
+  rings=new THREE.Mesh(new THREE.RingGeometry(3.2,3.25,96),new THREE.MeshBasicMaterial({color:0x3fe0ff,side:THREE.DoubleSide,transparent:true,opacity:.7}));
+  rings.rotation.x=-Math.PI/2;rings.position.y=.01;scene3.add(rings);
+  scene3.add(new THREE.AmbientLight(0x88aacc,.6));
+  const l=new THREE.DirectionalLight(0xffffff,1.6);l.position.set(4,8,5);scene3.add(l);
+  const l2=new THREE.PointLight(0x3fe0ff,20,15);l2.position.set(-4,2,-3);scene3.add(l2);
+  // background: full-screen drifting particles + wire solids
+  bgRend=new THREE.WebGLRenderer({canvas:$('#bg'),antialias:true,alpha:true});bgRend.setPixelRatio(Math.min(devicePixelRatio,1.5));
+  bgScene=new THREE.Scene();bgCam=new THREE.PerspectiveCamera(55,1,.1,200);bgCam.position.z=30;
+  const n=700,pos=new Float32Array(n*3);for(let i=0;i<n*3;i++)pos[i]=(Math.random()-.5)*120;
+  const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  stars=new THREE.Points(pg,new THREE.PointsMaterial({color:0x3fe0ff,size:.18,transparent:true,opacity:.5}));bgScene.add(stars);
+  [[ -26,10,-20],[28,-12,-30],[0,-22,-40]].forEach((p,i)=>{
+    const m=new THREE.Mesh(i%2?new THREE.IcosahedronGeometry(7,1):new THREE.TorusGeometry(6,.4,8,40),new THREE.MeshBasicMaterial({color:0x1d5f7a,wireframe:true,transparent:true,opacity:.35}));
+    m.position.set(...p);bgScene.add(m);bgObjs.push(m);
+  });
+  onResize();
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const clock=new THREE.Clock();
+  (function loop(){
+    requestAnimationFrame(loop);
+    const t=clock.getElapsedTime();
+    const p=P[sel.i];
+    const target=p.state==='idle'?0:p.progress;
+    const h=partMesh.geometry.boundingBox.max.y+partMesh.geometry.boundingBox.min.y*0;
+    const top=3.2; // approx part height
+    clip.constant=target*top+.001;
+    if(!reduce){
+      const a=t*.25;cam.position.set(Math.cos(a)*8.5,4.2+Math.sin(t*.3)*.4,Math.sin(a)*8.5);
+      stars.rotation.y=t*.01;bgObjs.forEach((o,i)=>{o.rotation.x=t*.05*(i+1);o.rotation.y=t*.07})
+    }
+    cam.lookAt(0,1.4,0);
+    rings.scale.setScalar(1+Math.sin(t*2)*.01);
+    rend.render(scene3,cam);bgRend.render(bgScene,bgCam);
+  })();
+}
+function setScene(p){
+  if(!partMesh)return;
+  const c=new THREE.Color(COL[p.state]);
+  partMesh.material.color.copy(c);partWire.material.color.copy(c);
+  rings.material.color.copy(c);grid3.material.color.copy(c);
+  partMesh.material.opacity=p.state==='idle'?.0:.92;
+}
+function onResize(){
+  if(!rend)return;
+  const w=viewEl.clientWidth,h=viewEl.clientHeight;
+  if(w&&h){rend.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+  bgRend.setSize(innerWidth,innerHeight,false);bgCam.aspect=innerWidth/innerHeight;bgCam.updateProjectionMatrix();
+}
+addEventListener('resize',onResize);
+
+render();initViewer();onResize();updateView();
+</script>
+</body>
+</html>

@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kielder Dark Sky Observatory – Stargazing nights</title>
+<meta name="description" content="Public stargazing nights at Kielder Dark Sky Observatory: dates, what you will see this month, booking and how to get there.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="theme.css">
+<style>
+  .skip { position: absolute; left: var(--space-4); top: -80px; background: var(--accent); color: var(--accent-fg); padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); z-index: 50; }
+  .skip:focus { top: var(--space-3); }
+  .wrap { width: 100%; max-width: var(--content-max); margin-inline: auto; padding-inline: var(--space-4); }
+  @media (min-width: 640px) { .wrap { padding-inline: var(--space-5); } }
+  @media (min-width: 1024px) { .wrap { padding-inline: var(--space-6); } }
+
+  /* ---------- buttons ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-height: var(--control-h); padding: 0 var(--space-5); border-radius: var(--radius); border: var(--border-w) solid transparent; font-weight: 500; text-decoration: none; cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
+  .btn:active { transform: scale(var(--press-scale)); }
+  .btn-primary { background: var(--accent); color: var(--accent-fg); box-shadow: var(--shadow-button); }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border-strong); }
+  .btn-ghost:hover { background: var(--surface-2); }
+  .btn[disabled] { opacity: .5; cursor: not-allowed; }
+  .btn-lg { min-height: 48px; padding: 0 var(--space-6); font-size: var(--text-md); }
+  @media (max-width: 640px), (pointer: coarse) {
+    .btn, input, select, .theme-toggle, .nav a { min-height: 44px; }
+    input, select { font-size: 16px; }
+  }
+
+  /* ---------- header ---------- */
+  .site-header { position: absolute; inset: 0 0 auto 0; z-index: 10; }
+  .site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); height: 64px; }
+  .brand { display: flex; align-items: center; gap: var(--space-3); color: var(--text); text-decoration: none; font-family: var(--font-display); font-weight: 600; font-size: var(--text-xl); letter-spacing: .02em; text-transform: uppercase; }
+  .brand svg { width: 24px; height: 24px; color: var(--accent); flex: none; }
+  .nav { display: flex; align-items: center; gap: var(--space-1); }
+  .nav a { display: inline-flex; align-items: center; padding: 0 var(--space-3); min-height: 40px; color: var(--text-muted); text-decoration: none; border-radius: var(--radius-sm); font-size: var(--text-sm); transition: color var(--dur-fast) var(--ease-out); }
+  .nav a:hover { color: var(--text); }
+  .theme-toggle { display: inline-grid; place-items: center; width: 40px; height: 40px; min-height: 40px; border-radius: var(--radius); border: var(--border-w) solid var(--border-strong); background: transparent; color: var(--text); cursor: pointer; }
+  .theme-toggle:hover { background: var(--surface-2); }
+  .theme-toggle svg { width: 18px; height: 18px; }
+  @media (max-width: 720px) { .nav a.hide-sm { display: none; } }
+  @media (max-width: 640px), (pointer: coarse) { .theme-toggle { width: 44px; height: 44px; } }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; isolation: isolate; min-height: max(560px, min(100svh, 860px)); display: flex; align-items: flex-end; overflow: hidden; background:
+      radial-gradient(120% 70% at 70% 0%, color-mix(in oklab, var(--accent) 14%, var(--bg)) 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, color-mix(in oklab, var(--accent) 8%, var(--bg)) 100%); }
+  .hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; opacity: 0; transition: opacity 1.2s var(--ease-out); display: block; }
+  .hero canvas.on { opacity: 1; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, transparent 45%, color-mix(in oklab, var(--bg) 55%, transparent) 78%, var(--bg) 100%); }
+  .hero-inner { width: 100%; padding-block: 112px var(--space-7); }
+  .eyebrow { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--text-muted); display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-4); }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--accent); }
+  .hero h1 { font-size: clamp(60px, 13vw, 144px); line-height: .92; text-transform: uppercase; max-width: 9ch; }
+  .hero h1 span { color: var(--accent-text); }
+  .hero .lede { margin-top: var(--space-5); max-width: 46ch; font-size: var(--text-lg); color: var(--text); }
+  .hero-actions { margin-top: var(--space-6); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+  .hero-next { margin-top: var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); font-size: var(--text-sm); color: var(--text-muted); }
+  .hero-next b { color: var(--text); font-weight: 500; }
+  .sky-note { position: absolute; right: var(--space-4); top: 80px; font-size: var(--text-xs); color: var(--text-subtle); font-family: var(--font-mono); display: none; }
+  @media (min-width: 900px) { .sky-note { display: block; right: var(--space-6); } }
+
+  /* ---------- sections ---------- */
+  section { padding-block: var(--space-8); }
+  .sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-3) var(--space-6); margin-bottom: var(--space-6); }
+  .sec-head h2 { font-size: clamp(36px, 6vw, 60px); text-transform: uppercase; line-height: 1; }
+  .sec-head p { color: var(--text-muted); max-width: 52ch; }
+  .tag { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--text-xs); padding: 2px var(--space-2); border-radius: var(--radius-full); background: var(--surface-2); color: var(--text-muted); border: var(--border-w) solid var(--border); white-space: nowrap; }
+  .tag.ok { background: var(--success-soft); color: var(--success-text); border-color: transparent; }
+  .tag.warn { background: var(--warning-soft); color: var(--warning-text); border-color: transparent; }
+  .tag.off { background: var(--surface-2); color: var(--text-subtle); }
+  .tag.hot { background: var(--accent-soft); color: var(--accent-text); border-color: transparent; }
+  .mono { font-family: var(--font-mono); font-size: var(--text-sm); }
+
+  /* dates */
+  .dates { list-style: none; margin: 0; padding: 0; border-top: var(--border-w) solid var(--border); }
+  .date-row { display: grid; grid-template-columns: 112px 1fr auto; align-items: center; gap: var(--space-4); min-height: 72px; padding-block: var(--space-3); border-bottom: var(--border-w) solid var(--border); }
+  .date-row .d { font-family: var(--font-display); font-size: var(--text-3xl); line-height: 1; text-transform: uppercase; }
+  .date-row .d small { display: block; font-family: var(--font-sans); font-size: var(--text-xs); letter-spacing: var(--tracking-caps); color: var(--text-muted); margin-bottom: 2px; }
+  .date-row .t { font-weight: 500; }
+  .date-row .s { color: var(--text-muted); font-size: var(--text-sm); }
+  .date-row .a { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-1); }
+  .date-row.past { opacity: .5; }
+  @media (max-width: 640px) {
+    .date-row { grid-template-columns: 76px 1fr; }
+    .date-row .a { grid-column: 2; align-items: flex-start; text-align: left; flex-direction: row; flex-wrap: wrap; gap: var(--space-2); }
+    .date-row .d { font-size: var(--text-2xl); }
+  }
+
+  /* what you'll see */
+  .see { display: grid; gap: var(--space-7); align-items: start; }
+  @media (min-width: 1024px) { .see { grid-template-columns: 5fr 7fr; } }
+  .feature { padding-left: var(--space-5); border-left: 2px solid var(--accent); }
+  .feature h3 { font-size: var(--text-4xl); text-transform: uppercase; }
+  .feature p { margin-top: var(--space-3); color: var(--text-muted); max-width: 48ch; }
+  .feature .mono { display: block; margin-top: var(--space-4); color: var(--text); }
+  .objects { list-style: none; margin: 0; padding: 0; border-top: var(--border-w) solid var(--border); }
+  .objects li { display: grid; grid-template-columns: 1fr auto; gap: var(--space-1) var(--space-4); align-items: baseline; min-height: var(--row-h); padding-block: var(--space-3); border-bottom: var(--border-w) solid var(--border); }
+  .objects h3 { font-family: var(--font-sans); font-size: var(--text-md); font-weight: 600; letter-spacing: 0; }
+  .objects .how { grid-column: 1; color: var(--text-muted); font-size: var(--text-sm); }
+  .objects .when { grid-row: 1; grid-column: 2; color: var(--text-muted); text-align: right; }
+  .objects .kit { grid-column: 2; grid-row: 2; text-align: right; }
+  @media (max-width: 520px) { .objects li { grid-template-columns: 1fr; } .objects .when, .objects .kit { grid-column: 1; grid-row: auto; text-align: left; } }
+
+  /* booking */
+  .book { background: var(--surface); border-block: var(--border-w) solid var(--border); }
+  .book-grid { display: grid; gap: var(--space-7); align-items: start; }
+  @media (min-width: 960px) { .book-grid { grid-template-columns: 7fr 5fr; } }
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  legend, .label { font-size: var(--text-sm); font-weight: 500; color: var(--text); margin-bottom: var(--space-3); padding: 0; }
+  .slots { display: grid; gap: var(--space-2); }
+  .slot { position: relative; }
+  .slot input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+  .slot label { display: grid; grid-template-columns: 20px 1fr auto; gap: var(--space-3); align-items: center; padding: var(--space-3) var(--space-4); min-height: 64px; border-radius: var(--radius); border: var(--border-w) solid var(--border); background: var(--bg); transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out); }
+  .slot label::before { content: ""; width: 18px; height: 18px; border-radius: var(--radius-full); border: 2px solid var(--border-strong); transition: border-color var(--dur-fast), box-shadow var(--dur-fast); }
+  .slot input:hover + label { border-color: var(--border-strong); }
+  .slot input:checked + label { border-color: var(--accent); background: var(--accent-soft); }
+  .slot input:checked + label::before { border-color: var(--accent); box-shadow: inset 0 0 0 4px var(--accent-soft), inset 0 0 0 12px var(--accent); }
+  .slot input:focus-visible + label { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .slot input:disabled { cursor: not-allowed; }
+  .slot input:disabled + label { opacity: .55; }
+  .slot .n { font-weight: 500; display: block; }
+  .slot .m { font-size: var(--text-sm); color: var(--text-muted); }
+  .form { display: grid; gap: var(--space-5); }
+  .field { display: grid; gap: var(--space-2); }
+  .field label { font-size: var(--text-sm); font-weight: 500; }
+  .field .help { font-size: var(--text-xs); color: var(--text-muted); }
+  input[type=text], input[type=email], select { width: 100%; min-height: var(--control-h); padding: 0 var(--space-3); border-radius: var(--radius); border: var(--border-w) solid var(--border-strong); background: var(--bg); color: var(--text); }
+  input::placeholder { color: var(--text-subtle); }
+  input[aria-invalid=true] { border-color: var(--danger); }
+  .err { display: none; color: var(--danger-text); font-size: var(--text-sm); }
+  .err.show { display: flex; gap: var(--space-2); align-items: center; }
+  .two { display: grid; gap: var(--space-4); grid-template-columns: 1fr 1fr; }
+  @media (max-width: 520px) { .two { grid-template-columns: 1fr; } }
+  .summary { position: relative; padding: var(--space-5); border-radius: var(--radius-lg); background: var(--surface-2); box-shadow: var(--shadow-raised); display: grid; gap: var(--space-4); }
+  @media (min-width: 960px) { .summary { position: sticky; top: var(--space-5); } }
+  .summary h3 { font-size: var(--text-2xl); text-transform: uppercase; }
+  .summary dl { margin: 0; display: grid; gap: var(--space-3); }
+  .summary dl > div { display: flex; justify-content: space-between; gap: var(--space-4); font-size: var(--text-sm); }
+  .summary dt { color: var(--text-muted); }
+  .summary dd { margin: 0; text-align: right; }
+  .summary .total { border-top: var(--border-w) solid var(--border); padding-top: var(--space-4); align-items: baseline; }
+  .summary .total dd { font-family: var(--font-display); font-size: var(--text-4xl); line-height: 1; }
+  .summary .total dt { font-size: var(--text-md); color: var(--text); }
+  .fine { font-size: var(--text-xs); color: var(--text-muted); }
+  .ok-box { display: none; padding: var(--space-4); border-radius: var(--radius); background: var(--success-soft); color: var(--success-text); font-size: var(--text-sm); }
+  .ok-box.show { display: block; }
+  .ok-box b { color: var(--text); font-weight: 600; }
+
+  /* getting there */
+  .there { display: grid; gap: var(--space-7); }
+  @media (min-width: 960px) { .there { grid-template-columns: 5fr 7fr; } }
+  .addr { font-style: normal; display: grid; gap: var(--space-1); font-size: var(--text-lg); }
+  .routes { display: grid; gap: var(--space-5); }
+  .route { display: grid; grid-template-columns: 112px 1fr; gap: var(--space-4); padding-bottom: var(--space-5); border-bottom: var(--border-w) solid var(--border); }
+  .route:last-child { border-bottom: 0; padding-bottom: 0; }
+  .route h3 { font-family: var(--font-sans); font-size: var(--text-sm); font-weight: 500; color: var(--text-muted); letter-spacing: 0; }
+  .route p { max-width: 62ch; }
+  .route .mono { color: var(--accent-text); }
+  @media (max-width: 520px) { .route { grid-template-columns: 1fr; gap: var(--space-2); } }
+  .tips { margin-top: var(--space-6); padding: var(--space-4) var(--space-5); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-raised); display: grid; gap: var(--space-2); font-size: var(--text-sm); }
+  .tips b { font-weight: 600; }
+
+  footer { padding-block: var(--space-7); border-top: var(--border-w) solid var(--border); color: var(--text-muted); font-size: var(--text-sm); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); justify-content: space-between; }
+  footer a { color: var(--accent-text); }
+
+  /* entrance (one orchestrated moment, off when reduced) */
+  .rise { animation: rise 650ms var(--ease-out) both; }
+  .rise.d1 { animation-delay: 80ms; } .rise.d2 { animation-delay: 160ms; } .rise.d3 { animation-delay: 240ms; }
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Kielder Dark Sky Observatory, home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+      Kielder Dark Sky
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#dates">Dates</a>
+      <a href="#see" class="hide-sm">This month</a>
+      <a href="#book">Book</a>
+      <a href="#visit" class="hide-sm">Getting here</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Switch theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="hero" id="top">
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <div class="hero-inner wrap">
+      <p class="eyebrow rise">Bortle class 2 &middot; Northumberland</p>
+      <h1 class="rise d1">Look up. <span>Really</span> up.</h1>
+      <p class="lede rise d2">Public stargazing nights under some of the darkest skies in England. Wrap up warm, bring nothing else. We supply the telescopes and the guides.</p>
+      <div class="hero-actions rise d3">
+        <a class="btn btn-primary btn-lg" href="#book">Book a stargazing night</a>
+        <a class="btn btn-ghost btn-lg" href="#dates">See dates</a>
+      </div>
+      <p class="hero-next rise d3"><span>Next night <b>Tue 17 Nov, 19:30</b></span><span>Leonids meteor watch</span><span>Moon rises <b class="num">04:12</b>, so the sky stays dark</span></p>
+    </div>
+    <p class="sky-note" aria-hidden="true">Move the pointer to tilt the sky</p>
+  </div>
+
+  <section id="dates" aria-labelledby="dates-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="dates-h">November nights</h2>
+        <p>Each night runs about two and a half hours, mostly outside. Cloud decides the final call: if we cancel, you can rebook free or get a full refund.</p>
+      </div>
+      <ul class="dates">
+        <li class="date-row">
+          <div class="d"><small>Tue</small><span class="num">17 Nov</span></div>
+          <div><div class="t">Leonids meteor watch</div><div class="s">19:30 – 22:00 &middot; Lying-down session on the fell, blankets provided</div></div>
+          <div class="a"><span class="tag warn">6 places left</span><span class="mono num">£18</span></div>
+        </li>
+        <li class="date-row">
+          <div class="d"><small>Fri</small><span class="num">20 Nov</span></div>
+          <div><div class="t">Autumn sky tour</div><div class="s">19:00 – 21:30 &middot; Saturn, Andromeda and the Pleiades</div></div>
+          <div class="a"><span class="tag ok">Places available</span><span class="mono num">£18</span></div>
+        </li>
+        <li class="date-row">
+          <div class="d"><small>Sat</small><span class="num">21 Nov</span></div>
+          <div><div class="t">Family stargazing</div><div class="s">18:30 – 20:30 &middot; Ages 6 and up, shorter and warmer</div></div>
+          <div class="a"><span class="tag off">Sold out</span><span class="mono num">£18</span></div>
+        </li>
+        <li class="date-row">
+          <div class="d"><small>Fri</small><span class="num">27 Nov</span></div>
+          <div><div class="t">Autumn sky tour</div><div class="s">19:00 – 21:30 &middot; Telescope time on Saturn and the Moon</div></div>
+          <div class="a"><span class="tag ok">Places available</span><span class="mono num">£18</span></div>
+        </li>
+        <li class="date-row">
+          <div class="d"><small>Sat</small><span class="num">28 Nov</span></div>
+          <div><div class="t">Astrophotography evening</div><div class="s">19:00 – 22:00 &middot; Bring your own camera and tripod</div></div>
+          <div class="a"><span class="tag hot">New</span><span class="mono num">£25</span></div>
+        </li>
+      </ul>
+      <p class="fine" style="margin-top: var(--space-4)">Sample data for this mockup: dates, prices and availability are placeholders.</p>
+    </div>
+  </section>
+
+  <section id="see" aria-labelledby="see-h" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="see-h">What you'll see this month</h2>
+        <p>Late autumn is the start of the best season. The nights are long and the Milky Way still stretches overhead before the winter stars climb.</p>
+      </div>
+      <div class="see">
+        <div class="feature">
+          <h3>Leonids, peak 17–18 Nov</h3>
+          <p>Fast, bright streaks from comet Tempel–Tuttle. Expect around 10 to 15 an hour from a dark site, and the occasional fireball that lights up the forest.</p>
+          <span class="mono">Best between 23:00 and 05:00. No kit needed.</span>
+        </div>
+        <ul class="objects">
+          <li><h3>Saturn</h3><span class="when num">Evening, south</span><span class="how">Rings and Titan through our 14-inch reflector.</span><span class="kit tag">Telescope</span></li>
+          <li><h3>Andromeda galaxy</h3><span class="when num">Overhead, 20:00</span><span class="how">2.5 million light years away, and visible to the eye here.</span><span class="kit tag">Naked eye</span></li>
+          <li><h3>The Pleiades</h3><span class="when num">East, from 19:30</span><span class="how">A cluster of hot blue stars, best in binoculars.</span><span class="kit tag">Binoculars</span></li>
+          <li><h3>Orion Nebula</h3><span class="when num">Rising, after 21:30</span><span class="how">A stellar nursery that glows grey-green in the eyepiece.</span><span class="kit tag">Telescope</span></li>
+          <li><h3>The Milky Way</h3><span class="when num">West, after dark</span><span class="how">Cygnus and Cassiopeia, with dust lanes you can trace.</span><span class="kit tag">Naked eye</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="book" class="book" aria-labelledby="book-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="book-h">Book your night</h2>
+        <p>Pay on the night or online. Tickets are fully refundable until 24 hours before.</p>
+      </div>
+      <form class="book-grid" id="bookForm" novalidate>
+        <div class="form">
+          <fieldset>
+            <legend>Choose a night</legend>
+            <div class="slots">
+              <div class="slot"><input type="radio" name="slot" id="s1" value="Tue 17 Nov, 19:30|Leonids meteor watch|18"><label for="s1"><span><span class="n">Tue 17 Nov &middot; Leonids meteor watch</span><span class="m">19:30 – 22:00</span></span><span class="tag warn">6 left</span></label></div>
+              <div class="slot"><input type="radio" name="slot" id="s2" value="Fri 20 Nov, 19:00|Autumn sky tour|18" checked><label for="s2"><span><span class="n">Fri 20 Nov &middot; Autumn sky tour</span><span class="m">19:00 – 21:30</span></span><span class="tag ok">Available</span></label></div>
+              <div class="slot"><input type="radio" name="slot" id="s3" value="Sat 21 Nov, 18:30|Family stargazing|18" disabled><label for="s3"><span><span class="n">Sat 21 Nov &middot; Family stargazing</span><span class="m">18:30 – 20:30</span></span><span class="tag off">Sold out</span></label></div>
+              <div class="slot"><input type="radio" name="slot" id="s4" value="Fri 27 Nov, 19:00|Autumn sky tour|18"><label for="s4"><span><span class="n">Fri 27 Nov &middot; Autumn sky tour</span><span class="m">19:00 – 21:30</span></span><span class="tag ok">Available</span></label></div>
+              <div class="slot"><input type="radio" name="slot" id="s5" value="Sat 28 Nov, 19:00|Astrophotography evening|25"><label for="s5"><span><span class="n">Sat 28 Nov &middot; Astrophotography evening</span><span class="m">19:00 – 22:00</span></span><span class="tag hot">New</span></label></div>
+            </div>
+          </fieldset>
+          <div class="two">
+            <div class="field">
+              <label for="guests">Guests</label>
+              <select id="guests" name="guests">
+                <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+              </select>
+              <span class="help">Up to 6 per booking.</span>
+            </div>
+            <div class="field">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" autocomplete="name" placeholder="Priya Raman" required>
+              <span class="err" id="nameErr">Enter the name for the booking.</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="priya@example.com" required>
+            <span class="help">We send tickets and any weather update here.</span>
+            <span class="err" id="emailErr">Enter an email address like name@example.com.</span>
+          </div>
+        </div>
+
+        <aside class="summary" aria-live="polite" aria-label="Booking summary">
+          <h3>Your booking</h3>
+          <dl>
+            <div><dt>Night</dt><dd id="sumNight">–</dd></div>
+            <div><dt>Time</dt><dd id="sumTime">–</dd></div>
+            <div><dt>Tickets</dt><dd id="sumTix" class="num">–</dd></div>
+            <div class="total"><dt>Total</dt><dd id="sumTotal" class="num">–</dd></div>
+          </dl>
+          <button class="btn btn-primary btn-lg" type="submit" id="submitBtn">Reserve places</button>
+          <p class="fine">No payment taken now. Under-16s must come with an adult.</p>
+          <p class="ok-box" id="okBox" role="status"></p>
+        </aside>
+      </form>
+    </div>
+  </section>
+
+  <section id="visit" aria-labelledby="visit-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="visit-h">Getting here</h2>
+        <p>We are on a hilltop with no street lights and limited mobile signal. Plan the route before you leave home.</p>
+      </div>
+      <div class="there">
+        <div>
+          <address class="addr">
+            <strong>Kielder Dark Sky Observatory</strong>
+            <span>Black Fell, Kielder Water &amp; Forest Park</span>
+            <span>Northumberland</span>
+            <span class="mono">NE48 1XX</span>
+          </address>
+          <div class="tips">
+            <p><b>Arrive 15 minutes early.</b> The last mile is a forest track.</p>
+            <p><b>Use a red torch.</b> White light ruins everyone's night vision. We lend them at the gate.</p>
+            <p><b>Dress for 5 degrees colder</b> than the forecast, with a hat and gloves.</p>
+          </div>
+        </div>
+        <div class="routes">
+          <div class="route"><h3>By car</h3><p><span class="mono">55 min</span> from Hexham, <span class="mono">1 h 20</span> from Newcastle. Follow signs for Kielder Castle, then the observatory. Free parking for 60 cars.</p></div>
+          <div class="route"><h3>By bus</h3><p>No evening public service reaches the site. Taxis from Bellingham take about 35 minutes: book your return in advance, as nothing is available on the night.</p></div>
+          <div class="route"><h3>Accessibility</h3><p>Level path from the car park, a step-free viewing deck and a heated room with seating. Tell us about your needs when booking and we will plan around them.</p></div>
+          <div class="route"><h3>Stay nearby</h3><p>Kielder Village has a pub and two guesthouses, five minutes' drive away. Book early on weekends.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Kielder Dark Sky Observatory &middot; Public stargazing nights</span>
+    <span>All details on this page are sample content. <a href="#top">Back to top</a></span>
+  </div>
+</footer>
+
+<script>
+/* ---------- theme toggle ---------- */
+(function () {
+  var root = document.documentElement, btn = document.getElementById('themeToggle');
+  try { var saved = localStorage.getItem('kielder-theme'); if (saved) root.setAttribute('data-theme', saved); } catch (e) {}
+  function sync() {
+    var d = root.getAttribute('data-theme') === 'dark';
+    btn.setAttribute('aria-label', d ? 'Switch to light theme' : 'Switch to dark theme');
+    btn.innerHTML = d
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  }
+  btn.addEventListener('click', function () {
+    var n = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', n);
+    try { localStorage.setItem('kielder-theme', n); } catch (e) {}
+    sync(); window.dispatchEvent(new Event('themechange'));
+  });
+  sync();
+})();
+
+/* ---------- booking ---------- */
+(function () {
+  var f = document.getElementById('bookForm'), $ = function (id) { return document.getElementById(id); };
+  function cur() { var r = f.querySelector('input[name=slot]:checked'); if (!r) return null; var p = r.value.split('|'); return { when: p[0], title: p[1], price: +p[2] }; }
+  function money(n) { return '£' + n.toLocaleString('en-GB'); }
+  function update() {
+    var c = cur(), g = +$('guests').value;
+    if (!c) return;
+    $('sumNight').textContent = c.title;
+    $('sumTime').textContent = c.when;
+    $('sumTix').textContent = g + ' × ' + money(c.price);
+    $('sumTotal').textContent = money(g * c.price);
+  }
+  f.addEventListener('change', function () { $('okBox').classList.remove('show'); update(); });
+  function check(input, errEl, ok) {
+    input.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    errEl.classList.toggle('show', !ok);
+    errEl.textContent = errEl.textContent;
+    return ok;
+  }
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var n = $('name'), m = $('email');
+    var a = check(n, $('nameErr'), n.value.trim().length > 1);
+    var b = check(m, $('emailErr'), /^\S+@\S+\.\S+$/.test(m.value.trim()));
+    if (!a) { n.focus(); return; }
+    if (!b) { m.focus(); return; }
+    var c = cur(), g = +$('guests').value;
+    var ref = 'KDS-' + (1000 + Math.floor(Math.random() * 9000));
+    var box = $('okBox');
+    box.innerHTML = '<b>Reserved: ' + g + (g === 1 ? ' place' : ' places') + '</b> for ' + c.title + ', ' + c.when + '. Reference <span class="mono">' + ref + '</span>. Tickets sent to ' + m.value.trim().replace(/[<>&]/g, '') + '.';
+    box.classList.add('show');
+  });
+  update();
+})();
+
+/* ---------- WebGL night sky ---------- */
+(function () {
+  var canvas = document.getElementById('sky');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+  var FS = [
+  'precision highp float;',
+  'uniform vec2 uRes;uniform float uTime;uniform vec2 uPtr;uniform vec3 uBg,uInk,uAcc;uniform float uDark,uAnim;',
+  'float h11(float n){return fract(sin(n*127.1)*43758.5453);}',
+  'vec2 h22(vec2 p){p=vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3)));return fract(sin(p)*43758.5453);}',
+  'float h21(vec2 p){return fract(sin(dot(p,vec2(41.3,289.1)))*43758.5453);}',
+  'float vn(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y);}',
+  'float fbm(vec2 p){float a=.5,s=0.;for(int i=0;i<5;i++){s+=a*vn(p);p=p*2.03+vec2(11.7,5.3);a*=.5;}return s;}',
+  'mat2 rot(float a){float c=cos(a),s=sin(a);return mat2(c,-s,s,c);}',
+  /* stars on a grid, three scales */
+  'float stars(vec2 p,float scale,float t,float dens,out float hue){',
+  ' vec2 g=p*scale;vec2 id=floor(g);vec2 f=fract(g)-.5;vec2 h=h22(id);',
+  ' vec2 off=(h-.5)*.7;float d=length(f-off);',
+  ' float pick=h21(id+7.);float on=step(1.-dens,pick);',
+  ' float mag=pow(h21(id+3.1),3.);float r=mix(.02,.07,mag)/1.0;',
+  ' float tw=1.+.35*sin(t*(1.5+h.x*3.)+h.y*40.)*uAnim;',
+  ' hue=h.x;',
+  ' return on*smoothstep(r,0.,d)*(.35+mag*1.6)*tw;}',
+  'void main(){',
+  ' vec2 res=uRes;vec2 uv=(gl_FragCoord.xy-.5*res)/res.y;',
+  ' float t=uTime;',
+  ' vec2 q=uv+uPtr*.03;',
+  ' vec2 sp=rot(t*.006)*(q-vec2(-.25,.45));',          /* slow turn around a pole */
+  ' float horizon=-.30+.05*fbm(vec2(uv.x*2.2+3.,1.))+.016*vn(vec2(uv.x*40.,2.));',
+  ' float hue;float I=0.;vec3 tint=vec3(0.);',
+  /* milky way band */
+  ' vec2 mp=rot(.62)*(q+uPtr*.02-vec2(0.,.05));',
+  ' float band=exp(-pow(mp.y*2.4+.08*sin(mp.x*2.),2.));',
+  ' float cloud=fbm(mp*vec2(2.2,5.)+vec2(t*.003,0.));',
+  ' float dust=smoothstep(.45,.75,fbm(mp*vec2(3.,9.)+9.));',
+  ' float mw=band*(.35+.9*cloud)*(1.-.7*dust*band);',
+  ' float dens=.05+.16*band;',
+  ' I+=stars(sp,28.,t,dens,hue);I+=stars(sp,60.,t,dens*1.4,hue)*.7;I+=stars(sp,130.,t,dens*1.8,hue)*.5;',
+  ' I+=mw*.30*(.6+.4*vn(sp*260.));',
+  /* shooting star */
+  ' float cyc=9.;float k=floor(t/cyc);float ph=fract(t/cyc)*cyc;float sh=0.;',
+  ' if(uAnim>.5&&ph<.9){vec2 a=vec2(h11(k)*1.2-.4,.12+h11(k+2.)*.3);vec2 dir=normalize(vec2(.8,-.45+h11(k+5.)*.2));',
+  '  float s=ph/.9;vec2 head=a+dir*s*.7;vec2 rel=uv-head;float along=dot(rel,-dir);float perp=length(rel+dir*along);',
+  '  sh=smoothstep(.0035,0.,perp)*smoothstep(0.,.02,along)*smoothstep(.22,0.,along)*(1.-abs(s*2.-1.));}',
+  ' vec3 col=uBg;',
+  /* sky glow toward horizon */
+  ' float gl=smoothstep(.55,-.3,uv.y);',
+  ' col=mix(col,mix(uBg,uAcc,uDark>.5?.30:.35),gl*.55);',
+  ' col=mix(col,uAcc,clamp(mw*.26,0.,.4));',
+  ' vec3 starC=mix(uInk,uAcc,.35);',
+  ' col=mix(col,mix(uInk,starC,hue),clamp(I,0.,1.));',
+  ' col=mix(col,uInk,clamp(sh,0.,1.));',
+  /* landscape */
+  ' float hillMask=smoothstep(.004,-.004,uv.y-horizon);',
+  ' vec3 ground=uDark>.5?uBg*.35:mix(uBg,uInk,.85);',
+  ' float rim=exp(-abs(uv.y-horizon)*60.)*.5;',
+  ' col=mix(col,ground,hillMask);',
+  ' col+=((uDark>.5)?uAcc*rim*.10*(1.-hillMask):vec3(0.));',
+  ' float vig=smoothstep(1.3,.3,length(uv*vec2(.8,1.)));col=mix(uBg,col,.55+.45*vig);',
+  ' gl_FragColor=vec4(col,1.);}'
+  ].join('\n');
+
+  function parse(v) {
+    v = (v || '').trim();
+    if (v[0] === '#') { if (v.length === 4) v = '#' + v[1]+v[1]+v[2]+v[2]+v[3]+v[3]; return [parseInt(v.substr(1,2),16)/255, parseInt(v.substr(3,2),16)/255, parseInt(v.substr(5,2),16)/255]; }
+    var m = v.match(/[\d.]+/g); return m ? [m[0]/255, m[1]/255, m[2]/255] : [0,0,0];
+  }
+
+  function start() {
+    var gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' });
+    if (!gl) return;   /* CSS gradient behind the canvas stays as the fallback */
+    function sh(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(s)); return null; } return s; }
+    var vs = sh(gl.VERTEX_SHADER, VS), fs = sh(gl.FRAGMENT_SHADER, FS); if (!vs || !fs) return;
+    var pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return;
+    gl.useProgram(pr);
+    var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    var U = {}; ['uRes','uTime','uPtr','uBg','uInk','uAcc','uDark','uAnim'].forEach(function (n) { U[n] = gl.getUniformLocation(pr, n); });
+
+    var cs, bg, ink, acc, dark;
+    function readTheme() {
+      cs = getComputedStyle(document.documentElement);
+      bg = parse(cs.getPropertyValue('--bg')); ink = parse(cs.getPropertyValue('--text')); acc = parse(cs.getPropertyValue('--accent'));
+      dark = (bg[0] + bg[1] + bg[2]) / 3 < .5 ? 1 : 0;
+      /* --immersive 2 = signature: full strength. lower values calm the effect */
+      var im = parseFloat(cs.getPropertyValue('--immersive')) || 2;
+      acc = acc.map(function (c, i) { return c; });
+      gl.uniform3fv(U.uBg, bg); gl.uniform3fv(U.uInk, ink); gl.uniform3fv(U.uAcc, acc); gl.uniform1f(U.uDark, dark);
+    }
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.5), W = 0, H = 0;
+    function size() {
+      var r = canvas.getBoundingClientRect(); W = Math.max(1, Math.round(r.width * dpr)); H = Math.max(1, Math.round(r.height * dpr));
+      canvas.width = W; canvas.height = H; gl.viewport(0, 0, W, H); gl.uniform2f(U.uRes, W, H);
+    }
+    var ptr = [0, 0], tgt = [0, 0], t0 = performance.now(), running = false, visible = true, raf = 0, still = reduce.matches;
+    function frame(now) {
+      raf = 0;
+      var anim = still ? 0 : 1;
+      /* camera settles toward the pointer: ~650ms with ease-out feel */
+      ptr[0] += (tgt[0] - ptr[0]) * .06; ptr[1] += (tgt[1] - ptr[1]) * .06;
+      gl.uniform1f(U.uTime, still ? 12 : (now - t0) / 1000 + 12);
+      gl.uniform2f(U.uPtr, ptr[0], ptr[1]); gl.uniform1f(U.uAnim, anim);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      if (!still && visible && !document.hidden) raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+    readTheme(); size(); kick();
+    canvas.classList.add('on');
+    window.addEventListener('resize', function () { size(); kick(); });
+    window.addEventListener('themechange', function () { readTheme(); kick(); });
+    document.addEventListener('visibilitychange', kick);
+    reduce.addEventListener && reduce.addEventListener('change', function () { still = reduce.matches; kick(); });
+    window.addEventListener('pointermove', function (e) {
+      if (still) return;
+      tgt[0] = (e.clientX / innerWidth - .5) * 2; tgt[1] = -(e.clientY / innerHeight - .5) * 2; kick();
+    }, { passive: true });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) kick(); }).observe(canvas);
+  }
+  /* engine starts after first paint */
+  function later() { (window.requestIdleCallback || function (f) { setTimeout(f, 80); })(start, { timeout: 600 }); }
+  if (document.readyState === 'complete') later(); else window.addEventListener('load', later);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tern, a hand-thrown pour-over kettle</title>
+<meta name="description" content="Tern: a hand-thrown ceramic pour-over kettle from a small pottery in Stoke-on-Trent. £48. Chalk, sea green or ink.">
+<style>
+:root{--bg:#15130f;--ink:#f1ece2;--mute:#b4ab9b;--accent:#e8e4da;--line:rgba(241,236,226,.28)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:18px/1.55 Georgia,"Iowan Old Style",serif;transition:background .8s;-webkit-font-smoothing:antialiased}
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+.fallback{position:fixed;inset:0;z-index:0;background:radial-gradient(60% 40% at 50% 40%,var(--accent),transparent 70%);opacity:.2}
+section{position:relative;z-index:1;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:96px 24px calc(48px + env(safe-area-inset-bottom));max-width:720px;margin:0 auto}
+h1{font-size:clamp(84px,24vw,200px);line-height:.9;letter-spacing:-.04em;font-weight:400}
+h2{font-size:clamp(32px,7vw,56px);line-height:1.1;letter-spacing:-.02em;font-weight:400;text-wrap:balance}
+p{max-width:34em;margin-top:16px;text-wrap:pretty;text-shadow:0 1px 14px var(--bg),0 0 4px var(--bg)}
+.eyebrow{font:600 13px/1 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:16px}
+.hint{font:14px system-ui,sans-serif;color:var(--mute);margin-top:32px}
+.hint i{display:inline-block;width:1px;height:28px;background:var(--mute);vertical-align:middle;margin-right:12px;animation:drip 2s ease-in-out infinite;transform-origin:top}
+@keyframes drip{0%{transform:scaleY(0)}60%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.glazes{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.glazes button{font:500 16px system-ui,sans-serif;min-height:48px;padding:0 20px 0 14px;border-radius:999px;border:1px solid var(--line);background:rgba(20,18,15,.6);color:var(--ink);display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s,transform .15s}
+.glazes button:active{transform:scale(.97)}
+.glazes button[aria-pressed=true]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.glazes b{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.35)}
+:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.price{font-size:56px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:8px}
+.cta{display:inline-flex;align-items:center;justify-content:center;min-height:56px;margin-top:24px;padding:0 32px;border-radius:999px;background:var(--ink);color:#15130f;font:600 17px system-ui,sans-serif;text-decoration:none;transition:transform .15s}
+.cta:active{transform:scale(.97)}
+.small{font:14px/1.5 system-ui,sans-serif;color:var(--mute)}
+.facts{list-style:none;padding:0;margin-top:24px;font:15px/1.5 system-ui,sans-serif;color:var(--mute);display:grid;gap:8px;text-shadow:0 1px 10px var(--bg)}
+.facts li{border-top:1px solid var(--line);padding-top:8px}
+.bar{position:fixed;z-index:2;left:0;top:0;height:2px;background:var(--ink);width:0}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}
+.reveal.in{opacity:1;transform:none}
+@media (min-width:900px){section{margin-left:8vw;margin-right:auto;justify-content:center;max-width:560px}}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.hint i{animation:none}}
+</style>
+</head>
+<body>
+<div class="fallback" id="fb"></div>
+<canvas id="c" aria-hidden="true"></canvas>
+<div class="bar" id="bar"></div>
+
+<main>
+<section>
+  <p class="eyebrow">Stoke-on-Trent &middot; New this month</p>
+  <h1>Tern</h1>
+  <p>A hand-thrown ceramic pour-over kettle. Made slowly, to pour slowly.</p>
+  <p class="hint"><i></i>Scroll</p>
+</section>
+
+<section>
+  <div class="reveal">
+  <p class="eyebrow">01 &middot; The clay</p>
+  <h2>One lump of clay, thrown on the wheel in about four minutes.</h2>
+  <p>Every Tern starts as a ball on a spinning wheel. No moulds, so no two kettles share quite the same curve.</p>
+  </div>
+</section>
+
+<section>
+  <div class="reveal">
+  <p class="eyebrow">02 &middot; The spout</p>
+  <h2>A long, thin neck for a slow, steady stream.</h2>
+  <p>Pour-over coffee needs a thread of water, not a gush. The spout is pulled by hand and tested on every kettle before it is glazed.</p>
+  </div>
+</section>
+
+<section>
+  <div class="reveal">
+  <p class="eyebrow">03 &middot; The glaze</p>
+  <h2>Three glazes, fired to 1,240&nbsp;&deg;C.</h2>
+  <p id="glazeText">Chalk: soft, matt, like a pebble from the shore.</p>
+  <div class="glazes" role="group" aria-label="Choose a glaze">
+    <button type="button" data-g="0" aria-pressed="true"><b style="background:#e8e4da"></b>Chalk</button>
+    <button type="button" data-g="1" aria-pressed="false"><b style="background:#5f9486"></b>Sea green</button>
+    <button type="button" data-g="2" aria-pressed="false"><b style="background:#1f2733"></b>Ink</button>
+  </div>
+  </div>
+</section>
+
+<section>
+  <div class="reveal">
+  <p class="eyebrow">04 &middot; Yours</p>
+  <h2>Tern, in <span id="gname">chalk</span>.</h2>
+  <div class="price">&pound;48</div>
+  <ul class="facts">
+    <li>Hand-thrown and glazed in Stoke-on-Trent</li>
+    <li>Holds about 700&nbsp;ml. Dishwasher safe, not for the hob</li>
+    <li>A small first batch, limited by what the kiln allows</li>
+  </ul>
+  <a class="cta" href="mailto:hello@example.com?subject=Tern%20kettle" id="cta">Reserve a chalk Tern</a>
+  <p class="small">Placeholder link: connect this to your shop checkout.</p>
+  </div>
+</section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+var glazes=[
+ {n:'chalk',c:0xe8e4da,r:.7,bg:'#15130f',acc:'#e8e4da',t:'Chalk: soft, matt, like a pebble from the shore.'},
+ {n:'sea green',c:0x5f9486,r:.35,bg:'#0d1916',acc:'#9fd0c3',t:'Sea green: pools darker where it runs thick, lighter on the edges.'},
+ {n:'ink',c:0x2a3648,r:.28,bg:'#1a1c20',acc:'#9aa8c4',t:'Ink: a deep blue-black that catches the light only at the rim.'}
+];
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var root=document.documentElement,mat=null;
+
+function setGlaze(i){
+  var g=glazes[i];
+  document.body.style.background=g.bg;
+  root.style.setProperty('--bg',g.bg);root.style.setProperty('--accent',g.acc);
+  document.getElementById('glazeText').textContent=g.t;
+  document.getElementById('gname').textContent=g.n;
+  document.getElementById('cta').textContent='Reserve a '+g.n+' Tern';
+  [].forEach.call(document.querySelectorAll('.glazes button'),function(b){b.setAttribute('aria-pressed',String(+b.dataset.g===i))});
+  if(mat){mat.color.setHex(g.c);mat.roughness=g.r}
+}
+[].forEach.call(document.querySelectorAll('.glazes button'),function(b){b.addEventListener('click',function(){setGlaze(+b.dataset.g)})});
+
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.15});
+[].forEach.call(document.querySelectorAll('.reveal'),function(el){io.observe(el)});
+document.getElementById('bar');
+
+if(!window.THREE){document.getElementById('fb').style.opacity=.35;setGlaze(0);return}
+document.getElementById('fb').style.display='none';
+
+var canvas=document.getElementById('c');
+var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+var scene=new THREE.Scene();
+var camera=new THREE.PerspectiveCamera(32,1,.1,50);
+
+scene.add(new THREE.HemisphereLight(0xfff3e0,0x2a2018,.45));
+var key=new THREE.DirectionalLight(0xfff0dd,1.0);key.position.set(-4,6,5);scene.add(key);
+var rimL=new THREE.DirectionalLight(0x9fb8ff,.9);rimL.position.set(5,3,-5);scene.add(rimL);
+
+mat=new THREE.MeshStandardMaterial({color:glazes[0].c,roughness:.7,metalness:0,side:THREE.DoubleSide});
+var kettle=new THREE.Group();scene.add(kettle);
+function V2(a){return new THREE.Vector2(a[0],a[1])}
+
+var body=[[0,0],[.85,0],[.98,.04],[1.1,.2],[1.26,.65],[1.3,1.1],[1.16,1.6],[.88,1.9],[.74,1.98],[.7,2.04],[.62,2.04],[.6,1.98]].map(V2);
+kettle.add(new THREE.Mesh(new THREE.LatheGeometry(body,72),mat));
+var lid=[[0,2.42],[.1,2.4],[.14,2.32],[.12,2.26],[.4,2.2],[.62,2.1],[.66,2.02],[0,2.02]].map(V2);
+kettle.add(new THREE.Mesh(new THREE.LatheGeometry(lid,48),mat));
+
+var SPOUT_TIP=new THREE.Vector3(2.35,2.05,0);
+var sc=new THREE.CatmullRomCurve3([new THREE.Vector3(1.15,.55,0),new THREE.Vector3(1.55,.95,0),new THREE.Vector3(1.9,1.65,0),SPOUT_TIP]);
+var TS=40,RS=20;
+var spoutGeo=new THREE.TubeGeometry(sc,TS,.15,RS,false);
+var sp=spoutGeo.attributes.position,tmp=new THREE.Vector3();
+for(var i=0;i<sp.count;i++){
+  var seg=Math.floor(i/(RS+1)),t=seg/TS,c=sc.getPoint(t);
+  tmp.set(sp.getX(i),sp.getY(i),sp.getZ(i)).sub(c).multiplyScalar(1-.45*t).add(c);
+  sp.setXYZ(i,tmp.x,tmp.y,tmp.z);
+}
+spoutGeo.computeVertexNormals();
+kettle.add(new THREE.Mesh(spoutGeo,mat));
+
+var hc=new THREE.CatmullRomCurve3([new THREE.Vector3(-1.2,1.75,0),new THREE.Vector3(-1.85,1.95,0),new THREE.Vector3(-2.15,1.2,0),new THREE.Vector3(-1.7,.5,0),new THREE.Vector3(-1.22,.55,0)]);
+var hm=new THREE.Mesh(new THREE.TubeGeometry(hc,48,.13,16,false),mat);hm.scale.z=1.5;kettle.add(hm);
+
+var ground=new THREE.Mesh(new THREE.CircleGeometry(5,48),new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.35}));
+ground.rotation.x=-Math.PI/2;ground.position.y=-.01;scene.add(ground);
+
+var N=90,pg=new THREE.BufferGeometry(),pp=new Float32Array(N*3),ps=[];
+for(var k=0;k<N;k++)ps.push({t:Math.random(),s:.15+Math.random()*.2,x:(Math.random()-.5)*.3});
+pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+var pm=new THREE.Points(pg,new THREE.PointsMaterial({color:0xffffff,size:.05,transparent:true,opacity:.5,depthWrite:false}));
+pm.frustumCulled=false;scene.add(pm);
+
+// keyframes per section: camX,camY,camZ, lookX,lookY,lookZ, rotY, tilt
+var K=[
+ [0,1.2,9.5, 0,1.1,0, .6, 0],
+ [.4,2.4,7.2, 0,1.2,0, 2.6, 0],
+ [3.0,2.6,6.2, 1.4,1.9,0, 0, .5],
+ [0,1.4,8.2, 0,1.1,0, 5.2, 0],
+ [0,1.5,8.8, 0,1.1,0, 6.6, 0]
+];
+function fit(){
+  var w=innerWidth,h=innerHeight;
+  renderer.setSize(w,h,false);camera.aspect=w/h;
+  camera.fov=w<h?46:32;camera.updateProjectionMatrix();
+}
+fit();addEventListener('resize',fit);
+
+var state=K[0].slice(),target=K[0].slice(),bar=document.getElementById('bar');
+function ease(x){return x*x*(3-2*x)}
+function readScroll(){
+  var vh=innerHeight,n=K.length-1,p=Math.min(Math.max(0,scrollY)/vh,n);
+  var i=Math.min(Math.floor(p),n-1),f=ease(p-i);
+  for(var j=0;j<8;j++)target[j]=K[i][j]+(K[i+1][j]-K[i][j])*f;
+  var tot=Math.max(1,document.documentElement.scrollHeight-vh);
+  bar.style.width=(scrollY/tot*100)+'%';
+}
+var clock=new THREE.Clock(),idle=0,wp=new THREE.Vector3();
+function frame(){
+  requestAnimationFrame(frame);
+  var dt=Math.min(clock.getDelta(),.05);idle+=dt;
+  readScroll();
+  var k=reduce?1:1-Math.exp(-dt*5);
+  for(var j=0;j<8;j++)state[j]+=(target[j]-state[j])*k;
+  var port=innerWidth<innerHeight;
+  // portrait: pull back and look below the kettle so it sits in the upper half, clear of the text
+  var off=port?-1.3:0,dist=port?1.4:1,side=port?0:-1;
+  camera.position.set(state[0]*dist+side,state[1]*dist,state[2]*dist);
+  camera.lookAt(state[3]+side,state[4]+off,state[5]);
+  kettle.rotation.y=state[6]+(reduce?0:Math.sin(idle*.4)*.05);
+  kettle.rotation.z=-state[7];
+  kettle.position.y=state[7]*.6;
+  kettle.updateMatrixWorld(true);
+  var pouring=state[7]>.2;
+  wp.copy(SPOUT_TIP);kettle.localToWorld(wp);
+  for(var m=0;m<N;m++){
+    var q=ps[m];q.t+=dt*q.s*(pouring?2.2:1);if(q.t>1)q.t=0;
+    var x,y,z;
+    if(pouring&&m<60){x=wp.x+q.x*.05;y=wp.y-q.t*wp.y;z=wp.z}
+    else{x=Math.sin(q.t*6+m)*.12+q.x;y=2.5+q.t*1.6+kettle.position.y;z=Math.cos(q.t*5+m)*.12}
+    pp[m*3]=x;pp[m*3+1]=y;pp[m*3+2]=z;
+  }
+  pg.attributes.position.needsUpdate=true;
+  renderer.render(scene,camera);
+}
+setGlaze(0);
+frame();
+})();
+</script>
+</body>
+</html>

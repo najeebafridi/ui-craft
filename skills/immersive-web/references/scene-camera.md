@@ -15,6 +15,8 @@ Load this when you compose a 3D scene, choose a lens, move a camera or set up th
 - **Camera height is attitude.** Level with the subject: honest. Slightly above: a product on a table. Low: monumental. Straight down: a map or a plan.
 - **The camera moves with a reason, slowly, or not at all.** Good reasons: to reveal, to follow, to compare, to arrive. Each move has a start, a hold and an end. A camera that drifts for ever makes people queasy.
 - **One shot per idea.** Establish (the whole), then closer (the detail), then closest (the proof). Do not circle the subject aimlessly.
+- **Something happens.** A scene earns the word cinematic when there is an event: it pours, opens, lights up, assembles, arrives. Decide the event first and build the shots toward it. A subject that only rotates is a product photo on a turntable.
+- **Stage it.** Put the subject in a pool of light with quieter surroundings, on something (a surface, a plinth, a horizon). Staging is what makes a simple shape look intended.
 
 ## On the web
 
@@ -22,6 +24,7 @@ Load this when you compose a 3D scene, choose a lens, move a camera or set up th
 
 - Put the scene in a sized box in the layout (a hero column, a sticky stage), not a fixed full-window canvas behind everything, unless the whole page is the scene. Size the canvas from its box with a `ResizeObserver`.
 - Text sits **beside** the scene, or over a calm part of it. Over a busy or moving part, give the text a solid or tinted surface. Check contrast at the busiest frame.
+- Plan a **text lane** for every pose: when the camera or subject moves, the subject stays out of the zone where words are. Fill the stage: a small subject in a large empty box reads as unfinished, most of all on phones.
 - Keep the subject inside a safe area: about the middle 80% of the frame, more on phones. Recompute the camera distance from the aspect ratio so the subject always fits:
   ```js
   const fov = 28 * Math.PI / 180;                                    // vertical field of view

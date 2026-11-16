@@ -15,6 +15,7 @@ Load this when you light a scene, choose materials, fix colours that look wrong,
 - **Ground the subject.** A soft, dark contact shadow directly under an object tells its weight and position. It matters more than any other shadow.
 - **Materials are told by how they blur light.** Rough surfaces scatter (paper, clay, fabric); smooth ones mirror (glass, lacquer, polished metal). Most real things are rougher than you think. Pick one hero material and let the others be plain.
 - **Restraint.** Three or four materials in a scene. One of them may be special.
+- **Contrast of light is the drama.** A cinematic look is mostly a bright subject against darker surroundings, a clear direction of light, and a rim. Flat, even light looks like a 3D viewer; a pool of light looks like a film. Be bold with the one light, quiet with everything else.
 
 ## On the web
 

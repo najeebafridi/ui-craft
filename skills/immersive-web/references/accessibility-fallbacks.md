@@ -30,7 +30,9 @@ Principles:
 
 `assets/scene-shell.js` implements all three and sets `data-scene="live|still|fallback"` on the host for CSS. The fallback element is in the HTML from the start, so it is also the loading state.
 
-**Posters.** Render the scene's best frame once (a screenshot of the canvas at the hero pose is fine) and save it as AVIF or WebP at the box's size, for light and dark themes if they differ a lot. For a story, one per beat. Decorative: `alt=""`. For token-driven abstract scenes, CSS gradients or inline SVG in the same tokens re-theme for free.
+**Posters.** Make the poster from the scene itself, so it is the same picture: `node <skill-dir>/scripts/immersive-check.mjs page.html --poster hero-poster.png --scheme dark` saves the scene's box as drawn (run it again with `--scheme light` if the themes differ), or screenshot the canvas at the hero pose. Convert to AVIF or WebP if a tool is at hand; a PNG of a simple scene is acceptable. Then build the fallback from it and run the check again.
+
+**The fallback must not be a lesser idea.** These fail: a plain gradient where a kettle was; an empty grid where six printers were; "photograph to come". A 3D object falls back to its poster. A data scene (columns, a map, a network) falls back to the **same data** drawn flat in SVG or CSS, with the same colours and labels. A shader field falls back to a CSS or SVG version of the same structure. For a story, one per beat. Decorative: `alt=""`. For token-driven abstract scenes, CSS gradients or inline SVG in the same tokens re-theme for free.
 
 ### Reduced motion
 
@@ -99,6 +101,8 @@ Also for everyone: nothing flashes more than 3 times a second; no strobing or ra
 ### Contrast and legibility over a scene
 
 - Text needs 4.5:1 against the **busiest, brightest and darkest** frames behind it, not the average. Safest: text beside the scene, or on a solid or strongly tinted surface over it.
+- **Give the text a lane.** In a scroll story the subject moves: plan where the words sit at every beat and keep the subject out of that zone (or fade the scene to `--bg` there). A model sliding behind a paragraph mid-scroll is the most common failure.
+- Navigation over a scene needs a scrim: a top gradient from `--bg` to transparent, or a solid bar. Links straight on stars or highlights fail contrast.
 - No text over moving detail. Calm the area behind words (fade the scene to `--bg` there).
 - Support `prefers-contrast: more` by strengthening the text surface and outlines.
 - Do not shrink body text to make room for the scene; ui-craft's type rules still hold.
@@ -114,18 +118,18 @@ Also for everyone: nothing flashes more than 3 times a second; no strobing or ra
 Run `node <skill-dir>/scripts/immersive-check.mjs page.html`, open every screenshot, then tick:
 
 - [ ] With JavaScript off, the headline, copy, links and primary action are all visible.
-- [ ] With WebGL off, the fallback shows in the scene's place, with no console errors and no broken layout.
+- [ ] With WebGL off, the fallback shows in the scene's place, with no console errors and no broken layout. It is the same subject (or the same data), not a blank box or a plain gradient.
 - [ ] With reduced motion, nothing moves by itself; the scene is a still; scroll is native; fades are short.
 - [ ] The fallback and the still look like the same design as the full scene, in light and dark.
 - [ ] The headline is real text and paints before the scene; no preloader.
-- [ ] Phone: nothing clipped or covered, pixel ratio capped, no sideways scroll, controls 44px.
+- [ ] Phone: nothing clipped or covered, pixel ratio capped, no sideways scroll, controls 44px. The pinned scene and its text share one screen with no empty band; the subject fills its stage.
 - [ ] Scrolling is native: speed and direction untouched, scrollbar present.
 - [ ] Ambient motion rests within 5 seconds or has a pause control. Nothing runs off screen or in a hidden tab.
 - [ ] Decorative canvas is `aria-hidden`; meaningful scenes have a text equivalent; interactive ones have real controls.
 - [ ] Tab goes through every control in reading order with a visible ring; there is a skip link for a long story.
-- [ ] Text over the scene passes contrast at its worst frame.
+- [ ] No text crosses the subject at any scroll position; text and navigation over the scene have a surface or scrim and pass contrast at the worst frame.
 - [ ] Sound is off until asked for. Nothing flashes.
-- [ ] One signature moment; the rest of the page is calm.
+- [ ] One signature moment, and it is an event worth describing; the rest of the page is calm.
 - [ ] Colours, radius and tempo come from the theme tokens; the scene follows light and dark.
 - [ ] Every asset has a known licence, recorded.
 

@@ -11,18 +11,19 @@ How to build 3D, shader and scroll-driven experiences that feel like the best fi
 
 **Honest limit.** You can direct a scene, light it, move a camera, write shaders and wire a model in. You cannot sculpt film-quality 3D art from nothing. Compose from simple geometry, shaders, type and light, or use a model the team supplies. Never fake it with a crude drawing of the subject.
 
-## 1. The eight hard rules
+## 1. The nine hard rules
 
 Break one and the work is not done, however good it looks.
 
 1. **Content first.** Headings, copy, links and buttons are real HTML, readable before any script runs. The scene is added on top and can vanish without loss. Never draw the page's words into a canvas. Never hide content at `opacity: 0` in the CSS waiting for a script to reveal it.
-2. **Three states for every effect.** *Full*; *reduced motion* (a still frame or a short fade: `prefers-reduced-motion`, and the OS setting in native apps); *no GPU* (a poster image or CSS/SVG art shown when WebGL or WebGPU is missing, fails, or the context is lost). Design the two fallbacks first. They are also what loads first.
+2. **Three states for every effect.** *Full*; *reduced motion* (a still frame or a short fade: `prefers-reduced-motion`, and the OS setting in native apps); *no GPU* (a poster image or CSS/SVG art shown when WebGL or WebGPU is missing, fails, or the context is lost). Design the two fallbacks first. They are also what loads first. **A fallback is the same picture, quieter**: the same subject from the same angle (a poster made from the scene itself), and for a data scene the same data drawn flat. A blank box, a plain gradient or "image to come" is a failure.
 3. **A speed budget, decided before building** (§4). The page's text paints first; the engine loads after. On a phone the scene costs less than the content.
-4. **One signature moment per page.** One scene, one idea, done completely. Everything else stays quiet. Effects everywhere read as a template and exhaust people.
+4. **One signature moment per page, and make it count.** One scene, one idea, done completely. Everything else stays quiet. Effects everywhere read as a template and exhaust people. Restraint limits the **number** of effects, not their strength: the one moment is an *event* that belongs to this product (the kettle pours; the sky fills with stars as eyes adjust), staged boldly enough that someone would describe it to a friend. An object that only turns as you scroll is not a moment.
 5. **Never take the scroll.** The browser scrolls; you only read the position. No changed speed or direction, no wheel hijack, no fake scrollbar. Pin with `position: sticky`, keep it short, give a way to skip.
-6. **Keyboard and screen reader reach everything real.** Tab order follows the reading order. A decorative canvas is `aria-hidden="true"`; a meaningful one has a text equivalent beside it. Anything you can do by dragging the scene, you can do with a button.
-7. **Motion rests, sound waits, nothing flashes.** Ambient motion settles within 5 seconds or has a visible pause control. Sound is off until asked for. No more than 3 flashes a second, ever. Nothing runs off screen or in a hidden tab.
-8. **Original and licensed.** Learn the language of a genre; never copy a product's look, models, characters, logos or sounds. Use only assets you made or that have a clear licence (CC0 libraries such as Poly Haven and ambientCG are safe), and record each one.
+6. **Words and scene never share a place.** At every scroll position the text sits beside the subject or on its own surface, never across it. Navigation and buttons laid over a scene get a scrim or a surface. Check every scroll screenshot, not only the first.
+7. **Keyboard and screen reader reach everything real.** Tab order follows the reading order. A decorative canvas is `aria-hidden="true"`; a meaningful one has a text equivalent beside it. Anything you can do by dragging the scene, you can do with a button.
+8. **Motion rests, sound waits, nothing flashes.** Ambient motion settles within 5 seconds or has a visible pause control. Sound is off until asked for. No more than 3 flashes a second, ever. Nothing runs off screen or in a hidden tab.
+9. **Original and licensed.** Learn the language of a genre; never copy a product's look, models, characters, logos or sounds. Use only assets you made or that have a clear licence (CC0 libraries such as Poly Haven and ambientCG are safe), and record each one.
 
 ## 2. Workflow (do this every time)
 
@@ -43,15 +44,16 @@ Break one and the work is not done, however good it looks.
 4. **Write the immersive brief** (add it to the ui-craft design brief), before code:
    ```
    Level: 2 signature (theme says --immersive: 2)        Stack: plain HTML + three.js, lazy
-   Signature moment: the kettle turns to follow the pointer; steam is the only thing that moves
-   Scene: one matte ceramic kettle on the page background; soft key light from above left, warm rim
+   Signature moment (an event, not a turntable): at beat 3 the kettle tips and a thin stream pours, holding its line
+   Scene: one matte ceramic kettle in a pool of light on the page background; soft key from above left, warm rim
+   Text lane: copy in the left column on desktop, under the pinned scene on phones; the kettle never crosses it
    Camera: 35mm-like, slightly above, never moves by itself         Tempo: gentle (--dur-slow 400ms)
    Beats (level 3 only): 1 whole kettle - 2 the spout, close - 3 pouring - 4 the set on a table
-   Reduced motion: one still render per beat, cross-faded        No GPU: hero-poster.avif (same angle)
+   Reduced motion: one still render per beat, cross-faded        No GPU: a poster of the same scene, same angle
    Budget: text paints first; engine after; scene under 1.5 MB on phones; pixel ratio 1.5 on touch
    ```
 5. **Build in this order.** (a) The whole page as plain HTML and CSS with ui-craft, with the poster or CSS fallback in the scene's place. It must already be a good page. (b) The scene shell: `assets/scene-shell.js` gives lazy start, still frames, fallback, pause off screen, pixel-ratio cap, lost-context recovery. (c) The theme bridge: `assets/theme-bridge.js` so colours, radius and tempo come from the tokens. (d) The scene itself, at its simplest. (e) Motion and scroll. (f) Polish: light, material, grain, timing. `assets/starter.html` is a working page with (a)-(c) done; replace its placeholder scene.
-6. **Check, then look.** Run `node <skill-dir>/scripts/immersive-check.mjs page.html`. It loads the page five ways (desktop, phone, reduced motion, no WebGL, no JavaScript), measures weight, draw calls, pixel ratio, native scrolling and pauses, and saves screenshots. **Open every screenshot.** Fix what fails. Then run ui-craft's `ui-audit.mjs` for contrast, tap targets and type, and judge the phone as strictly as the desktop. Final pass: `references/accessibility-fallbacks.md` checklist.
+6. **Check, then look.** Run `node <skill-dir>/scripts/immersive-check.mjs page.html`. It loads the page five ways (desktop, phone, reduced motion, no WebGL, no JavaScript), measures weight, draw calls, pixel ratio, native scrolling and pauses, and saves screenshots. For an app window (Electron, Tauri, a signed-in web app) add `--app` to skip the no-JavaScript test. **Open every screenshot.** Fix what fails. Look hardest at three: the middle of the scroll (is any text crossing the subject?), the phone's middle (scene and text together in one screen, no empty band?), and the no-WebGL one (the same picture, or a hole?). Make the poster from the scene itself: `--poster hero-poster.png` saves the scene's box from the desktop pass (`--scheme light` or `dark` picks the theme), ready to use as the fallback image. Then run ui-craft's `ui-audit.mjs` for contrast, tap targets and type, and judge the phone as strictly as the desktop. Final pass: `references/accessibility-fallbacks.md` checklist.
 
 ## 3. The immersion ladder
 
@@ -133,6 +135,9 @@ These read as generic or cheap. Use them only when the brief truly calls for the
 
 - a purple-blue gradient blob, an "aurora" or a particle field behind the headline
 - a spinning shiny torus knot, a wobbling sphere, floating glass shapes with no subject
+- the subject on a turntable: it rotates as you scroll and nothing ever happens
+- a stand-in shape labelled as the real thing (a knot captioned "your part")
+- flat, even light on a dark page: no pool of light, no rim, no staging
 - default grey plastic material, pure white light, no ground contact
 - bloom on everything, rainbow iridescence, chromatic aberration as a style
 - stars, a wireframe globe or a neon grid floor because the product is "tech"
@@ -145,7 +150,7 @@ Banning a pattern is not a design. Decide what the scene is **about** (the produ
 
 ## 8. Beyond a website
 
-The ideas travel; the technique changes. A desktop app, a mobile app or a dashboard can carry the same scene language at a lower level, with the platform keeping its bones. A dense finance tool gets level 0 or one precise accent. Read `references/beyond-web.md` before using any of this outside a normal web page, and ui-craft's `references/mixing.md` for borrowing a genre's look (game, sci-fi, film) on another medium.
+The ideas travel; the technique changes. A desktop app, a mobile app or a dashboard can carry the same scene language at a lower level, with the platform keeping its bones. A dense finance tool gets level 0 or one precise accent. A work tool that is also a showpiece (a wall screen, a demo) gets two modes: a calm desk mode and a display mode where the asked-for character is delivered in full. Read `references/beyond-web.md` before using any of this outside a normal web page, and ui-craft's `references/mixing.md` for borrowing a genre's look (game, sci-fi, film) on another medium.
 
 ## 9. Reference files (load only what you need)
 

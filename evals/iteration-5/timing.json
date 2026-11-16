@@ -1,0 +1,5 @@
+{
+  "kettle-launch-story": { "with_skill": { "tokens": 205863, "seconds": 977 }, "without_skill": { "tokens": 85677, "seconds": 148 } },
+  "observatory-themed-hero": { "with_skill": { "tokens": 172195, "seconds": 423 }, "without_skill": { "tokens": 103219, "seconds": 198 } },
+  "printfarm-desktop-app": { "with_skill": { "tokens": 164133, "seconds": 624 }, "without_skill": { "tokens": 85787, "seconds": 186 } }
+}

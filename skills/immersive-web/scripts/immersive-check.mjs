@@ -1,5 +1,8 @@
 // immersive-check: test a 3D, shader or scroll-driven page the way its hard rules demand.
-// Usage: node immersive-check.mjs <page.html | http://localhost:3000 | https://site> [--out <folder>] [--json <file>] [--wait <ms>]
+// Usage: node immersive-check.mjs <page.html | http://localhost:3000 | https://site> [--out <folder>] [--json <file>] [--wait <ms>] [--app]
+//        --app   the page is an app window (Electron, Tauri, a signed-in web app): skip the no-JavaScript test, which only public pages must pass
+//        --poster <file.png>   save the scene's box, as drawn at the top of the desktop pass: a ready-made fallback image
+//        --scheme light|dark   which colour scheme to test and to use for the poster (default: the system's)
 // Needs Node 22+ and Google Chrome (or Chromium / Edge). No npm packages.
 //
 // It loads the page five times and looks at what a visitor would get each time:
@@ -19,8 +22,10 @@ import { pathToFileURL } from "node:url";
 const args = process.argv.slice(2);
 const opt = (name) => { const i = args.indexOf(name); return i >= 0 ? args.splice(i, 2)[1] : null; };
 const jsonPath = opt("--json"), outArg = opt("--out"), settle = +(opt("--wait") || 3000);
+const posterPath = opt("--poster"), scheme = opt("--scheme");
+const appMode = args.includes("--app"); if (appMode) args.splice(args.indexOf("--app"), 1);
 const outDir = outArg ? resolve(outArg) : mkdtempSync(join(tmpdir(), "immersive-check-"));
-if (!args.length) { console.log("Usage: node immersive-check.mjs <page.html|url> [--out folder] [--json file] [--wait ms]"); process.exit(1); }
+if (!args.length) { console.log("Usage: node immersive-check.mjs <page.html|url> [--out folder] [--json file] [--wait ms] [--app] [--poster file.png] [--scheme light|dark]"); process.exit(1); }
 mkdirSync(outDir, { recursive: true });
 const target = /^https?:/.test(args[0]) ? args[0] : pathToFileURL(resolve(args[0])).href;
 
@@ -103,12 +108,31 @@ const SEEN = String.raw`(() => {
   return S.n;
 })()`;
 
-// How many elements change place within 0.9s with no input. A ticking clock or a filling bar is not movement; a drifting or sliding element is.
+// How many elements keep changing place with no input. Three looks, 0.45s apart: an element counts only if it moved in BOTH gaps.
+// So a ticking clock, a filling bar, or live data that shifts the layout once is not movement; a drifting or sliding element is.
 const MOVERS = String.raw`(async () => {
   const els = [...document.body.querySelectorAll("*")].filter((e) => { const r = e.getBoundingClientRect(); return r.width * r.height > 400 && r.bottom > 0 && r.top < innerHeight; }).slice(0, 2500);
-  const snap = () => els.map((e) => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2, getComputedStyle(e).transform]; });
-  const a = snap(); await new Promise((r) => setTimeout(r, 900)); const b = snap();
-  return a.filter((p, i) => Math.abs(p[0] - b[i][0]) > 4 || Math.abs(p[1] - b[i][1]) > 4 || (p[2] !== b[i][2] && /matrix/.test(p[2] + b[i][2]) && (p[2] + b[i][2]).length > 12 && Math.hypot(p[0] - b[i][0], p[1] - b[i][1]) > 1)).length;
+  const snap = () => els.map((e) => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; });
+  const wait = () => new Promise((r) => setTimeout(r, 450)), far = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1]) > 1.5;
+  const a = snap(); await wait(); const b = snap(); await wait(); const c = snap();
+  return a.filter((p, i) => far(p, b[i]) && far(b[i], c[i])).length;
+})()`;
+
+// Text that sits straight on the scene with no surface of its own behind it. Not scored: it needs a look in the screenshots.
+const OVER = String.raw`(() => {
+  const shown = (e) => { for (let n = e; n && n.nodeType === 1; n = n.parentElement) { const cs = getComputedStyle(n); if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) < 0.05) return false; } return true; };
+  const cvs = [...document.querySelectorAll("canvas")].filter((c) => c.width * c.height > 40000 && shown(c)).map((c) => c.getBoundingClientRect()).filter((r) => r.bottom > 0 && r.top < innerHeight);
+  if (!cvs.length) return { n: 0, samples: [] };
+  let n = 0; const samples = [];
+  for (const e of document.body.querySelectorAll("h1,h2,h3,h4,p,a,li,button,label,span,dt,dd")) {
+    if (![...e.childNodes].some((t) => t.nodeType === 3 && t.textContent.trim().length > 1)) continue;
+    const r = e.getBoundingClientRect(); if (r.width < 2 || r.bottom <= 0 || r.top >= innerHeight || !shown(e)) continue;
+    if (!cvs.some((c) => { const w = Math.min(r.right, c.right) - Math.max(r.left, c.left), h = Math.min(r.bottom, c.bottom) - Math.max(r.top, c.top); return w > 0 && h > 0 && w * h > r.width * r.height * 0.5; })) continue;
+    let solid = false;
+    for (let p = e; p && p !== document.body; p = p.parentElement) { if (p.querySelector("canvas")) break; const cs = getComputedStyle(p), m = cs.backgroundColor.match(/[\d.]+/g) || []; const alpha = m.length > 3 ? +m[3] : m.length === 3 ? 1 : 0; if (alpha > 0.6 || (cs.backdropFilter && cs.backdropFilter !== "none")) { solid = true; break; } }
+    if (!solid) { n++; if (samples.length < 3) samples.push(e.textContent.trim().slice(0, 32)); }
+  }
+  return { n, samples };
 })()`;
 
 const PEAK = `window.__imm ? { draws: Math.max(window.__imm.maxD, window.__imm.fd), tris: Math.max(window.__imm.maxT, window.__imm.ft) } : { draws: 0, tris: 0 }`;   // the busiest single frame so far
@@ -153,7 +177,7 @@ try {
     await c.send("Page.navigate", { url: "about:blank" }); await sleep(150);
     await c.send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: dpr, mobile });
     await c.send("Emulation.setTouchEmulationEnabled", { enabled: mobile });
-    await c.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" }] });
+    await c.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" }, ...(scheme ? [{ name: "prefers-color-scheme", value: scheme }] : [])] });
     await c.send("Emulation.setScriptExecutionDisabled", { value: noJS });
     if (!noJS) { const r = await c.send("Page.addScriptToEvaluateOnNewDocument", { source: (noGL ? "window.__immNoGL = true;" : "") + PROBE }); if (r.result?.identifier) scripts.push(r.result.identifier); }
     net = {}; errors = []; fcp = 0;
@@ -174,11 +198,20 @@ try {
   const D = result.passes.desktop = { facts: await ev(FACTS), weight: weigh(), errors: [...errors] };
   await shot("desktop-0-top");
   D.early = await sample(1500);
+  if (posterPath) {                                                                    // the scene alone, as drawn, on the page background: the honest fallback image
+    const box = await ev(`(() => { const c = [...document.querySelectorAll("canvas")].filter((c) => c.width * c.height > 40000).sort((a, b) => b.width * b.height - a.width * a.height)[0]; if (!c) return null;
+      c.setAttribute("data-imm-poster", ""); const st = document.createElement("style"); st.id = "imm-poster-style";
+      st.textContent = "body{visibility:hidden!important}[data-imm-poster]{visibility:visible!important}"; document.head.append(st);
+      const r = c.getBoundingClientRect(); return { x: Math.max(0, r.left), y: Math.max(0, r.top + scrollY), width: Math.min(r.width, innerWidth), height: Math.min(r.height, innerHeight) }; })()`);
+    if (box && box.width > 8 && box.height > 8) { await sleep(200); const r = await c.send("Page.captureScreenshot", { format: "png", clip: { ...box, scale: 1 } }); if (r.result?.data) { writeFileSync(resolve(posterPath), Buffer.from(r.result.data, "base64")); result.poster = resolve(posterPath); } }
+    await ev(`document.getElementById("imm-poster-style")?.remove(); document.querySelector("[data-imm-poster]")?.removeAttribute("data-imm-poster")`);
+  }
+  D.over = await ev(OVER);
   const screens = Math.min(30, Math.ceil(D.facts.pageScreens / 0.8));                 // walk the page once, so scroll-revealed content gets its chance
   for (let i = 0; i <= screens; i++) { await ev(`window.scrollTo({ top: ${i} * innerHeight * 0.8, behavior: "instant" })`); await sleep(140); D.seenText = await ev(SEEN); }
   await scrollTo(0); await sleep(400);
   const steps = [0.25, 0.5, 0.75, 1];
-  for (let i = 0; i < steps.length; i++) { await scrollTo(steps[i]); await sleep(900); await shot(`desktop-${i + 1}-scroll-${steps[i] * 100}`); }
+  for (let i = 0; i < steps.length; i++) { await scrollTo(steps[i]); await sleep(900); await shot(`desktop-${i + 1}-scroll-${steps[i] * 100}`); const o = await ev(OVER); if (o && o.n > (D.over?.n || 0)) D.over = { ...o, at: steps[i] * 100 + "% scroll" }; }
   D.offscreenCanvas = (await ev(FACTS)).canvases.filter((cv) => cv.shown && !cv.onScreen).length; D.offscreen = D.offscreenCanvas ? await sample(1500) : null;
   await scrollTo(0); await sleep(600);
   await wheel(400); await sleep(250); const y1 = await ev("scrollY"); await sleep(1500); const y2 = await ev("scrollY");
@@ -224,7 +257,7 @@ try {
   const check = (points, ok, name, detail, fix) => result.checks.push({ points, ok: ok === null ? null : !!ok, name, detail, fix });
   const f = D.facts, w = D.weight, hasScene = f.canvases.length > 0 || f.modelViewers.length > 0 || (f.probe && f.probe.contexts > 0);
   const textRatio = (x) => (f.text ? x.facts.text / f.text : 1), seen = Math.max(D.seenText || 0, f.text);
-  check(15, J.facts.h1Shown && J.facts.text >= seen * 0.7, "Content is in the HTML (JavaScript off)", `${J.facts.text} characters visible with scripts off, of ${seen} a scripted visitor sees while scrolling; h1 ${J.facts.h1 ? (J.facts.h1Shown ? "visible" : "HIDDEN") : "missing"}`, "Write the headings, copy and links as plain HTML. Never start content at opacity 0 waiting for a script: add the hidden state from JavaScript (for example a class on <html>), so the page reads without it.");
+  check(15, appMode ? null : J.facts.h1Shown && J.facts.text >= seen * 0.7, "Content is in the HTML (JavaScript off)", appMode ? "skipped: app window" : `${J.facts.text} characters visible with scripts off, of ${seen} a scripted visitor sees while scrolling; h1 ${J.facts.h1 ? (J.facts.h1Shown ? "visible" : "HIDDEN") : "missing"}`, "Write the headings, copy and links as plain HTML. Never start content at opacity 0 waiting for a script: add the hidden state from JavaScript (for example a class on <html>), so the page reads without it.");
   check(15, !G.errors.length && G.facts.h1Shown && textRatio(G) >= 0.9, "Works without WebGL / WebGPU", `${G.errors.length} error(s)${G.errors[0] ? ": " + G.errors[0] : ""}; ${G.facts.text} of ${f.text} characters visible`, "Test for the context before building the scene; on failure leave the poster or CSS fallback in place and skip the scene code (assets/scene-shell.js does this).");
   const moving = R.idle && (R.idle.framesPerSec > 1.5 || R.afterScroll?.framesPerSec > 1.5), cssMoving = R.facts.running > 0, smooth = Math.abs(R.wheel.settled - R.wheel.after250ms) > 60;
   const reducedKnown = f.cssReducedMotion || (f.probe && f.probe.media.some((q) => /reduced-motion/.test(q)));
@@ -246,7 +279,7 @@ try {
 
   const note = (t) => result.notes.push(t);
   if (!hasScene) note("No canvas, WebGL context or <model-viewer> was found: the page may be pure CSS (fine), or the scene did not start in headless Chrome.");
-  if (f.h1 !== 1) note(`${f.h1} <h1> elements: use exactly one.`);
+  if (f.h1 !== 1 && !appMode) note(`${f.h1} <h1> elements: use exactly one.`);
   for (const cv of f.canvases) if (!cv.hidden && !cv.label && !cv.inner) note("A canvas is neither aria-hidden (decorative) nor labelled (meaningful): pick one. Decorative scenes get aria-hidden=\"true\"; meaningful ones need a text alternative beside them.");
   for (const mv of f.modelViewers) if (!mv.alt) note("<model-viewer> has no alt text.");
   for (const m of f.media) if (m.autoplay && (!m.muted || (m.loop && !m.controls))) note(`A ${m.tag} autoplays ${m.muted ? "on a loop with no controls" : "with sound"}: sound never starts by itself, and looping video needs a pause control.`);
@@ -261,7 +294,9 @@ try {
   if (hasScene && f.probe && !f.probe.visHook && !resting) note("No visibilitychange listener: the scene may keep drawing in a hidden tab.");
   if (D.errors.length) note("Console errors with everything on: " + D.errors.slice(0, 3).join(" | "));
   if (hasScene) note("Frame rate was not measured (headless Chrome draws in software). Test on a mid-range phone, or throttle the CPU 4x in DevTools, and aim for a steady 60 fps.");
-  note("Text over the scene: contrast cannot be measured over a moving image. Check it by eye in the screenshots, at the busiest frame.");
+  if (D.over?.n) note(`${D.over.n} piece(s) of text sit straight on the scene with no surface behind them${D.over.at ? " at " + D.over.at : " at the top"} (for example "${D.over.samples.join('", "')}"). Contrast cannot be measured over a moving image: open that screenshot and check no text crosses the subject; give text a lane, a surface or a scrim.`);
+  else if (hasScene) note("No text was found straight on the scene. Still check the screenshots: the subject must not pass behind copy at any scroll position.");
+  if (result.poster) note("Poster saved: " + result.poster + ". It shows the scene alone on the page background: use it as the fallback image, and save one per theme if light and dark differ.");
 
   // ---- report ----
   console.log(`\n${target}\n  Immersive check: ${result.score}/100 (measured parts only)\n`);

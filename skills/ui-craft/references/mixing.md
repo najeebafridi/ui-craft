@@ -41,6 +41,7 @@ A genre is a set of habits people recognise: a HUD, a ship's console, a film tit
 4. **Map each trait onto the theme.** Start from the nearest direction (`references/directions.md`: Quiet instrument or Graph-paper technical for consoles; Stage dark for film; Playful game-feel for arcade; Paper and ink for editorial) and adjust tokens: accent, fonts, radius, depth style, motion preset. Build the palette with `scripts/palette.mjs` so contrast still passes.
 5. **Give the genre one signature** and keep everything else plain. One readout that ticks like an instrument. One title that arrives like a film. That is the whole borrowing.
 6. **Run the medium's own rules last.** The result must still pass as a good website, app or dashboard by this skill's normal checks.
+7. **Then check the brief was met.** Show the first screen to someone with one question: "what genre is this?" If they cannot say, the borrowing is too timid. The owner asked for a feeling; deliver it through the chosen traits at full strength (strong signal colour, confident readout type, decisive line work), not at half strength everywhere. When a product has a working view and a showpiece view (a wall screen, a demo mode), keep the working view calm and give the showpiece view the whole genre.
 
 ## What stays with the medium
 
@@ -100,3 +101,4 @@ Layers: theme + scene on the web; in the app the scene drops one level (immersiv
 - [ ] Nobody could name a specific product as the source.
 - [ ] Assets are original or licensed.
 - [ ] Without the genre layer, the screen is still a good screen.
+- [ ] With it, a stranger can name the genre from one screenshot.
