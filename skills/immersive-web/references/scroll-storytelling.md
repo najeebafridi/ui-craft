@@ -18,6 +18,7 @@ Scroll storytelling is a slide show the reader controls with their thumb. It wor
 - **The reader is in charge.** Scrolling forward advances; scrolling back rewinds exactly; stopping stops. Nothing plays by itself for long, and nothing forces the pace.
 - **Text and picture take turns.** When the picture changes, the text is short. When the text matters, the picture holds still.
 - **A way out.** Offer "Skip the story" at the start, and never trap someone who only wanted the price.
+- **The first screen already sells.** The name, the price (if there is one) and the main action are visible before any scrolling, on the phone too. The story is for people who want more, not a toll before the facts.
 - **It must survive being flattened.** With motion off, on a slow phone, or read aloud, the same beats work as plain sections: picture, heading, sentence. If the story only works animated, it is a demo, not a story.
 
 ## On the web

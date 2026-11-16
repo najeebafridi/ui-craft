@@ -1,0 +1,10 @@
+{
+ "kettle-launch-story": {
+  "X": "without_skill",
+  "Y": "with_skill"
+ },
+ "printfarm-desktop-app": {
+  "X": "with_skill",
+  "Y": "without_skill"
+ }
+}

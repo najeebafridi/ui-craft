@@ -1,0 +1,430 @@
+{
+  "page": "file:///D:/Projects/design-skill/evals/iteration-6/kettle-launch-story/with_skill/outputs/index.html",
+  "passes": {
+    "desktop": {
+      "facts": {
+        "title": "Tern, a hand-thrown pour-over kettle",
+        "lang": "en-GB",
+        "text": 1417,
+        "hiddenText": 0,
+        "h1": 1,
+        "h1Shown": true,
+        "h1Text": "Tern, a pour-over kettle thrown by hand.",
+        "links": 11,
+        "buttons": 0,
+        "main": true,
+        "canvases": [
+          {
+            "css": [
+              612,
+              788
+            ],
+            "backing": [
+              612,
+              788
+            ],
+            "ratio": 1,
+            "megapixels": 0.48,
+            "hidden": true,
+            "label": "",
+            "inner": 0,
+            "onScreen": true,
+            "shown": true
+          }
+        ],
+        "modelViewers": [],
+        "media": [],
+        "cssReducedMotion": true,
+        "focusStyle": true,
+        "pageScreens": 4.1,
+        "scrollHeight": 3686,
+        "viewport": [
+          1440,
+          900
+        ],
+        "overflowX": false,
+        "rootOverflow": "visible/visible",
+        "pauseControl": false,
+        "skipLink": true,
+        "running": 0,
+        "probe": {
+          "media": [
+            "(prefers-reduced-motion: reduce)",
+            "(pointer: coarse)",
+            "(prefers-reduced-data: reduce)",
+            "(prefers-contrast: more)"
+          ],
+          "lostHook": true,
+          "visHook": true,
+          "io": true,
+          "wheelBlock": false,
+          "contexts": 2
+        }
+      },
+      "weight": {
+        "requests": 10,
+        "totalKB": 655,
+        "scriptKB": 204,
+        "imageKB": 336,
+        "fontKB": 59,
+        "assets3dKB": 0,
+        "mediaKB": 0,
+        "scriptBeforePaintKB": 0,
+        "beforePaintKB": 451,
+        "biggest": [
+          "203 KB three.module.js",
+          "93 KB poster-d-0.png",
+          "91 KB poster-d-3.png",
+          "85 KB poster-d-1.png"
+        ]
+      },
+      "errors": [],
+      "early": {
+        "framesPerSec": 0,
+        "drawsPerFrame": 0,
+        "trisPerFrame": 0,
+        "rafPerSec": 0
+      },
+      "over": {
+        "n": 0,
+        "samples": []
+      },
+      "seenText": 1417,
+      "offscreenCanvas": 0,
+      "offscreen": null,
+      "wheel": {
+        "after250ms": 400,
+        "settled": 400,
+        "asked": 400
+      },
+      "rest": {
+        "framesPerSec": 0,
+        "drawsPerFrame": 0,
+        "trisPerFrame": 0,
+        "rafPerSec": 0
+      },
+      "tabStops": [
+        null,
+        null,
+        null
+      ],
+      "peak": {
+        "draws": 59,
+        "tris": 94002
+      },
+      "contextLoss": 1,
+      "contextLossErrors": []
+    },
+    "phone": {
+      "facts": {
+        "title": "Tern, a hand-thrown pour-over kettle",
+        "lang": "en-GB",
+        "text": 1400,
+        "hiddenText": 17,
+        "h1": 1,
+        "h1Shown": true,
+        "h1Text": "Tern, a pour-over kettle thrown by hand.",
+        "links": 11,
+        "buttons": 0,
+        "main": true,
+        "canvases": [
+          {
+            "css": [
+              358,
+              327
+            ],
+            "backing": [
+              537,
+              490
+            ],
+            "ratio": 1.5,
+            "megapixels": 0.26,
+            "hidden": true,
+            "label": "",
+            "inner": 0,
+            "onScreen": true,
+            "shown": true
+          }
+        ],
+        "modelViewers": [],
+        "media": [],
+        "cssReducedMotion": true,
+        "focusStyle": true,
+        "pageScreens": 3,
+        "scrollHeight": 2519,
+        "viewport": [
+          390,
+          844
+        ],
+        "overflowX": false,
+        "rootOverflow": "visible/visible",
+        "pauseControl": false,
+        "skipLink": true,
+        "running": 0,
+        "probe": {
+          "media": [
+            "(prefers-reduced-motion: reduce)",
+            "(pointer: coarse)",
+            "(prefers-reduced-data: reduce)",
+            "(prefers-contrast: more)"
+          ],
+          "lostHook": true,
+          "visHook": true,
+          "io": true,
+          "wheelBlock": false,
+          "contexts": 2
+        }
+      },
+      "errors": [],
+      "early": {
+        "framesPerSec": 0,
+        "drawsPerFrame": 0,
+        "trisPerFrame": 0,
+        "rafPerSec": 0
+      },
+      "peak": {
+        "draws": 59,
+        "tris": 92936
+      }
+    },
+    "reducedMotion": {
+      "facts": {
+        "title": "Tern, a hand-thrown pour-over kettle",
+        "lang": "en-GB",
+        "text": 1417,
+        "hiddenText": 0,
+        "h1": 1,
+        "h1Shown": true,
+        "h1Text": "Tern, a pour-over kettle thrown by hand.",
+        "links": 11,
+        "buttons": 0,
+        "main": true,
+        "canvases": [
+          {
+            "css": [
+              612,
+              788
+            ],
+            "backing": [
+              612,
+              788
+            ],
+            "ratio": 1,
+            "megapixels": 0.48,
+            "hidden": true,
+            "label": "",
+            "inner": 0,
+            "onScreen": true,
+            "shown": true
+          }
+        ],
+        "modelViewers": [],
+        "media": [],
+        "cssReducedMotion": true,
+        "focusStyle": true,
+        "pageScreens": 4.1,
+        "scrollHeight": 3686,
+        "viewport": [
+          1440,
+          900
+        ],
+        "overflowX": false,
+        "rootOverflow": "visible/visible",
+        "pauseControl": false,
+        "skipLink": true,
+        "running": 0,
+        "probe": {
+          "media": [
+            "(prefers-reduced-motion: reduce)",
+            "(pointer: coarse)",
+            "(prefers-reduced-data: reduce)",
+            "(prefers-contrast: more)"
+          ],
+          "lostHook": true,
+          "visHook": true,
+          "io": true,
+          "wheelBlock": false,
+          "contexts": 2
+        }
+      },
+      "errors": [],
+      "idle": {
+        "framesPerSec": 0,
+        "drawsPerFrame": 0,
+        "trisPerFrame": 0,
+        "rafPerSec": 0
+      },
+      "movers": 0,
+      "stillFrame": true,
+      "wheel": {
+        "after250ms": 400,
+        "settled": 400
+      },
+      "afterScroll": {
+        "framesPerSec": 0,
+        "drawsPerFrame": 0,
+        "trisPerFrame": 0,
+        "rafPerSec": 0
+      }
+    },
+    "noWebGL": {
+      "facts": {
+        "title": "Tern, a hand-thrown pour-over kettle",
+        "lang": "en-GB",
+        "text": 1417,
+        "hiddenText": 0,
+        "h1": 1,
+        "h1Shown": true,
+        "h1Text": "Tern, a pour-over kettle thrown by hand.",
+        "links": 11,
+        "buttons": 0,
+        "main": true,
+        "canvases": [],
+        "modelViewers": [],
+        "media": [],
+        "cssReducedMotion": true,
+        "focusStyle": true,
+        "pageScreens": 4.1,
+        "scrollHeight": 3686,
+        "viewport": [
+          1440,
+          900
+        ],
+        "overflowX": false,
+        "rootOverflow": "visible/visible",
+        "pauseControl": false,
+        "skipLink": true,
+        "running": 0,
+        "probe": {
+          "media": [
+            "(prefers-reduced-motion: reduce)",
+            "(pointer: coarse)",
+            "(prefers-reduced-data: reduce)",
+            "(prefers-contrast: more)"
+          ],
+          "lostHook": false,
+          "visHook": true,
+          "io": true,
+          "wheelBlock": false,
+          "contexts": 0
+        }
+      },
+      "errors": []
+    },
+    "noJS": {
+      "facts": {
+        "title": "Tern, a hand-thrown pour-over kettle",
+        "lang": "en-GB",
+        "text": 1417,
+        "hiddenText": 0,
+        "h1": 1,
+        "h1Shown": true,
+        "h1Text": "Tern, a pour-over kettle thrown by hand.",
+        "links": 11,
+        "buttons": 0,
+        "main": true,
+        "canvases": [],
+        "modelViewers": [],
+        "media": [],
+        "cssReducedMotion": true,
+        "focusStyle": true,
+        "pageScreens": 4.1,
+        "scrollHeight": 3686,
+        "viewport": [
+          1440,
+          900
+        ],
+        "overflowX": false,
+        "rootOverflow": "visible/visible",
+        "pauseControl": false,
+        "skipLink": true,
+        "running": 0,
+        "probe": null
+      }
+    }
+  },
+  "checks": [
+    {
+      "points": 15,
+      "ok": true,
+      "name": "Content is in the HTML (JavaScript off)",
+      "detail": "1417 characters visible with scripts off, of 1417 a scripted visitor sees while scrolling; h1 visible",
+      "fix": "Write the headings, copy and links as plain HTML. Never start content at opacity 0 waiting for a script: add the hidden state from JavaScript (for example a class on <html>), so the page reads without it."
+    },
+    {
+      "points": 15,
+      "ok": true,
+      "name": "Works without WebGL / WebGPU",
+      "detail": "0 error(s); 1417 of 1417 characters visible",
+      "fix": "Test for the context before building the scene; on failure leave the poster or CSS fallback in place and skip the scene code (assets/scene-shell.js does this)."
+    },
+    {
+      "points": 15,
+      "ok": true,
+      "name": "Reduced motion: the page holds still",
+      "detail": "0 scene frames/s when idle, 0 element(s) changing place, 0 looping or long CSS animation(s), smooth-scroll off",
+      "fix": "Under prefers-reduced-motion draw single still frames (one per beat), turn off parallax, scrubbing, smooth-scroll and looping CSS animation, and keep short fades only."
+    },
+    {
+      "points": 10,
+      "ok": true,
+      "name": "Little script before first paint",
+      "detail": "0 KB of script requested before first paint (budget 170 KB); 451 KB in all",
+      "fix": "Load the 3D engine with a dynamic import() after first paint (or when the scene is near the viewport). Keep the heading as real text so it paints first."
+    },
+    {
+      "points": 10,
+      "ok": true,
+      "name": "Page weight",
+      "detail": "655 KB total (script 204, images 336, 3D assets 0, fonts 59); biggest: 203 KB three.module.js; 93 KB poster-d-0.png; 91 KB poster-d-3.png; 85 KB poster-d-1.png",
+      "fix": "Budget: first scene under about 1.5 MB on phones and 4 MB on desktop. Compress models (meshopt or Draco) and textures (KTX2 / WebP), cut texture size, lazy-load what is below the fold."
+    },
+    {
+      "points": 5,
+      "ok": true,
+      "name": "Phone: pixel ratio is capped",
+      "detail": "canvas draws at 1.5x on a 3x screen, 0.3 megapixels",
+      "fix": "Cap the pixel ratio at 1.5 on touch screens (2 at most) and lower it when frames get slow. A 3x canvas draws 9 pixels for every CSS pixel."
+    },
+    {
+      "points": 5,
+      "ok": true,
+      "name": "Phone: no sideways scroll",
+      "detail": "fits 390px",
+      "fix": "Give the scene host overflow: hidden and min-width: 0; size the canvas from its box, not from the window."
+    },
+    {
+      "points": 10,
+      "ok": true,
+      "name": "Scrolling stays native",
+      "detail": "a 400px wheel step moved the page 400px; root overflow visible/visible",
+      "fix": "Never change scroll speed or direction and never replace the scrollbar with a transform. Pin with position: sticky and read the scroll position; let the browser do the scrolling."
+    },
+    {
+      "points": 5,
+      "ok": null,
+      "name": "Scene pauses off screen",
+      "detail": "the canvas is always on screen (or there is none)",
+      "fix": "Stop the render loop with an IntersectionObserver when the scene leaves the viewport, and on visibilitychange when the tab is hidden."
+    },
+    {
+      "points": 5,
+      "ok": true,
+      "name": "Ambient motion rests or can be paused",
+      "detail": "0 frames/s still being drawn about 7s after load with no input",
+      "fix": "Anything that moves by itself for more than 5 seconds needs a visible pause control (WCAG 2.2.2), or should settle and render on demand."
+    },
+    {
+      "points": 5,
+      "ok": true,
+      "name": "Survives a lost graphics context",
+      "detail": "0 error(s) after the context was lost; webglcontextlost handler present",
+      "fix": "Listen for webglcontextlost (preventDefault, stop the loop, show the fallback) and rebuild on webglcontextrestored. Phones drop contexts when memory is tight."
+    }
+  ],
+  "notes": [
+    "Frame rate was not measured (headless Chrome draws in software). Test on a mid-range phone, or throttle the CPU 4x in DevTools, and aim for a steady 60 fps.",
+    "No text was found straight on the scene. Still check the screenshots: the subject must not pass behind copy at any scroll position."
+  ],
+  "score": 100
+}

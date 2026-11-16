@@ -1,0 +1,20 @@
+{
+  "kettle-launch-story": {
+    "X": {"impact":5,"scene_craft":4,"content":4,"phone":4,"robustness":3,"fit":4,"approve":3},
+    "Y": {"impact":7,"scene_craft":7,"content":8,"phone":8,"robustness":9,"fit":8,"approve":8},
+    "winner": "Y",
+    "reason": "Y shows a ribbed sea-green kettle that tilts and pours into a cup as you scroll, with a Form/Spout/Pour/Glaze progress rail, three glaze choices, a £48 price, a reserve button and an honest note that the pictures are renders. X is a faceted white default-looking teapot with a particle stream, no glaze choice and a placeholder reserve link; on its phone screens text runs over the pot, and with JavaScript off or no WebGL it is left with only the hero text.",
+    "winner_weaknesses": ["The 'Reserve the sea green Tern' action only tells people to email, and the phone first screen shows the kettle and headline but not the price or the buy path.", "The kettle is a clean render with little glaze pooling or surface variation, and the dark backdrop has no environment; the cinematic moment is mostly the pour, so the hero is calmer than the brief's 'immersive' ask."],
+    "loser_strengths": ["The large serif 'Tern' on a near-black stage is a strong, simple hero.", "The scene keeps one continuous camera move across scroll sections.", "Page weight is light at 131 KB."],
+    "copied_or_manipulative": {"X": "none", "Y": "none"}
+  },
+  "printfarm-desktop-app": {
+    "X": {"impact":8,"scene_craft":7,"content":9,"phone":7,"robustness":6,"fit":9,"approve":8},
+    "Y": {"impact":6,"scene_craft":5,"content":5,"phone":5,"robustness":5,"fit":5,"approve":4},
+    "winner": "X",
+    "reason": "X is a dense, readable work tool: a status strip, Dune's failure and Boreas's low filament as the top alerts, six printer cards with layer counts and temperature graphs, and the job queue and event log. Its wall mode shows six glowing wireframe printer bays, including a tangle of red filament in the failed printer's bay, with big alert text. Y's cards are half empty, its torus-knot 'live part' is unrelated to the six printers, and its Wall toggle is clipped on the phone.",
+    "winner_weaknesses": ["With JavaScript off, the page is an empty shell with a blank queue and events panel. The cards and graphs only appear after scripts run.", "In wall mode the printer bays are drawn small with a lot of dead space above and below, and the printer cards underneath are small for a wall monitor; the 3D could fill more of the screen."],
+    "loser_strengths": ["Y adds a live 3D part view and a Desk/Wall toggle, and its Add to queue form is always visible.", "Y's phone view is a compact two-column grid of cards and puts the alert first."],
+    "copied_or_manipulative": {"X": "none", "Y": "none"}
+  }
+}

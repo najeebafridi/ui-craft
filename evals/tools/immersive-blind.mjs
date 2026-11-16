@@ -1,7 +1,7 @@
 // Prepare a blind comparison for immersive evals.
 // Usage: node evals/tools/immersive-blind.mjs evals/iteration-N [--judges a,b] [--configs with_skill,without_skill] [--skip-check]
 //   1. runs skills/immersive-web/scripts/immersive-check.mjs on every <case>/<config>/outputs/index.html
-//      -> <run>/immersive.json and <run>/screens/*.png
+//      -> <run>/immersive.json and <run>/screens/*.png  (an extra screens/desktop-wall-mode.png, if you add one by hand, is included)
 //   2. for each judge makes <iteration>/blind-<judge>/<case>/{X,Y}/ with the same screenshots and a facts.txt,
 //      X and Y assigned at random per judge, and writes the answer key to <iteration>/blind-<judge>_key.json
 import { execFileSync } from "node:child_process";
@@ -14,7 +14,7 @@ const judges = opt("--judges", "a,b").split(","), configs = opt("--configs", "wi
 const skip = args.includes("--skip-check"); if (skip) args.splice(args.indexOf("--skip-check"), 1);
 const root = resolve(args[0]);
 const CHECK = resolve("skills/immersive-web/scripts/immersive-check.mjs");
-const SHOTS = ["desktop-0-top", "desktop-2-scroll-50", "desktop-4-scroll-100", "phone-0-top", "phone-1-middle", "phone-2-end", "reduced-0-top", "nowebgl-0-top", "nojs-0-top"];
+const SHOTS = ["desktop-0-top", "desktop-wall-mode", "desktop-2-scroll-50", "desktop-4-scroll-100", "phone-0-top", "phone-1-middle", "phone-2-end", "reduced-0-top", "nowebgl-0-top", "nojs-0-top"];
 const cases = readdirSync(root).filter((d) => existsSync(join(root, d, "eval_metadata.json")));
 
 for (const c of cases) for (const cfg of configs) {

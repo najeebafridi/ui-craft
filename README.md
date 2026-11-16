@@ -239,7 +239,7 @@ You get plain HTML files you can zip or host. The client clicks **Feedback** →
 ## How it was made
 
 - **Curated, not compiled.** The rules come from public design systems (Material, Apple HIG, Fluent, Radix, shadcn, Carbon, GOV.UK), from WCAG 2.2, from research on colour, emotion and trust, from the writing of respected interface craftspeople, and from the best existing AI design rule sets. Claims are graded by evidence, and popular myths are named as myths. Everything is rewritten in our own words. Where sources disagree, we picked one rule and wrote down why: [research/conflicts.md](research/conflicts.md). Sources and licences: [research/sources.md](research/sources.md) and [CREDITS.md](CREDITS.md).
-- **Tested.** The same 5 screens were built with and without the skill, then measured automatically and judged blind from screenshots. Results: [evals/RESULTS.md](evals/RESULTS.md).
+- **Tested.** The same screens were built with and without each skill, then measured automatically and judged blind from screenshots. For immersive-web, two blind judges preferred the skill's page in 6 of 6 verdicts in the first round and 4 of 4 after fixes, at about twice the tokens per page. Results, costs and limits: [evals/RESULTS.md](evals/RESULTS.md).
 
 ## Updating the rules
 

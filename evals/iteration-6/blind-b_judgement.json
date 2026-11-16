@@ -1,0 +1,32 @@
+{
+  "kettle-launch-story": {
+    "X": {"impact":6,"scene_craft":4,"content":5,"phone":5,"robustness":2,"fit":5,"approve":3},
+    "Y": {"impact":7,"scene_craft":7,"content":9,"phone":7,"robustness":9,"fit":8,"approve":7},
+    "winner": "Y",
+    "reason": "Y renders a ribbed, wheel-thrown body in sea green with a bare-clay foot, tilts it into a cup at 'The pour', and ends on a real glaze picker (chalk, sea green, ink) with '£48' up top and a 'Choose a glaze' button in the sticky header. Every fallback (reduced motion, no WebGL, no JS) shows the same complete page. X is a generic faceted white teapot with a stock-looking steam particle column; at 50% scroll the headline and body copy run straight across the model, the end only sells chalk with a visible 'Placeholder link' note, and with no WebGL or no JS it is a bare title on black.",
+    "winner_weaknesses": [
+      "On the phone the sticky scene plus step bar takes about half the screen, and story text slides under it ('where your hand wants it.' peeks out below the 04 Glaze tab), so you read each chapter through a slot. Shrink the sticky stage on phones or unpin it after the hero.",
+      "The hero object is still a small teapot sitting in the right half and barely moves until the pour. It reads as a tidy product render, not a cinematic moment. Make the pour (or a glaze change) a bigger, full-bleed signature beat, and make the spout more clearly a pour-over gooseneck."
+    ],
+    "loser_strengths": [
+      "A bigger, bolder hero: the huge serif 'Tern' next to a large lit object makes a stronger first-second impression than Y's more conventional split hero.",
+      "Very light at 131 KB in total, against 655 KB for Y."
+    ],
+    "copied_or_manipulative": {"X": "none (the 'small first batch, limited by what the kiln allows' line is mild and plausible, not fake urgency)", "Y": "none; it openly says the pictures are renders until photos of the first batch replace them"}
+  },
+  "printfarm-desktop-app": {
+    "X": {"impact":6,"scene_craft":3,"content":6,"phone":5,"robustness":4,"fit":4,"approve":4},
+    "Y": {"impact":8,"scene_craft":8,"content":9,"phone":7,"robustness":8,"fit":9,"approve":8},
+    "winner": "Y",
+    "reason": "Y's desk mode is a dense, readable operator tool: a status-count strip, a failure alert and a filament-runout forecast, each with its own action, per-printer temperature sparklines, layer counts, and a reorderable 7-job queue with a keyboard shortcut. Its display mode switches to a real cockpit: six 3D build volumes with parts growing, a heating ring, and a spaghetti tangle on the failed Dune. X's 3D is a stock torus knot labelled 'Gearbox housing x4' plus faint wireframe decoration behind the cards, its 'Wall' mode is the same desk layout scaled to 1920, and it keeps drawing at 60 fps with 5 CSS loops under reduced motion.",
+    "winner_weaknesses": [
+      "Display mode composition: the leftmost build volume is cut off at the left edge, a dead band of about 150px sits between the 3D row and the cards, and the failure banner loses its Restart action while the Boreas filament warning disappears entirely.",
+      "Desk mode has no 3D or cinematic touch at all (the measuring script found no canvas), so the owner's cockpit wish only exists after pressing D. The failed-print spaghetti also reads crude next to the clean blocks. Add a small live-volume thumbnail per card or a mini wall preview, and refine the failure visual."
+    ],
+    "loser_strengths": [
+      "A brighter neon-cyan sci-fi palette and a glowing alert banner give a slightly more instant 'game HUD' impression at first glance.",
+      "The add-job form is right next to the queue in a single column at desk size, and the four header KPIs (printing, failed, queued, last finish) are big and easy to scan."
+    ],
+    "copied_or_manipulative": {"X": "none, though the torus-knot 'live part' misrepresents what is printing", "Y": "none; it labels its numbers 'Sample data · 10x clock'"}
+  }
+}

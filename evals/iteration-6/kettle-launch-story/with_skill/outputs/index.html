@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tern, a hand-thrown pour-over kettle</title>
+<meta name="description" content="Tern is a ceramic pour-over kettle thrown by hand in Stoke-on-Trent. Three glazes: chalk, sea green and ink. £48.">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600&display=swap">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<style>
+/* Theme: ui-craft direction "Apothecary editorial" (tokens + base), level 3 (story) for the launch */
+:root {
+  color-scheme: light;
+  --bg: #FBF9F6;
+  --surface: #FFFEFD;
+  --surface-2: #F6F3EF;
+  --surface-3: #EBE7E3;
+  --border: #E6E2DE;
+  --border-strong: #8F8A83;
+  --text: #1E1A14;
+  --text-muted: #5D5852;
+  --text-subtle: #726D66;
+  --accent: #1C6FD2;
+  --accent-hover: #0461C3;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #E7F1FF;
+  --accent-text: #156ACD;
+  --focus: #1C6FD2;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #2670CC;
+  --chart-2: #D55A40;
+  --chart-3: #006B54;
+  --chart-4: #9C61C8;
+  --chart-5: #846300;
+  --chart-6: #00566D;
+  --shadow-color: 39 32 24;
+  --shadow-strength: 1;
+  --ring: rgb(39 32 24 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+
+  /* ---- Type ---- */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --text-xs: 12px;  --text-sm: 14px;  --text-md: 16px;  --text-lg: 18px;  --text-xl: 20px;
+  --text-2xl: 24px; --text-3xl: 30px; --text-4xl: 36px; --text-5xl: 48px; --text-6xl: 60px;
+  --text-body: 16px;                    /* 14px in dense desktop tools */
+  --leading-tight: 1.15;  --leading-snug: 1.3;  --leading-normal: 1.5;
+  --tracking-display: -0.025em;         /* 36px and up */
+  --tracking-heading: -0.015em;         /* 20-30px */
+  --tracking-caps: 0.06em;              /* small all-caps labels */
+  --weight-regular: 400;  --weight-medium: 500;  --weight-semibold: 600;  --weight-display: 600;
+
+  /* ---- Spacing (4px base) ---- */
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;  --space-4: 16px;
+  --space-5: 24px;  --space-6: 32px;  --space-7: 48px;  --space-8: 64px;  --space-9: 96px;
+  --space-section: 48px;
+
+  /* ---- Shape: one family. Nested radius = outer radius minus the padding between. ---- */
+  --radius-sm: 6px;  --radius: 8px;  --radius-lg: 12px;  --radius-full: 9999px;  --border-w: 1px;
+
+  /* ---- Depth: one light source from above; shadows are layered and tinted, never one grey blur. ---- */
+  --shadow-raised: 0 0 0 1px var(--ring), 0 1px 2px rgb(var(--shadow-color) / calc(0.06 * var(--shadow-strength))), 0 2px 4px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength)));
+  --shadow-overlay: 0 0 0 1px var(--ring), 0 4px 8px rgb(var(--shadow-color) / calc(0.05 * var(--shadow-strength))), 0 12px 24px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength))), 0 24px 48px rgb(var(--shadow-color) / calc(0.08 * var(--shadow-strength)));
+  --shadow-button: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(var(--shadow-color) / calc(0.14 * var(--shadow-strength)));
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);      /* entering, and most UI */
+  --ease-in: cubic-bezier(0.64, 0, 0.78, 0);       /* leaving */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* moving on screen */
+  --ease-spring: linear(0, 0.074, 0.234, 0.415, 0.584, 0.723, 0.83, 0.906, 0.956, 0.988, 1.005, 1.013, 1.015, 1.014, 1.012, 1.009, 1.007, 1.004, 1); /* slight overshoot; use with 550ms on transform only */
+  --dur-fast: 120ms;  --dur-base: 200ms;  --dur-slow: 300ms;  --press-scale: 0.97;
+  --immersive: 1;         /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
+
+  /* ---- Sizes ---- */
+  --control-h: 40px;       /* buttons, inputs (32-36 compact, 44+ touch) */
+  --row-h: 40px;           /* table rows (36 compact, 44+ touch) */
+  --sidebar-w: 248px;  --content-max: 1280px;  --reading-max: 68ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0E0C08;
+    --surface: #171411;
+    --surface-2: #201E1A;
+    --surface-3: #2A2723;
+    --border: #2D2A25;
+    --border-strong: #75716C;
+    --text: #EAE7E4;
+    --text-muted: #A29F9C;
+    --text-subtle: #928F8C;
+    --accent: #1C6FD2;
+    --accent-hover: #0461C3;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #0F2440;
+    --accent-text: #6DA7F4;
+    --focus: #1C6FD2;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #63A6FF;
+    --chart-2: #FFA28C;
+    --chart-3: #00A482;
+    --chart-4: #DEB8FF;
+    --chart-5: #DDA800;
+    --chart-6: #00A8D2;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0E0C08;
+  --surface: #171411;
+  --surface-2: #201E1A;
+  --surface-3: #2A2723;
+  --border: #2D2A25;
+  --border-strong: #75716C;
+  --text: #EAE7E4;
+  --text-muted: #A29F9C;
+  --text-subtle: #928F8C;
+  --accent: #1C6FD2;
+  --accent-hover: #0461C3;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #0F2440;
+  --accent-text: #6DA7F4;
+  --focus: #1C6FD2;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #63A6FF;
+  --chart-2: #FFA28C;
+  --chart-3: #00A482;
+  --chart-4: #DEB8FF;
+  --chart-5: #DDA800;
+  --chart-6: #00A8D2;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}
+
+/* ---- Base: small details that make everything feel finished ---- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: var(--weight-regular) var(--text-body)/var(--leading-normal) var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-display); font-weight: var(--weight-display); line-height: var(--leading-tight); letter-spacing: var(--tracking-heading); text-wrap: balance; }
+h1 { letter-spacing: var(--tracking-display); }
+p { margin: 0; text-wrap: pretty; }
+img, video { max-width: 100%; height: auto; }
+::selection { background: color-mix(in oklab, var(--accent) 24%, transparent); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }   /* outline survives Windows high-contrast mode */
+input, textarea, select { caret-color: var(--accent); font: inherit; }
+button { font: inherit; }
+.num { font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* tokens:end */
+
+:root {
+  color-scheme: light;
+  --bg: #FDF9EF;
+  --surface: #FFFEFD;
+  --surface-2: #FAF3E5;
+  --surface-3: #EFE7D7;
+  --border: #EAE2D1;
+  --border-strong: #968A70;
+  --text: #231903;
+  --text-muted: #63583F;
+  --text-subtle: #796D54;
+  --accent: #4E5C2A;
+  --accent-hover: #424F1D;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #EEF2E6;
+  --accent-text: #4E5C2A;
+  --focus: #4E5C2A;
+  --success: #0E8745;
+  --success-soft: #E8F9EB;
+  --success-text: #00783B;
+  --warning: #AB6500;
+  --warning-soft: #FFF1E4;
+  --warning-text: #8E5300;
+  --danger: #D63E38;
+  --danger-soft: #FFEFED;
+  --danger-text: #B7191C;
+  --info: #0078CF;
+  --info-soft: #EBF5FF;
+  --info-text: #0065B0;
+  --chart-1: #667B2A;
+  --chart-2: #5E86C8;
+  --chart-3: #8D412A;
+  --chart-4: #12957C;
+  --chart-5: #7E5596;
+  --chart-6: #5F4A00;
+  --shadow-color: 45 31 1;
+  --shadow-strength: 1;
+  --ring: rgb(45 31 1 / 0.08);
+  --highlight: rgb(255 255 255 / 0.18);
+  /* type */
+  --font-display: "Libre Caslon Text", ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --tracking-display: -0.01em;  --weight-display: 400;  --text-body: 16px;
+  /* shape and depth (none) */
+  --radius-sm: 0px;  --radius: 2px;  --radius-lg: 4px;  --border-w: 1px;
+  --shadow-raised: none;
+  --shadow-overlay: 0 0 0 1px var(--border-strong), 0 16px 48px rgb(var(--shadow-color) / calc(0.12 * var(--shadow-strength)));
+  --shadow-button: none;
+  /* density and motion (gentle) */
+  --control-h: 44px;  --row-h: 52px;  --space-section: 96px;
+  --dur-fast: 160ms;  --dur-base: 260ms;  --dur-slow: 400ms;  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);  --press-scale: 0.98;
+  --immersive: 2;   /* most 3D and scroll effect this theme should carry: 0 still, 1 accent, 2 signature, 3 story (immersive-web skill) */
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #120B01;
+    --surface: #1B1406;
+    --surface-2: #241D0E;
+    --surface-3: #2E2717;
+    --border: #312919;
+    --border-strong: #7A715E;
+    --text: #EDE7DC;
+    --text-muted: #A59F92;
+    --text-subtle: #958F82;
+    --accent: #5C6A38;
+    --accent-hover: #4F5D2B;
+    --accent-fg: #FFFFFF;
+    --accent-soft: #222618;
+    --accent-text: #9EAB84;
+    --focus: #5C6A38;
+    --success: #399559;
+    --success-soft: #0F2817;
+    --success-text: #7DC08F;
+    --warning: #AF7027;
+    --warning-soft: #301D08;
+    --warning-text: #D6A26F;
+    --danger: #D34D44;
+    --danger-soft: #341916;
+    --danger-text: #F78B80;
+    --info: #2E84D2;
+    --info-soft: #0F2336;
+    --info-text: #75B3F2;
+    --chart-1: #98B05F;
+    --chart-2: #97BFFF;
+    --chart-3: #C5735B;
+    --chart-4: #74E2C6;
+    --chart-5: #C99CE4;
+    --chart-6: #B3953F;
+    --shadow-color: 0 0 0;
+    --shadow-strength: 3;
+    --ring: rgb(255 255 255 / 0.09);
+    --highlight: rgb(255 255 255 / 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #120B01;
+  --surface: #1B1406;
+  --surface-2: #241D0E;
+  --surface-3: #2E2717;
+  --border: #312919;
+  --border-strong: #7A715E;
+  --text: #EDE7DC;
+  --text-muted: #A59F92;
+  --text-subtle: #958F82;
+  --accent: #5C6A38;
+  --accent-hover: #4F5D2B;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #222618;
+  --accent-text: #9EAB84;
+  --focus: #5C6A38;
+  --success: #399559;
+  --success-soft: #0F2817;
+  --success-text: #7DC08F;
+  --warning: #AF7027;
+  --warning-soft: #301D08;
+  --warning-text: #D6A26F;
+  --danger: #D34D44;
+  --danger-soft: #341916;
+  --danger-text: #F78B80;
+  --info: #2E84D2;
+  --info-soft: #0F2336;
+  --info-text: #75B3F2;
+  --chart-1: #98B05F;
+  --chart-2: #97BFFF;
+  --chart-3: #C5735B;
+  --chart-4: #74E2C6;
+  --chart-5: #C99CE4;
+  --chart-6: #B3953F;
+  --shadow-color: 0 0 0;
+  --shadow-strength: 3;
+  --ring: rgb(255 255 255 / 0.09);
+  --highlight: rgb(255 255 255 / 0.07);
+}
+
+:root { --immersive: 3; --head: 64px; --stage-nav: 48px;
+  /* product colours (the three glazes) and raw clay: data, not theme */
+  --glaze-chalk: #E4DDCC; --glaze-sea: #6C9A8A; --glaze-ink: #1D2A39; --clay: #B79B7B; }
+
+/* ---------- page ---------- */
+a { color: inherit; }
+.skip { position: absolute; left: 16px; top: -80px; z-index: 20; padding: 12px 16px; background: var(--surface); color: var(--text); border-radius: var(--radius); box-shadow: var(--shadow-overlay); }
+.skip:focus { top: 8px; }
+.site-head { position: sticky; top: 0; z-index: 10; height: var(--head); background: var(--bg); border-bottom: 1px solid var(--border); }
+.site-head .in { max-width: 1280px; height: 100%; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; gap: 16px; }
+.brand { margin-right: auto; display: flex; align-items: baseline; gap: 12px; text-decoration: none; }
+.brand b { font: 400 24px/1 var(--font-display); letter-spacing: -0.015em; }
+.brand span { font-size: 14px; color: var(--text-muted); }
+.price { font-size: 14px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--control-h); padding: 0 24px; border-radius: var(--radius); border: var(--border-w) solid transparent; font: 500 16px var(--font-sans); text-decoration: none; cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out); }
+.btn:active { transform: scale(var(--press-scale)); }
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-quiet { background: transparent; color: var(--text); border-color: var(--border-strong); }
+.btn-text { padding: 0 8px; color: var(--text-muted); text-decoration: underline; text-underline-offset: 4px; }
+@media (hover: hover) { .btn-primary:hover { background: var(--accent-hover); } .btn-quiet:hover { background: var(--surface-2); } .btn-text:hover { color: var(--text); } }
+.site-head .btn { min-height: 40px; padding: 0 16px; font-size: 14px; }
+
+/* the story: text steps scroll normally; the stage (picture) sticks beside them */
+.story { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); column-gap: 48px; max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+.steps { grid-column: 1; grid-row: 1; list-style: none; margin: 0; padding: 0; }
+.steps > li { min-height: calc(88svh - var(--head)); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 48px 0; scroll-margin-top: var(--head); }
+.steps > li:first-child { min-height: calc(100svh - var(--head)); }
+.steps > li:last-child { min-height: calc(100svh - var(--head)); }
+.stage { grid-column: 2; grid-row: 1; position: sticky; top: var(--head); height: calc(100svh - var(--head)); align-self: start; display: flex; flex-direction: column; }
+.stage-art { position: relative; flex: 1; min-height: 0; }
+.poster, .stage-art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.poster { object-fit: contain; opacity: 0; transition: opacity var(--dur-base) var(--ease-out); }
+.poster.is-on { opacity: 1; }
+.stage-art canvas { opacity: 0; transition: opacity var(--dur-slow) var(--ease-out); }
+.stage-art[data-scene="live"] canvas, .stage-art[data-scene="still"] canvas { opacity: 1; }
+.stage-art[data-scene="live"] .poster, .stage-art[data-scene="still"] .poster { visibility: hidden; transition: visibility 0s linear var(--dur-slow); }
+
+.beatnav { height: var(--stage-nav); border-top: 1px solid var(--border); }
+.beatnav ul { list-style: none; margin: 0; padding: 0; height: 100%; display: flex; }
+.beatnav li { flex: 1; }
+.beatnav a { height: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 8px; text-decoration: none; font-size: 14px; font-weight: 500; color: var(--text-muted); border-top: 2px solid transparent; margin-top: -1px; transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.beatnav .n { font-variant-numeric: tabular-nums; letter-spacing: 0.06em; font-size: 12px; }
+.beatnav a[aria-current="step"] { color: var(--text); border-top-color: var(--accent); }
+@media (hover: hover) { .beatnav a:hover { color: var(--text); } }
+
+.label { font: 500 12px/1.4 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+h1 { font-size: 60px; line-height: 1.05; letter-spacing: -0.03em; max-width: 12ch; }
+h2 { font-size: 36px; line-height: 1.15; letter-spacing: -0.025em; max-width: 16ch; }
+.steps p { font-size: 18px; line-height: 1.55; color: var(--text-muted); margin-top: 16px; max-width: 38ch; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 32px; }
+.fine { font-size: 14px; color: var(--text-muted); margin-top: 16px; max-width: 44ch; }
+
+/* glaze picker (real radios) */
+fieldset.glazes { border: 0; margin: 24px 0 0; padding: 0; width: 100%; max-width: 440px; display: grid; gap: 8px; }
+.glazes legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.glaze { position: relative; display: grid; grid-template-columns: 24px 1fr auto; align-items: center; column-gap: 16px; min-height: 64px; padding: 8px 16px; border: 1px solid var(--border-strong); border-radius: var(--radius-lg); background: var(--surface); cursor: pointer; transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out); }
+.glaze input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.glaze .sw { width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .25); background: var(--c); }
+.glaze .gn { font-weight: 500; line-height: 1.3; }
+.glaze .gd { display: block; font-size: 14px; font-weight: 400; color: var(--text-muted); line-height: 1.4; }
+.glaze .ck { width: 20px; height: 20px; color: var(--accent-text); opacity: 0; }
+.glaze:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.glaze:has(input:checked) .ck { opacity: 1; }
+.glaze:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (hover: hover) { .glaze:hover { background: var(--surface-2); } .glaze:has(input:checked):hover { background: var(--accent-soft); } }
+
+.after { border-top: 1px solid var(--border); }
+.after .in { max-width: 1280px; margin: 0 auto; padding: 96px 32px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); column-gap: 48px; }
+.after h2 { max-width: 14ch; }
+.after p { font-size: 18px; line-height: 1.55; color: var(--text-muted); max-width: 52ch; }
+.after p + p { margin-top: 16px; }
+footer.site-foot { border-top: 1px solid var(--border); }
+footer .in { max-width: 1280px; margin: 0 auto; padding: 24px 32px; font-size: 14px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (max-width: 1100px) { h1 { font-size: 48px; } h2 { font-size: 30px; } .story { column-gap: 32px; } }
+
+/* phone: stage pinned on top, the current step's text passes right under it */
+@media (max-width: 860px) {
+  :root { --head: 56px; --stage-nav: 44px; }
+  .site-head .in, footer .in { padding: 0 16px; }
+  footer .in { padding: 24px 16px; }
+  .brand span, .price { display: none; }
+  .story { display: flex; flex-direction: column; padding: 0 16px; }
+  .stage { order: -1; width: 100%; }
+  .stage { height: 44svh; min-height: 300px; z-index: 5; background: var(--bg); }
+  .steps > li, .steps > li:first-child, .steps > li:last-child { min-height: 36svh; justify-content: flex-start; padding: 24px 0 24px; scroll-margin-top: calc(var(--head) + 44svh); }
+  .steps > li:last-child { min-height: 60svh; }
+  h1 { font-size: 36px; max-width: 14ch; }
+  h2 { font-size: 30px; max-width: none; }
+  .steps p { font-size: 16px; margin-top: 12px; }
+  .label { margin-bottom: 8px; }
+  .actions { margin-top: 16px; }
+  .btn, .beatnav a, .glaze { min-height: 44px; }
+  .after .in { display: block; padding: 64px 16px; }
+  .after h2 { margin-bottom: 16px; }
+}
+@media (max-width: 860px) and (max-height: 700px) { .stage { height: 40svh; min-height: 240px; } .steps > li { scroll-margin-top: calc(var(--head) + 40svh); } }
+
+@media (prefers-contrast: more) { .glaze, .btn-quiet { border-color: var(--text); } .beatnav { border-top-color: var(--text-muted); } }
+
+/* poster capture mode (#poster=N): the scene alone on a transparent page, used to make the fallback pictures */
+.poster-mode, .poster-mode body { background: transparent; }
+.poster-mode .site-head, .poster-mode .steps, .poster-mode .beatnav, .poster-mode .after, .poster-mode .site-foot, .poster-mode .skip { display: none !important; }
+.poster-mode .story { display: block; padding: 0; max-width: none; }
+.poster-mode .stage { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; min-height: 0; display: block; }
+.poster-mode .stage-art { position: absolute; inset: 0; }
+.poster-mode .poster { display: none; }
+.poster-mode .stage-art canvas { opacity: 1; transition: none; }
+</style>
+</head>
+<body>
+<a class="skip" href="#after-story">Skip the story</a>
+<header class="site-head"><div class="in">
+  <a class="brand" href="#top"><b>Tern</b><span>Stoke-on-Trent</span></a>
+  <span class="price">£48</span>
+  <a class="btn btn-quiet" href="#glaze">Choose a glaze</a>
+</div></header>
+
+<main id="top">
+<div class="story" id="story">
+  <ol class="steps">
+    <li id="b1">
+      <p class="label" style="margin-top:0">A small pottery in Stoke-on-Trent</p>
+      <h1>Tern, a pour-over kettle thrown by hand.</h1>
+      <p>One at a time on the wheel, glazed in three colours, made for the slow part of the morning. £48.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="#glaze">Choose your glaze</a>
+        <a class="btn btn-text" href="#after-story">Skip the story</a>
+      </div>
+    </li>
+    <li id="b2">
+      <p class="label" style="margin-top:0">02 &nbsp;The spout</p>
+      <h2>A spout for a thin, steady line.</h2>
+      <p>Narrow at the tip, so the water leaves in a thread and lands exactly where you aim it. The ridges you can see are the marks of the wheel.</p>
+    </li>
+    <li id="b3">
+      <p class="label" style="margin-top:0">03 &nbsp;The pour</p>
+      <h2>Tilt your wrist and it pours.</h2>
+      <p>A slow tilt, one unbroken line, and you decide how fast the coffee is made. The handle sits where your hand wants it.</p>
+    </li>
+    <li id="b4">
+      <p class="label" id="glaze-label" style="margin-top:0">04 &nbsp;The glaze</p>
+      <h2 id="glaze">Three glazes, £48 each.</h2>
+      <p>Each Tern is glazed by hand, so no two are quite the same. Pick the one that goes with your kitchen.</p>
+      <fieldset class="glazes" aria-describedby="glaze-live">
+        <legend>Glaze</legend>
+        <label class="glaze" style="--c:var(--glaze-chalk)"><input type="radio" name="glaze" value="chalk"><span class="sw"></span><span class="gn">Chalk<span class="gd">Soft, warm white</span></span><svg class="ck" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></label>
+        <label class="glaze" style="--c:var(--glaze-sea)"><input type="radio" name="glaze" value="sea" checked><span class="sw"></span><span class="gn">Sea green<span class="gd">Pale, deeper where the glaze pools</span></span><svg class="ck" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></label>
+        <label class="glaze" style="--c:var(--glaze-ink)"><input type="radio" name="glaze" value="ink"><span class="sw"></span><span class="gn">Ink<span class="gd">Deep blue-black</span></span><svg class="ck" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg></label>
+      </fieldset>
+      <p class="sr" id="glaze-live" role="status" aria-live="polite">Glaze: sea green</p>
+      <div class="actions">
+        <a class="btn btn-primary" id="reserve" href="mailto:hello@tern.example?subject=Reserve%20a%20Tern%20in%20sea%20green">Reserve the sea green Tern</a>
+      </div>
+      <p class="fine">Email us and we will reply with how to pay and when it ships. £48, one kettle per glaze.</p>
+    </li>
+  </ol>
+
+  <div class="stage" id="stage" data-beat="0">
+    <div class="stage-art" id="scene" aria-hidden="true">
+      <picture><source media="(prefers-color-scheme: dark)" srcset="poster-d-0.png"><img class="poster is-on" data-i="0" src="poster-0.png" alt="" width="640" height="640"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="poster-d-1.png"><img class="poster" data-i="1" src="poster-1.png" alt="" width="640" height="640" loading="lazy"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="poster-d-2.png"><img class="poster" data-i="2" src="poster-2.png" alt="" width="640" height="640" loading="lazy"></picture>
+      <picture><source media="(prefers-color-scheme: dark)" srcset="poster-d-3.png"><img class="poster" data-i="3" src="poster-3.png" alt="" width="640" height="640" loading="lazy"></picture>
+    </div>
+    <nav class="beatnav" aria-label="Chapters">
+      <ul>
+        <li><a href="#b1" data-i="0" aria-current="step"><span class="n">01</span>Form</a></li>
+        <li><a href="#b2" data-i="1"><span class="n">02</span>Spout</a></li>
+        <li><a href="#b3" data-i="2"><span class="n">03</span>Pour</a></li>
+        <li><a href="#b4" data-i="3"><span class="n">04</span>Glaze</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<section class="after" id="after-story" tabindex="-1">
+  <div class="in">
+    <h2>Made in Stoke-on-Trent</h2>
+    <div>
+      <p>Tern is thrown on the wheel, dried, fired, glazed and fired again, a few at a time, in a small pottery in the city that has made ceramics for centuries.</p>
+      <p>Because each kettle is made by hand, glaze and shape vary a little from one to the next. That is the point of buying one.</p>
+      <div class="actions"><a class="btn btn-quiet" href="#glaze">Choose your glaze</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="site-foot"><div class="in">
+  <span>Tern, a pour-over kettle. Stoke-on-Trent.</span>
+  <span>Pictures on this page are renders of the form; photographs of the first batch will replace them.</span>
+</div></footer>
+
+<script type="module">
+const TOKEN_NAMES = {
+  bg: "--bg", surface: "--surface", surface2: "--surface-2", surface3: "--surface-3",
+  border: "--border", borderStrong: "--border-strong",
+  text: "--text", textMuted: "--text-muted", textSubtle: "--text-subtle",
+  accent: "--accent", accentHover: "--accent-hover", accentFg: "--accent-fg", accentSoft: "--accent-soft", accentText: "--accent-text",
+  secondary: "--secondary", success: "--success", warning: "--warning", danger: "--danger", info: "--info",
+  chart1: "--chart-1", chart2: "--chart-2", chart3: "--chart-3",
+};
+
+const srgbToLinear = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+const linearToSrgb = (v) => (v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055);
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const toHex = (rgb) => "#" + rgb.map((v) => Math.round(clamp01(v) * 255).toString(16).padStart(2, "0")).join("");
+
+let ctx2d;
+function parseColor(css) {
+  const m = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+%?))?\s*\)$/.exec(css.trim());
+  if (m) return [m[1] / 255, m[2] / 255, m[3] / 255, m[4] === undefined ? 1 : m[4].endsWith("%") ? parseFloat(m[4]) / 100 : +m[4]];
+  if (!ctx2d) { const c = document.createElement("canvas"); c.width = c.height = 1; ctx2d = c.getContext("2d", { willReadFrequently: true }); }
+  ctx2d.clearRect(0, 0, 1, 1); ctx2d.fillStyle = "#000"; ctx2d.fillStyle = css; ctx2d.fillRect(0, 0, 1, 1);
+  const d = ctx2d.getImageData(0, 0, 1, 1).data;
+  return [d[0] / 255, d[1] / 255, d[2] / 255, d[3] / 255];
+}
+
+function readColor(name, scope = document.documentElement) {
+  if (!getComputedStyle(scope).getPropertyValue(name).trim()) return null;
+  const probe = document.createElement("span");
+  probe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;color:var(${name})`;
+  (scope === document.documentElement && document.body ? document.body : scope).append(probe);
+  const css = getComputedStyle(probe).color;
+  probe.remove();
+  const [r, g, b, a] = parseColor(css);
+  return { css, srgb: [r, g, b], linear: [srgbToLinear(r), srgbToLinear(g), srgbToLinear(b)], hex: toHex([r, g, b]), alpha: a };
+}
+
+const ms = (v, fallback) => { const n = parseFloat(v); return Number.isFinite(n) ? (/\ds\s*$/.test(v) && !/ms\s*$/.test(v) ? n * 1000 : n) : fallback; };
+const px = (v, fallback) => { const n = parseFloat(v); return Number.isFinite(n) ? n : fallback; };
+
+function readTheme(scope = document.documentElement, names = {}) {
+  const map = { ...TOKEN_NAMES, ...names }, cs = getComputedStyle(scope), get = (n) => cs.getPropertyValue(n).trim();
+  const color = {};
+  for (const [key, name] of Object.entries(map)) { const c = readColor(name, scope); if (c) color[key] = c; }
+  const fallback = (key, css) => { if (!color[key]) { const [r, g, b] = parseColor(css); color[key] = { css, srgb: [r, g, b], linear: [r, g, b].map(srgbToLinear), hex: toHex([r, g, b]), alpha: 1 }; } };
+  fallback("bg", cs.backgroundColor && !/rgba?\(0, 0, 0, 0\)|transparent/.test(cs.backgroundColor) ? cs.backgroundColor : "#ffffff");
+  fallback("text", cs.color || "#1a1a1a"); fallback("surface", color.bg.css); fallback("accent", color.text.css); fallback("border", color.text.css);
+  const lum = ([r, g, b]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const easeNums = (get("--ease-out").match(/cubic-bezier\(([^)]+)\)/) || [, "0.22, 1, 0.36, 1"])[1].split(",").map(Number);
+  const shadowRgb = (get("--shadow-color").match(/[\d.]+/g) || [0, 0, 0]).slice(0, 3).map((v) => srgbToLinear(v / 255));
+  const base = ms(get("--dur-base"), 200);
+  return {
+    dark: lum(color.bg.linear) < 0.18,
+    color,
+    motion: {
+      fast: ms(get("--dur-fast"), 120), base, slow: ms(get("--dur-slow"), 300),
+      ease: easeNums.length === 4 && easeNums.every(Number.isFinite) ? easeNums : [0.22, 1, 0.36, 1],
+      press: px(get("--press-scale"), 0.97),
+      bouncy: easeNums[1] > 1 || easeNums[3] > 1,   // the curve overshoots: playful directions
+      tempo: base / 200,                            // 1 = crisp; under 1 = faster (tools); over 1 = slower (care, luxury)
+    },
+    shape: { radiusSm: px(get("--radius-sm"), 6), radius: px(get("--radius"), 8), radiusLg: px(get("--radius-lg"), 12), borderW: px(get("--border-w"), 1) },
+    shadow: { color: shadowRgb, strength: px(get("--shadow-strength"), 1) },
+    font: { display: get("--font-display") || cs.fontFamily, sans: get("--font-sans") || cs.fontFamily, mono: get("--font-mono") || "monospace" },
+    // --immersive: the most 3D and scroll effect this theme should carry. 0 still, 1 accent, 2 signature, 3 story. Unset = 1.
+    immersive: Number.isFinite(parseInt(get("--immersive"))) ? Math.min(3, Math.max(0, parseInt(get("--immersive")))) : 1,
+    reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+  };
+}
+
+function watchTheme(callback, scope = document.documentElement, names = {}) {
+  let queued = false;
+  const fire = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; callback(readTheme(scope, names)); }); };
+  const mo = new MutationObserver(fire); mo.observe(scope, { attributes: true, attributeFilter: ["data-theme", "class", "style"] });
+  const queries = ["(prefers-color-scheme: dark)", "(prefers-reduced-motion: reduce)", "(prefers-contrast: more)"].map((q) => matchMedia(q));
+  queries.forEach((q) => q.addEventListener("change", fire));
+  return () => { mo.disconnect(); queries.forEach((q) => q.removeEventListener("change", fire)); };
+}
+
+function bezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const X = (t) => ((ax * t + bx) * t + cx) * t, Y = (t) => ((ay * t + by) * t + cy) * t, dX = (t) => (3 * ax * t + 2 * bx) * t + cx;
+  return (x) => {
+    if (x <= 0) return 0; if (x >= 1) return 1;
+    let t = x;
+    for (let i = 0; i < 6; i++) { const d = dX(t); if (Math.abs(d) < 1e-6) break; t -= (X(t) - x) / d; }
+    return Y(Math.min(1, Math.max(0, t)));
+  };
+}
+
+function mixOklab(a, b, t) {
+  const toLab = ([r, g, bl]) => { const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * bl), m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * bl), s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * bl); return [0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s, 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s, 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s]; };
+  const A = toLab(a), B = toLab(b), [L, p, q] = A.map((v, i) => v + (B[i] - v) * t);
+  const l = (L + 0.3963377774 * p + 0.2158037573 * q) ** 3, m = (L - 0.1055613458 * p - 0.0638541728 * q) ** 3, s = (L - 0.0894841775 * p - 1.291485548 * q) ** 3;
+  return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+}
+// ---------------- scene-shell.js (inlined) ----------------
+function supports(kind = "webgl") {
+  if (kind === "webgpu") return "gpu" in navigator;
+  if (kind === "2d") return true;
+  try {
+    const c = document.createElement("canvas"), gl = c.getContext(kind === "webgl2" ? "webgl2" : "webgl", { failIfMajorPerformanceCaveat: false });
+    if (!gl) return false;
+    gl.getExtension("WEBGL_lose_context")?.loseContext();   // hand the test context straight back
+    return true;
+  } catch { return false; }
+}
+
+function deviceTier() {
+  const nav = navigator, coarse = matchMedia("(pointer: coarse)").matches;
+  if (nav.connection?.saveData || matchMedia("(prefers-reduced-data: reduce)").matches) return "low";
+  if ((nav.deviceMemory && nav.deviceMemory <= 4) || (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4)) return "low";
+  return coarse ? "mid" : "high";
+}
+
+function mountScene(host, hooks, options = {}) {
+  const opt = { need: "webgl", maxPixelRatio: 2, touchMaxPixelRatio: 1.5, minScale: 0.5, lazy: true, rootMargin: "200px", slowFrameMs: 24, ...options };
+  const reducedQuery = matchMedia("(prefers-reduced-motion: reduce)");
+  const state = { mode: "fallback", reduced: opt.reduced ?? reducedQuery.matches, visible: false, width: 0, height: 0, pixelRatio: 1, scale: 1, tier: deviceTier() };
+  let canvas = host.querySelector("canvas"), ready = false, starting = false, dead = false, wired = false, raf = 0, last = 0, wanted = false, slow = 0, quick = 0;
+  const setMode = (m) => { state.mode = m; host.dataset.scene = m; };
+  setMode("fallback");
+
+  const cap = () => Math.min(devicePixelRatio || 1, matchMedia("(pointer: coarse)").matches ? opt.touchMaxPixelRatio : opt.maxPixelRatio) * (state.tier === "low" ? 0.75 : 1);
+  function measure() {
+    const r = host.getBoundingClientRect(), w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height)), pr = Math.max(0.5, cap() * state.scale);
+    if (w === state.width && h === state.height && pr === state.pixelRatio) return;
+    state.width = w; state.height = h; state.pixelRatio = pr;
+    if (ready) { hooks.resize?.(w, h, pr); invalidate(); }
+  }
+
+  function tick(now) {
+    raf = 0;
+    if (!ready || dead || !state.visible || document.hidden) return;
+    const delta = last ? Math.min(100, now - last) : 16.7; last = now; wanted = false;
+    let more = false;
+    try { more = hooks.frame(now, delta, state) === true; } catch (err) { fail(err); return; }
+    if (state.mode === "fallback") setMode(state.reduced ? "still" : "live");
+    if (state.reduced) { last = 0; return; }                  // still frames only: never loop
+    if (more) {                                               // adapt resolution only while the loop is really running
+      if (delta > opt.slowFrameMs) { quick = 0; if (++slow > 20 && state.scale > opt.minScale) { state.scale = Math.max(opt.minScale, state.scale * 0.85); slow = 0; measure(); } }
+      else if (delta < 13) { slow = 0; if (++quick > 240 && state.scale < 1) { state.scale = Math.min(1, state.scale / 0.85); quick = 0; measure(); } }
+    } else last = 0;
+    if (more || wanted) raf = requestAnimationFrame(tick);
+  }
+  function invalidate() { wanted = true; if (!raf && ready && !dead && state.visible && !document.hidden) raf = requestAnimationFrame(tick); }
+
+  function fail(err) {
+    if (err) console.warn("Scene stopped, showing the fallback:", err);
+    ready = false; cancelAnimationFrame(raf); raf = 0; setMode("fallback");
+  }
+
+  async function start() {
+    if (ready || starting || dead || opt.disabled) return;
+    if (!supports(opt.need)) return;                          // fallback stays
+    starting = true;
+    try {
+      if (!canvas) { canvas = document.createElement("canvas"); canvas.setAttribute("aria-hidden", "true"); host.append(canvas); }
+      if (!wired) {                                           // once per canvas, however often the scene restarts
+        wired = true;
+        canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); fail(); });
+        canvas.addEventListener("webglcontextrestored", () => { if (!ready && !starting) start(); });
+      }
+      const ok = await hooks.init(canvas, state);
+      if (ok === false || dead) { starting = false; return; }
+      ready = true; state.width = 0; measure();             // measure() calls resize() and asks for the first frame
+    } catch (err) { fail(err); }
+    starting = false;
+  }
+
+  const io = new IntersectionObserver(([entry]) => {
+    state.visible = entry.isIntersecting;
+    if (state.visible) { if (!ready) start(); else { last = 0; invalidate(); } }
+  }, { rootMargin: opt.lazy ? opt.rootMargin : "100000px" });
+  io.observe(host);
+  const ro = new ResizeObserver(measure); ro.observe(host);
+  const onVisibility = () => { if (!document.hidden) { last = 0; invalidate(); } };
+  const onMotion = () => { if (opt.reduced === undefined) { state.reduced = reducedQuery.matches; last = 0; invalidate(); } };
+  document.addEventListener("visibilitychange", onVisibility);
+  reducedQuery.addEventListener("change", onMotion);
+
+  return {
+    state, invalidate,
+    setReduced(v) { state.reduced = !!v; opt.reduced = !!v; last = 0; if (ready) setMode(v ? "still" : "live"); invalidate(); },
+    destroy() {
+      dead = true; cancelAnimationFrame(raf); io.disconnect(); ro.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility); reducedQuery.removeEventListener("change", onMotion);
+      if (ready) { try { hooks.dispose?.(); } catch {} }
+      ready = false; setMode("fallback");
+    },
+  };
+}
+
+
+// ======================= the page =======================
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const root = document.documentElement;
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const S = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+
+const story = $("#story"), stage = $("#stage"), host = $("#scene"), header = $(".site-head");
+const lis = $$(".steps > li"), navLinks = $$(".beatnav a"), posters = $$(".poster");
+const params = new URLSearchParams(location.hash.slice(1));
+const posterMode = params.has("poster");
+if (posterMode) root.classList.add("poster-mode");
+
+// ---- glaze choice ----
+const GLAZES = { chalk: { name: "Chalk", key: "glazeChalk" }, sea: { name: "Sea green", key: "glazeSea" }, ink: { name: "Ink", key: "glazeInk" } };
+const ORDER = ["chalk", "sea", "ink"];
+let hero = "sea";
+const reserve = $("#reserve"), live = $("#glaze-live");
+function syncGlaze() {
+  const n = GLAZES[hero].name;
+  reserve.textContent = `Reserve the ${n.toLowerCase()} Tern`;
+  reserve.href = `mailto:hello@tern.example?subject=${encodeURIComponent("Reserve a Tern in " + n.toLowerCase())}`;
+  live.textContent = `Glaze: ${n.toLowerCase()}`;
+}
+
+// ---- scroll -> beat progress (native scroll; we only read it) ----
+let anchors = [], refY = 0, targetP = posterMode ? +params.get("poster") || 0 : 0, activeBeat = -1, lastInput = performance.now(), scene = null;
+const phone = () => matchMedia("(max-width: 860px)").matches;
+function measure() {
+  const sy = scrollY, head = header.offsetHeight;
+  anchors = lis.map((li) => sy + li.getBoundingClientRect().top + (phone() ? 72 : li.offsetHeight / 2));
+  refY = phone() ? head + stage.offsetHeight + 72 : head + (innerHeight - head) / 2;
+}
+function progress() {
+  const y = scrollY + refY, n = anchors.length;
+  if (y <= anchors[0]) return 0;
+  if (y >= anchors[n - 1]) return n - 1;
+  let i = 0; while (i < n - 2 && y > anchors[i + 1]) i++;
+  return i + S(0.18, 0.82, (y - anchors[i]) / (anchors[i + 1] - anchors[i]));
+}
+function setActive(a) {
+  if (a === activeBeat) return;
+  activeBeat = a; stage.dataset.beat = a;
+  posters.forEach((p, i) => p.classList.toggle("is-on", i === a));
+  navLinks.forEach((l, i) => i === a ? l.setAttribute("aria-current", "step") : l.removeAttribute("aria-current"));
+}
+function onScroll() { if (posterMode) return; targetP = progress(); setActive(Math.round(targetP)); lastInput = performance.now(); scene?.invalidate(); }
+if (!posterMode) {
+  measure(); onScroll();
+  addEventListener("scroll", onScroll, { passive: true });
+  addEventListener("resize", () => { measure(); onScroll(); });
+  new ResizeObserver(() => { measure(); onScroll(); }).observe(story);
+  document.fonts?.ready.then(() => { measure(); onScroll(); });
+  addEventListener("load", () => { measure(); onScroll(); });
+}
+$$("input[name=glaze]").forEach((r) => r.addEventListener("change", () => { hero = r.value; syncGlaze(); scene?.invalidate(); }));
+syncGlaze();
+const heroFromQuery = params.get("glaze"); if (heroFromQuery && GLAZES[heroFromQuery]) { hero = heroFromQuery; }
+
+// ======================= the scene (three.js, loaded after first paint) =======================
+let theme = readTheme(document.documentElement, { glazeChalk: "--glaze-chalk", glazeSea: "--glaze-sea", glazeInk: "--glaze-ink", clay: "--clay" });
+const themeNames = { glazeChalk: "--glaze-chalk", glazeSea: "--glaze-sea", glazeInk: "--glaze-ink", clay: "--clay" };
+
+let T, renderer, scn, cam, kettles, cup, pool, shadowTex, poolTex, stream, water, ring, lights = {}, dims = { w: 1, h: 1 };
+let curP = targetP, CUPX = 2.2, mats;
+
+const PIV = { x: 0.15, y: 0.75 }, TILT = 0.4, LIFT = 1.25;                    // radians, units
+const FOV = 26 * Math.PI / 180;
+const POSES = [                                                                  // target, azimuth, elevation, half-height, half-width
+  { tx: 0.3, ty: 0.8, tz: 0, az: 30, el: 9, hh: 1.15, hw: 2.2 },                // 1 the whole kettle
+  { tx: 1.65, ty: 0.9, tz: 0.1, az: 14, el: 5, hh: 0.85, hw: 1.3 },               // 2 close on the spout
+  { tx: 1.0, ty: 1.35, tz: 0, az: 6, el: 3, hh: 1.75, hw: 3.1 },               // 3 the pour
+  { tx: 0.5, ty: 0.9, tz: -0.3, az: 14, el: 11, hh: 1.35, hw: 3.5 },               // 4 the set
+];
+
+function radialTexture(rgb, stops) {
+  const c = document.createElement("canvas"); c.width = c.height = 256;
+  const g = c.getContext("2d"), grad = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  for (const [o, a] of stops) grad.addColorStop(o, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`);
+  g.fillStyle = grad; g.fillRect(0, 0, 256, 256);
+  const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; return t;
+}
+const to255 = (c) => c.srgb.map((v) => Math.round(v * 255));
+const shadowRgb = () => (getComputedStyle(root).getPropertyValue("--shadow-color").match(/[\d.]+/g) || [0, 0, 0]).slice(0, 3).map((v) => +v);
+
+function taperedTube(curve, segs, radial, r0, r1) {
+  const fr = curve.computeFrenetFrames(segs, false), pos = [], idx = [];
+  for (let i = 0; i <= segs; i++) {
+    const t = i / segs, p = curve.getPointAt(t), r = r0 + (r1 - r0) * Math.pow(t, 0.85);
+    for (let j = 0; j < radial; j++) {
+      const a = (j / radial) * Math.PI * 2, n = fr.normals[i].clone().multiplyScalar(Math.cos(a)).addScaledVector(fr.binormals[i], Math.sin(a));
+      pos.push(p.x + n.x * r, p.y + n.y * r, p.z + n.z * r);
+    }
+  }
+  for (let i = 0; i < segs; i++) for (let j = 0; j < radial; j++) {
+    const a = i * radial + j, b = i * radial + (j + 1) % radial, c = (i + 1) * radial + j, d = (i + 1) * radial + (j + 1) % radial;
+    idx.push(a, c, b, b, c, d);
+  }
+  const g = new T.BufferGeometry(); g.setAttribute("position", new T.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals(); return g;
+}
+
+function buildGeometry() {
+  const V = (x, y) => new T.Vector2(x, y);
+  // a thrown form is a revolved profile; throwing rings are a faint ripple along it
+  const bodyPts = new T.SplineCurve([V(0.62, 0.1), V(0.8, 0.14), V(0.93, 0.32), V(0.98, 0.58), V(0.9, 0.86), V(0.68, 1.08), V(0.53, 1.18), V(0.5, 1.22)]).getPoints(110)
+    .map((p) => V(p.x + (p.y > 0.2 && p.y < 1.05 ? 0.006 * Math.sin(p.y * 62) : 0), p.y));
+  const lidPts = new T.SplineCurve([V(0.52, 1.2), V(0.5, 1.3), V(0.4, 1.42), V(0.22, 1.5), V(0.08, 1.535), V(0, 1.54)]).getPoints(36);
+  const spoutCurve = new T.CatmullRomCurve3([[0.8, 0.34], [1.12, 0.4], [1.42, 0.58], [1.62, 0.86], [1.8, 1.1], [2.0, 1.22], [2.18, 1.2]].map(([x, y]) => new T.Vector3(x, y, 0)));
+  const handleCurve = new T.CatmullRomCurve3([[-0.82, 1.0], [-1.3, 1.16], [-1.66, 0.82], [-1.5, 0.38], [-0.96, 0.22]].map(([x, y]) => new T.Vector3(x, y, 0)));
+  const cupPts = [V(0, 0), V(0.4, 0), V(0.47, 0.06), V(0.53, 0.8), V(0.54, 0.84), V(0.5, 0.85), V(0.46, 0.8), V(0.43, 0.1), V(0, 0.1)];
+  return {
+    body: new T.LatheGeometry(bodyPts, 96), lid: new T.LatheGeometry(lidPts, 64),
+    knob: new T.SphereGeometry(0.1, 32, 16), foot: new T.LatheGeometry([V(0, 0), V(0.56, 0), V(0.6, 0.02), V(0.63, 0.1), V(0, 0.1)], 64),
+    spout: taperedTube(spoutCurve, 56, 20, 0.17, 0.05), handle: new T.TubeGeometry(handleCurve, 48, 0.085, 16, false),
+    cup: new T.LatheGeometry(cupPts, 64), tip: spoutCurve.getPoint(1),
+  };
+}
+
+function glazeColor(id) { return theme.color[GLAZES[id].key].linear; }
+
+function build(THREE, RoomEnvironment) {
+  T = THREE;
+  scn = new T.Scene();
+  if (RoomEnvironment) { const pm = new T.PMREMGenerator(renderer); scn.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; scn.environmentIntensity = 0.6; pm.dispose(); }
+  cam = new T.PerspectiveCamera(26, 1, 0.5, 80);
+
+  // light: one warm key from above left, a cool-green rim from behind, the room for soft fill
+  lights.key = new T.DirectionalLight(0xfff0dc, 2.4); lights.key.position.set(-4, 7, 5); scn.add(lights.key);
+  lights.rim = new T.DirectionalLight(0xffffff, 1.4); lights.rim.position.set(5, 3, -5); scn.add(lights.rim);
+  scn.add(new T.HemisphereLight(0xffffff, 0x8a7a60, 0.35));
+
+  const geo = buildGeometry(); const tipLocal = geo.tip;
+  const clay = new T.MeshStandardMaterial({ roughness: 0.92, metalness: 0 });
+  const cupMat = new T.MeshStandardMaterial({ roughness: 0.5, metalness: 0 });
+  const waterMat = new T.MeshPhysicalMaterial({ color: 0xdcebee, roughness: 0.04, metalness: 0, transparent: true, opacity: 0.8, clearcoat: 1, clearcoatRoughness: 0.02 });
+  mats = { clay, cupMat };
+
+  poolTex = radialTexture(to255(theme.color.surface), [[0, 0.95], [0.4, 0.5], [0.8, 0], [1, 0]]);
+  shadowTex = radialTexture(shadowRgb(), [[0, 0.5], [0.35, 0.34], [0.7, 0.1], [1, 0]]);
+  pool = new T.Mesh(new T.PlaneGeometry(9, 9), new T.MeshBasicMaterial({ map: poolTex, transparent: true, depthWrite: false, toneMapped: false }));
+  pool.rotation.x = -Math.PI / 2; pool.position.set(0.3, -0.004, -0.3); scn.add(pool);
+
+  const shadowGeo = new T.PlaneGeometry(1, 1).rotateX(-Math.PI / 2);
+  const mkShadow = (sx, sz) => { const m = new T.Mesh(shadowGeo, new T.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, toneMapped: false })); m.scale.set(sx, 1, sz); m.position.y = 0.003; m.renderOrder = 1; scn.add(m); return m; };
+
+  kettles = ORDER.map((id) => {
+    const g = new T.Group(), tilt = new T.Group(), shape = new T.Group();
+    tilt.position.set(PIV.x, PIV.y, 0); shape.position.set(-PIV.x, -PIV.y, 0); g.add(tilt); tilt.add(shape);
+    const mat = new T.MeshPhysicalMaterial({ roughness: 0.4, metalness: 0, clearcoat: 0.45, clearcoatRoughness: 0.32, sheen: 0.2, sheenRoughness: 0.6 });
+    for (const [geometry, material] of [[geo.body, mat], [geo.lid, mat], [geo.spout, mat], [geo.handle, mat], [geo.foot, clay]]) shape.add(new T.Mesh(geometry, material));
+    const knob = new T.Mesh(geo.knob, mat); knob.position.y = 1.56; knob.scale.set(1, 0.85, 1); shape.add(knob);
+    const tip = new T.Object3D(); tip.position.copy(tipLocal); shape.add(tip);
+    scn.add(g);
+    return { id, g, tilt, mat, tip, shadow: mkShadow(3.7, 2.5), x: 0, y: 0, z: 0, s: 1, init: false };
+  });
+
+  cup = new T.Mesh(geo.cup, cupMat); scn.add(cup);
+  cup.userData.shadow = mkShadow(1.8, 1.8);
+  water = new T.Mesh(new T.CircleGeometry(0.44, 40).rotateX(-Math.PI / 2), waterMat); cup.add(water);
+  stream = new T.Mesh(new T.CylinderGeometry(0.03, 0.02, 1, 14, 1, true), waterMat); stream.visible = false; scn.add(stream);
+  ring = new T.Mesh(new T.RingGeometry(0.88, 1, 40).rotateX(-Math.PI / 2), new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, depthWrite: false })); ring.visible = false; cup.add(ring);
+
+  // where the cup must stand: under the spout tip at full tilt
+  const h = kettles[0]; h.tilt.rotation.z = -TILT; h.g.position.y = LIFT; h.g.updateMatrixWorld(true);
+  const v = new T.Vector3(); h.tip.getWorldPosition(v); CUPX = v.x; h.tilt.rotation.z = 0; h.g.position.y = 0;
+  applyTheme();
+}
+
+function applyTheme() {
+  if (!scn) return;
+  for (const k of kettles) k.mat.color.setRGB(...glazeColor(k.id));
+  mats.clay.color.setRGB(...theme.color.clay.linear);
+  mats.cupMat.color.setRGB(...(theme.dark ? theme.color.text.linear.map((v) => v * 0.7) : theme.color.surface3.linear));
+  poolTex.dispose(); shadowTex.dispose();
+  const np = radialTexture(to255(theme.color.surface), [[0, theme.dark ? 0.9 : 0.95], [0.4, 0.5], [0.8, 0], [1, 0]]), ns = radialTexture(shadowRgb(), [[0, theme.dark ? 0.7 : 0.5], [0.35, theme.dark ? 0.5 : 0.34], [0.7, 0.1], [1, 0]]);
+  poolTex = np; shadowTex = ns; pool.material.map = np; pool.material.needsUpdate = true;
+  for (const k of kettles) { k.shadow.material.map = ns; k.shadow.material.needsUpdate = true; }
+  cup.userData.shadow.material.map = ns; cup.userData.shadow.material.needsUpdate = true;
+  lights.rim.color.setRGB(...theme.color.accentSoft.linear).lerp(new T.Color(1, 1, 1), 0.5);
+  lights.rim.intensity = theme.dark ? 2.2 : 1.4; lights.key.intensity = theme.dark ? 2.0 : 2.4;
+}
+
+// ---- one frame: everything derives from the scroll progress p ----
+function update(now, delta, st) {
+  const reduced = st.reduced, tempo = theme.motion.tempo;
+  const tp = reduced ? Math.round(targetP) : targetP;
+  curP += (tp - curP) * (reduced ? 1 : 1 - Math.exp(-delta / (110 * tempo)));
+  let moving = false;
+  if (Math.abs(tp - curP) < 0.0008) curP = tp; else moving = true;
+  const p = curP;
+
+  const tiltAmt = S(1.35, 1.9, p) - S(2.45, 2.9, p);
+  const streamAmt = S(1.85, 2.05, p) * (1 - S(2.4, 2.6, p));
+  const fill = S(1.9, 2.55, p);
+  const t4 = S(2.55, 3.0, p);
+  const kk = reduced ? 1 : 1 - Math.exp(-delta / (150 * tempo));
+
+  const others = ORDER.filter((id) => id !== hero);
+  for (const k of kettles) {
+    const isHero = k.id === hero, side = isHero ? 0 : (k.id === others[0] ? -1 : 1);
+    const tx = isHero ? 0 : side * (1.75 + 8 * (1 - t4)), tz = isHero ? 0.55 * t4 : -1.15, ts = isHero ? 1 : 0.92;
+    const ty = isHero ? LIFT * tiltAmt : 0;
+    if (!k.init) { k.x = tx; k.z = tz; k.s = ts; k.init = true; }
+    const dx = tx - k.x, dz = tz - k.z;
+    k.x += dx * kk; k.z += dz * kk; k.s += (ts - k.s) * kk;
+    if (Math.abs(dx) > 0.003 || Math.abs(dz) > 0.003) moving = true; else { k.x = tx; k.z = tz; }
+    k.g.position.set(k.x, ty, k.z); k.g.scale.setScalar(k.s);
+    k.tilt.rotation.z = isHero ? -TILT * tiltAmt : 0;
+    k.g.visible = isHero || t4 > 0.001 || Math.abs(k.x) < 6;
+    k.shadow.position.set(k.x + 0.1, 0.003, k.z); k.shadow.scale.set(3.7 * k.s * (1 + ty * 0.1), 1, 2.5 * k.s * (1 + ty * 0.1));
+    k.shadow.material.opacity = (1 - ty * 0.28) * (k.g.visible ? 1 : 0);
+  }
+
+  // cup slides in as the pour begins and out when it ends
+  const cupX = CUPX + 8 * (1 - S(1.1, 1.6, p)) + 8 * S(2.55, 2.95, p);
+  cup.position.set(cupX, 0, 0); cup.visible = cupX < 7; cup.userData.shadow.position.set(cupX + 0.05, 0.003, 0);
+  water.position.y = 0.1 + fill * 0.55; water.visible = fill > 0.02;
+
+  // the stream: top at the spout tip, falling straight to the water
+  const hk = kettles.find((k) => k.id === hero), tipW = new T.Vector3();
+  hk.g.updateMatrixWorld(true); hk.tip.getWorldPosition(tipW);
+  const rest = reduced ? 0 : clamp((5000 - (now - lastInput)) / 1500);
+  const bottom = (cup.visible ? 0.1 + fill * 0.55 : 0) + 0.01, fullLen = Math.max(0.01, tipW.y - bottom - 0.02);
+  const shown = fullLen * streamAmt;
+  stream.visible = streamAmt > 0.01;
+  if (stream.visible) {
+    const wob = rest * 0.1 * Math.sin(now * 0.021);
+    stream.scale.set(1 + wob, shown, 1 + wob); stream.position.set(tipW.x + 0.01, tipW.y - 0.03 - shown / 2, tipW.z);
+    if (rest > 0) moving = true;
+  }
+  ring.visible = streamAmt > 0.5 && fill > 0.05 && !reduced;
+  if (ring.visible) { const ph = (now * 0.0011) % 1; ring.position.y = water.position.y + 0.003; ring.scale.setScalar(0.12 + ph * 0.3); ring.material.opacity = (1 - ph) * 0.45 * streamAmt; if (rest > 0) moving = true; }
+
+  // camera: blend two poses, distance solved from the frame's aspect so the subject always fits
+  const i = Math.min(2, Math.floor(p)), f = clamp(p - i, 0, 1), A = POSES[i], B = POSES[i + 1];
+  const mix = (k) => A[k] + (B[k] - A[k]) * f, aspect = dims.w / dims.h;
+  const dist = Math.max(mix("hh"), mix("hw") / aspect) / Math.tan(FOV / 2) * 1.04;
+  const az = mix("az") * Math.PI / 180, el = mix("el") * Math.PI / 180;
+  const tx = mix("tx"), ty = mix("ty"), tz = mix("tz");
+  cam.position.set(tx + dist * Math.sin(az) * Math.cos(el), ty + dist * Math.sin(el), tz + dist * Math.cos(az) * Math.cos(el));
+  cam.lookAt(tx, ty, tz);
+  return moving;
+}
+
+function startScene() {
+  if (theme.immersive === 0) return;
+  scene = mountScene(host, {
+    async init(canvas) {
+      const THREE = await import("three");
+      let RoomEnvironment = null;
+      try { RoomEnvironment = (await import("three/addons/environments/RoomEnvironment.js")).RoomEnvironment; } catch {}
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: "default" });
+      renderer.setClearColor(0x000000, 0);
+      renderer.toneMapping = THREE.NeutralToneMapping || THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+      build(THREE, RoomEnvironment);
+    },
+    resize(w, h, pr) { dims = { w, h }; renderer.setPixelRatio(pr); renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); },
+    frame(now, delta, st) { const more = update(now, delta, st); renderer.render(scn, cam); return more; },
+    dispose() { scn?.traverse((o) => { o.geometry?.dispose?.(); const m = o.material; (Array.isArray(m) ? m : m ? [m] : []).forEach((x) => { x.map?.dispose?.(); x.dispose(); }); }); renderer?.dispose(); renderer = null; scn = null; },
+  }, { reduced: posterMode ? true : undefined, maxPixelRatio: 2, touchMaxPixelRatio: 1.5, rootMargin: "100px" });
+  window.__tern = { scene, setProgress(v) { targetP = v; curP = v; setActive(Math.round(v)); scene.invalidate(); } };
+  watchTheme((next) => { theme = next; applyTheme(); scene.invalidate(); }, document.documentElement, themeNames);
+}
+// start after the page has painted: the words come first, the engine second
+if ("requestIdleCallback" in window) requestIdleCallback(startScene, { timeout: 1200 }); else setTimeout(startScene, 200);
+</script>
+</body>
+</html>
